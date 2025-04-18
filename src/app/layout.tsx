@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { HeroProvider } from "@/provider/hero-provider";
 import { ZustandProvider } from "@/zustand/ZustandProvider";
+import CookieConsentModal from "@/components/CookieConsentModal";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,7 +32,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ZustandProvider>
-          <HeroProvider>{children}</HeroProvider>
+          <HeroProvider>
+            {children}
+            <CookieConsentModal />
+          </HeroProvider>
         </ZustandProvider>
       </body>
     </html>
