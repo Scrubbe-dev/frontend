@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React from 'react'
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -78,27 +78,7 @@ export function MainModal({
   );
 }
 
-export function SubDropdownMenu({
-  title,
-  items,
-}: {
-  title: string;
-  items?: { label: string; description: string; icon: React.ReactNode }[];
-}) {
-  // Default items if none are provided
-  const menuItems = items || [
-    {
-      label: "Contact us",
-      description: "Contact us for more info concerning scrubbe",
-      icon: <Contact size={25} />,
-    },
-    {
-      label: "About us",
-      description: "Learn more about scrubbe",
-      icon: <BookCheck size={25} />,
-    },
-  ];
-
+export function SubDropdownMenu({ title }: { title: string }) {
   return (
     <Dropdown>
       <NavbarItem>
@@ -115,20 +95,25 @@ export function SubDropdownMenu({
         </DropdownTrigger>
       </NavbarItem>
       <DropdownMenu
-        aria-label={`${title.toLowerCase()} menu`}
+        aria-label="scrubbe features"
         itemClasses={{
           base: "gap-4",
         }}
       >
-        {menuItems.map((item, index) => (
-          <DropdownItem
-            key={`${item.label}-${index}`}
-            description={item.description}
-            startContent={item.icon}
-          >
-            {item.label}
-          </DropdownItem>
-        ))}
+        <DropdownItem
+          key="contactus"
+          description="Contact us for more info concerning scrubbe"
+          startContent={<Contact size={25} />}
+        >
+          Contact us
+        </DropdownItem>
+        <DropdownItem
+          key="aboutus"
+          description="Learn more about scrubbe"
+          startContent={<BookCheck size={25} />}
+        >
+          About us
+        </DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );
@@ -153,33 +138,11 @@ function MainNavbar() {
   const mainMenuItem = [
     {
       title: "Features",
-      submenu: [
-        {
-          label: "Core Features",
-          description: "Explore our main product features",
-          icon: <BookCheck size={25} />,
-        },
-        {
-          label: "Advanced Features",
-          description: "Discover our premium capabilities",
-          icon: <BookCheck size={25} />,
-        },
-      ],
+      link: "/",
     },
     {
       title: "Solutions",
-      submenu: [
-        {
-          label: "Enterprise",
-          description: "Solutions for large organizations",
-          icon: <BookCheck size={25} />,
-        },
-        {
-          label: "Small Business",
-          description: "Tailored for small teams",
-          icon: <BookCheck size={25} />,
-        },
-      ],
+      link: "/",
     },
     {
       title: "Pricing",
@@ -191,18 +154,7 @@ function MainNavbar() {
     },
     {
       title: "More",
-      submenu: [
-        {
-          label: "Contact us",
-          description: "Contact us for more info concerning scrubbe",
-          icon: <Contact size={25} />,
-        },
-        {
-          label: "About us",
-          description: "Learn more about scrubbe",
-          icon: <BookCheck size={25} />,
-        },
-      ],
+      submenu: [{}],
     },
   ];
 
@@ -221,7 +173,7 @@ function MainNavbar() {
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="lg:hidden" // Changed from sm:hidden to lg:hidden
+          className="sm:hidden"
         />
         <NavbarBrand className="gap-2">
           <Link
@@ -239,25 +191,23 @@ function MainNavbar() {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden lg:flex gap-6" justify="center">
-        {" "}
-        {/* Changed from sm:flex to lg:flex */}
+      <NavbarContent className="hidden sm:flex gap-4" justify="center">
         {mainMenuItem.map((item, index) => {
           return (
             <>
-              {!item.submenu ? (
+              {item.title !== "More" ? (
                 <NavbarItem className="px-1" key={index}>
                   <HeroLink
                     color="foreground"
                     className="font-Poppins text-[15px] "
-                    href={item.link}
+                    href="#"
                   >
                     {item.title}
                   </HeroLink>
                 </NavbarItem>
               ) : (
                 <NavbarItem className="-mx-2" key={index}>
-                  <SubDropdownMenu title={item.title} items={item.submenu} />
+                  <SubDropdownMenu title={item.title} />
                 </NavbarItem>
               )}
             </>
@@ -266,8 +216,6 @@ function MainNavbar() {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex cursor-pointer">
-          {" "}
-          {/* This was already using lg:flex */}
           <MainModal
             iconComponent={
               <Search className="text-foreground" color="gray" size={24} />
@@ -297,13 +245,11 @@ function MainNavbar() {
           </MainModal>
         </NavbarItem>
         <NavbarItem className="hidden lg:flex cursor-pointer">
-          {" "}
-          {/* This was already using lg:flex */}
           <Globe size={24} color="gray" />
         </NavbarItem>
         <NavbarItem>
           <Button
-            className="font-Poppins bg-[#2563eb] text-white rounded-sm font-semibold"
+            className="font-Poppins bg-[#2563eb] text-white rounded-sm  font-semibold "
             as={HeroLink}
             color="default"
             href="#"
