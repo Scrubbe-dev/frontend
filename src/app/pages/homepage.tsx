@@ -1,8 +1,7 @@
 "use client";
-
 import Banner from "@/components/banner";
 import MainLayout from "@/components/main-layout";
-import { security_data } from "@/features/home/security-features/dto/security-data";
+import SecurityFeatures from "@/components/SecurityFeatures";
 import {
   Button,
   Card,
@@ -121,7 +120,7 @@ function HomePage() {
                   </div>
                 </CardBody>
                 <CardFooter className="mt-8 w-full">
-                  <div className="space-x-4 w-full flex justify-center xl:justify-start" >
+                  <div className="space-x-4 w-full flex justify-center xl:justify-start">
                     <Button
                       className="bg-blue-600 text-white font-semibold  font-Inter  text-md rounded-sm"
                       size="lg"
@@ -174,54 +173,7 @@ function HomePage() {
           </div>
         </div>
       </div>
-      <aside className="w-full h-full pt-20 xl:pt-0">
-        <div className="min-h-screen w-full flex items-center flex-col  xl:pt-28">
-          <div className="container w-full h-full">
-            <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
-              <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl  xl:text-4xl font-semibold ">
-                Powerful Security Features
-              </div>
-              <div className="bg-[#10b981] h-1 w-16 rounded-full "></div>
-            </div>
-
-            <div className="w-full h-full flex items-center  justify-center py-8">
-              <div className="h-fit xl:w-3/6 text-wrap text-center text-md text-muted-foreground px-2 xl:px-0 font-Raleway font-[500] ">
-                Scrubbe offers comprehensive security monitoring and automated
-                response capabilities to identify and neutralize threats before
-                they impact your business.
-              </div>
-            </div>
-
-            <div className="w-full flex items-center justify-center mt-6">
-              <div className=" w-11/12 h-fit grid xl:grid-cols-3 gap-6">
-                {security_data.map((items) => {
-                  return (
-                    <div key={items.id} className=" col-span-1 w-full h-fit">
-                      <Card className="px-6 pb-4 h-full transition-all xl:h-[260px] hover:-translate-y-2  hover:transition-all">
-                        <CardHeader>
-                          <div className="w-full">
-                            <div className="h-[100px] flex items-center w-full">
-                              <div className="h-14 flex justify-center items-center w-14 rounded-full  bg-slate-200">
-                                {items.icon}
-                              </div>
-                            </div>
-                            <div className="font-Poppins font-bold text-xl py-4 text-slate-900">
-                              {items.title}
-                            </div>
-                            <div className="font-Raleway text-sm font-thin ">
-                              {items.description}
-                            </div>
-                          </div>
-                        </CardHeader>
-                      </Card>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      </aside>
+      <SecurityFeatures />
 
       <div className="w-full min-h-full">
         <div className="min-h-full w-full flex items-center flex-col  py-32">
@@ -425,8 +377,7 @@ function HomePage() {
                           </div>
                         </div>
                         <div className="hidden">
-                        <Meteors number={30} />
-
+                          <Meteors number={30} />
                         </div>
                       </div>
                     </div>
