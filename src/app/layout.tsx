@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { HeroProvider } from "@/provider/hero-provider";
+import { ZustandProvider } from "@/zustand/ZustandProvider";
+import CookieConsentModal from "@/components/landing/CookieConsentModal";
+import Chatbot from "@/components/landing/Chatbot";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,7 +32,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <HeroProvider>{children}</HeroProvider>
+        <ZustandProvider>
+          <HeroProvider>
+            {children}
+            <CookieConsentModal />
+            <Chatbot />
+          </HeroProvider>
+        </ZustandProvider>
       </body>
     </html>
   );
