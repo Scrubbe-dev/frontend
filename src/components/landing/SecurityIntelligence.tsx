@@ -9,7 +9,7 @@ function SecurityIntelligence() {
         <div className="container w-full h-full">
           {/* Header */}
           <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
-            <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold">
+            <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold px-4">
               Security Intelligence In Action
             </div>
             <div className="bg-[#10b981] h-1 w-16 rounded-full"></div>

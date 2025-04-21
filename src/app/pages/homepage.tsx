@@ -1,8 +1,8 @@
 "use client";
 import Banner from "@/components/banner";
 import MainLayout from "@/components/main-layout";
-import SecurityFeatures from "@/components/SecurityFeatures";
-import SecurityIntelligence from "@/components/SecurityIntelligence";
+import SecurityFeatures from "@/components/landing/SecurityFeatures";
+import SecurityIntelligence from "@/components/landing/SecurityIntelligence";
 import {
   Button,
   Card,
@@ -158,7 +158,7 @@ function HomePage() {
                 </div>
               </div>
               <div className="py-1 xl:px-4 flex justify-center  sm:items-center col-span-1 flex-col space-y-2 xl:border-l-2 xl:border-l-green-400">
-                <span className="font-Poppins text-white font-bold text-3xl tracking-wide">
+                <span className="font-Poppins text-white font-bold text-3xl tracking-wide whitespace-nowrap">
                   Tons of
                 </span>
                 <div className="text-sm xl:text-md font-normal font-Montserrat text-white/60 ">

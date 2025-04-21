@@ -3,8 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { HeroProvider } from "@/provider/hero-provider";
 import { ZustandProvider } from "@/zustand/ZustandProvider";
-import CookieConsentModal from "@/components/CookieConsentModal";
-import Chatbot from "@/components/Chatbot";
+import CookieConsentModal from "@/components/landing/CookieConsentModal";
+import Chatbot from "@/components/landing/Chatbot";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

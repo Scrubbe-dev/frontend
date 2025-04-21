@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useAppStore } from "../zustand/ZustandProvider";
+import { useAppStore } from "../../zustand/ZustandProvider";
 
 const CounterTestComponent: React.FC = () => {
   const counterState = useAppStore((state) => state);
@@ -69,6 +69,7 @@ const CounterTestComponent: React.FC = () => {
           {JSON.stringify({ count }, null, 2)}
         </pre>
       </div>
+      <p className=" text-colorScblue bg-colorScPink">Trae Zeeofor</p>
     </div>
   );
 };
