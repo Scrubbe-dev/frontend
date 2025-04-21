@@ -7,6 +7,7 @@ import SeamlessIntegrations from "@/components/landing/SeamlessIntegrations";
 import CompromiseChecker from "@/components/landing/CompromiseChecker";
 import Integration from "@/components/landing/Integration";
 import ChartScroll from "@/components/landing/ChartScroll";
+import ScrubbeHighlights from "@/components/landing/ScrubbeHighlights";
 import { Button, Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
 import React from "react";
 import { FlipWords } from "@/components/animation/flip-words";
@@ -128,6 +129,8 @@ function HomePage() {
       <Integration />
 
       <ChartScroll />
+
+      <ScrubbeHighlights />
     </MainLayout>
   );
 }

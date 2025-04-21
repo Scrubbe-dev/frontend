@@ -70,6 +70,12 @@ const ChartScroll = () => {
           </div>
         </div>
       </div>
+
+      <div className="mt-8 px-4 md:px-8 mb-4">
+        <button className="bg-colorScRed hover:bg-red-700 text-white font-semibold font-Inter text-md rounded-sm mx-auto block w-full md:w-1/3 py-3">
+          Start free trial
+        </button>
+      </div>
     </div>
   );
 };
