@@ -3,6 +3,7 @@ import Banner from "@/components/banner";
 import MainLayout from "@/components/main-layout";
 import SecurityFeatures from "@/components/landing/SecurityFeatures";
 import SecurityIntelligence from "@/components/landing/SecurityIntelligence";
+import SeamlessIntegrations from "@/components/landing/SeamlessIntegrations";
 import {
   Button,
   Card,
@@ -12,7 +13,6 @@ import {
   Input,
 } from "@heroui/react";
 import React from "react";
-import { integrationData } from "@/features/home/integration/dto/integration-data";
 import { FlipWords } from "@/components/animation/flip-words";
 import { Meteors } from "@/components/animation/meteors";
 import { AnimatingButton } from "@/components/animation/moving-border";
@@ -178,54 +178,7 @@ function HomePage() {
 
       <SecurityIntelligence />
 
-      <div className="w-full min-h-full xl:py-10">
-        <div className="h-full w-full flex items-center flex-col">
-          <div className="container w-full h-full">
-            <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
-              <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl  xl:text-4xl font-semibold ">
-                Seamless Integrations
-              </div>
-              <div className="bg-[#10b981] h-1 w-16 rounded-full "></div>
-            </div>
-
-            <div className="w-full h-full flex items-center  justify-center py-8">
-              <span className="h-fit xl:w-3/6 text-wrap text-center text-md text-muted-foreground px-2 xl:px-0 font-Raleway font-[500] ">
-                Scrubbe connects with your existing security and cloud
-                infrastructure to provide comprehensive visibility and control.
-              </span>
-            </div>
-
-            <div className="w-full flex items-center justify-center mt-6">
-              <div className=" w-11/12 h-fit grid grid-cols-2 xl:grid-cols-5 gap-6 py-10">
-                {integrationData.map((item, index) => (
-                  <Card
-                    className="col-span-1 transition-all hover:-translate-y-2  hover:transition-all"
-                    key={index}
-                  >
-                    <CardHeader>
-                      <div className="w-full  flex-col flex items-center justify-center ">
-                        <div className="flex h-[100px] items-center justify-center w-full">
-                          <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center">
-                            {item.icon}
-                          </div>
-                        </div>
-                        <div className="w-full h-fit flex items-center space-y-3 my-4 flex-col justify-center">
-                          <div className="font-Raleway font-bold text-xl">
-                            {item.title}
-                          </div>
-                          <div className="w-5/6 items-center font-Poppins  text-center text-sm font-thin text-muted-foreground">
-                            {item.description}
-                          </div>
-                        </div>
-                      </div>
-                    </CardHeader>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <SeamlessIntegrations />
 
       <div className="w-full min-h-full bg-slate-100  pb-12 px-2 overflow-x-hidden">
         <div className="min-h-screen xl:h-screen w-full flex items-center flex-col xl:pt-28">

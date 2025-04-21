@@ -1,11 +1,12 @@
 "use client";
 import React from "react";
 import { Card, CardHeader } from "@heroui/react";
+import { Button } from "@heroui/react";
 
 function SecurityIntelligence() {
   return (
     <aside className="w-full h-auto">
-      <div className="h-auto w-full flex items-center flex-col py-8">
+      <div className="h-auto w-full flex items-center flex-col py-2">
         <div className="container w-full h-full">
           {/* Header */}
           <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
@@ -16,7 +17,7 @@ function SecurityIntelligence() {
           </div>
 
           {/* Subheading */}
-          <div className="w-full h-full flex items-center justify-center py-8">
+          <div className="w-full h-full flex items-center justify-center py-4">
             <span className="h-fit xl:w-3/6 text-wrap text-center text-md text-muted-foreground px-2 xl:px-0 font-Raleway font-[500]">
               Experience how Scrubbe collects and analyzes device and network
               data to enhance security monitoring.
@@ -119,6 +120,14 @@ function SecurityIntelligence() {
                   </div>
                 </CardHeader>
               </Card>
+              <div className="w-full flex justify-center mt-4">
+                <Button
+                  className=" bg-colorScRed hover:bg-red-700 text-white font-semibold font-Inter text-md rounded-sm"
+                  size="lg"
+                >
+                  Start free trial
+                </Button>
+              </div>
             </div>
           </div>
         </div>

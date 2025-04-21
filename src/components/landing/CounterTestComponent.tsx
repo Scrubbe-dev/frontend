@@ -69,7 +69,17 @@ const CounterTestComponent: React.FC = () => {
           {JSON.stringify({ count }, null, 2)}
         </pre>
       </div>
-      <p className=" text-colorScblue bg-colorScPink">Trae Zeeofor</p>
+      <p className="text-colorScBlue bg-[#5a8cf7]">Trae Zeeofor</p>
+      <p className="text-colorScBlue bg-[#8bb8fd]">Trae Zeeofor</p>
+
+      <p className="text-colorScPurple bg-[#b18fd7]">Trae Zeeofor</p>
+      <p className="text-colorScPurple bg-[#bc9bd4]">Trae Zeeofor</p>
+
+      <p className="text-colorScRed bg-[#e38d8d]">Trae Zeeofor</p>
+      <p className="text-colorScRed bg-[#ae5f5f]">Trae Zeeofor</p>
+
+      <p className="text-colorScPink bg-[#c7c5f7]">Trae Zeeofor</p>
+      <p className="text-colorScPink bg-[#a9a6eb]">Trae Zeeofor</p>
     </div>
   );
 };

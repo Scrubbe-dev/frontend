@@ -244,7 +244,7 @@ function MainNavbar() {
         {/* Changed from sm:flex to lg:flex */}
         {mainMenuItem.map((item, index) => {
           return (
-            <>
+            <React.Fragment key={index}>
               {!item.submenu ? (
                 <NavbarItem className="px-1" key={index}>
                   <HeroLink
@@ -260,7 +260,7 @@ function MainNavbar() {
                   <SubDropdownMenu title={item.title} items={item.submenu} />
                 </NavbarItem>
               )}
-            </>
+            </React.Fragment>
           );
         })}
       </NavbarContent>
