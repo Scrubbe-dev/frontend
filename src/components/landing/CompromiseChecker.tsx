@@ -21,7 +21,7 @@ function CompromiseChecker() {
   };
 
   return (
-    <aside className="w-full bg-slate-100 rounded-lg shadow-md overflow-hidden p-4 md:p-6 flex flex-col">
+    <aside className="w-full bg-slate-100 rounded-lg shadow-md overflow-hidden px-4 md:px-6 py-12 flex flex-col">
       <div className="flex flex-col md:flex-row flex-grow">
         {/* Left column with title and form */}
         <div className="w-full md:w-1/2 bg-gradient-to-br from-slate-800 to-blue-900 p-6 md:p-8 rounded-lg">

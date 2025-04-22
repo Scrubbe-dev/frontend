@@ -100,7 +100,7 @@ const CodeBlock: React.FC<{ children: string }> = ({ children }) => {
 
 const Integration: React.FC = () => {
   return (
-    <div className="min-w-[320px] max-w-[1440px] mx-auto p-5 bg-gray-50 text-gray-800">
+    <div className="min-w-[320px] max-w-[1440px] mx-auto px-5 py-12 bg-gray-50 text-gray-800">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-center mb-8 text-2xl md:text-3xl font-bold text-blue-700">
           Scrubbe Enterprise Integration

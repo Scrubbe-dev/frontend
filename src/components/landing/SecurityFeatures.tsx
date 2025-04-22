@@ -308,7 +308,7 @@ const SecurityFeatures: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-auto bg-white flex justify-center py-12">
+    <section className="w-full h-auto bg-white flex justify-center py-12">
       <section className="w-full max-w-[1440px] px-4 flex flex-col">
         {/* Header */}
         <div className="text-center mb-8">
@@ -355,7 +355,7 @@ const SecurityFeatures: React.FC = () => {
           />
         </Carousel>
       </section>
-    </div>
+    </section>
   );
 };
 
