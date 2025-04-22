@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 // Define the structure of our knowledge base items
 interface KnowledgeItem {
@@ -81,15 +81,16 @@ const Chatbot: React.FC = () => {
     "Hello! I'm the Scrubbe Assistant. I can help you learn about our SIEM & SOAR platform, navigate documentation, or connect you with our team. How can I assist you today?";
 
   // Function to add a message to the chat
-  const addMessage = (text: string, isUser: boolean = false) => {
+  // Function to add a message to the chat
+  const addMessage = useCallback((text: string, isUser: boolean = false) => {
     setMessages((prev) => [...prev, { text, isUser }]);
-  };
+  }, []);
 
   // Function to show quick links
-  const showQuickLinks = () => {
+  const showQuickLinks = useCallback(() => {
     // Simulate a message asking if the user wants to learn about topics
     addMessage("Would you like to learn about any of these topics?");
-  };
+  }, [addMessage]);
 
   // Function to process user input and generate a response
   const processInput = (input: string): string => {
@@ -219,7 +220,7 @@ const Chatbot: React.FC = () => {
         }, 500);
       }, 300);
     }
-  }, [isOpen]);
+  }, [isOpen, welcomeMessage, addMessage, showQuickLinks]);
 
   return (
     <div className="fixed bottom-3 right-3 z-50">

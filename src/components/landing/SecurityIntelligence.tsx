@@ -5,7 +5,7 @@ import { Button } from "@heroui/react";
 
 function SecurityIntelligence() {
   return (
-    <aside className="w-full h-auto">
+    <aside className="w-full h-auto py-12">
       <div className="h-auto w-full flex items-center flex-col py-2">
         <div className="container w-full h-full">
           {/* Header */}

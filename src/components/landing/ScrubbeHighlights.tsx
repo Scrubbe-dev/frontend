@@ -3,7 +3,7 @@ import { CheckCircle } from "lucide-react";
 
 export default function ScrubbeHighlights() {
   return (
-    <div className="min-w-[320px] max-w-7xl mx-auto bg-gray-50 rounded-lg p-8 shadow-sm">
+    <div className="min-w-[320px] max-w-7xl mx-auto bg-gray-50 rounded-lg px-8 py-12 shadow-sm">
       <div className="max-w-2xl mx-auto">
         <h2 className="text-3xl font-bold text-gray-900 mb-8">
           What Scrubbe can do for your business

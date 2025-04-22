@@ -110,7 +110,7 @@ function SeamlessIntegrations() {
   };
 
   return (
-    <aside className="w-full min-h-full xl:py-6 px-6 md:px-12">
+    <aside className="w-full h-auto py-12 px-6 md:px-12">
       <div className="h-full w-full flex items-center flex-col">
         <div className="container w-full h-full">
           <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
