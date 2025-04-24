@@ -5,6 +5,7 @@ import { HeroProvider } from "@/provider/hero-provider";
 import { ZustandProvider } from "@/zustand/ZustandProvider";
 import CookieConsentModal from "@/components/landing/CookieConsentModal";
 import Chatbot from "@/components/landing/Chatbot";
+import AnnouncementBar from "@/components/landing/AnnouncementBar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,6 +34,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ZustandProvider>
+          <AnnouncementBar />
           <HeroProvider>
             {children}
             <CookieConsentModal />
