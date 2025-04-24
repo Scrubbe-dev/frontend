@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { Button } from "@heroui/react";
 
 function CompromiseChecker() {
   const [isChecking, setIsChecking] = useState(false);
@@ -21,8 +22,23 @@ function CompromiseChecker() {
   };
 
   return (
-    <aside className="w-full bg-slate-100 rounded-lg shadow-md overflow-hidden px-4 md:px-6 py-12 flex flex-col">
-      <div className="flex flex-col md:flex-row flex-grow">
+    <section className="w-full bg-slate-100 rounded-lg shadow-md overflow-hidden px-4 md:px-6 py-12 flex flex-col">
+      {/* Header */}
+      <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
+        <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold px-4 text-center">
+          Built on Scrubbe’s Secure Intelligence Engine
+        </div>
+        <div className="bg-emerald-500 h-1 w-16 rounded-full"></div>
+      </div>
+
+      {/* Subheading */}
+      <div className="w-full h-full flex items-center justify-center py-4">
+        <span className="h-fit xl:w-3/6 text-wrap text-center text-[1rem] md:text-[1.3rem]  text-muted-foreground px-2 xl:px-0 font-Raleway font-medium">
+          Scrubbe is your first line of defense instantly
+        </span>
+      </div>
+
+      <aside className="flex flex-col md:flex-row flex-grow">
         {/* Left column with title and form */}
         <div className="w-full md:w-1/2 bg-gradient-to-br from-slate-800 to-blue-900 p-6 md:p-8 rounded-lg">
           <div className="flex flex-col h-full justify-center space-y-6">
@@ -238,15 +254,19 @@ function CompromiseChecker() {
             </div>
           )}
         </div>
-      </div>
+      </aside>
 
       {/* Single trial button centered at bottom of entire component */}
       <div className="mt-8 px-4 md:px-8 mb-4">
-        <button className="bg-colorScRed hover:bg-red-700 text-white font-semibold font-Inter text-md rounded-sm mx-auto block w-full md:w-1/3 py-3">
+        <Button
+          size="lg"
+          className="bg-red-600 hover:bg-red-800 text-white 
+                     font-Inter font-semibold text-md rounded-sm mx-auto block"
+        >
           Start free trial
-        </button>
+        </Button>
       </div>
-    </aside>
+    </section>
   );
 }
 

@@ -67,11 +67,13 @@ function HomePage() {
                 <CardFooter className="mt-8 w-full">
                   <div className="space-x-4 w-full flex justify-center xl:justify-start">
                     <Button
-                      className="bg-blue-600 text-white font-semibold  font-Inter  text-md rounded-sm"
                       size="lg"
+                      className="bg-red-600 hover:bg-red-800 text-white 
+             font-Inter font-semibold text-md rounded-sm"
                     >
                       Start free trial
                     </Button>
+
                     <Button
                       className=" text-white font-Inter font-semibold border-white  text-md rounded-sm"
                       color="secondary"

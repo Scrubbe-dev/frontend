@@ -1,14 +1,16 @@
 "use client";
 import React, { useEffect, useRef, RefObject } from "react";
-import ChartSystem from "@/components/landing/ChartSystem";
+//import ChartSystem from "@/components/landing/ChartSystem";
 import ChartFraud from "@/components/landing/ChartFraud";
+import ChartTransaction from "@/components/landing/ChartTransaction";
+import { Button } from "@heroui/react";
 
 const ChartScroll = () => {
   const scrollTrackRef = useRef<HTMLDivElement>(null);
 
-  // Define charts
+  // Define charts  { id: "fraud", Component: ChartFraud },
   const charts = [
-    { id: "system", Component: ChartSystem },
+    { id: "transaction", Component: ChartTransaction },
     { id: "fraud", Component: ChartFraud },
   ];
 
@@ -49,11 +51,15 @@ const ChartScroll = () => {
 
   return (
     <div className="w-full py-12 bg-gray-50">
-      <h2 className="text-3xl font-bold text-center mb-8">
-        Security Analytics Dashboard
-      </h2>
+      {/* Header */}
+      <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
+        <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold px-4 text-center">
+          Security Analytics Dashboard
+        </div>
+        <div className="bg-emerald-500 h-1 w-16 rounded-full"></div>
+      </div>
 
-      <div className="w-full overflow-hidden">
+      <div className="w-full overflow-hidden mt-4">
         <div
           ref={scrollTrackRef}
           className="w-full overflow-hidden whitespace-nowrap"
@@ -71,10 +77,21 @@ const ChartScroll = () => {
         </div>
       </div>
 
-      <div className="mt-8 px-4 md:px-8 mb-4">
-        <button className="bg-colorScRed hover:bg-red-700 text-white font-semibold font-Inter text-md rounded-sm mx-auto block w-full md:w-1/3 py-3">
+      <div className="mt-8 px-1 md:px-8 mb-4 flex flex-row gap-4 md:gap-8 justify-center">
+        <Button
+          size="lg"
+          className="bg-red-600 hover:bg-red-800 text-white 
+    font-Inter font-semibold text-[0.75rem] sm:text-[0.9rem] md:text-[1.1rem] rounded-sm transition-colors duration-200 px-1 sm:px-4"
+        >
+          Explore our Demo Dashboards
+        </Button>
+        <Button
+          size="lg"
+          className="bg-red-600 hover:bg-red-800 text-white 
+    font-Inter font-semibold text-[0.75rem] sm:text-[0.9rem] md:text-[1.1rem] rounded-sm transition-colors duration-200 px-1 sm:px-4"
+        >
           Start free trial
-        </button>
+        </Button>
       </div>
     </div>
   );

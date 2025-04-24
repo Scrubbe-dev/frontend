@@ -84,14 +84,14 @@ function SeamlessIntegrations() {
           <div className="font-Raleway font-bold text-base mb-1 text-black">
             {item.title}
           </div>
-          <div className="font-Poppins text-[0.75rem] text-black text-opacity-80 h-8 w-full text-pretty">
+          <div className="font-Poppins text-[0.75rem] text-black text-opacity-80 h-8 w-full break-words line-clamp-2 whitespace-normal">
             {item.description}
           </div>
         </div>
       </div>
     </Link>
   );
-
+  /* text-pretty */
   const renderScrollingRow = (
     data: IntegrationItem[],
     ref: RefObject<HTMLDivElement>
@@ -114,14 +114,14 @@ function SeamlessIntegrations() {
       <div className="h-full w-full flex items-center flex-col">
         <div className="container w-full h-full">
           <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
-            <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold">
+            <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold text-center">
               Seamless Integrations
             </div>
             <div className="bg-[#10b981] h-1 w-16 rounded-full"></div>
           </div>
 
           <div className="w-full h-full flex items-center justify-center py-6">
-            <span className="h-fit xl:w-3/6 text-wrap text-center text-md text-muted-foreground px-2 xl:px-0 font-Raleway font-[500]">
+            <span className="h-fit xl:w-3/6 text-wrap text-center text-[1rem] md:text-[1.3rem]  text-muted-foreground px-2 xl:px-0 font-Raleway font-medium">
               Scrubbe connects with your existing security and cloud
               infrastructure to provide comprehensive visibility and control.
             </span>
