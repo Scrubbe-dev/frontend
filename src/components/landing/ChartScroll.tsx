@@ -1,15 +1,16 @@
 "use client";
 import React, { useEffect, useRef, RefObject } from "react";
-import ChartSystem from "@/components/landing/ChartSystem";
+//import ChartSystem from "@/components/landing/ChartSystem";
 import ChartFraud from "@/components/landing/ChartFraud";
+import ChartTransaction from "@/components/landing/ChartTransaction";
 import { Button } from "@heroui/react";
 
 const ChartScroll = () => {
   const scrollTrackRef = useRef<HTMLDivElement>(null);
 
-  // Define charts
+  // Define charts  { id: "fraud", Component: ChartFraud },
   const charts = [
-    { id: "system", Component: ChartSystem },
+    { id: "transaction", Component: ChartTransaction },
     { id: "fraud", Component: ChartFraud },
   ];
 
@@ -72,7 +73,14 @@ const ChartScroll = () => {
         </div>
       </div>
 
-      <div className="mt-8 px-4 md:px-8 mb-4">
+      <div className="mt-8 px-4 md:px-8 mb-4 flex gap-8">
+        <Button
+          size="lg"
+          className="bg-red-600 hover:bg-red-800 text-white 
+                                           font-Inter font-semibold text-md rounded-sm mx-auto block transition-colors duration-200"
+        >
+          Explore our Demo Dashboards
+        </Button>
         <Button
           size="lg"
           className="bg-red-600 hover:bg-red-800 text-white 
