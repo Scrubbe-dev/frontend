@@ -102,9 +102,21 @@ const Integration: React.FC = () => {
   return (
     <div className="min-w-[320px] max-w-[1440px] mx-auto px-5 py-12 bg-gray-50 text-gray-800">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-center mb-8 text-2xl md:text-3xl font-bold text-blue-700">
-          Scrubbe Enterprise Integration
-        </h1>
+      
+        {/* Header */}
+        <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
+          <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold px-4 text-center">
+            Built for Enterprise. Ready for Anything
+          </div>
+          <div className="bg-emerald-500 h-1 w-16 rounded-full"></div>
+        </div>
+
+        {/* Subheading */}
+        <div className="w-full h-full flex items-center justify-center py-4">
+          <span className="h-fit xl:w-3/6 text-wrap text-center text-[1rem] md:text-[1.3rem]  text-muted-foreground px-2 xl:px-0 font-Raleway font-medium">
+            Unify data. Automate workflows. Drive decisions
+          </span>
+        </div>
 
         <div className="mb-10">
           {/* Webhook API Integration */}

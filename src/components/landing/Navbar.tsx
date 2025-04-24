@@ -50,19 +50,19 @@ const Navbar = () => {
     {
       label: "Features",
       dropdownOptions: [
-        { label: "Analytics Dashboard", href: "#" },
-        { label: "Team Collaboration", href: "#" },
-        { label: "Automation Tools", href: "#" },
-        { label: "Integrations", href: "#" },
+        { label: "API as a service", href: "#" },
+        { label: "Auth SDK as a service", href: "#" },
+        { label: "SIEM", href: "#" },
+        { label: "SOAR", href: "#" },
       ],
     },
     {
       label: "Solutions",
       dropdownOptions: [
-        { label: "For Startups", href: "#" },
-        { label: "For Enterprises", href: "#" },
-        { label: "For Agencies", href: "#" },
+        { label: "SOAR capabilities", href: "#" },
+        { label: "For Medium sized companies", href: "#" },
         { label: "For Developers", href: "#" },
+        { label: "For Enterprise Orgs", href: "#" },
       ],
     },
     {
@@ -71,15 +71,22 @@ const Navbar = () => {
     },
     {
       label: "Documentation",
-      href: "#",
+      dropdownOptions: [
+        { label: "AWS", href: "#" },
+        { label: "Splunk", href: "#" },
+        { label: "Datadog", href: "#" },
+        { label: "GCP", href: "#" },
+        { label: "Azure", href: "#" },
+        { label: "Webhook API", href: "#" },
+      ],
     },
     {
       label: "More",
       dropdownOptions: [
-        { label: "Resources", href: "#" },
         { label: "Blog", href: "#" },
-        { label: "Community", href: "#" },
-        { label: "Support", href: "#" },
+        { label: "Contact Sales", href: "#" },
+        { label: "Contact Us", href: "#" },
+        { label: "Knowledge Base", href: "#" },
       ],
     },
   ];

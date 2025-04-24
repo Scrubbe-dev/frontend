@@ -82,14 +82,14 @@ const Card: React.FC<CardProps> = ({ icon, title, description }) => {
   return (
     <div className="h-full px-4 pb-4 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg rounded-xl bg-white">
       <div className="flex flex-col items-start text-left h-full ">
-        <div className="w-full border-b-[2px] border-scblue my-2">
-          <div className="text-scblue text-4xl inline-block">{icon}</div>
+        <div className="w-full border-b-[2px] border-colorScBlue my-2">
+          <div className="text-colorScBlue text-4xl inline-block">{icon}</div>
         </div>
-        <h3 className="text-scblue text-2xl font-bold mb-4">{title}</h3>
-        <p className="text-gray-800 mb-4">{description}</p>
+        <h3 className="text-colorScBlue text-2xl font-bold mb-4">{title}</h3>
+        <p className="text-black mb-4">{description}</p>
         <Link
           href="/"
-          className="flex items-center text-scblue font-bold mt-auto cursor-pointer hover:underline"
+          className="flex items-center text-colorScBlue font-bold mt-auto cursor-pointer hover:underline"
         >
           Learn More <IoChevronForwardOutline className="ml-1" />
         </Link>
@@ -184,7 +184,7 @@ const CarouselButton: React.FC<CarouselButtonProps> = ({
       disabled={disabled}
       aria-label={direction === "previous" ? "Previous cards" : "Next cards"}
     >
-      <Icon className="text-2xl text-scblue" />
+      <Icon className="text-2xl text-colorScBlue" />
     </button>
   );
 };
@@ -218,8 +218,8 @@ const SecurityFeatures: React.FC = () => {
   }, [isMobile]);
 
   const IconWrapper = ({ Icon }: { Icon: React.ElementType }) => (
-    <div className="p-2 bg-white rounded-full border-2 border-scblue">
-      <Icon className="text-scblue" />
+    <div className="p-2 bg-white rounded-full border-2 border-colorScBlue">
+      <Icon className="text-colorScBlue" />
     </div>
   );
 
@@ -311,15 +311,19 @@ const SecurityFeatures: React.FC = () => {
     <section className="w-full h-auto bg-white flex justify-center py-12">
       <section className="w-full max-w-[1440px] px-4 flex flex-col">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-[1.9rem] md:text-4xl font-bold text-gray-900 mb-4">
+        <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
+          <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold text-center px-4">
             Powerful Security Features
-          </h2>
-          <p className="text-[0.9rem] md:text-[1.2rem] text-gray-700 max-w-4xl mx-auto">
+          </div>
+          <div className="bg-emerald-500 h-1 w-16 rounded-full"></div>
+        </div>
+        {/* Subheading */}
+        <div className="w-full h-full flex items-center justify-center py-4">
+          <span className="h-fit xl:w-3/6 text-wrap text-center text-[1rem] md:text-[1.3rem]  text-muted-foreground px-2 xl:px-0 font-Raleway font-medium">
             Scrubbe offers comprehensive security monitoring and automated
             response capabilities to identify and neutralize threats before they
             impact your business.
-          </p>
+          </span>
         </div>
 
         {/* Carousel */}

@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, RefObject } from "react";
 import ChartSystem from "@/components/landing/ChartSystem";
 import ChartFraud from "@/components/landing/ChartFraud";
+import { Button } from "@heroui/react";
 
 const ChartScroll = () => {
   const scrollTrackRef = useRef<HTMLDivElement>(null);
@@ -72,9 +73,13 @@ const ChartScroll = () => {
       </div>
 
       <div className="mt-8 px-4 md:px-8 mb-4">
-        <button className="bg-colorScRed hover:bg-red-700 text-white font-semibold font-Inter text-md rounded-sm mx-auto block w-full md:w-1/3 py-3">
+        <Button
+          size="lg"
+          className="bg-red-600 hover:bg-red-800 text-white 
+                                           font-Inter font-semibold text-md rounded-sm mx-auto block transition-colors duration-200"
+        >
           Start free trial
-        </button>
+        </Button>
       </div>
     </div>
   );
