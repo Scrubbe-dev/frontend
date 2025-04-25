@@ -14,10 +14,10 @@ const theme = {
     linkHover: "text-green-400", // Adjusted link hover color
   },
   spacing: {
-    padding: "px-4 py-10 sm:pt-0 sm:px-0 sm:pb-8", // Doubled vertical padding
+    padding: "px-4 py-5 sm:pt-0 sm:px-0 sm:pb-4",
     columnGap: "gap-8",
-    itemGap: "gap-2", // Increased from gap-1
-    marginTop: "mt-20", // Doubled from mt-10
+    itemGap: "gap-1",
+    marginTop: "mt-10",
   },
   fonts: {
     title: "font-semibold font-Montserrat text-xl",
@@ -58,9 +58,7 @@ const SocialLink: React.FC<SocialLinkProps> = ({ icon: Icon }) => (
 
 // Footer link component
 const FooterLink: React.FC<FooterLinkProps> = ({ text }) => (
-  <div className="flex items-center justify-start gap-1 mb-4">
-    {" "}
-    {/* Added mb-4 for double spacing */}
+  <div className="flex items-center justify-start gap-1">
     <div className="w-fit gap-1 h-fit items-center rounded-full flex cursor-pointer hover:text-green-400 transition-all justify-start text-[#ebeaff]">
       <ChevronRight size={18} />
       <div className={`w-fit h-fit ${theme.fonts.linkText}`}>{text}</div>
@@ -82,9 +80,7 @@ const ColumnHeader: React.FC<ColumnHeaderProps> = ({ title }) => (
 const FooterColumn: React.FC<FooterColumnProps> = ({ title, links }) => (
   <div className="w-full col-span-1 space-y-6 pt-10">
     <ColumnHeader title={title} />
-    <div className="mt-4">
-      {" "}
-      {/* Increased from mt-2 */}
+    <div className="mt-2">
       {links.map((link, index) => (
         <FooterLink key={index} text={link} />
       ))}
@@ -121,7 +117,7 @@ const Footer: React.FC = () => {
       style={{ backgroundImage: "linear-gradient(135deg, #1e293b, #1e40af)" }}
     >
       <div
-        className={`xl:w-8/12 h-full grid xl:grid-cols-4 ${theme.spacing.columnGap} py-10`} /* Added py-10 for double padding top/bottom */
+        className={`xl:w-8/12 h-full grid xl:grid-cols-4 ${theme.spacing.columnGap}`}
       >
         {/* Company info column */}
         <div className="w-full col-span-1 space-y-6 pt-10">
@@ -130,9 +126,7 @@ const Footer: React.FC = () => {
             Advanced SIEM & SOAR security intelligence platform that protects
             your organization from emerging threats.
           </div>
-          <div className="flex items-center justify-start mt-4 gap-2">
-            {" "}
-            {/* Increased from mt-2 */}
+          <div className="flex items-center justify-start mt-2 gap-2">
             <SocialLink icon={FaTwitter} />
             <SocialLink icon={FaLinkedin} />
             <SocialLink icon={FaGithub} />
