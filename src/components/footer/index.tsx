@@ -3,26 +3,42 @@ import React from "react";
 import { FaDiscord, FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa6";
 import { IconType } from "react-icons";
 
-// Centralized theme configuration
+// Centralized theme configuration - keeping only shared/reused styles
 const theme = {
   colors: {
-    background: "bg-slate-200",
-    text: "text-[#ebeaff]", // Light purple text color
-    accent: "bg-green-400",
-    socialBg: "bg-slate-600", // Darkened social background
-    socialHover: "bg-green-500",
-    linkHover: "text-green-400", // Adjusted link hover color
+    text: "text-[#ebeaff]", // Light purple text color - used in multiple places
   },
   spacing: {
-    padding: "px-4 py-10 sm:pt-0 sm:px-0 sm:pb-8", // Doubled vertical padding
     columnGap: "gap-8",
-    itemGap: "gap-2", // Increased from gap-1
-    marginTop: "mt-20", // Doubled from mt-10
   },
   fonts: {
     title: "font-semibold font-Montserrat text-xl",
     body: "font-Raleway text-sm",
     linkText: "font-Montserrat text-sm",
+  },
+};
+
+// Component-specific styles grouped together
+const componentStyles = {
+  footer: {
+    container:
+      "h-auto w-full flex justify-center px-4 py-10 sm:pt-0 sm:px-0 sm:pb-8 z-10 mt-20 border-black border-t-[8px]",
+    background: "linear-gradient(135deg, #1e293b, #1e40af)",
+    innerContainer: "xl:w-8/12 h-full grid xl:grid-cols-4 py-10",
+  },
+  socialLink: {
+    container:
+      "w-fit h-fit p-2 items-center rounded-full flex hover:-translate-y-1 cursor-pointer hover:bg-green-500 transition-all justify-center bg-slate-600",
+  },
+  footerLink: {
+    container: "flex items-center justify-start gap-1 mb-4",
+    text: "w-fit gap-1 h-fit items-center rounded-full flex cursor-pointer hover:text-green-400 transition-all justify-start",
+  },
+  column: {
+    container: "w-full col-span-1 space-y-6 pt-10",
+    headerContainer: "w-full space-y-2",
+    accent: "w-10 h-1 bg-green-400 rounded-full",
+    linkContainer: "mt-4",
   },
 };
 
@@ -51,17 +67,15 @@ interface ColumnData {
 
 // Social media link component
 const SocialLink: React.FC<SocialLinkProps> = ({ icon: Icon }) => (
-  <div className="w-fit h-fit p-2 items-center rounded-full flex hover:-translate-y-1 cursor-pointer hover:bg-green-500 transition-all justify-center bg-slate-600">
+  <div className={componentStyles.socialLink.container}>
     <Icon size={20} color="#ffffff" />
   </div>
 );
 
 // Footer link component
 const FooterLink: React.FC<FooterLinkProps> = ({ text }) => (
-  <div className="flex items-center justify-start gap-1 mb-4">
-    {" "}
-    {/* Added mb-4 for double spacing */}
-    <div className="w-fit gap-1 h-fit items-center rounded-full flex cursor-pointer hover:text-green-400 transition-all justify-start text-[#ebeaff]">
+  <div className={componentStyles.footerLink.container}>
+    <div className={`${componentStyles.footerLink.text} ${theme.colors.text}`}>
       <ChevronRight size={18} />
       <div className={`w-fit h-fit ${theme.fonts.linkText}`}>{text}</div>
     </div>
@@ -70,21 +84,19 @@ const FooterLink: React.FC<FooterLinkProps> = ({ text }) => (
 
 // Column header component
 const ColumnHeader: React.FC<ColumnHeaderProps> = ({ title }) => (
-  <div className="w-full space-y-2">
+  <div className={componentStyles.column.headerContainer}>
     <div className={`w-fit h-fit ${theme.fonts.title} ${theme.colors.text}`}>
       {title}
     </div>
-    <div className="w-10 h-1 bg-green-400 rounded-full"></div>
+    <div className={componentStyles.column.accent}></div>
   </div>
 );
 
 // Column component
 const FooterColumn: React.FC<FooterColumnProps> = ({ title, links }) => (
-  <div className="w-full col-span-1 space-y-6 pt-10">
+  <div className={componentStyles.column.container}>
     <ColumnHeader title={title} />
-    <div className="mt-4">
-      {" "}
-      {/* Increased from mt-2 */}
+    <div className={componentStyles.column.linkContainer}>
       {links.map((link, index) => (
         <FooterLink key={index} text={link} />
       ))}
@@ -117,22 +129,20 @@ const Footer: React.FC = () => {
 
   return (
     <div
-      className={`h-auto w-full flex justify-center ${theme.spacing.padding} z-10 ${theme.spacing.marginTop}`}
-      style={{ backgroundImage: "linear-gradient(135deg, #1e293b, #1e40af)" }}
+      className={componentStyles.footer.container}
+      style={{ backgroundImage: componentStyles.footer.background }}
     >
       <div
-        className={`xl:w-8/12 h-full grid xl:grid-cols-4 ${theme.spacing.columnGap} py-10`} /* Added py-10 for double padding top/bottom */
+        className={`${componentStyles.footer.innerContainer} ${theme.spacing.columnGap}`}
       >
         {/* Company info column */}
-        <div className="w-full col-span-1 space-y-6 pt-10">
+        <div className={componentStyles.column.container}>
           <ColumnHeader title="Scrubbe" />
           <div className={`w-full ${theme.fonts.body} ${theme.colors.text}`}>
             Advanced SIEM & SOAR security intelligence platform that protects
             your organization from emerging threats.
           </div>
           <div className="flex items-center justify-start mt-4 gap-2">
-            {" "}
-            {/* Increased from mt-2 */}
             <SocialLink icon={FaTwitter} />
             <SocialLink icon={FaLinkedin} />
             <SocialLink icon={FaGithub} />
