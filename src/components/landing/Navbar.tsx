@@ -184,7 +184,7 @@ const Navbar = () => {
               <FiGlobe size={24} />
             </button>
             <Link
-              href="#"
+              href="/auth"
               className="px-6 py-2 text-colorScPink bg-colorScBlue rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap focus:outline-none"
             >
               Login

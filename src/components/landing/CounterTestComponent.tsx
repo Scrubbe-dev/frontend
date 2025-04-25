@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useAppStore } from "../../zustand/ZustandProvider";
+import { useAppStore } from "../../store/StoreProvider";
 
 const CounterTestComponent: React.FC = () => {
   const counterState = useAppStore((state) => state);
