@@ -6,7 +6,7 @@ import SecurityIntelligence from "@/components/landing/SecurityIntelligence";
 import SeamlessIntegrations from "@/components/landing/SeamlessIntegrations";
 import CompromiseChecker from "@/components/landing/CompromiseChecker";
 import Integration from "@/components/landing/Integration";
-import ChartScroll from "@/components/landing/ChartScroll";
+import ChartHome from "@/components/landing/ChartHome";
 import ScrubbeHighlights from "@/components/landing/ScrubbeHighlights";
 import { Button, Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
 import React from "react";
@@ -127,7 +127,7 @@ function HomePage() {
 
       <Integration />
 
-      <ChartScroll />
+      <ChartHome />
 
       <ScrubbeHighlights />
     </MainLayout>
