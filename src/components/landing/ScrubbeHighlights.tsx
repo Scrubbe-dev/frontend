@@ -25,6 +25,7 @@ export default function ScrubbeHighlights() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // Log the form values when Contact Sales is clicked
     console.log("Form submitted with values:", formData);
     // You could add additional form handling logic here
   };
@@ -85,8 +86,8 @@ export default function ScrubbeHighlights() {
             </Button>
           </div>
 
-          {/* Right side - Contact form */}
-          <div className="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-sm">
+          {/* Right side - Contact form with nice border */}
+          <aside className="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-sm border-2 border-blue-500 border-opacity-40">
             <h3 className="text-xl font-semibold text-gray-800 mb-6">
               Contact our sales team
             </h3>
@@ -149,6 +150,7 @@ export default function ScrubbeHighlights() {
               </div>
 
               <Button
+                type="submit"
                 size="lg"
                 className="bg-red-600 hover:bg-red-800 text-white 
                                    font-Inter font-semibold text-md rounded-sm mx-auto block transition-colors duration-200"
@@ -156,7 +158,7 @@ export default function ScrubbeHighlights() {
                 Contact Sales
               </Button>
             </form>
-          </div>
+          </aside>
         </div>
       </div>
     </section>
