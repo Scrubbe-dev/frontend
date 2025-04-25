@@ -110,7 +110,7 @@ function SecurityIntelligence() {
               </Card>
               <div className="w-full flex justify-center mt-4">
                 <Button
-                  className="bg-red-600 hover:bg-red-800 text-white font-semibold font-Inter text-md rounded-sm"
+                  className="bg-blue-600 hover:bg-blue-800 text-white font-semibold font-Inter text-md rounded-sm"
                   size="lg"
                 >
                   Start free trial

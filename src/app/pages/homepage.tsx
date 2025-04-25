@@ -68,7 +68,7 @@ function HomePage() {
                   <div className="space-x-4 w-full flex justify-center xl:justify-start">
                     <Button
                       size="lg"
-                      className="bg-red-600 hover:bg-red-800 text-white 
+                      className="bg-blue-600 hover:bg-blue-800 text-white 
              font-Inter font-semibold text-md rounded-sm"
                     >
                       Start free trial
@@ -86,8 +86,10 @@ function HomePage() {
                 </CardFooter>
               </Card>
             </div>
-            <div className="w-full h-fit flex px-2 gap-4 xl:px-0 items-center justify-center xl:grid xl:grid-cols-3 py-10">
-              <div className="py-1 xl:px-4 flex justify-center col-span-1 flex-col space-y-2 xl:border-l-2 xl:border-l-green-400">
+            <aside className="w-full h-fit px-2 gap-4 xl:px-0 flex items-center justify-between  py-10">
+              <div className="h-[4rem] bg-green-400 w-[2px]"></div>
+
+              <div className="py-1 xl:px-4 flex justify-center col-span-1 flex-col space-y-2 ">
                 <span className="font-Poppins text-white font-bold text-3xl tracking-wide">
                   98.7%
                 </span>
@@ -95,7 +97,9 @@ function HomePage() {
                   Threat Detection
                 </div>
               </div>
-              <div className="py-1 xl:px-4 flex justify-center items-center xl:item-start col-span-1 flex-col space-y-2 xl:border-l-2 xl:border-l-green-400">
+              <div className="h-[4rem] bg-green-400 w-[2px]"></div>
+
+              <div className="py-1 xl:px-4 flex justify-center items-center xl:item-start col-span-1 flex-col space-y-2">
                 <span className="w-fit h-fit  font-Poppins text-white font-bold text-3xl tracking-wide">
                   87%
                 </span>
@@ -103,15 +107,8 @@ function HomePage() {
                   Faster Response
                 </div>
               </div>
-              <div className="py-1 xl:px-4 flex justify-center  sm:items-center col-span-1 flex-col space-y-2 xl:border-l-2 xl:border-l-green-400">
-                <span className="font-Poppins text-white font-bold text-3xl tracking-wide whitespace-nowrap">
-                  Tons of
-                </span>
-                <div className="text-sm xl:text-md font-normal font-Montserrat text-white/60 ">
-                  Integrations
-                </div>
-              </div>
-            </div>
+              <div className="h-[4rem] bg-green-400 w-[2px]"></div>
+            </aside>
           </div>
           <div className="col-span-1  flex justify-center items-center w-full">
             <div className="px-4 xl:px-0 w-full">

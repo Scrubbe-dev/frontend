@@ -260,7 +260,7 @@ function CompromiseChecker() {
       <div className="mt-8 px-4 md:px-8 mb-4">
         <Button
           size="lg"
-          className="bg-red-600 hover:bg-red-800 text-white 
+          className="bg-blue-600 hover:bg-blue-800 text-white 
                      font-Inter font-semibold text-md rounded-sm mx-auto block"
         >
           Start free trial

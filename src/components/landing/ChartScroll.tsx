@@ -80,14 +80,14 @@ const ChartScroll = () => {
       <div className="mt-8 px-1 md:px-8 mb-4 flex flex-row gap-4 md:gap-8 justify-center">
         <Button
           size="lg"
-          className="bg-red-600 hover:bg-red-800 text-white 
+          className="bg-blue-600 hover:bg-blue-800 text-white 
     font-Inter font-semibold text-[0.75rem] sm:text-[0.9rem] md:text-[1.1rem] rounded-sm transition-colors duration-200 px-1 sm:px-4"
         >
           Explore our Demo Dashboards
         </Button>
         <Button
           size="lg"
-          className="bg-red-600 hover:bg-red-800 text-white 
+          className="bg-blue-600 hover:bg-blue-800 text-white 
     font-Inter font-semibold text-[0.75rem] sm:text-[0.9rem] md:text-[1.1rem] rounded-sm transition-colors duration-200 px-1 sm:px-4"
         >
           Start free trial

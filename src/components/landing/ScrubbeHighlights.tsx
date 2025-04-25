@@ -79,7 +79,7 @@ export default function ScrubbeHighlights() {
 
             <Button
               size="lg"
-              className="bg-red-600 hover:bg-red-800 text-white 
+              className="bg-blue-600 hover:bg-blue-800 text-white 
                                    font-Inter font-semibold text-md rounded-sm mx-auto block transition-colors duration-200"
             >
               Talk to an expert
@@ -152,7 +152,7 @@ export default function ScrubbeHighlights() {
               <Button
                 type="submit"
                 size="lg"
-                className="bg-red-600 hover:bg-red-800 text-white 
+                className="bg-blue-600 hover:bg-blue-800 text-white 
                                    font-Inter font-semibold text-md rounded-sm mx-auto block transition-colors duration-200"
               >
                 Contact Sales
