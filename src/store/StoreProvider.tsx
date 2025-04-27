@@ -1,13 +1,13 @@
 "use client";
 import { ReactNode, createContext, useContext, useRef } from "react";
 import { useStore } from "zustand";
-import { createBoundStore, BoundStoreType } from "./store";
+import { createBoundStore, BoundStoreType } from ".";
 
 const StoreContext = createContext<
   ReturnType<typeof createBoundStore> | undefined
 >(undefined);
 
-export function ZustandProvider({ children }: { children: ReactNode }) {
+export function StoreProvider({ children }: { children: ReactNode }) {
   const storeRef = useRef<ReturnType<typeof createBoundStore> | null>(null);
   if (!storeRef.current) {
     storeRef.current = createBoundStore();

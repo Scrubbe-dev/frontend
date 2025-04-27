@@ -2,24 +2,45 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
+const COOKIE_NAME = "announcement_dismissed";
+const COOKIE_EXPIRY_HOURS = 24;
+
 const AnnouncementBar = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Show the announcement bar on component mount
-    setIsVisible(true);
+    // Check if the cookie exists
+    const hasDismissedCookie = document.cookie
+      .split("; ")
+      .some((row) => row.startsWith(`${COOKIE_NAME}=`));
 
-    // Set a timer to hide it after 20 seconds
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 20000);
+    // Only show the announcement if cookie doesn't exist
+    if (!hasDismissedCookie) {
+      setIsVisible(true);
 
-    // Clear the timer when component unmounts
-    return () => clearTimeout(timer);
+      // Set a timer to hide it after 20 seconds
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+        setDismissedCookie();
+      }, 20000);
+
+      // Clear the timer when component unmounts
+      return () => clearTimeout(timer);
+    }
   }, []);
+
+  // Function to set cookie with 24-hour expiration
+  const setDismissedCookie = () => {
+    const expiryDate = new Date();
+    expiryDate.setTime(
+      expiryDate.getTime() + COOKIE_EXPIRY_HOURS * 60 * 60 * 1000
+    );
+    document.cookie = `${COOKIE_NAME}=true; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
+  };
 
   const handleDismiss = () => {
     setIsVisible(false);
+    setDismissedCookie();
   };
 
   return (
