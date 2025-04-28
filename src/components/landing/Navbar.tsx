@@ -265,7 +265,7 @@ const Navbar = () => {
 
               <div className="pt-6 border-t border-gray-200">
                 <Link
-                  href="/login"
+                  href="/auth"
                   onClick={() => setIsModalOpen(false)}
                   className="block w-full text-center py-3 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors focus:outline-none text-lg font-medium"
                 >
