@@ -51,7 +51,7 @@ const Navbar = () => {
       label: "Features",
       dropdownOptions: [
         { label: "API as a service", href: "#" },
-        { label: "Auth SDK as a service", href: "#" },
+        { label: "Scrubbe Authentication SDK", href: "#" },
         { label: "SIEM", href: "#" },
         { label: "SOAR", href: "#" },
       ],
@@ -59,7 +59,7 @@ const Navbar = () => {
     {
       label: "Solutions",
       dropdownOptions: [
-        { label: "SOAR capabilities", href: "#" },
+        { label: "For Startups", href: "#" },
         { label: "For Medium sized companies", href: "#" },
         { label: "For Developers", href: "#" },
         { label: "For Enterprise Orgs", href: "#" },
