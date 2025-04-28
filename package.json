@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@bprogress/next": "^3.2.12",
     "@heroui/react": "^2.7.5",
     "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-scroll-area": "^1.2.3",
