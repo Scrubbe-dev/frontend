@@ -1,35 +1,50 @@
 import type { StateCreator } from "zustand";
-import axios from '@/lib/axios';
+import api from "@/lib/axios";
+import Cookies from "js-cookie";
+import { AxiosError } from "axios";
+
+// Define interface for API error responses
+interface APIErrorResponse {
+  message: string;
+  errors?: Record<string, string[]>;
+  statusCode?: number;
+}
 
 export type User = {
   id: string;
   email: string;
   firstName: string;
   lastName: string;
-  role: string;
-  avatar?: string;
-  lastLogin?: string;
+  isVerified: boolean;
+  createdAt: string;
 };
 
-export type SliceAuthType = {
+export type AuthResponse = {
+  user: User;
+  tokens: {
+    accessToken: string;
+    refreshToken: string;
+  };
+};
+
+export type SliceAuthDevType = {
   user: User | null;
-  accessToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  register: (
-    userData: Omit<User, "id" | "role" | "lastLogin">
-  ) => Promise<void>;
-  resetPassword: (email: string) => Promise<void>;
-  updateUser: (userData: Partial<User>) => void;
+  register: (userData: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+  }) => Promise<void>;
   clearError: () => void;
 };
 
-export const createAuthSlice: StateCreator<SliceAuthType> = (set, get) => ({
+export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
   user: null,
-  accessToken: null,
   isAuthenticated: false,
   isLoading: false,
   error: null,
@@ -37,103 +52,102 @@ export const createAuthSlice: StateCreator<SliceAuthType> = (set, get) => ({
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
-      // This would be replaced with your actual API call
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const response = await api.post<AuthResponse>("/api/v1/login", {
+        email,
+        password,
       });
 
-      if (!response.ok) {
-        throw new Error("Invalid credentials");
-      }
+      const { user, tokens } = response.data;
 
-      const data = await response.json();
+      // Store tokens in cookies
+      Cookies.set("accessToken", tokens.accessToken, {
+        secure: true,
+        sameSite: "strict",
+      });
+      Cookies.set("refreshToken", tokens.refreshToken, {
+        secure: true,
+        sameSite: "strict",
+      });
+
       set({
-        user: data.user,
-        accessToken: data.accessToken,
+        user,
         isAuthenticated: true,
         isLoading: false,
       });
     } catch (error) {
+      // Handle axios error with proper typing
+      const axiosError = error as AxiosError<APIErrorResponse>;
+      const errorMessage =
+        axiosError.response?.data?.message ||
+        axiosError.message ||
+        "Login failed";
+
       set({
-        error: error instanceof Error ? error.message : "Login failed",
+        error: errorMessage,
         isLoading: false,
       });
     }
   },
 
   logout: () => {
-    // Optional: Make API call to invalidate token on server
+    // Remove cookies
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
+
     set({
       user: null,
-      accessToken: null,
       isAuthenticated: false,
     });
   },
 
   register: async (userData) => {
     set({ isLoading: true, error: null });
+
+     console.log("Registration attempt with:", {
+       email: userData.email,
+       password: userData.password,
+       firstName: userData.firstName,
+       lastName: userData.lastName,
+     });
+     
     try {
-      // This would be replaced with your actual API call
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
+      const response = await api.post<AuthResponse>("/api/v1/register", {
+        email: userData.email,
+        password: userData.password,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
       });
 
-      if (!response.ok) {
-        throw new Error("Registration failed");
-      }
+      const { user, tokens } = response.data;
 
-      const data = await response.json();
+      // Store tokens in cookies
+      Cookies.set("accessToken", tokens.accessToken, {
+        secure: true,
+        sameSite: "strict",
+      });
+      Cookies.set("refreshToken", tokens.refreshToken, {
+        secure: true,
+        sameSite: "strict",
+      });
+
       set({
-        user: data.user,
-        accessToken: data.accessToken,
+        user,
         isAuthenticated: true,
         isLoading: false,
       });
     } catch (error) {
+      // Handle axios error with proper typing
+      const axiosError = error as AxiosError<APIErrorResponse>;
+      const errorMessage =
+        axiosError.response?.data?.message ||
+        axiosError.message ||
+        "Registration failed";
+
       set({
-        error: error instanceof Error ? error.message : "Registration failed",
+        error: errorMessage,
         isLoading: false,
       });
     }
-  },
-
-  resetPassword: async (email) => {
-    set({ isLoading: true, error: null });
-    try {
-      // This would be replaced with your actual API call
-      const response = await fetch("/api/auth/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Password reset request failed");
-      }
-
-      set({ isLoading: false });
-      return;
-    } catch (error) {
-      set({
-        error: error instanceof Error ? error.message : "Password reset failed",
-        isLoading: false,
-      });
-    }
-  },
-
-  updateUser: (userData) => {
-    const currentUser = get().user;
-    if (!currentUser) return;
-
-    set({
-      user: { ...currentUser, ...userData },
-    });
-
-    // You could also add an API call here to update the user on the server
   },
 
   clearError: () => set({ error: null }),

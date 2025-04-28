@@ -1,16 +1,21 @@
 import { createStore } from "zustand/vanilla";
 import { devtools, persist } from "zustand/middleware";
 import { createAuthSlice, SliceAuthType } from "./sliceAuth";
+import { createAuthDevSlice, SliceAuthDevType } from "./sliceAuthDev";
 import { createUiSlice, SliceUiType } from "./sliceUi";
 import { createCounterSlice, SliceCounterType } from "./sliceCounter";
 
-export type BoundStoreType = SliceAuthType & SliceUiType & SliceCounterType;
+export type BoundStoreType = SliceAuthType &
+  SliceAuthDevType &
+  SliceUiType &
+  SliceCounterType;
 
 export const createBoundStore = () => {
   const store = createStore<BoundStoreType>()(
     persist(
       devtools((set, get, store) => ({
         ...createAuthSlice(set, get, store),
+        ...createAuthDevSlice(set, get, store),
         ...createUiSlice(set, get, store),
         ...createCounterSlice(set, get, store),
       })),

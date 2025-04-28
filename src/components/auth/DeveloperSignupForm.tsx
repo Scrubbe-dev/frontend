@@ -1,9 +1,9 @@
-// app/auth/DeveloperSignupForm.tsx
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
+import { useAppStore } from "@/store/StoreProvider"; 
 
 // Define the schema for form validation
 const developerSignupSchema = z
@@ -32,8 +32,15 @@ export default function DeveloperSignupForm() {
   // Add state for password visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  // Add state for loading indication
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Get the register function and other auth state from Zustand
+  const developerSignupFormState = useAppStore((state) => state);
+    const {
+      register: registerUser,
+      isLoading,
+      error,
+      clearError,
+    } = developerSignupFormState;
 
   const {
     register,
@@ -51,15 +58,30 @@ export default function DeveloperSignupForm() {
     },
   });
 
-  const onSubmit = (data: DeveloperSignupFormData) => {
-    // Set submitting state to show loading animation
-    setIsSubmitting(true);
+  const onSubmit = async (data: DeveloperSignupFormData) => {
+    // Clear any previous errors
+    clearError();
 
-    // Delay the console.log by 5 seconds
-    setTimeout(() => {
-      console.log("Developer signup:", data);
-      setIsSubmitting(false);
-    }, 5000);
+    try {
+      // Split the fullName into firstName and lastName
+      const nameParts = data.fullName.trim().split(/\s+/);
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || "";
+
+      // Call the register function from our auth slice with just the required fields
+      await registerUser({
+        email: data.email,
+        password: data.password,
+        firstName,
+        lastName,
+      });
+
+      // If successful, the user will be logged in automatically
+      // The auth slice will handle setting the user and tokens
+    } catch {
+      // If there's an error, it will be handled by the auth slice
+      // We don't need to do anything here as the error state will be updated
+    }
   };
 
   // Toggle password visibility
@@ -77,6 +99,17 @@ export default function DeveloperSignupForm() {
       <h1 className="text-xl md:text-2xl text-indigo-900 font-bold mb-4 md:mb-6">
         Developer Signup
       </h1>
+
+      {/* Show error message if there is one */}
+      {error && (
+        <div
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+          role="alert"
+        >
+          <span className="block sm:inline">{error}</span>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)} className="mt-4 md:mt-6">
         <div className="flex flex-col md:flex-row gap-3 md:gap-4 mb-3 md:mb-4">
           <div className="w-full md:flex-1">
@@ -233,14 +266,14 @@ export default function DeveloperSignupForm() {
         <div className="mb-4 md:mb-5">
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isLoading}
             className={`w-full py-2 md:py-3 px-4 md:px-6 bg-indigo-900 text-white font-semibold uppercase rounded-md transition duration-300 text-sm md:text-base ${
-              isSubmitting
+              isLoading
                 ? "opacity-75 cursor-not-allowed"
                 : "hover:bg-indigo-700"
             }`}
           >
-            {isSubmitting ? (
+            {isLoading ? (
               <div className="flex items-center justify-center">
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
