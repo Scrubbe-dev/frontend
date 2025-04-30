@@ -1,6 +1,5 @@
 import type { StateCreator } from "zustand";
-import api from "@/lib/axios";
-import Cookies from "js-cookie";
+import { api, localApi } from "@/lib/axios";
 import { AxiosError } from "axios";
 
 // Define interface for API error responses
@@ -59,14 +58,10 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
 
       const { user, tokens } = response.data;
 
-      // Store tokens in cookies
-      Cookies.set("accessToken", tokens.accessToken, {
-        secure: true,
-        sameSite: "strict",
-      });
-      Cookies.set("refreshToken", tokens.refreshToken, {
-        secure: true,
-        sameSite: "strict",
+      // Call local API route to set cookies instead of external API
+      await localApi.post("/api/cookies/set", {
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
       });
 
       set({
@@ -89,10 +84,13 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
     }
   },
 
-  logout: () => {
-    // Remove cookies
-    Cookies.remove("accessToken");
-    Cookies.remove("refreshToken");
+  logout: async () => {
+    // Call local API route to clear cookies
+    try {
+      await localApi.post("/api/cookies/clear");
+    } catch (error) {
+      console.error("Error clearing cookies:", error);
+    }
 
     set({
       user: null,
@@ -103,13 +101,13 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
   register: async (userData) => {
     set({ isLoading: true, error: null });
 
-     console.log("Registration attempt with:", {
-       email: userData.email,
-       password: userData.password,
-       firstName: userData.firstName,
-       lastName: userData.lastName,
-     });
-     
+    console.log("Registration attempt with:", {
+      email: userData.email,
+      password: userData.password,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+    });
+
     try {
       const response = await api.post<AuthResponse>("/api/v1/register", {
         email: userData.email,
@@ -120,14 +118,10 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
 
       const { user, tokens } = response.data;
 
-      // Store tokens in cookies
-      Cookies.set("accessToken", tokens.accessToken, {
-        secure: true,
-        sameSite: "strict",
-      });
-      Cookies.set("refreshToken", tokens.refreshToken, {
-        secure: true,
-        sameSite: "strict",
+      // Call local API route to set cookies
+      await localApi.post("/api/cookies/set", {
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
       });
 
       set({
