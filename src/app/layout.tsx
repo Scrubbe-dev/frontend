@@ -6,7 +6,7 @@ import { StoreProvider } from "@/store/StoreProvider";
 import CookieConsentModal from "@/components/landing/CookieConsentModal";
 import Chatbot from "@/components/landing/Chatbot";
 import AnnouncementBar from "@/components/landing/AnnouncementBar";
-import BprogressProvider from "@/lib/BprogressProvider";
+import NextJsTopLoader from "@/lib/NextJsTopLoader";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,16 +35,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <BprogressProvider>
-          <StoreProvider>
-            <AnnouncementBar />
-            <HeroProvider>
-              {children}
-              <CookieConsentModal />
-              <Chatbot />
-            </HeroProvider>
-          </StoreProvider>
-        </BprogressProvider>
+        <NextJsTopLoader />
+        <StoreProvider>
+          <AnnouncementBar />
+          <HeroProvider>
+            {children}
+            <CookieConsentModal />
+            <Chatbot />
+          </HeroProvider>
+        </StoreProvider>
       </body>
     </html>
   );
