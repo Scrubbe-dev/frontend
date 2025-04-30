@@ -2,24 +2,24 @@ import type { StateCreator } from "zustand";
 import { api, localApi } from "@/lib/axios";
 import { AxiosError } from "axios";
 
-// Define interface for API error responses
 interface APIErrorResponse {
   message: string;
   errors?: Record<string, string[]>;
   statusCode?: number;
 }
 
-export type User = {
+export type DevUser = {
   id: string;
   email: string;
   firstName: string;
   lastName: string;
   isVerified: boolean;
   createdAt: string;
+  lastLogin?: string;
 };
 
-export type AuthResponse = {
-  user: User;
+export type DevAuthResponse = {
+  user: DevUser;
   tokens: {
     accessToken: string;
     refreshToken: string;
@@ -27,50 +27,48 @@ export type AuthResponse = {
 };
 
 export type SliceAuthDevType = {
-  user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-  register: (userData: {
+  devUser: DevUser | null;
+  devIsAuthenticated: boolean;
+  devIsLoading: boolean;
+  devError: string | null;
+  devLogin: (email: string, password: string) => Promise<void>;
+  devLogout: () => void;
+  devRegister: (userData: {
     email: string;
     password: string;
     firstName: string;
     lastName: string;
   }) => Promise<void>;
-  clearError: () => void;
+  devClearError: () => void;
+  devCheckAuthStatus: () => Promise<boolean>;
 };
 
 export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
-  user: null,
-  isAuthenticated: false,
-  isLoading: false,
-  error: null,
+  devUser: null,
+  devIsAuthenticated: false,
+  devIsLoading: false,
+  devError: null,
 
-  login: async (email, password) => {
-    set({ isLoading: true, error: null });
+  devLogin: async (email, password) => {
+    set({ devIsLoading: true, devError: null });
     try {
-      const response = await api.post<AuthResponse>("/api/v1/login", {
+      const response = await api.post<DevAuthResponse>("/api/v1/login", {
         email,
         password,
       });
 
       const { user, tokens } = response.data;
-
-      // Call local API route to set cookies instead of external API
       await localApi.post("/api/cookies/set", {
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,
       });
 
       set({
-        user,
-        isAuthenticated: true,
-        isLoading: false,
+        devUser: user,
+        devIsAuthenticated: true,
+        devIsLoading: false,
       });
     } catch (error) {
-      // Handle axios error with proper typing
       const axiosError = error as AxiosError<APIErrorResponse>;
       const errorMessage =
         axiosError.response?.data?.message ||
@@ -78,38 +76,32 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
         "Login failed";
 
       set({
-        error: errorMessage,
-        isLoading: false,
+        devError: errorMessage,
+        devIsLoading: false,
       });
     }
   },
 
-  logout: async () => {
-    // Call local API route to clear cookies
+  devLogout: async () => {
+    set({ devIsLoading: true });
     try {
       await localApi.post("/api/cookies/clear");
-    } catch (error) {
-      console.error("Error clearing cookies:", error);
+      set({
+        devUser: null,
+        devIsAuthenticated: false,
+        devIsLoading: false,
+      });
+    } catch (err) {
+      console.error("Error clearing cookies:", err);
+      set({ devIsLoading: false });
     }
-
-    set({
-      user: null,
-      isAuthenticated: false,
-    });
   },
 
-  register: async (userData) => {
-    set({ isLoading: true, error: null });
-
-    console.log("Registration attempt with:", {
-      email: userData.email,
-      password: userData.password,
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-    });
+  devRegister: async (userData) => {
+    set({ devIsLoading: true, devError: null });
 
     try {
-      const response = await api.post<AuthResponse>("/api/v1/register", {
+      const response = await api.post<DevAuthResponse>("/api/v1/register", {
         email: userData.email,
         password: userData.password,
         firstName: userData.firstName,
@@ -117,20 +109,17 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
       });
 
       const { user, tokens } = response.data;
-
-      // Call local API route to set cookies
       await localApi.post("/api/cookies/set", {
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,
       });
 
       set({
-        user,
-        isAuthenticated: true,
-        isLoading: false,
+        devUser: user,
+        devIsAuthenticated: true,
+        devIsLoading: false,
       });
     } catch (error) {
-      // Handle axios error with proper typing
       const axiosError = error as AxiosError<APIErrorResponse>;
       const errorMessage =
         axiosError.response?.data?.message ||
@@ -138,11 +127,31 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
         "Registration failed";
 
       set({
-        error: errorMessage,
-        isLoading: false,
+        devError: errorMessage,
+        devIsLoading: false,
       });
     }
   },
 
-  clearError: () => set({ error: null }),
+  devClearError: () => set({ devError: null }),
+
+  devCheckAuthStatus: async () => {
+    set({ devIsLoading: true });
+    try {
+      const response = await api.get<{ user: DevUser }>("/api/v1/me");
+      set({
+        devUser: response.data.user,
+        devIsAuthenticated: true,
+        devIsLoading: false,
+      });
+      return true;
+    } catch {
+      set({
+        devUser: null,
+        devIsAuthenticated: false,
+        devIsLoading: false,
+      });
+      return false;
+    }
+  },
 });
