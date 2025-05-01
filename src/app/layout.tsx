@@ -4,8 +4,10 @@ import "./globals.css";
 import { HeroProvider } from "@/provider/hero-provider";
 import { StoreProvider } from "@/store/StoreProvider";
 import CookieConsentModal from "@/components/landing/CookieConsentModal";
+import CookieToggleButton from "@/components/landing/CookieToggleButton";
 import Chatbot from "@/components/landing/Chatbot";
 import AnnouncementBar from "@/components/landing/AnnouncementBar";
+import NextJsTopLoader from "@/lib/NextJsTopLoader";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,11 +36,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <NextJsTopLoader />
         <StoreProvider>
           <AnnouncementBar />
           <HeroProvider>
             {children}
             <CookieConsentModal />
+            <CookieToggleButton />
             <Chatbot />
           </HeroProvider>
         </StoreProvider>

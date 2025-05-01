@@ -1,11 +1,10 @@
-// app/auth/DeveloperSignupForm.tsx
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
+import { useAppStore } from "@/store/StoreProvider";
 
-// Define the schema for form validation
 const developerSignupSchema = z
   .object({
     fullName: z.string().min(1, "Full name is required"),
@@ -25,15 +24,15 @@ const developerSignupSchema = z
     path: ["confirmPassword"],
   });
 
-// Type for our form data
 type DeveloperSignupFormData = z.infer<typeof developerSignupSchema>;
 
 export default function DeveloperSignupForm() {
-  // Add state for password visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  // Add state for loading indication
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { devRegister, devIsLoading, devError, devClearError } = useAppStore(
+    (state) => state
+  );
 
   const {
     register,
@@ -51,32 +50,43 @@ export default function DeveloperSignupForm() {
     },
   });
 
-  const onSubmit = (data: DeveloperSignupFormData) => {
-    // Set submitting state to show loading animation
-    setIsSubmitting(true);
+  const onSubmit = async (data: DeveloperSignupFormData) => {
+    devClearError();
+    try {
+      const nameParts = data.fullName.trim().split(/\s+/);
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || "";
 
-    // Delay the console.log by 5 seconds
-    setTimeout(() => {
-      console.log("Developer signup:", data);
-      setIsSubmitting(false);
-    }, 5000);
+      await devRegister({
+        email: data.email,
+        password: data.password,
+        firstName,
+        lastName,
+      });
+    } catch (error) {
+      console.error("Registration error:", error);
+    }
   };
 
-  // Toggle password visibility
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  // Toggle confirm password visibility
-  const toggleConfirmPasswordVisibility = () => {
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const toggleConfirmPasswordVisibility = () =>
     setShowConfirmPassword(!showConfirmPassword);
-  };
 
   return (
     <div className="p-4 md:p-8">
       <h1 className="text-xl md:text-2xl text-indigo-900 font-bold mb-4 md:mb-6">
         Developer Signup
       </h1>
+
+      {devError && (
+        <div
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+          role="alert"
+        >
+          <span className="block sm:inline">{devError}</span>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)} className="mt-4 md:mt-6">
         <div className="flex flex-col md:flex-row gap-3 md:gap-4 mb-3 md:mb-4">
           <div className="w-full md:flex-1">
@@ -135,11 +145,6 @@ export default function DeveloperSignupForm() {
             placeholder="Your GitHub username"
             className="w-full p-2 md:p-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-900 text-sm md:text-base"
           />
-          {errors.githubUsername && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.githubUsername.message}
-            </p>
-          )}
         </div>
 
         <div className="mb-3 md:mb-4">
@@ -233,14 +238,14 @@ export default function DeveloperSignupForm() {
         <div className="mb-4 md:mb-5">
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={devIsLoading}
             className={`w-full py-2 md:py-3 px-4 md:px-6 bg-indigo-900 text-white font-semibold uppercase rounded-md transition duration-300 text-sm md:text-base ${
-              isSubmitting
+              devIsLoading
                 ? "opacity-75 cursor-not-allowed"
                 : "hover:bg-indigo-700"
             }`}
           >
-            {isSubmitting ? (
+            {devIsLoading ? (
               <div className="flex items-center justify-center">
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"

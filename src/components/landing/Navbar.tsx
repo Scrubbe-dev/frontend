@@ -51,7 +51,7 @@ const Navbar = () => {
       label: "Features",
       dropdownOptions: [
         { label: "API as a service", href: "#" },
-        { label: "Auth SDK as a service", href: "#" },
+        { label: "Scrubbe Authentication SDK", href: "#" },
         { label: "SIEM", href: "#" },
         { label: "SOAR", href: "#" },
       ],
@@ -59,7 +59,7 @@ const Navbar = () => {
     {
       label: "Solutions",
       dropdownOptions: [
-        { label: "SOAR capabilities", href: "#" },
+        { label: "For Startups", href: "#" },
         { label: "For Medium sized companies", href: "#" },
         { label: "For Developers", href: "#" },
         { label: "For Enterprise Orgs", href: "#" },
@@ -265,7 +265,7 @@ const Navbar = () => {
 
               <div className="pt-6 border-t border-gray-200">
                 <Link
-                  href="/login"
+                  href="/auth"
                   onClick={() => setIsModalOpen(false)}
                   className="block w-full text-center py-3 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors focus:outline-none text-lg font-medium"
                 >

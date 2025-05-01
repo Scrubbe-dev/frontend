@@ -1,25 +1,42 @@
-// app/auth/SignInForm.tsx
 "use client";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useAppStore } from "@/store/StoreProvider";
+
+const signInSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(1, "Password is required"),
+});
+
+type SignInFormData = z.infer<typeof signInSchema>;
 
 export default function SignInForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  // Add state for password visibility
   const [showPassword, setShowPassword] = useState(false);
-  // Add state for loading indication
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { devLogin, devIsLoading, devError, devClearError } = useAppStore(
+    (state) => state
+  );
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Set submitting state to show loading animation
-    setIsSubmitting(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormData>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-    // Delay the console.log by 5 seconds
-    setTimeout(() => {
-      console.log("Sign in with:", { email, password });
-      setIsSubmitting(false);
-    }, 5000);
+  const onSubmit = async (data: SignInFormData) => {
+    devClearError();
+    try {
+      await devLogin(data.email, data.password);
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   // Toggle password visibility
@@ -32,7 +49,17 @@ export default function SignInForm() {
       <h1 className="text-xl md:text-2xl text-indigo-900 font-bold mb-4 md:mb-6">
         Sign In to Scrubbe
       </h1>
-      <form onSubmit={handleSubmit} className="mt-4 md:mt-6">
+
+      {devError && (
+        <div
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+          role="alert"
+        >
+          <span className="block sm:inline">{devError}</span>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-4 md:mt-6">
         <div className="mb-4 md:mb-5">
           <label
             htmlFor="signin-email"
@@ -44,12 +71,13 @@ export default function SignInForm() {
             type="email"
             autoComplete="email"
             id="signin-email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            {...register("email")}
             placeholder="Your email"
             className="w-full p-2 md:p-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-900 text-sm md:text-base"
-            required
           />
+          {errors.email && (
+            <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+          )}
         </div>
 
         <div className="mb-4 md:mb-5">
@@ -64,11 +92,9 @@ export default function SignInForm() {
               type={showPassword ? "text" : "password"}
               id="signin-password"
               autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register("password")}
               placeholder="Your password"
               className="w-full p-2 md:p-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-900 text-sm md:text-base"
-              required
             />
             <button
               type="button"
@@ -78,19 +104,24 @@ export default function SignInForm() {
               {showPassword ? "Hide" : "Show"}
             </button>
           </div>
+          {errors.password && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
         <div className="mb-4 md:mb-5">
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={devIsLoading}
             className={`w-full py-2 md:py-3 px-4 md:px-6 bg-indigo-900 text-white font-semibold uppercase rounded-md transition duration-300 text-sm md:text-base ${
-              isSubmitting
+              devIsLoading
                 ? "opacity-75 cursor-not-allowed"
                 : "hover:bg-indigo-700"
             }`}
           >
-            {isSubmitting ? (
+            {devIsLoading ? (
               <div className="flex items-center justify-center">
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -118,6 +149,15 @@ export default function SignInForm() {
               "Sign In"
             )}
           </button>
+        </div>
+
+        <div className="flex justify-end mb-4">
+          <a
+            href=""
+            className="text-indigo-900 hover:text-indigo-700 text-sm"
+          >
+            Forgot Password?
+          </a>
         </div>
 
         <div className="relative my-4 md:my-6 text-center">

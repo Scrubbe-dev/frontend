@@ -1,23 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
-
-interface CookiePreferences {
-  essential: boolean;
-  analytics: boolean;
-  functional: boolean;
-  marketing: boolean;
-}
+import { useAppStore } from "@/store/StoreProvider";
 
 const CookieConsentModal: React.FC = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [showDetailedSettings, setShowDetailedSettings] = useState(false);
   const [activeTab, setActiveTab] = useState("cookie-preferences");
-  const [preferences, setPreferences] = useState<CookiePreferences>({
-    essential: true, // Always required
-    analytics: false,
-    functional: false,
-    marketing: false,
-  });
+  const [showDetailedSettings, setShowDetailedSettings] = useState(false);
+
+  // Get cookie-related state and actions from Zustand
+  const {
+    cookiePreferences,
+    showCookieModal,
+    setShowCookieModal,
+    acceptAllCookies,
+    acceptEssentialOnly,
+    setCookiePreferences,
+    updateCookiePreference,
+  } = useAppStore((state) => state);
 
   // Check for existing consent on component mount
   useEffect(() => {
@@ -27,80 +25,37 @@ const CookieConsentModal: React.FC = () => {
         .split(";")
         .some((item) => item.trim().startsWith("cookie_consent="));
 
-      if (hasCookieConsent) {
-        // If consent exists, don't show the modal
-        setShowModal(false);
-
-        // Load saved preferences (if any)
-        const savedPreferences = localStorage.getItem("cookiePreferences");
-        if (savedPreferences) {
-          setPreferences(JSON.parse(savedPreferences));
-        }
-      } else {
-        // Show the modal if no consent exists
-        setShowModal(true);
+      if (!hasCookieConsent) {
+        // Only show modal if no consent exists
+        setShowCookieModal(true);
       }
     };
 
     checkExistingConsent();
-  }, []);
-
-  // Save cookie preferences
-  const setCookiePreferences = (newPreferences: CookiePreferences) => {
-    // Store preferences in local storage
-    localStorage.setItem("cookiePreferences", JSON.stringify(newPreferences));
-
-    // Here you would also set actual cookies based on preferences
-    // For each category, you would enable/disable the corresponding cookies
-
-    console.log("Cookie preferences saved:", newPreferences);
-
-    // Set the consent cookie with 1-year expiration
-    document.cookie = `cookie_consent=true; max-age=${
-      365 * 24 * 60 * 60
-    }; path=/`;
-  };
+  }, [setShowCookieModal]);
 
   // Handle different button clicks
   const handleAcceptAll = () => {
-    const allAccepted = {
-      essential: true,
-      analytics: true,
-      functional: true,
-      marketing: true,
-    };
-    setPreferences(allAccepted);
-    setCookiePreferences(allAccepted);
-    setShowModal(false);
+    acceptAllCookies();
   };
 
   const handleEssentialOnly = () => {
-    const essentialOnly = {
-      essential: true,
-      analytics: false,
-      functional: false,
-      marketing: false,
-    };
-    setPreferences(essentialOnly);
-    setCookiePreferences(essentialOnly);
-    setShowModal(false);
+    acceptEssentialOnly();
   };
 
   const handleSavePreferences = () => {
-    setCookiePreferences(preferences);
-    setShowModal(false);
+    setCookiePreferences(cookiePreferences);
   };
 
-  const handleToggleChange = (category: keyof CookiePreferences) => {
-    if (category === "essential") return; // Essential cookies can't be toggled
-    setPreferences({
-      ...preferences,
-      [category]: !preferences[category],
-    });
+  const handleToggleChange = (category: keyof typeof cookiePreferences) => {
+    // Don't toggle essential cookies
+    if (category === "essential") return;
+
+    updateCookiePreference(category, !cookiePreferences[category]);
   };
 
   // If modal is not shown, don't render anything
-  if (!showModal) return null;
+  if (!showCookieModal) return null;
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 transform animate-slide-up">
@@ -178,17 +133,19 @@ const CookieConsentModal: React.FC = () => {
                       <input
                         type="checkbox"
                         className="opacity-0 w-0 h-0"
-                        checked={preferences.essential}
+                        checked={cookiePreferences.essential}
                         disabled
                       />
                       <span
                         className={`absolute inset-0 rounded-full transition ${
-                          preferences.essential ? "bg-green-500" : "bg-gray-300"
+                          cookiePreferences.essential
+                            ? "bg-green-500"
+                            : "bg-gray-300"
                         } opacity-50 cursor-not-allowed`}
                       >
                         <span
                           className={`absolute h-5 w-5 bg-white rounded-full transform transition top-0.5 left-0.5 ${
-                            preferences.essential ? "translate-x-6" : ""
+                            cookiePreferences.essential ? "translate-x-6" : ""
                           }`}
                         />
                       </span>
@@ -210,18 +167,20 @@ const CookieConsentModal: React.FC = () => {
                       <input
                         type="checkbox"
                         className="opacity-0 w-0 h-0"
-                        checked={preferences.analytics}
+                        checked={cookiePreferences.analytics}
                         onChange={() => handleToggleChange("analytics")}
                       />
                       <span
                         onClick={() => handleToggleChange("analytics")}
                         className={`absolute inset-0 rounded-full transition cursor-pointer ${
-                          preferences.analytics ? "bg-green-500" : "bg-gray-300"
+                          cookiePreferences.analytics
+                            ? "bg-green-500"
+                            : "bg-gray-300"
                         }`}
                       >
                         <span
                           className={`absolute h-5 w-5 bg-white rounded-full transform transition top-0.5 left-0.5 ${
-                            preferences.analytics ? "translate-x-6" : ""
+                            cookiePreferences.analytics ? "translate-x-6" : ""
                           }`}
                         />
                       </span>
@@ -243,20 +202,20 @@ const CookieConsentModal: React.FC = () => {
                       <input
                         type="checkbox"
                         className="opacity-0 w-0 h-0"
-                        checked={preferences.functional}
+                        checked={cookiePreferences.functional}
                         onChange={() => handleToggleChange("functional")}
                       />
                       <span
                         onClick={() => handleToggleChange("functional")}
                         className={`absolute inset-0 rounded-full transition cursor-pointer ${
-                          preferences.functional
+                          cookiePreferences.functional
                             ? "bg-green-500"
                             : "bg-gray-300"
                         }`}
                       >
                         <span
                           className={`absolute h-5 w-5 bg-white rounded-full transform transition top-0.5 left-0.5 ${
-                            preferences.functional ? "translate-x-6" : ""
+                            cookiePreferences.functional ? "translate-x-6" : ""
                           }`}
                         />
                       </span>
@@ -278,18 +237,20 @@ const CookieConsentModal: React.FC = () => {
                       <input
                         type="checkbox"
                         className="opacity-0 w-0 h-0"
-                        checked={preferences.marketing}
+                        checked={cookiePreferences.marketing}
                         onChange={() => handleToggleChange("marketing")}
                       />
                       <span
                         onClick={() => handleToggleChange("marketing")}
                         className={`absolute inset-0 rounded-full transition cursor-pointer ${
-                          preferences.marketing ? "bg-green-500" : "bg-gray-300"
+                          cookiePreferences.marketing
+                            ? "bg-green-500"
+                            : "bg-gray-300"
                         }`}
                       >
                         <span
                           className={`absolute h-5 w-5 bg-white rounded-full transform transition top-0.5 left-0.5 ${
-                            preferences.marketing ? "translate-x-6" : ""
+                            cookiePreferences.marketing ? "translate-x-6" : ""
                           }`}
                         />
                       </span>
@@ -319,7 +280,7 @@ const CookieConsentModal: React.FC = () => {
               </div>
             )}
 
-            {/* Privacy Policy Tab */}
+            {/* Privacy Policy Tab - Content remains the same */}
             {activeTab === "privacy-policy" && (
               <div className="text-sm">
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">
@@ -386,7 +347,7 @@ const CookieConsentModal: React.FC = () => {
               </div>
             )}
 
-            {/* Cookie Policy Tab */}
+            {/* Cookie Policy Tab - Content remains the same */}
             {activeTab === "cookie-policy" && (
               <div className="text-sm">
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">
