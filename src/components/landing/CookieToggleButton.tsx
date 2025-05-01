@@ -54,6 +54,14 @@ const CookieToggleButton: React.FC = () => {
         </svg>
       </button>
 
+      {/* Backdrop overlay */}
+      {isDialogOpen && (
+        <div
+          className="fixed inset-0 z-40 backdrop-blur-md bg-black/40 transition-opacity duration-300"
+          onClick={() => setIsDialogOpen(false)}
+        />
+      )}
+
       {/* Cookie dialog box - Improved for mobile responsiveness */}
       <div
         className={`fixed inset-x-4 mx-auto top-4 md:top-10 z-50 w-auto max-w-xl bg-white rounded-lg shadow-xl transition-all duration-300 ${
