@@ -4,6 +4,7 @@ import "./globals.css";
 import { HeroProvider } from "@/provider/hero-provider";
 import { StoreProvider } from "@/store/StoreProvider";
 import CookieConsentModal from "@/components/landing/CookieConsentModal";
+import CookieToggleButton from "@/components/landing/CookieToggleButton";
 import Chatbot from "@/components/landing/Chatbot";
 import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
@@ -41,6 +42,7 @@ export default function RootLayout({
           <HeroProvider>
             {children}
             <CookieConsentModal />
+            <CookieToggleButton />
             <Chatbot />
           </HeroProvider>
         </StoreProvider>
