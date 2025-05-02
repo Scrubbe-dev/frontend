@@ -51,7 +51,10 @@ const Navbar = () => {
       label: "Features",
       dropdownOptions: [
         { label: "API as a service", href: "/features/api-as-a-service" },
-        { label: "Scrubbe Authentication SDK", href: "#" },
+        {
+          label: "Authentication SDK",
+          href: "/features/authentication-sdk",
+        },
         { label: "SIEM", href: "#" },
         { label: "SOAR", href: "#" },
       ],
