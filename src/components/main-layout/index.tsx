@@ -5,7 +5,7 @@ import Footer from '../footer'
 
 function MainLayout({children}:{children:React.ReactNode}) {
   return (
-    <main className="min-h-full overflow-x-hidden w-full ">
+    <main className="h-auto w-full">
       <Navbar />
       <div className="w-full flex-grow">{children}</div>
       <Footer />

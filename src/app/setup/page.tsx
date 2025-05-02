@@ -1,9 +1,10 @@
 import MainLayout from "@/components/main-layout";
+import SetupConfiguration from "@/components/setup/SetupConfiguration";
 
 const SetupPage = () => {
   return (
     <MainLayout>
-      <div>SetupPage</div>
+      <SetupConfiguration />
     </MainLayout>
   );
 }
