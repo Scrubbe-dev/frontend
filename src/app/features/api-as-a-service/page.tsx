@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
-import SetupConfiguration from "@/components/setup/SetupConfiguration";
 
 export const metadata: Metadata = {
-  title: "SetUp - Scrubbe",
+  title: "API as a Service - Scrubbe",
   description:
     "Scrubbe's AI-driven platform combines SIEM and SOAR for automated threat detection, response, and unified security analytics.",
 };
 
-const SetupPage = () => {
+const ApiServicePage = () => {
   return (
     <>
-      <SetupConfiguration />
+      <div>ApiServicePage</div>
     </>
   );
 }
 
-export default SetupPage;
+export default ApiServicePage;
