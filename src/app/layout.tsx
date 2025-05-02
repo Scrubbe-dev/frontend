@@ -36,14 +36,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full w-full`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen w-full`}
       >
         <NextJsTopLoader />
         <StoreProvider>
           <AnnouncementBar />
           <HeroProvider>
             <Navbar />
-            {children}
+            <main className="flex-grow h-full w-full">{children}</main>
             <Footer />
             <CookieConsentModal />
             <CookieToggleButton />
