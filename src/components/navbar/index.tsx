@@ -183,11 +183,11 @@ function MainNavbar() {
     },
     {
       title: "Pricing",
-      link: "#",
+      link: "/",
     },
     {
       title: "Documentation",
-      link: "#",
+      link: "/",
     },
     {
       title: "More",
