@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ApiService from "@/components/features/ApiService";
 
 export const metadata: Metadata = {
   title: "API as a Service - Scrubbe",
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 const ApiServicePage = () => {
   return (
     <>
-      <div>ApiServicePage</div>
+      <ApiService />
     </>
   );
 }
