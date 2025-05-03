@@ -5,6 +5,8 @@ import { HeroProvider } from "@/provider/hero-provider";
 import { StoreProvider } from "@/store/StoreProvider";
 import CookieConsentModal from "@/components/landing/CookieConsentModal";
 import CookieToggleButton from "@/components/landing/CookieToggleButton";
+import Navbar from "@/components/landing/Navbar";
+import Footer from "@/components/landing/Footer";
 import Chatbot from "@/components/landing/Chatbot";
 import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
@@ -34,13 +36,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen w-full`}
       >
         <NextJsTopLoader />
         <StoreProvider>
           <AnnouncementBar />
           <HeroProvider>
-            {children}
+            <Navbar />
+            <main className="flex-grow h-full w-full">{children}</main>
+            <Footer />
             <CookieConsentModal />
             <CookieToggleButton />
             <Chatbot />

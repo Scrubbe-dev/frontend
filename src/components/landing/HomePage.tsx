@@ -1,6 +1,5 @@
 "use client";
 import Banner from "@/components/banner";
-import MainLayout from "@/components/main-layout";
 import SecurityFeatures from "@/components/landing/SecurityFeatures";
 import SecurityIntelligence from "@/components/landing/SecurityIntelligence";
 import SeamlessIntegrations from "@/components/landing/SeamlessIntegrations";
@@ -37,7 +36,7 @@ function HomePage() {
   const words = ["Intelligence", "Features", "in Action"];
 
   return (
-    <MainLayout>
+    <>
       <div
         className="w-full min-h-screen flex justify-center pb-14"
         style={{ backgroundImage: "linear-gradient(135deg, #1e293b, #1e40af)" }}
@@ -130,7 +129,7 @@ function HomePage() {
       <ChartHome />
 
       <ScrubbeHighlights />
-    </MainLayout>
+    </>
   );
 }
 

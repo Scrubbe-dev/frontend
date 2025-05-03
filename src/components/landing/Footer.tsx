@@ -2,6 +2,7 @@ import { ChevronRight } from "lucide-react";
 import React from "react";
 import { FaDiscord, FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa6";
 import { IconType } from "react-icons";
+import Link from "next/link";
 
 // Centralized theme configuration - keeping only shared/reused styles
 const theme = {
@@ -45,10 +46,12 @@ const componentStyles = {
 // Type definitions
 interface SocialLinkProps {
   icon: IconType;
+  href: string;
 }
 
 interface FooterLinkProps {
   text: string;
+  href: string;
 }
 
 interface ColumnHeaderProps {
@@ -57,28 +60,36 @@ interface ColumnHeaderProps {
 
 interface FooterColumnProps {
   title: string;
-  links: string[];
+  links: Array<{ text: string; href: string }>;
 }
 
 interface ColumnData {
   title: string;
-  links: string[];
+  links: Array<{ text: string; href: string }>;
 }
 
 // Social media link component
-const SocialLink: React.FC<SocialLinkProps> = ({ icon: Icon }) => (
-  <div className={componentStyles.socialLink.container}>
+const SocialLink: React.FC<SocialLinkProps> = ({ icon: Icon, href }) => (
+  <Link
+    href={href}
+    className={componentStyles.socialLink.container}
+    target="_blank"
+    rel="noopener noreferrer"
+  >
     <Icon size={20} color="#ffffff" />
-  </div>
+  </Link>
 );
 
 // Footer link component
-const FooterLink: React.FC<FooterLinkProps> = ({ text }) => (
+const FooterLink: React.FC<FooterLinkProps> = ({ text, href }) => (
   <div className={componentStyles.footerLink.container}>
-    <div className={`${componentStyles.footerLink.text} ${theme.colors.text}`}>
+    <Link
+      href={href}
+      className={`${componentStyles.footerLink.text} ${theme.colors.text}`}
+    >
       <ChevronRight size={18} />
       <div className={`w-fit h-fit ${theme.fonts.linkText}`}>{text}</div>
-    </div>
+    </Link>
   </div>
 );
 
@@ -98,31 +109,43 @@ const FooterColumn: React.FC<FooterColumnProps> = ({ title, links }) => (
     <ColumnHeader title={title} />
     <div className={componentStyles.column.linkContainer}>
       {links.map((link, index) => (
-        <FooterLink key={index} text={link} />
+        <FooterLink key={index} text={link.text} href={link.href} />
       ))}
     </div>
   </div>
 );
 
 const Footer: React.FC = () => {
-  // Data for columns
+  // Data for columns with proper href values
   const columns: ColumnData[] = [
     {
       title: "Product",
-      links: ["Features", "Integration", "Installation", "Demo", "Pricing"],
+      links: [
+        { text: "Features", href: "#" },
+        { text: "Integration", href: "/setup" },
+        { text: "Installation", href: "#" },
+        { text: "Demo", href: "#" },
+        { text: "Pricing", href: "#" },
+      ],
     },
     {
       title: "Resources",
-      links: ["Documentation", "API Reference", "Blog", "Community", "Support"],
+      links: [
+        { text: "Documentation", href: "#" },
+        { text: "API Reference", href: "#" },
+        { text: "Blog", href: "#" },
+        { text: "Community", href: "#" },
+        { text: "Support", href: "#" },
+      ],
     },
     {
       title: "Company",
       links: [
-        "About us",
-        "Careers",
-        "Press",
-        "Privacy Policy",
-        "Terms of Service",
+        { text: "About us", href: "#" },
+        { text: "Careers", href: "#" },
+        { text: "Press", href: "#" },
+        { text: "Privacy Policy", href: "#" },
+        { text: "Terms of Service", href: "#" },
       ],
     },
   ];
@@ -143,10 +166,10 @@ const Footer: React.FC = () => {
             your organization from emerging threats.
           </div>
           <div className="flex items-center justify-start mt-4 gap-2">
-            <SocialLink icon={FaTwitter} />
-            <SocialLink icon={FaLinkedin} />
-            <SocialLink icon={FaGithub} />
-            <SocialLink icon={FaDiscord} />
+            <SocialLink icon={FaTwitter} href="#" />
+            <SocialLink icon={FaLinkedin} href="#" />
+            <SocialLink icon={FaGithub} href="#" />
+            <SocialLink icon={FaDiscord} href="#" />
           </div>
         </div>
 
