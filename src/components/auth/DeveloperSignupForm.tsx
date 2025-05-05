@@ -79,9 +79,6 @@ export default function DeveloperSignupForm() {
       }
     } catch (error) {
       console.error("Registration error:", error);
-      toast.error("Registration failed", {
-        description: devError || "An error occurred during registration.",
-      });
     }
   };
 

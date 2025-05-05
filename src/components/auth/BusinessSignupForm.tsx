@@ -1,11 +1,11 @@
-// app/auth/BusinessSignupForm.tsx
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
+import { toast } from "sonner";
+import { useAppStore } from "@/store/StoreProvider";
 
-// Define the schema for form validation
 const businessSignupSchema = z
   .object({
     fullName: z.string().min(1, "Full name is required"),
@@ -26,15 +26,15 @@ const businessSignupSchema = z
     path: ["confirmPassword"],
   });
 
-// Type for our form data
 type BusinessSignupFormData = z.infer<typeof businessSignupSchema>;
 
 export default function BusinessSignupForm() {
-  // Add state for password visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  // Add state for loading indication
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { devRegister, devIsLoading, devError, devClearError } = useAppStore(
+    (state) => state
+  );
 
   const {
     register,
@@ -53,32 +53,56 @@ export default function BusinessSignupForm() {
     },
   });
 
-  const onSubmit = (data: BusinessSignupFormData) => {
-    // Set submitting state to show loading animation
-    setIsSubmitting(true);
+  const onSubmit = async (data: BusinessSignupFormData) => {
+    devClearError();
+    try {
+      const nameParts = data.fullName.trim().split(/\s+/);
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || "";
 
-    // Delay the console.log by 5 seconds
-    setTimeout(() => {
-      console.log("Business signup:", data);
-      setIsSubmitting(false);
-    }, 5000);
+      // Call devRegister and capture the success status
+      const success = await devRegister({
+        email: data.email,
+        password: data.password,
+        firstName,
+        lastName,
+      });
+
+      // Only show success toast if registration was successful
+      if (success) {
+        toast.success(`Welcome, ${firstName} ${lastName}!`, {
+          description: `Business account created successfully for ${data.email}`,
+        });
+      } else {
+        // If registration failed but didn't throw an exception
+        toast.error("Registration failed", {
+          description: devError || "An error occurred during registration.",
+        });
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+    }
   };
 
-  // Toggle password visibility
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  // Toggle confirm password visibility
-  const toggleConfirmPasswordVisibility = () => {
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const toggleConfirmPasswordVisibility = () =>
     setShowConfirmPassword(!showConfirmPassword);
-  };
 
   return (
     <div className="p-4 md:p-8">
       <h1 className="text-xl md:text-2xl text-indigo-900 font-bold mb-4 md:mb-6">
         Business Signup
       </h1>
+
+      {devError && (
+        <div
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+          role="alert"
+        >
+          <span className="block sm:inline">{devError}</span>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)} className="mt-4 md:mt-6">
         <div className="flex flex-col md:flex-row gap-3 md:gap-4 mb-3 md:mb-4">
           <div className="w-full md:flex-1">
@@ -109,6 +133,7 @@ export default function BusinessSignupForm() {
             </label>
             <input
               type="email"
+              autoComplete="email"
               id="email"
               {...register("email")}
               placeholder="Your business email"
@@ -264,14 +289,14 @@ export default function BusinessSignupForm() {
         <div className="mb-4 md:mb-5">
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={devIsLoading}
             className={`w-full py-2 md:py-3 px-4 md:px-6 bg-indigo-900 text-white font-semibold uppercase rounded-md transition duration-300 text-sm md:text-base ${
-              isSubmitting
+              devIsLoading
                 ? "opacity-75 cursor-not-allowed"
                 : "hover:bg-indigo-700"
             }`}
           >
-            {isSubmitting ? (
+            {devIsLoading ? (
               <div className="flex items-center justify-center">
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
