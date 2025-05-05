@@ -52,7 +52,8 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
   devLogin: async (email, password) => {
     set({ devIsLoading: true, devError: null });
     try {
-      const response = await api.post<DevAuthResponse>("/api/v1/login", {
+      // Use the api client which now points to the proxy in development
+      const response = await api.post<DevAuthResponse>("/login", {
         email,
         password,
       });
@@ -98,34 +99,51 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
   },
 
   devRegister: async (userData) => {
+    console.log("[devRegister] Starting registration process", {
+      email: userData.email,
+      firstName: userData.firstName,
+    });
     set({ devIsLoading: true, devError: null });
+    console.log("[devRegister] State updated: isLoading=true, error=null");
 
     try {
-      const response = await api.post<DevAuthResponse>("/api/v1/register", {
+      console.log("[devRegister] Sending registration request to API...");
+      // Use the api client which now points to the proxy in development
+      const response = await api.post<DevAuthResponse>("/register", {
         email: userData.email,
         password: userData.password,
         firstName: userData.firstName,
         lastName: userData.lastName,
       });
+      console.log(
+        "[devRegister] Registration successful! User created with ID:",
+        response.data.user.id
+      );
 
       const { user, tokens } = response.data;
+      console.log("[devRegister] Setting cookies with tokens...");
       await localApi.post("/api/cookies/set", {
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,
       });
+      console.log("[devRegister] Cookies set successfully");
 
+      console.log("[devRegister] Updating state with authenticated user");
       set({
         devUser: user,
         devIsAuthenticated: true,
         devIsLoading: false,
       });
+      console.log("[devRegister] Process completed successfully");
     } catch (error) {
+      console.error("[devRegister] Error occurred during registration:", error);
       const axiosError = error as AxiosError<APIErrorResponse>;
       const errorMessage =
         axiosError.response?.data?.message ||
         axiosError.message ||
         "Registration failed";
 
+      console.log("[devRegister] Setting error state:", errorMessage);
       set({
         devError: errorMessage,
         devIsLoading: false,
@@ -138,7 +156,7 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
   devCheckAuthStatus: async () => {
     set({ devIsLoading: true });
     try {
-      const response = await api.get<{ user: DevUser }>("/api/v1/me");
+      const response = await api.get<{ user: DevUser }>("/me");
       set({
         devUser: response.data.user,
         devIsAuthenticated: true,

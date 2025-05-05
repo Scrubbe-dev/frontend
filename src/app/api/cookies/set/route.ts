@@ -1,14 +1,15 @@
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+// src/app/api/cookies/set/route.ts
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
     const { accessToken, refreshToken } = await request.json();
 
-    const cookieStore = cookies();
+    const response = NextResponse.json({ success: true });
 
     // Set access token cookie
-    cookieStore.set("accessToken", accessToken, {
+    response.cookies.set("accessToken", accessToken, {
       secure: true,
       sameSite: "strict",
       httpOnly: true,
@@ -17,7 +18,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Set refresh token cookie
-    cookieStore.set("refreshToken", refreshToken, {
+    response.cookies.set("refreshToken", refreshToken, {
       secure: true,
       sameSite: "strict",
       httpOnly: true,
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
       path: "/",
     });
 
-    return NextResponse.json({ success: true });
+    return response;
   } catch (error) {
     console.error("Error setting cookies:", error);
     return NextResponse.json(
