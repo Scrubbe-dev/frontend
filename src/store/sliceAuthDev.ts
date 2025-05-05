@@ -31,14 +31,14 @@ export type SliceAuthDevType = {
   devIsAuthenticated: boolean;
   devIsLoading: boolean;
   devError: string | null;
-  devLogin: (email: string, password: string) => Promise<void>;
-  devLogout: () => void;
+  devLogin: (email: string, password: string) => Promise<boolean>;
+  devLogout: () => Promise<boolean>;
   devRegister: (userData: {
     email: string;
     password: string;
     firstName: string;
     lastName: string;
-  }) => Promise<void>;
+  }) => Promise<boolean>;
   devClearError: () => void;
   devCheckAuthStatus: () => Promise<boolean>;
 };
@@ -69,6 +69,7 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
         devIsAuthenticated: true,
         devIsLoading: false,
       });
+      return true; // Return success status
     } catch (error) {
       const axiosError = error as AxiosError<APIErrorResponse>;
       const errorMessage =
@@ -80,6 +81,7 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
         devError: errorMessage,
         devIsLoading: false,
       });
+      return false; // Return failure status
     }
   },
 
@@ -92,9 +94,11 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
         devIsAuthenticated: false,
         devIsLoading: false,
       });
+      return true; // Return success status
     } catch (err) {
       console.error("Error clearing cookies:", err);
       set({ devIsLoading: false });
+      return false; // Return failure status
     }
   },
 
@@ -135,6 +139,7 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
         devIsLoading: false,
       });
       console.log("[devRegister] Process completed successfully");
+      return true; // Return success status
     } catch (error) {
       console.error("[devRegister] Error occurred during registration:", error);
       const axiosError = error as AxiosError<APIErrorResponse>;
@@ -148,6 +153,7 @@ export const createAuthDevSlice: StateCreator<SliceAuthDevType> = (set) => ({
         devError: errorMessage,
         devIsLoading: false,
       });
+      return false; // Return failure status
     }
   },
 

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
+import { toast } from "sonner";
 import { useAppStore } from "@/store/StoreProvider";
 
 const developerSignupSchema = z
@@ -57,14 +58,30 @@ export default function DeveloperSignupForm() {
       const firstName = nameParts[0] || "";
       const lastName = nameParts.slice(1).join(" ") || "";
 
-      await devRegister({
+      // Call devRegister and capture the success status
+      const success = await devRegister({
         email: data.email,
         password: data.password,
         firstName,
         lastName,
       });
+
+      // Only show success toast if registration was successful
+      if (success) {
+        toast.success(`Welcome, ${firstName} ${lastName}!`, {
+          description: `Account created successfully for ${data.email}`,
+        });
+      } else {
+        // If registration failed but didn't throw an exception
+        toast.error("Registration failed", {
+          description: devError || "An error occurred during registration.",
+        });
+      }
     } catch (error) {
       console.error("Registration error:", error);
+      toast.error("Registration failed", {
+        description: devError || "An error occurred during registration.",
+      });
     }
   };
 
