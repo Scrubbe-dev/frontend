@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { signInAction } from "@/lib/signInAction";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const signInSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -14,13 +14,18 @@ const signInSchema = z.object({
 
 type SignInFormData = z.infer<typeof signInSchema>;
 
-export default function SignInForm() {
+interface SignInFormProps {
+  emailFromQuery?: string;
+  callbackUrl?: string;
+}
+
+export default function SignInForm({
+  emailFromQuery = "",
+  callbackUrl = "/",
+}: SignInFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const emailFromQuery = searchParams.get("email");
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const {
     register,
@@ -29,7 +34,7 @@ export default function SignInForm() {
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: emailFromQuery || "",
+      email: emailFromQuery,
       password: "",
     },
   });
