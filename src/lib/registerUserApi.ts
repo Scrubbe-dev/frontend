@@ -1,4 +1,4 @@
-// src/lib/api.ts
+// src/lib/registerUserApi.ts
 import api from "@/lib/axios";
 import axios, { AxiosError } from "axios";
 

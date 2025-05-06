@@ -1,53 +1,55 @@
-// src/auth.ts
 import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import Credentials from "next-auth/providers/credentials";
+import { z } from "zod";
 import api from "@/lib/axios";
 
-// Type declarations
-declare module "next-auth" {
-  interface User {
-    accessToken?: string;
-    refreshToken?: string;
-  }
+// Define the schema for credentials validation
+const signInSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
 
-  interface Session {
-    accessToken?: string;
-    refreshToken?: string;
-  }
-
-  interface JWT {
-    accessToken?: string;
-    refreshToken?: string;
-  }
+// Define the JWT token type
+interface Token {
+  sub?: string;
+  firstName?: string;
+  lastName?: string;
+  isVerified?: boolean;
+  accessToken?: string;
+  refreshToken?: string;
 }
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
-    CredentialsProvider({
+    Credentials({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      authorize: async (credentials) => {
         try {
-          // Change this to login endpoint when you implement it
+          // Validate credentials
+          const { email, password } = await signInSchema.parseAsync(
+            credentials
+          );
+
+          // Use the configured axios instance instead of fetch
           const response = await api.post("/login", {
-            email: credentials?.email,
-            password: credentials?.password,
+            email,
+            password,
           });
 
-          const { user, tokens } = response.data;
-
+          // Return user data in the format Auth.js expects
           return {
-            id: user.id,
-            email: user.email,
-            name:
-              user.firstName && user.lastName
-                ? `${user.firstName} ${user.lastName}`
-                : user.email,
-            accessToken: tokens.accessToken,
-            refreshToken: tokens.refreshToken,
+            id: response.data.user.id,
+            email: response.data.user.email,
+            name: `${response.data.user.firstName} ${response.data.user.lastName}`,
+            firstName: response.data.user.firstName,
+            lastName: response.data.user.lastName,
+            isVerified: response.data.user.isVerified,
+            accessToken: response.data.tokens.accessToken,
+            refreshToken: response.data.tokens.refreshToken,
           };
         } catch (error) {
           console.error("Authentication error:", error);
@@ -57,20 +59,53 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    // Add tokens to the session
     async jwt({ token, user }) {
       if (user) {
-        token.accessToken = user.accessToken as string;
-        token.refreshToken = user.refreshToken as string;
+        token.accessToken = user.accessToken;
+        token.refreshToken = user.refreshToken;
+        token.firstName = user.firstName;
+        token.lastName = user.lastName;
+        token.isVerified = user.isVerified;
       }
       return token;
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken as string;
-      session.refreshToken = token.refreshToken as string;
+      const typedToken = token as Token;
+
+      session.user.id = typedToken.sub || "";
+      session.user.firstName = typedToken.firstName;
+      session.user.lastName = typedToken.lastName;
+      session.user.isVerified = typedToken.isVerified;
+      session.accessToken = typedToken.accessToken;
+      session.refreshToken = typedToken.refreshToken;
+
       return session;
     },
   },
-  session: {
-    strategy: "jwt",
+  pages: {
+    signIn: "/auth/signin", // Custom sign-in page
   },
 });
+
+// Extend the User and Session types for TypeScript
+declare module "next-auth" {
+  interface User {
+    firstName?: string;
+    lastName?: string;
+    isVerified?: boolean;
+    accessToken?: string;
+    refreshToken?: string;
+  }
+
+  interface Session {
+    user: {
+      id: string;
+      firstName?: string;
+      lastName?: string;
+      isVerified?: boolean;
+    };
+    accessToken?: string;
+    refreshToken?: string;
+  }
+}
