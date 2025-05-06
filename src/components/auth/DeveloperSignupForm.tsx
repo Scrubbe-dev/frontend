@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useAppStore } from "@/store/StoreProvider";
+import { registerUser } from "@/lib/registerUserApi";
 
 const developerSignupSchema = z
   .object({
@@ -30,15 +30,14 @@ type DeveloperSignupFormData = z.infer<typeof developerSignupSchema>;
 export default function DeveloperSignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const { devRegister, devIsLoading, devError, devClearError } = useAppStore(
-    (state) => state
-  );
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<DeveloperSignupFormData>({
     resolver: zodResolver(developerSignupSchema),
     defaultValues: {
@@ -52,33 +51,52 @@ export default function DeveloperSignupForm() {
   });
 
   const onSubmit = async (data: DeveloperSignupFormData) => {
-    devClearError();
+    setError(null);
+    setIsLoading(true);
+
     try {
       const nameParts = data.fullName.trim().split(/\s+/);
       const firstName = nameParts[0] || "";
       const lastName = nameParts.slice(1).join(" ") || "";
 
-      // Call devRegister and capture the success status
-      const success = await devRegister({
+      // Use our separate registration function
+      const result = await registerUser({
         email: data.email,
         password: data.password,
         firstName,
         lastName,
       });
 
-      // Only show success toast if registration was successful
-      if (success) {
-        toast.success(`Welcome, ${firstName} ${lastName}!`, {
-          description: `Account created successfully for ${data.email}`,
-        });
-      } else {
-        // If registration failed but didn't throw an exception
-        toast.error("Registration failed", {
-          description: devError || "An error occurred during registration.",
-        });
+      if (!result.success) {
+        throw new Error(result.error);
       }
-    } catch (error) {
-      console.error("Registration error:", error);
+
+      // Show success message for 10 seconds
+      toast.success(`Account created successfully!`, {
+        description: `${firstName} ${lastName}, you'll be redirected to sign in shortly.`,
+        duration: 10000, // 10 seconds
+      });
+
+      // Redirect after 10 seconds
+      setTimeout(() => {
+        // Pass the email as a query parameter to pre-fill the sign-in form
+        window.location.href = `/auth/signin?email=${encodeURIComponent(
+          data.email
+        )}`;
+      }, 10000);
+
+      // Clear the form after successful registration
+      reset();
+    } catch (err) {
+      console.error("Registration error:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "Registration failed";
+      setError(errorMessage);
+      toast.error("Registration failed", {
+        description: errorMessage,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -92,16 +110,17 @@ export default function DeveloperSignupForm() {
         Developer Signup
       </h1>
 
-      {devError && (
+      {error && (
         <div
           className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
           role="alert"
         >
-          <span className="block sm:inline">{devError}</span>
+          <span className="block sm:inline">{error}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-4 md:mt-6">
+        {/* Rest of the form remains unchanged */}
         <div className="flex flex-col md:flex-row gap-3 md:gap-4 mb-3 md:mb-4">
           <div className="w-full md:flex-1">
             <label
@@ -252,14 +271,14 @@ export default function DeveloperSignupForm() {
         <div className="mb-4 md:mb-5">
           <button
             type="submit"
-            disabled={devIsLoading}
+            disabled={isLoading}
             className={`w-full py-2 md:py-3 px-4 md:px-6 bg-indigo-900 text-white font-semibold uppercase rounded-md transition duration-300 text-sm md:text-base ${
-              devIsLoading
+              isLoading
                 ? "opacity-75 cursor-not-allowed"
                 : "hover:bg-indigo-700"
             }`}
           >
-            {devIsLoading ? (
+            {isLoading ? (
               <div className="flex items-center justify-center">
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
