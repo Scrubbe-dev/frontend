@@ -63,8 +63,11 @@ const Navbar = () => {
       label: "Solutions",
       dropdownOptions: [
         { label: "For Startups", href: "/solutions/startups" },
-        { label: "For Medium sized companies", href: "#" },
-        { label: "For Developers", href: "#" },
+        {
+          label: "For Medium sized companies",
+          href: "/solutions/medium-sized-companies",
+        },
+        { label: "For Developers", href: "/solutions/developers" },
         { label: "For Enterprise Orgs", href: "#" },
       ],
     },
