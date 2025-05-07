@@ -23,7 +23,7 @@ const theme = {
 const componentStyles = {
   footer: {
     container:
-      "h-auto w-full flex justify-center px-4 py-10 sm:pt-0 sm:px-0 sm:pb-8 z-10 mt-20 border-black border-t-[8px]",
+      "h-auto w-full flex justify-center px-4 py-10 sm:pt-0 sm:px-0 sm:pb-8 z-10 border-black border-t-[8px]",
     background: "linear-gradient(135deg, #1e293b, #1e40af)",
     innerContainer: "xl:w-8/12 h-full grid xl:grid-cols-4 py-10",
   },
