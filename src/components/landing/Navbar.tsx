@@ -68,7 +68,7 @@ const Navbar = () => {
           href: "/solutions/medium-sized-companies",
         },
         { label: "For Developers", href: "/solutions/developers" },
-        { label: "For Enterprise Orgs", href: "#" },
+        { label: "For Enterprise Orgs", href: "/solutions/enterprise-orgs" },
       ],
     },
     {
