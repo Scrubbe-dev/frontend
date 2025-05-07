@@ -56,7 +56,7 @@ const Navbar = () => {
           href: "/features/authentication-sdk",
         },
         { label: "SIEM", href: "/features/siem" },
-        { label: "SOAR", href: "#" },
+        { label: "SOAR", href: "/features/soar" },
       ],
     },
     {
