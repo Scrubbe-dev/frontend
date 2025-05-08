@@ -3,10 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node server.js",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "NODE_ENV=production node server.js",
+    "biome:check": "biome check .",
+    "biome:format":"biome format - write .",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
+    "test": "jest --ci",
+    "audit": "npm audit --production"
   },
   "dependencies": {
     "@heroui/react": "^2.7.5",
