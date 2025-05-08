@@ -4,7 +4,7 @@ const StartUps = () => {
   return (
     // Applying body styles to the main container div
     <div className="w-full mx-auto bg-[#f8f9fa] text-[#212529] leading-relaxed">
-      <section className="bg-gradient-to-br from-[#4361ee] to-[#3a0ca3] text-white text-center px-5 py-20">
+      <section className="py-16 text-center text-white bg-gradient-to-br from-slate-800 to-[#2a4365]">
         <h1 className="text-4xl md:text-5xl mb-4">
           Enterprise-Grade Security For Startups
         </h1>
@@ -1189,7 +1189,7 @@ const StartUps = () => {
         </article>
       </section>
 
-      <section className="cta text-center bg-gradient-to-br from-[#4cc9f0] to-[#4361ee] text-white px-5 py-20">
+      <section className="bg-slate-800 text-white py-16 text-center">
         <h2 className="text-3xl md:text-4xl mb-6">Secure Your Startup Today</h2>
         <p className="max-w-screen-md mx-auto mb-8 text-lg">
           Join the growing community of startups protecting their business with

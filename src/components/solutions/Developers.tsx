@@ -409,7 +409,7 @@ const Developers = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="cta-section bg-slate-800 text-white py-16 text-center">
+      <section className="bg-slate-800 text-white py-16 text-center">
         <div className="container mx-auto w-11/12 max-w-[1200px]">
           <h2 className="text-3xl font-bold mb-6 text-white">
             Ready to Secure Your Application?

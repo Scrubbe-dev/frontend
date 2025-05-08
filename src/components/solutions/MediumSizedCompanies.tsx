@@ -15,7 +15,7 @@ const MediumSizedCompanies = () => {
       {" "}
       {/* Added overflow-hidden to prevent potential issues */}
       {/* Hero Section */}
-      <section className="hero bg-gradient-to-br from-blue-800 to-blue-600 text-white py-20 text-center">
+      <section className="py-16 text-center text-white bg-gradient-to-br from-slate-800 to-[#2a4365]">
         <div className="container mx-auto px-5 md:px-10 max-w-screen-xl">
           <h1 className="text-3xl md:text-5xl font-bold mb-5">
             Enterprise-Grade Security for Medium-Sized Businesses
@@ -27,7 +27,7 @@ const MediumSizedCompanies = () => {
           </p>
           <a
             href="#contact"
-            className="cta-button inline-block bg-white text-blue-700 px-8 py-3 rounded-full font-semibold transition duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-lg"
+            className="cta-button inline-block bg-blue-700 hover:bg-blue-800 text-white px-8 py-3 rounded-full font-semibold transition duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-lg"
           >
             Schedule a Demo
           </a>
@@ -808,19 +808,19 @@ const MediumSizedCompanies = () => {
         </div>
       </section>
       {/* Contact Section */}
-      <section className="section py-16 bg-slate-100" id="contact">
+      <section className="bg-slate-800 text-white py-16 text-center">
         <div className="container mx-auto px-5 md:px-10 max-w-screen-xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-5 text-blue-800">
+          <h2 className="text-3xl md:text-4xl font-bold mb-5 ">
             Ready to Secure Your Business?
           </h2>
-          <p className="text-lg max-w-2xl mx-auto text-slate-500">
+          <p className="text-lg max-w-2xl mx-auto ">
             Take the first step toward comprehensive security that grows with
             your organization
           </p>
           <div className="mt-10">
             <a
               href="#"
-              className="cta-button inline-block bg-blue-700 text-white px-8 py-3 rounded-full font-semibold transition duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-lg hover:bg-blue-800"
+              className="cta-button inline-block bg-blue-700 hover:bg-blue-800 text-white px-8 py-3 rounded-full font-semibold transition duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-lg"
             >
               Schedule a Demo
             </a>
