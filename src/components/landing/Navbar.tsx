@@ -83,7 +83,7 @@ const Navbar = () => {
         { label: "Datadog", href: "/documentation/datadog" },
         { label: "GCP", href: "/documentation/gcp" },
         { label: "Azure", href: "/documentation/azure" },
-        { label: "Webhook API", href: "#" },
+        { label: "Webhook API", href: "/documentation/webhook-api" },
       ],
     },
     {
