@@ -79,7 +79,7 @@ const Navbar = () => {
       label: "Documentation",
       dropdownOptions: [
         { label: "AWS", href: "/documentation/aws" },
-        { label: "Splunk", href: "#" },
+        { label: "Splunk", href: "/documentation/splunk" },
         { label: "Datadog", href: "#" },
         { label: "GCP", href: "#" },
         { label: "Azure", href: "#" },
