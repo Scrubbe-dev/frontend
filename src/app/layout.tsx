@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Toaster } from "sonner";
 import { HeroProvider } from "@/provider/hero-provider";
 import { StoreProvider } from "@/store/StoreProvider";
 import CookieConsentModal from "@/components/landing/CookieConsentModal";
@@ -50,6 +51,7 @@ export default function RootLayout({
             <Chatbot />
           </HeroProvider>
         </StoreProvider>
+        <Toaster position="top-center" />
       </body>
     </html>
   );

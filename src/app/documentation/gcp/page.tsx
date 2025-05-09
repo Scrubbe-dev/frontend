@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import SiemDashboard from "@/components/features/SiemDashboard";
+import GCP from "@/components/documentation/GCP";
 
 export const metadata: Metadata = {
-  title: "SIEM - Scrubbe",
+  title: "Documentation GCP - Scrubbe",
   description:
     "Scrubbe's AI-driven platform combines SIEM and SOAR for automated threat detection, response, and unified security analytics.",
 };
 
-const SIEMpage = () => {
+const GCPpage = () => {
   return (
     <>
-      <SiemDashboard />
+      <GCP />
     </>
   );
-}
+};
 
-export default SIEMpage;
+export default GCPpage;

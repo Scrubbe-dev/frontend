@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import SiemDashboard from "@/components/features/SiemDashboard";
+import Azure from "@/components/documentation/Azure";
 
 export const metadata: Metadata = {
-  title: "SIEM - Scrubbe",
+  title: "Documentation Azure - Scrubbe",
   description:
     "Scrubbe's AI-driven platform combines SIEM and SOAR for automated threat detection, response, and unified security analytics.",
 };
 
-const SIEMpage = () => {
+const Azurepage = () => {
   return (
     <>
-      <SiemDashboard />
+      <Azure />
     </>
   );
-}
+};
 
-export default SIEMpage;
+export default Azurepage;
