@@ -78,12 +78,12 @@ const Navbar = () => {
     {
       label: "Documentation",
       dropdownOptions: [
-        { label: "AWS", href: "#" },
-        { label: "Splunk", href: "#" },
-        { label: "Datadog", href: "#" },
-        { label: "GCP", href: "#" },
-        { label: "Azure", href: "#" },
-        { label: "Webhook API", href: "#" },
+        { label: "AWS", href: "/documentation/aws" },
+        { label: "Splunk", href: "/documentation/splunk" },
+        { label: "Datadog", href: "/documentation/datadog" },
+        { label: "GCP", href: "/documentation/gcp" },
+        { label: "Azure", href: "/documentation/azure" },
+        { label: "Webhook API", href: "/documentation/webhook-api" },
       ],
     },
     {
