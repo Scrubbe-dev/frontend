@@ -1,15 +1,13 @@
 import { createStore } from "zustand/vanilla";
 import { devtools, persist } from "zustand/middleware";
-import { createCounterSlice, SliceCounterType } from "./sliceCounter";
-import { createCookiesSlice, SliceCookiesType } from "./sliceCookies";
+import { createCookiesSlice, SliceCookiesType } from "./slices/sliceCookies";
 
-export type BoundStoreType = SliceCounterType & SliceCookiesType;
+export type BoundStoreType = SliceCookiesType;
 
 export const createBoundStore = () => {
   const store = createStore<BoundStoreType>()(
     persist(
       devtools((set, get, store) => ({
-        ...createCounterSlice(set, get, store),
         ...createCookiesSlice(set, get, store),
       })),
       {

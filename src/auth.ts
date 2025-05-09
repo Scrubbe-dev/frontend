@@ -3,13 +3,11 @@ import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import api from "@/lib/axios";
 
-// Define the schema for credentials validation
 const signInSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-// Define the JWT token type
 interface Token {
   sub?: string;
   firstName?: string;
@@ -29,18 +27,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
       authorize: async (credentials) => {
         try {
-          // Validate credentials
+          
           const { email, password } = await signInSchema.parseAsync(
             credentials
           );
 
-          // Use the configured axios instance instead of fetch
+          
           const response = await api.post("/login", {
             email,
             password,
           });
 
-          // Return user data in the format Auth.js expects
+          
           return {
             id: response.data.user.id,
             email: response.data.user.email,
@@ -59,7 +57,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    // Add tokens to the session
+    
     async jwt({ token, user }) {
       if (user) {
         token.accessToken = user.accessToken;
@@ -79,16 +77,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.isVerified = typedToken.isVerified;
       session.accessToken = typedToken.accessToken;
       session.refreshToken = typedToken.refreshToken;
-
       return session;
     },
   },
   pages: {
-    signIn: "/auth/signin", // Custom sign-in page
+    signIn: "/auth/signin", 
   },
 });
 
-// Extend the User and Session types for TypeScript
+
 declare module "next-auth" {
   interface User {
     firstName?: string;
