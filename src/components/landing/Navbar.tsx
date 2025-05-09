@@ -56,16 +56,19 @@ const Navbar = () => {
           href: "/features/authentication-sdk",
         },
         { label: "SIEM", href: "/features/siem" },
-        { label: "SOAR", href: "#" },
+        { label: "SOAR", href: "/features/soar" },
       ],
     },
     {
       label: "Solutions",
       dropdownOptions: [
-        { label: "For Startups", href: "#" },
-        { label: "For Medium sized companies", href: "#" },
-        { label: "For Developers", href: "#" },
-        { label: "For Enterprise Orgs", href: "#" },
+        { label: "For Startups", href: "/solutions/startups" },
+        {
+          label: "For Medium sized companies",
+          href: "/solutions/medium-sized-companies",
+        },
+        { label: "For Developers", href: "/solutions/developers" },
+        { label: "For Enterprise Orgs", href: "/solutions/enterprise-orgs" },
       ],
     },
     {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Toaster } from "sonner";
 import { HeroProvider } from "@/provider/hero-provider";
 import { StoreProvider } from "@/store/StoreProvider";
 import CookieConsentModal from "@/components/landing/CookieConsentModal";
@@ -10,6 +11,7 @@ import Footer from "@/components/landing/Footer";
 import Chatbot from "@/components/landing/Chatbot";
 import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
+import  AuthProvider  from "@/provider/AuthProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,6 +40,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen w-full`}
       >
+        <AuthProvider>
         <NextJsTopLoader />
         <StoreProvider>
           <AnnouncementBar />
@@ -50,6 +53,8 @@ export default function RootLayout({
             <Chatbot />
           </HeroProvider>
         </StoreProvider>
+        <Toaster position="top-center" />
+        </AuthProvider>
       </body>
     </html>
   );

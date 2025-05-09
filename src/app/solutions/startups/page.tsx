@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import SiemDashboard from "@/components/features/SiemDashboard";
+import StartUps from "@/components/solutions/StartUps";
 
 export const metadata: Metadata = {
-  title: "SIEM - Scrubbe",
+  title: "Solution StartUps - Scrubbe",
   description:
     "Scrubbe's AI-driven platform combines SIEM and SOAR for automated threat detection, response, and unified security analytics.",
 };
 
-const SIEMpage = () => {
+const StartUpspage = () => {
   return (
     <>
-      <SiemDashboard />
+      <StartUps />
     </>
   );
 }
 
-export default SIEMpage;
+export default StartUpspage;
