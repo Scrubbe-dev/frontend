@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import SiemDashboard from "@/components/features/SiemDashboard";
+import Splunk from "@/components/documentation/Splunk";
 
 export const metadata: Metadata = {
-  title: "SIEM - Scrubbe",
+  title: "Documentation Splunk - Scrubbe",
   description:
     "Scrubbe's AI-driven platform combines SIEM and SOAR for automated threat detection, response, and unified security analytics.",
 };
 
-const SIEMpage = () => {
+const Splunkpage = () => {
   return (
     <>
-      <SiemDashboard />
+      <Splunk />
     </>
   );
 }
 
-export default SIEMpage;
+export default Splunkpage;

@@ -2,44 +2,60 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useAppStore } from "@/store/StoreProvider";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { LoginFormData, loginSchema } from "@/lib/validations/auth.schema";
 
-const signInSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
-});
 
-type SignInFormData = z.infer<typeof signInSchema>;
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const { devLogin, devIsLoading, devError, devClearError } = useAppStore(
-    (state) => state
-  );
-
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<SignInFormData>({
-    resolver: zodResolver(signInSchema),
+    formState: { isSubmitting, errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = async (data: SignInFormData) => {
-    devClearError();
+  const onSubmit = async (data: LoginFormData) => {
     try {
-      await devLogin(data.email, data.password);
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
+      console.log(result?.error , 'from error status  ')
+      if (!!result?.error) {
+        toast.error("Sign in failed", {
+          description: result?.error,
+        });
+        return 
+      }
+      toast.success(`Successfully signed in!`, {
+        description: `${data.email}, you are being redirected...`,
+        duration: 5000,
+      });
+
+      router.push('/');
     } catch (error) {
       console.error("Login error:", error);
+      toast.error("Sign in failed", {
+        description:
+          error instanceof Error ? error.message : "An error occurred",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Toggle password visibility
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -49,15 +65,6 @@ export default function SignInForm() {
       <h1 className="text-xl md:text-2xl text-indigo-900 font-bold mb-4 md:mb-6">
         Sign In to Scrubbe
       </h1>
-
-      {devError && (
-        <div
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
-          role="alert"
-        >
-          <span className="block sm:inline">{devError}</span>
-        </div>
-      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-4 md:mt-6">
         <div className="mb-4 md:mb-5">
@@ -114,14 +121,14 @@ export default function SignInForm() {
         <div className="mb-4 md:mb-5">
           <button
             type="submit"
-            disabled={devIsLoading}
+            disabled={isLoading}
             className={`w-full py-2 md:py-3 px-4 md:px-6 bg-indigo-900 text-white font-semibold uppercase rounded-md transition duration-300 text-sm md:text-base ${
-              devIsLoading
+              isLoading
                 ? "opacity-75 cursor-not-allowed"
                 : "hover:bg-indigo-700"
             }`}
           >
-            {devIsLoading ? (
+            {isSubmitting ? (
               <div className="flex items-center justify-center">
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -153,7 +160,7 @@ export default function SignInForm() {
 
         <div className="flex justify-end mb-4">
           <a
-            href=""
+            href="/auth/forgot-password"
             className="text-indigo-900 hover:text-indigo-700 text-sm"
           >
             Forgot Password?

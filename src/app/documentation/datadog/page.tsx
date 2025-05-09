@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import SiemDashboard from "@/components/features/SiemDashboard";
+import Datadog from "@/components/documentation/Datadog";
 
 export const metadata: Metadata = {
-  title: "SIEM - Scrubbe",
+  title: "Documentation Datadog - Scrubbe",
   description:
     "Scrubbe's AI-driven platform combines SIEM and SOAR for automated threat detection, response, and unified security analytics.",
 };
 
-const SIEMpage = () => {
+const Datadogpage = () => {
   return (
     <>
-      <SiemDashboard />
+      <Datadog />
     </>
   );
-}
+};
 
-export default SIEMpage;
+export default Datadogpage;

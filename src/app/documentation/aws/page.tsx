@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import SiemDashboard from "@/components/features/SiemDashboard";
+import AWS from "@/components/documentation/AWS";
 
 export const metadata: Metadata = {
-  title: "SIEM - Scrubbe",
+  title: "Documentation AWS - Scrubbe",
   description:
     "Scrubbe's AI-driven platform combines SIEM and SOAR for automated threat detection, response, and unified security analytics.",
 };
 
-const SIEMpage = () => {
+const AWSpage = () => {
   return (
     <>
-      <SiemDashboard />
+      <AWS />
     </>
   );
 }
 
-export default SIEMpage;
+export default AWSpage;
