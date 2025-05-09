@@ -46,25 +46,25 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint
 
-    steps:
+    steps:  
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 20
           cache: 'pnpm'
-
+          
       - name: Install pnpm
-        if: env.PNPM_VERSION
-        uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
+        run: npm install -g pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
+        run:  pnpm install --frozen-lockfile
+      - name: Install pnpm
+      - name: Verify pnpm installation
+        run: pnpm --version
+        
       - name: Run tests
         run: pnpm test
         env:
