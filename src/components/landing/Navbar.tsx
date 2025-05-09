@@ -81,7 +81,7 @@ const Navbar = () => {
         { label: "AWS", href: "/documentation/aws" },
         { label: "Splunk", href: "/documentation/splunk" },
         { label: "Datadog", href: "/documentation/datadog" },
-        { label: "GCP", href: "#" },
+        { label: "GCP", href: "/documentation/gcp" },
         { label: "Azure", href: "#" },
         { label: "Webhook API", href: "#" },
       ],
