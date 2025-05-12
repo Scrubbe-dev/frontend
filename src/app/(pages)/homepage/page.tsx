@@ -1,5 +1,8 @@
 "use client";
-import Banner from "@/components/banner";
+import React from "react";
+//import Banner from "@/components/banner";
+//import { Button, Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
+//import { FlipWords } from "@/components/animation/flip-words";
 import SecurityFeatures from "@/components/landing/SecurityFeatures";
 import SecurityIntelligence from "@/components/landing/SecurityIntelligence";
 import SeamlessIntegrations from "@/components/landing/SeamlessIntegrations";
@@ -7,9 +10,7 @@ import CompromiseChecker from "@/components/landing/CompromiseChecker";
 import Integration from "@/components/landing/Integration";
 import ChartHome from "@/components/landing/ChartHome";
 import ScrubbeHighlights from "@/components/landing/ScrubbeHighlights";
-import { Button, Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
-import React from "react";
-import { FlipWords } from "@/components/animation/flip-words";
+import Hero from "@/components/landing/hero/Hero";
 import { CodeBlock, dracula } from "react-code-blocks";
 
 export function CodeDisplay({
@@ -33,11 +34,11 @@ export function CodeDisplay({
 }
 
 function HomePage() {
-  const words = ["Intelligence", "Features", "in Action"];
+ // const words = ["Intelligence", "Features", "in Action"];
 
   return (
     <>
-      <div
+  {/*     <section
         className="w-full min-h-screen flex justify-center pb-14"
         style={{ backgroundImage: "linear-gradient(135deg, #1e293b, #1e40af)" }}
       >
@@ -115,7 +116,9 @@ function HomePage() {
             </div>
           </div>
         </div>
-      </div>
+      </section> */}
+      <Hero />
+
       <SecurityFeatures />
 
       <SecurityIntelligence />
