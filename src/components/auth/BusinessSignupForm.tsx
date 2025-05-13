@@ -18,7 +18,7 @@ export default function BusinessSignupForm() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
+
   } = useForm<BusinessSignupFormData>({
     resolver: zodResolver(businessSignupSchema),
     defaultValues: {
@@ -42,12 +42,12 @@ export default function BusinessSignupForm() {
         description: `${data.fullName}, you'll be redirected to sign in shortly.`,
         duration: 10000,
       });
-      router.push('/auth/signin')
+      router.push("/auth/signin");
     } catch (err) {
       toast.error("Registration failed", {
-        description: error,
+        description: (err as Error).message || "Something went wrong.",
       });
-    } 
+    }    
   };
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);

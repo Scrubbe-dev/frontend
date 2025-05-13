@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+"use client";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 // Single corner animation
@@ -105,6 +106,34 @@ function CornerAnimation({ width, height }: { width: number; height: number }) {
 
 // HERO section wrapper
 export default function HeroSection() {
+  // State to store window dimensions
+  const [windowDimensions, setWindowDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  // Effect to safely access window object after component mount
+  useEffect(() => {
+    // Set initial dimensions
+    setWindowDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+
+    // Handle resize events
+    const handleResize = () => {
+      setWindowDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Adjusted positions with slight upward shift for each corner
   const corners = [
     { pos: "top-0 left-0", shift: "translate-y-2" },
@@ -112,7 +141,7 @@ export default function HeroSection() {
     { pos: "bottom-0 left-0", shift: "-translate-y-2 -translate-x-1/4" }, // more left
     { pos: "bottom-0 right-0", shift: "-translate-y-2 translate-x-1/4" }, // more right
   ];
-  
+
   return (
     <section className="relative w-full h-full overflow-hidden">
       {/* Background Corner Animations */}
@@ -121,15 +150,17 @@ export default function HeroSection() {
           key={i}
           className={`absolute ${pos} w-1/2 h-1/2 pointer-events-none z-0 transform ${shift}`}
         >
-          <CornerAnimation
-            width={window.innerWidth / 2}
-            height={window.innerHeight / 2}
-          />
+          {windowDimensions.width > 0 && windowDimensions.height > 0 && (
+            <CornerAnimation
+              width={windowDimensions.width / 2}
+              height={windowDimensions.height / 2}
+            />
+          )}
         </div>
       ))}
 
       {/* Foreground Hero Content */}
-    {/*   <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
+      {/* <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
         <h1 className="text-4xl font-bold">Welcome to My Hero Section</h1>
         <p className="mt-4 text-lg text-center max-w-xl">
           This is a foreground section rendered above animated corners. The

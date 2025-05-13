@@ -18,7 +18,6 @@ export default function DeveloperSignupForm() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<DeveloperSignupFormData>({
     resolver: zodResolver(developerSignupSchema),
     defaultValues: {
@@ -47,7 +46,7 @@ export default function DeveloperSignupForm() {
      
     } catch (err) {
       toast.error("Registration failed", {
-        description: error,
+        description: (err as Error).message || "Something went wrong.",
       });
     }
   };
