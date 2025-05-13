@@ -9,6 +9,16 @@ import { RiSearchLine } from "react-icons/ri";
 import { FiGlobe } from "react-icons/fi";
 import SearchModal from "@/components/landing/SearchModal";
 
+type MenuItem = {
+  label: string;
+  href?: string;
+  dropdownOptions?: {
+    label: string;
+    href: string;
+    description?: string; // Adding optional description field
+  }[];
+};
+
 const Navbar = () => {
   // Existing state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,53 +56,132 @@ const Navbar = () => {
   };
 
   // Menu items configuration
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
-      label: "Features",
+      label: "Products",
       dropdownOptions: [
-        { label: "API as a service", href: "/features/api-as-a-service" },
+        {
+          label: "SIEM Platform",
+          href: "#",
+          description:
+            "Real-time threat detection, log analysis, and centralized monitoring",
+        },
+        {
+          label: "SOAR Automation",
+          href: "#",
+          description:
+            "Automated workflows to respond to incidents faster and smarter",
+        },
+        {
+          label: "Incident Management",
+          href: "#",
+          description:
+            "End-to-end visibility, manage security events from detection to resolution",
+        },
+        {
+          label: "Fraud Detection",
+          href: "#",
+          description:
+            "Tools to detect and block suspicious behavior across digital platforms",
+        },
         {
           label: "Authentication SDK",
-          href: "/features/authentication-sdk",
+          href: "#",
+          description:
+            "Secure user and system authentication for integrated apps",
         },
-        { label: "SIEM", href: "/features/siem" },
-        { label: "SOAR", href: "/features/soar" },
+        {
+          label: "Compliance Tools",
+          href: "#",
+          description:
+            "Automate reporting and meet standards like SOC 2, ISO 27001",
+        },
+        {
+          label: "Dashboard Preview",
+          href: "#",
+          description:
+            "Get a sneak peak of the Scrubbe control center in action",
+        },
       ],
     },
     {
       label: "Solutions",
       dropdownOptions: [
-        { label: "For Startups", href: "/solutions/startups" },
         {
-          label: "For Medium sized companies",
-          href: "/solutions/medium-sized-companies",
+          label: "For Fintech",
+          href: "#",
+          description: "Monitor Fraud, ensure compliance and Scale securely",
         },
-        { label: "For Developers", href: "/solutions/developers" },
-        { label: "For Enterprise Orgs", href: "/solutions/enterprise-orgs" },
+        {
+          label: "For SaaS Companies",
+          href: "#",
+          description:
+            "Protect customer data and respond to security threats in real time",
+        },
+        {
+          label: "For Security Teams",
+          href: "#",
+          description:
+            "Centralize visibility, automate playbooks, and reduce manual triage",
+        },
+        {
+          label: "Real-time Threat Monitoring",
+          href: "#",
+          description: "Spot and act on threats as they happen",
+        },
+        {
+          label: "KYC & Fraud Protection",
+          href: "#",
+          description:
+            "Detect identity fraud and malicious account behavior early",
+        },
       ],
-    },
-    {
-      label: "Pricing",
-      href: "#",
     },
     {
       label: "Documentation",
       dropdownOptions: [
-        { label: "AWS", href: "/documentation/aws" },
-        { label: "Splunk", href: "/documentation/splunk" },
-        { label: "Datadog", href: "/documentation/datadog" },
-        { label: "GCP", href: "/documentation/gcp" },
-        { label: "Azure", href: "/documentation/azure" },
-        { label: "Webhook API", href: "/documentation/webhook-api" },
+        {
+          label: "Fraud APIs",
+          href: "#",
+          description:
+            "Fraud-aware APIs equipped with tools to monitor, detect and block suspicious behavior across digital platforms",
+        },
+        {
+          label: "Authentication SDK",
+          href: "#",
+          description:
+            "Secure user and system with scrubbe authentication with features",
+        },
+      ],
+    },
+    {
+      label: "Pricing",
+      dropdownOptions: [
+        {
+          label: "Authentication SDK Pricing",
+          href: "#",
+        },
+        {
+          label: "SIEM and SOAR Monitoring Pricing",
+          href: "#",
+        },
+        {
+          label: "Talk To Sales",
+          href: "#",
+        },
       ],
     },
     {
       label: "More",
       dropdownOptions: [
-        { label: "Blog", href: "#" },
-        { label: "Contact Sales", href: "#" },
-        { label: "Contact Us", href: "#" },
-        { label: "Knowledge Base", href: "#" },
+        { label: "Knowledge base", href: "#" },
+        { label: "Security and Trust", href: "#" },
+        { label: "Case Studies", href: "#" },
+        { label: "Blog (Technical and Industry Post)", href: "#" },
+        { label: "White Papers", href: "#" },
+        { label: "Careers", href: "#" },
+        { label: "Compliance Checklist", href: "#" },
+        { label: "About Us", href: "#" },
       ],
     },
   ];
@@ -154,16 +243,30 @@ const Navbar = () => {
                       {item.label} <VscChevronDown className="ml-1" />
                     </button>
 
-                    <div className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-lg min-w-[220px] z-50 border border-gray-200 py-1 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200">
-                      {item.dropdownOptions.map((option) => (
-                        <Link
-                          key={option.label}
-                          href={option.href}
-                          className={`block px-4 py-2 ${textColor} hover:bg-blue-600 hover:text-white transition-colors text-sm`}
-                        >
-                          {option.label}
-                        </Link>
-                      ))}
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 bg-white shadow-lg rounded-lg w-[600px] z-50 border border-gray-200 py-4 px-6 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200">
+                      <div className="grid grid-cols-2 gap-4">
+                        {item.dropdownOptions.map((option) => (
+                          <Link
+                            key={option.label}
+                            href={option.href}
+                            className="block p-3 rounded-lg hover:bg-blue-50 transition-colors relative overflow-hidden group/item"
+                          >
+                            {/* Left border that appears on hover */}
+                            <div className="absolute left-0 top-0 h-full w-1 bg-transparent group-hover/item:bg-blue-600 transition-colors"></div>
+
+                            <h3
+                              className={`font-medium ${textColor} group-hover/item:text-blue-600 group-hover/item:underline transition-colors`}
+                            >
+                              {option.label}
+                            </h3>
+                            {option.description && (
+                              <p className="text-sm text-gray-500 mt-1 group-hover/item:text-blue-500 transition-colors">
+                                {option.description}
+                              </p>
+                            )}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   </>
                 ) : (
@@ -206,7 +309,7 @@ const Navbar = () => {
               <Link
                 href="/"
                 onClick={() => setIsModalOpen(false)}
-                className="relative  w-[141px] h-[40px] sm:w-[176px] sm:h-[50px] lg:w-[211px] lg:h-[60px]"
+                className="relative w-[141px] h-[40px] sm:w-[176px] sm:h-[50px] lg:w-[211px] lg:h-[60px]"
               >
                 <Image
                   src="/scrubbe-logo-01.png"
@@ -243,15 +346,25 @@ const Navbar = () => {
                       </button>
 
                       {expandedMenus[item.label] && (
-                        <div className="mt-1 bg-gray-50 rounded-lg overflow-hidden">
+                        <div className="mt-1 space-y-2">
                           {item.dropdownOptions.map((option) => (
                             <Link
                               key={option.label}
                               href={option.href}
                               onClick={() => setIsModalOpen(false)}
-                              className={`block px-4 py-3 ${textColor} hover:bg-blue-600 hover:text-white transition-colors text-base`}
+                              className={`block px-4 py-3 rounded-lg bg-gray-50 hover:bg-blue-50 transition-colors group relative`}
                             >
-                              {option.label}
+                              <div className="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-blue-600 transition-colors"></div>
+                              <span
+                                className={`block font-medium ${textColor} group-hover:text-blue-600 group-hover:underline transition-colors`}
+                              >
+                                {option.label}
+                              </span>
+                              {option.description && (
+                                <span className="block text-sm text-gray-500 mt-1 group-hover:text-blue-500 transition-colors">
+                                  {option.description}
+                                </span>
+                              )}
                             </Link>
                           ))}
                         </div>
