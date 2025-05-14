@@ -194,7 +194,7 @@ const Navbar = () => {
   return (
     <>
       {/* Navbar Container */}
-      <section className="w-full h-auto bg-white flex justify-center">
+      <section className="w-full h-auto bg-white flex justify-center sticky top-0 z-50">
         <nav
           className={`flex ${textColor} h-16 w-full max-w-[1440px] justify-between items-center px-4 md:px-6 lg:px-10 xl:px-20 sticky top-0 z-50 bg-white shadow-sm`}
         >
