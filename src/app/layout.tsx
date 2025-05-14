@@ -11,7 +11,7 @@ import Footer from "@/components/landing/Footer";
 import Chatbot from "@/components/landing/Chatbot";
 import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
-import  AuthProvider  from "@/provider/AuthProvider";
+import AuthProvider from "@/provider/AuthProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,22 +38,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen w-full`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen w-full flex flex-col justify-center items-center`}
       >
         <AuthProvider>
-        <NextJsTopLoader />
-        <StoreProvider>
-          <AnnouncementBar />
-          <HeroProvider>
-            <Navbar />
-            <main className="flex-grow h-full w-full">{children}</main>
-            <Footer />
-            <CookieConsentModal />
-            <CookieToggleButton />
-            <Chatbot />
-          </HeroProvider>
-        </StoreProvider>
-        <Toaster position="top-center" />
+          <NextJsTopLoader />
+          <StoreProvider>
+            <AnnouncementBar />
+            <HeroProvider>
+              <Navbar />
+              <main className="flex-grow h-full w-full">{children}</main>
+              <Footer />
+              <CookieConsentModal />
+              <CookieToggleButton />
+              <Chatbot />
+            </HeroProvider>
+          </StoreProvider>
+          <Toaster position="top-center" />
         </AuthProvider>
       </body>
     </html>

@@ -100,43 +100,43 @@ const CodeBlock: React.FC<{ children: string }> = ({ children }) => {
 
 const Integration: React.FC = () => {
   return (
-    <div className="min-w-[320px] max-w-[1440px] mx-auto px-5 py-12 bg-gray-50 text-gray-800">
-      <div className="max-w-3xl mx-auto">
-      
-        {/* Header */}
-        <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
-          <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold px-4 text-center">
-            Built for Enterprise. Ready for Anything
+    <div className="w-full h-auto bg-gray-50">
+      <section className="min-w-[320px] max-w-[1440px] mx-auto px-5 py-12 bg-gray-50 text-gray-800">
+        <div className="max-w-3xl mx-auto">
+          {/* Header */}
+          <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
+            <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold px-4 text-center">
+              Built for Enterprise. Ready for Anything
+            </div>
+            <div className="bg-emerald-500 h-1 w-16 rounded-full"></div>
           </div>
-          <div className="bg-emerald-500 h-1 w-16 rounded-full"></div>
-        </div>
 
-        {/* Subheading */}
-        <div className="w-full h-full flex items-center justify-center py-4">
-          <span className="h-fit xl:w-3/6 text-wrap text-center text-[1rem] md:text-[1.3rem]  text-muted-foreground px-2 xl:px-0 font-Raleway font-medium">
-            Unify data. Automate workflows. Drive decisions
-          </span>
-        </div>
+          {/* Subheading */}
+          <div className="w-full h-full flex items-center justify-center py-4">
+            <span className="h-fit xl:w-3/6 text-wrap text-center text-[1rem] md:text-[1.3rem]  text-muted-foreground px-2 xl:px-0 font-Raleway font-medium">
+              Unify data. Automate workflows. Drive decisions
+            </span>
+          </div>
 
-        <div className="mb-10">
-          {/* Webhook API Integration */}
-          <AccordionItem title="Webhook API Integration">
-            <p className="mb-4">
-              Scrubbe&apos;s Webhook API allows you to receive real-time
-              notifications about security events.
-            </p>
+          <div className="mb-10">
+            {/* Webhook API Integration */}
+            <AccordionItem title="Webhook API Integration">
+              <p className="mb-4">
+                Scrubbe&apos;s Webhook API allows you to receive real-time
+                notifications about security events.
+              </p>
 
-            <TabGroup>
-              <Tab title="Setup" id="webhook-setup" defaultActive>
-                <h3 className="text-xl font-semibold mb-2">
-                  Setting Up Webhooks
-                </h3>
-                <p className="mb-2">
-                  Create an endpoint in your application to receive webhook
-                  events:
-                </p>
-                <CodeBlock>
-                  {`// Node.js Express example
+              <TabGroup>
+                <Tab title="Setup" id="webhook-setup" defaultActive>
+                  <h3 className="text-xl font-semibold mb-2">
+                    Setting Up Webhooks
+                  </h3>
+                  <p className="mb-2">
+                    Create an endpoint in your application to receive webhook
+                    events:
+                  </p>
+                  <CodeBlock>
+                    {`// Node.js Express example
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -163,31 +163,32 @@ app.post('/api/scrubbe-webhook', (req, res) => {
 app.listen(3000, () => {
   console.log('Webhook server running on port 3000');
 });`}
-                </CodeBlock>
-              </Tab>
+                  </CodeBlock>
+                </Tab>
 
-              <Tab title="Events" id="webhook-events">
-                <h3 className="text-xl font-semibold mb-2">Event Types</h3>
-                <p className="mb-2">
-                  Scrubbe sends the following main event categories:
-                </p>
-                <ul className="list-disc pl-5 mb-4">
-                  <li>
-                    <strong>User Events</strong>: login, logout, password_reset
-                  </li>
-                  <li>
-                    <strong>Security Events</strong>: brute_force_detected,
-                    suspicious_login
-                  </li>
-                  <li>
-                    <strong>Admin Events</strong>: user_created, user_deleted,
-                    role_assigned
-                  </li>
-                </ul>
+                <Tab title="Events" id="webhook-events">
+                  <h3 className="text-xl font-semibold mb-2">Event Types</h3>
+                  <p className="mb-2">
+                    Scrubbe sends the following main event categories:
+                  </p>
+                  <ul className="list-disc pl-5 mb-4">
+                    <li>
+                      <strong>User Events</strong>: login, logout,
+                      password_reset
+                    </li>
+                    <li>
+                      <strong>Security Events</strong>: brute_force_detected,
+                      suspicious_login
+                    </li>
+                    <li>
+                      <strong>Admin Events</strong>: user_created, user_deleted,
+                      role_assigned
+                    </li>
+                  </ul>
 
-                <p className="mb-2">Example event payload:</p>
-                <CodeBlock>
-                  {`{
+                  <p className="mb-2">Example event payload:</p>
+                  <CodeBlock>
+                    {`{
   "event_id": "evt_123456789",
   "event_type": "user.login",
   "created_at": "2025-04-19T14:30:00Z",
@@ -199,19 +200,19 @@ app.listen(3000, () => {
     "success": true
   }
 }`}
-                </CodeBlock>
-              </Tab>
+                  </CodeBlock>
+                </Tab>
 
-              <Tab title="Security" id="webhook-security">
-                <h3 className="text-xl font-semibold mb-2">
-                  Security Best Practices
-                </h3>
-                <p className="mb-2">
-                  Verify webhook signatures to ensure requests are coming from
-                  Scrubbe:
-                </p>
-                <CodeBlock>
-                  {`// Verify webhook signature
+                <Tab title="Security" id="webhook-security">
+                  <h3 className="text-xl font-semibold mb-2">
+                    Security Best Practices
+                  </h3>
+                  <p className="mb-2">
+                    Verify webhook signatures to ensure requests are coming from
+                    Scrubbe:
+                  </p>
+                  <CodeBlock>
+                    {`// Verify webhook signature
 const verifyWebhookSignature = (req) => {
   const crypto = require('crypto');
   
@@ -236,51 +237,53 @@ const verifyWebhookSignature = (req) => {
     Buffer.from(calculatedSignature)
   );
 };`}
-                </CodeBlock>
-              </Tab>
-            </TabGroup>
-          </AccordionItem>
+                  </CodeBlock>
+                </Tab>
+              </TabGroup>
+            </AccordionItem>
 
-          {/* SCIM Integration */}
-          <AccordionItem title="SCIM Provisioning">
-            <p className="mb-4">
-              System for Cross-domain Identity Management (SCIM) allows you to
-              automate user provisioning.
-            </p>
+            {/* SCIM Integration */}
+            <AccordionItem title="SCIM Provisioning">
+              <p className="mb-4">
+                System for Cross-domain Identity Management (SCIM) allows you to
+                automate user provisioning.
+              </p>
 
-            <TabGroup>
-              <Tab title="Setup" id="scim-setup" defaultActive>
-                <h3 className="text-xl font-semibold mb-2">Setting Up SCIM</h3>
-                <p className="mb-2">
-                  Scrubbe provides the following SCIM endpoints:
-                </p>
-                <ul className="list-disc pl-5 mb-4">
-                  <li>
-                    SCIM Base URL:{" "}
-                    <code className="bg-gray-100 px-1 py-0.5 rounded text-sm">
-                      https://api.scrubbe.com/scim/v2
-                    </code>
-                  </li>
-                  <li>
-                    Users Endpoint:{" "}
-                    <code className="bg-gray-100 px-1 py-0.5 rounded text-sm">
-                      /Users
-                    </code>
-                  </li>
-                  <li>
-                    Groups Endpoint:{" "}
-                    <code className="bg-gray-100 px-1 py-0.5 rounded text-sm">
-                      /Groups
-                    </code>
-                  </li>
-                </ul>
+              <TabGroup>
+                <Tab title="Setup" id="scim-setup" defaultActive>
+                  <h3 className="text-xl font-semibold mb-2">
+                    Setting Up SCIM
+                  </h3>
+                  <p className="mb-2">
+                    Scrubbe provides the following SCIM endpoints:
+                  </p>
+                  <ul className="list-disc pl-5 mb-4">
+                    <li>
+                      SCIM Base URL:{" "}
+                      <code className="bg-gray-100 px-1 py-0.5 rounded text-sm">
+                        https://api.scrubbe.com/scim/v2
+                      </code>
+                    </li>
+                    <li>
+                      Users Endpoint:{" "}
+                      <code className="bg-gray-100 px-1 py-0.5 rounded text-sm">
+                        /Users
+                      </code>
+                    </li>
+                    <li>
+                      Groups Endpoint:{" "}
+                      <code className="bg-gray-100 px-1 py-0.5 rounded text-sm">
+                        /Groups
+                      </code>
+                    </li>
+                  </ul>
 
-                <p className="mb-2">
-                  For SCIM API requests, use the SCIM token in the Authorization
-                  header:
-                </p>
-                <CodeBlock>
-                  {`// Example SCIM API request
+                  <p className="mb-2">
+                    For SCIM API requests, use the SCIM token in the
+                    Authorization header:
+                  </p>
+                  <CodeBlock>
+                    {`// Example SCIM API request
 fetch('https://api.scrubbe.com/scim/v2/Users', {
   method: 'GET',
   headers: {
@@ -291,14 +294,14 @@ fetch('https://api.scrubbe.com/scim/v2/Users', {
 .then(response => response.json())
 .then(data => console.log('Users:', data))
 .catch(error => console.error('Error fetching users:', error));`}
-                </CodeBlock>
-              </Tab>
+                  </CodeBlock>
+                </Tab>
 
-              <Tab title="User Management" id="scim-users">
-                <h3 className="text-xl font-semibold mb-2">Managing Users</h3>
-                <p className="mb-2">Create new users using the SCIM API:</p>
-                <CodeBlock>
-                  {`// Create a new user
+                <Tab title="User Management" id="scim-users">
+                  <h3 className="text-xl font-semibold mb-2">Managing Users</h3>
+                  <p className="mb-2">Create new users using the SCIM API:</p>
+                  <CodeBlock>
+                    {`// Create a new user
 const createUser = async (userData) => {
   try {
     const response = await fetch('https://api.scrubbe.com/scim/v2/Users', {
@@ -332,60 +335,62 @@ const createUser = async (userData) => {
     console.error('Error creating user:', error);
   }
 };`}
-                </CodeBlock>
-              </Tab>
+                  </CodeBlock>
+                </Tab>
 
-              <Tab title="IdP Integration" id="scim-idp">
-                <h3 className="text-xl font-semibold mb-2">
-                  Identity Provider Integration
-                </h3>
-                <p className="mb-2">
-                  Connect Scrubbe to Azure AD for automatic provisioning:
-                </p>
-                <ol className="list-decimal pl-5 mb-4">
-                  <li>In Azure AD, go to Enterprise Applications → Add</li>
-                  <li>Go to Provisioning → Get Started → Automatic</li>
-                  <li>
-                    Enter your Scrubbe SCIM details:
-                    <ul className="list-disc pl-5 mt-1">
-                      <li>
-                        Tenant URL:{" "}
-                        <code className="bg-gray-100 px-1 py-0.5 rounded text-sm">
-                          https://api.scrubbe.com/scim/v2
-                        </code>
-                      </li>
-                      <li>Secret Token: Your Scrubbe SCIM token</li>
-                    </ul>
-                  </li>
-                  <li>Test the connection and save</li>
-                </ol>
+                <Tab title="IdP Integration" id="scim-idp">
+                  <h3 className="text-xl font-semibold mb-2">
+                    Identity Provider Integration
+                  </h3>
+                  <p className="mb-2">
+                    Connect Scrubbe to Azure AD for automatic provisioning:
+                  </p>
+                  <ol className="list-decimal pl-5 mb-4">
+                    <li>In Azure AD, go to Enterprise Applications → Add</li>
+                    <li>Go to Provisioning → Get Started → Automatic</li>
+                    <li>
+                      Enter your Scrubbe SCIM details:
+                      <ul className="list-disc pl-5 mt-1">
+                        <li>
+                          Tenant URL:{" "}
+                          <code className="bg-gray-100 px-1 py-0.5 rounded text-sm">
+                            https://api.scrubbe.com/scim/v2
+                          </code>
+                        </li>
+                        <li>Secret Token: Your Scrubbe SCIM token</li>
+                      </ul>
+                    </li>
+                    <li>Test the connection and save</li>
+                  </ol>
 
-                <p className="mb-2">
-                  Connect Scrubbe to Okta for automatic provisioning:
-                </p>
-                <ol className="list-decimal pl-5 mb-4">
-                  <li>
-                    In Okta Admin Console, go to Applications → Add Application
-                  </li>
-                  <li>Select &quot;SCIM&quot; as the sign-on method</li>
-                  <li>
-                    Enter your Scrubbe SCIM details:
-                    <ul className="list-disc pl-5 mt-1">
-                      <li>
-                        SCIM 2.0 Base URL:{" "}
-                        <code className="bg-gray-100 px-1 py-0.5 rounded text-sm">
-                          https://api.scrubbe.com/scim/v2
-                        </code>
-                      </li>
-                      <li>OAuth Bearer Token: Your Scrubbe SCIM token</li>
-                    </ul>
-                  </li>
-                </ol>
-              </Tab>
-            </TabGroup>
-          </AccordionItem>
+                  <p className="mb-2">
+                    Connect Scrubbe to Okta for automatic provisioning:
+                  </p>
+                  <ol className="list-decimal pl-5 mb-4">
+                    <li>
+                      In Okta Admin Console, go to Applications → Add
+                      Application
+                    </li>
+                    <li>Select &quot;SCIM&quot; as the sign-on method</li>
+                    <li>
+                      Enter your Scrubbe SCIM details:
+                      <ul className="list-disc pl-5 mt-1">
+                        <li>
+                          SCIM 2.0 Base URL:{" "}
+                          <code className="bg-gray-100 px-1 py-0.5 rounded text-sm">
+                            https://api.scrubbe.com/scim/v2
+                          </code>
+                        </li>
+                        <li>OAuth Bearer Token: Your Scrubbe SCIM token</li>
+                      </ul>
+                    </li>
+                  </ol>
+                </Tab>
+              </TabGroup>
+            </AccordionItem>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

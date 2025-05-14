@@ -234,68 +234,70 @@ const SecurityFeatures: React.FC = () => {
   };
 
   return (
-    <section className="w-full py-16 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-4">
-            Powerful Security Features
-          </h2>
-          <div className="w-16 h-1 bg-emerald-500 mx-auto mb-6 rounded-full"></div>
-          <p className="max-w-3xl mx-auto text-lg text-gray-600">
-            Scrubbe offers comprehensive security monitoring and automated
-            response capabilities to identify and neutralize threats before they
-            impact your business.
-          </p>
+    <div className="w-full h-auto bg-gray-50">
+      <section className="w-full max-w-[1440px] py-16 bg-gray-50 mx-auto">
+        <div className="max-w-7xl mx-auto px-4">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-4">
+              Powerful Security Features
+            </h2>
+            <div className="w-16 h-1 bg-emerald-500 mx-auto mb-6 rounded-full"></div>
+            <p className="max-w-3xl mx-auto text-lg text-gray-600">
+              Scrubbe offers comprehensive security monitoring and automated
+              response capabilities to identify and neutralize threats before
+              they impact your business.
+            </p>
+          </div>
+
+          {/* Desktop Grid Layout (hidden on mobile) */}
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature, index) => (
+              <FeatureCard
+                key={`feature-${index}`}
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+              />
+            ))}
+          </div>
+
+          {/* Mobile Carousel (visible only on mobile) */}
+          {isMobile && (
+            <Carousel className="md:hidden">
+              <CarouselButton
+                direction="previous"
+                onClick={goToPrevious}
+                disabled={isPreviousDisabled}
+              />
+
+              <CarouselContent
+                currentIndex={currentIndex}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+              >
+                {features.map((feature, idx) => (
+                  <CarouselItem key={`mobile-feature-${idx}`}>
+                    <FeatureCard
+                      icon={feature.icon}
+                      title={feature.title}
+                      description={feature.description}
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+
+              <CarouselButton
+                direction="next"
+                onClick={goToNext}
+                disabled={isNextDisabled}
+              />
+            </Carousel>
+          )}
         </div>
-
-        {/* Desktop Grid Layout (hidden on mobile) */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
-            <FeatureCard
-              key={`feature-${index}`}
-              icon={feature.icon}
-              title={feature.title}
-              description={feature.description}
-            />
-          ))}
-        </div>
-
-        {/* Mobile Carousel (visible only on mobile) */}
-        {isMobile && (
-          <Carousel className="md:hidden">
-            <CarouselButton
-              direction="previous"
-              onClick={goToPrevious}
-              disabled={isPreviousDisabled}
-            />
-
-            <CarouselContent
-              currentIndex={currentIndex}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-            >
-              {features.map((feature, idx) => (
-                <CarouselItem key={`mobile-feature-${idx}`}>
-                  <FeatureCard
-                    icon={feature.icon}
-                    title={feature.title}
-                    description={feature.description}
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-
-            <CarouselButton
-              direction="next"
-              onClick={goToNext}
-              disabled={isNextDisabled}
-            />
-          </Carousel>
-        )}
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };
 
