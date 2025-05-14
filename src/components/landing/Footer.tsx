@@ -1,45 +1,60 @@
 import { ChevronRight } from "lucide-react";
 import React from "react";
-import { FaDiscord, FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa6";
+import Image from "next/image";
+import { FaGithub, FaLinkedin, FaSquareXTwitter } from "react-icons/fa6";
 import { IconType } from "react-icons";
 import Link from "next/link";
 
 // Centralized theme configuration - keeping only shared/reused styles
 const theme = {
   colors: {
-    text: "text-[#ebeaff]", // Light purple text color - used in multiple places
+    text: "text-white",
+    accent: "text-green-400",
   },
   spacing: {
-    columnGap: "gap-8",
+    columnGap: "gap-4",
+    rowGap: "gap-8",
   },
   fonts: {
-    title: "font-semibold font-Montserrat text-xl",
-    body: "font-Raleway text-sm",
-    linkText: "font-Montserrat text-sm",
+    logo: "font-bold font-Montserrat text-xl xl:text-2xl",
+    title: "font-semibold font-Montserrat text-base xl:text-lg",
+    body: "font-Raleway text-xs xl:text-sm",
+    linkText: "font-Montserrat text-xs xl:text-sm",
   },
 };
 
 // Component-specific styles grouped together
 const componentStyles = {
   footer: {
-    container:
-      "h-auto w-full flex justify-center px-4 py-10 sm:pt-0 sm:px-0 sm:pb-8 z-10 border-black border-t-[8px]",
-    background: "linear-gradient(135deg, #1e293b, #1e40af)",
-    innerContainer: "xl:w-8/12 h-full grid xl:grid-cols-4 py-10",
+    container: "w-full px-4 py-8 z-10",
+    background: "bg-gradient-to-r from-[#1E326A] to-[#3B62D0]",
+    innerContainer: "max-w-7xl mx-auto",
+    topRow:
+      "grid grid-cols-1 xl:grid-cols-5 gap-8 mb-8 pb-8 border-b border-blue-400/30",
+    middleRow:
+      "grid grid-cols-1 xl:grid-cols-5 gap-8 mb-8 pb-8 border-b-4 border-white",
+    bottomRow: "flex flex-col xl:flex-row xl:items-center xl:justify-between",
+    address: "mb-4 xl:mb-0",
+    copyright: "text-sm text-gray-300",
   },
   socialLink: {
     container:
-      "w-fit h-fit p-2 items-center rounded-full flex hover:-translate-y-1 cursor-pointer hover:bg-green-500 transition-all justify-center bg-slate-600",
+      "relative z-10 w-10 h-10 rounded-full flex items-center justify-center bg-black hover:bg-blue-700 text-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1",
   },
   footerLink: {
-    container: "flex items-center justify-start gap-1 mb-4",
-    text: "w-fit gap-1 h-fit items-center rounded-full flex cursor-pointer hover:text-green-400 transition-all justify-start",
+    container: "flex items-center justify-start mb-2 xl:mb-3",
+    text: "w-fit h-fit items-center flex cursor-pointer hover:text-green-400 transition-all justify-start",
   },
   column: {
-    container: "w-full col-span-1 space-y-6 pt-10",
-    headerContainer: "w-full space-y-2",
-    accent: "w-10 h-1 bg-green-400 rounded-full",
+    container: "w-full",
+    headerContainer: "w-full mb-4",
+    accent: "w-10 h-1 bg-green-400 rounded-full mt-2",
     linkContainer: "mt-4",
+  },
+  logoSection: {
+    container: "col-span-1 xl:col-span-1",
+    description: "mt-3 mb-6 max-w-xs",
+    socialContainer: "flex items-center gap-3",
   },
 };
 
@@ -76,19 +91,20 @@ const SocialLink: React.FC<SocialLinkProps> = ({ icon: Icon, href }) => (
     target="_blank"
     rel="noopener noreferrer"
   >
-    <Icon size={20} color="#ffffff" />
+    <Icon size={24} />
   </Link>
 );
 
 // Footer link component
+// This is incorrect, as size doesn't support the lg: variant directly, let me fix it
 const FooterLink: React.FC<FooterLinkProps> = ({ text, href }) => (
   <div className={componentStyles.footerLink.container}>
     <Link
       href={href}
       className={`${componentStyles.footerLink.text} ${theme.colors.text}`}
     >
-      <ChevronRight size={18} />
-      <div className={`w-fit h-fit ${theme.fonts.linkText}`}>{text}</div>
+      <ChevronRight size={14} className="text-green-400" />
+      <div className={`${theme.fonts.linkText}`}>{text}</div>
     </Link>
   </div>
 );
@@ -96,9 +112,7 @@ const FooterLink: React.FC<FooterLinkProps> = ({ text, href }) => (
 // Column header component
 const ColumnHeader: React.FC<ColumnHeaderProps> = ({ title }) => (
   <div className={componentStyles.column.headerContainer}>
-    <div className={`w-fit h-fit ${theme.fonts.title} ${theme.colors.text}`}>
-      {title}
-    </div>
+    <div className={`${theme.fonts.title} ${theme.colors.text}`}>{title}</div>
     <div className={componentStyles.column.accent}></div>
   </div>
 );
@@ -116,67 +130,208 @@ const FooterColumn: React.FC<FooterColumnProps> = ({ title, links }) => (
 );
 
 const Footer: React.FC = () => {
-  // Data for columns with proper href values
-  const columns: ColumnData[] = [
+  // Data for top row columns
+  const productLinks: ColumnData = {
+    title: "Product",
+    links: [
+      { text: "SIEM platform", href: "#" },
+      { text: "SOAR automation", href: "#" },
+      { text: "Incident Management", href: "#" },
+      { text: "Fraud Detection", href: "#" },
+      { text: "Authentication SDK", href: "#" },
+      { text: "Compliance Tool", href: "#" },
+      { text: "Dashboard Preview", href: "#" },
+    ],
+  };
+
+  const solutionsLinks: ColumnData = {
+    title: "Solutions",
+    links: [
+      { text: "Fintech", href: "#" },
+      { text: "SaaS Companies", href: "#" },
+      { text: "Security Team", href: "#" },
+      { text: "Real-Time threat Monitoring", href: "#" },
+      { text: "KYC and Fraud Protection", href: "#" },
+    ],
+  };
+
+  const documentationLinks: ColumnData = {
+    title: "Documentation",
+    links: [
+      { text: "Fraud API", href: "#" },
+      { text: "Authentication SDK", href: "#" },
+      { text: "Blog", href: "#" },
+      { text: "Community", href: "#" },
+      { text: "Support", href: "#" },
+    ],
+  };
+
+  const pricingLinks: ColumnData = {
+    title: "Pricing",
+    links: [
+      { text: "Authentication SDK Pricing", href: "#" },
+      { text: "SIEM and SOAR monitoring Pricing", href: "#" },
+      { text: "Talk to sales", href: "#" },
+      { text: "Community", href: "#" },
+      { text: "Support", href: "#" },
+    ],
+  };
+
+  // Data for middle row columns
+  const moreLinks: ColumnData = {
+    title: "More",
+    links: [
+      { text: "Knowledge base", href: "#" },
+      { text: "Case studies", href: "#" },
+      { text: "White papers", href: "#" },
+      { text: "Compliance Check list", href: "#" },
+      { text: "Security and Trust", href: "#" },
+      { text: "Blog (Technical and Industrial Post)", href: "#" },
+      { text: "Careers", href: "#" },
+      { text: "About Us", href: "#" },
+    ],
+  };
+
+  // Compliance content from the screenshot
+  const complianceContent = [
     {
-      title: "Product",
-      links: [
-        { text: "Features", href: "#" },
-        { text: "Integration", href: "/setup" },
-        { text: "Installation", href: "#" },
-        { text: "Demo", href: "#" },
-        { text: "Pricing", href: "#" },
-      ],
+      id: 1,
+      text: "Our services are hosted on AWS Cloud, which makes scrubbe to be ISO 27017, ISO compliant.",
     },
     {
-      title: "Resources",
-      links: [
-        { text: "Documentation", href: "#" },
-        { text: "API Reference", href: "#" },
-        { text: "Blog", href: "#" },
-        { text: "Community", href: "#" },
-        { text: "Support", href: "#" },
-      ],
+      id: 2,
+      text: "Your personal Data Protection in the cloud such as PII, KYC and Authentication information is guaranteed - compliant with ISO 27018.",
     },
     {
-      title: "Company",
-      links: [
-        { text: "About us", href: "#" },
-        { text: "Careers", href: "#" },
-        { text: "Press", href: "#" },
-        { text: "Privacy Policy", href: "#" },
-        { text: "Terms of Service", href: "#" },
-      ],
+      id: 3,
+      text: "Scrubbe is compliant with ISO 27001 - Information Security Management global standards necessary for controlling, processing and protecting customer data, internal systems and software assets.",
     },
   ];
 
   return (
     <div
-      className={componentStyles.footer.container}
-      style={{ backgroundImage: componentStyles.footer.background }}
+      className={`${componentStyles.footer.container} ${componentStyles.footer.background}`}
     >
-      <div
-        className={`${componentStyles.footer.innerContainer} ${theme.spacing.columnGap}`}
-      >
-        {/* Company info column */}
-        <div className={componentStyles.column.container}>
-          <ColumnHeader title="Scrubbe" />
-          <div className={`w-full ${theme.fonts.body} ${theme.colors.text}`}>
-            Advanced SIEM & SOAR security intelligence platform that protects
-            your organization from emerging threats.
+      <div className={componentStyles.footer.innerContainer}>
+        {/* Top Row - Logo + 4 columns */}
+        <div className={componentStyles.footer.topRow}>
+          {/* Logo and description section */}
+          <div className={componentStyles.logoSection.container}>
+            <div className="relative w-32 h-8 xl:w-40 xl:h-10">
+              <Image
+                src="/scrubbe-logo-01.png"
+                alt="Scrubbe Logo"
+                fill
+                sizes="(max-width: 1280px) 128px, 160px"
+                className="object-contain"
+              />
+            </div>
+            <div
+              className={`${componentStyles.logoSection.description} ${theme.fonts.body} ${theme.colors.text}`}
+            >
+              1207 Delaware Ave #3296
+              <br />
+              Wilmington, DE 19806, United States
+            </div>
+            <div className={componentStyles.logoSection.socialContainer}>
+              <SocialLink icon={FaSquareXTwitter} href="#" />
+              <SocialLink icon={FaLinkedin} href="#" />
+              <SocialLink icon={FaGithub} href="#" />
+            </div>
+            <div className="flex items-center gap-3 mt-4">
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1">
+                <div className="relative w-8 h-8">
+                  <Image
+                    src="/icon-eu.svg"
+                    alt="EU Compliance"
+                    fill
+                    sizes="32px"
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1">
+                <div className="relative w-8 h-8">
+                  <Image
+                    src="/icon-iso.svg"
+                    alt="ISO Certification"
+                    fill
+                    sizes="32px"
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center justify-start mt-4 gap-2">
-            <SocialLink icon={FaTwitter} href="#" />
-            <SocialLink icon={FaLinkedin} href="#" />
-            <SocialLink icon={FaGithub} href="#" />
-            <SocialLink icon={FaDiscord} href="#" />
+
+          {/* Product Column */}
+          <div>
+            <FooterColumn
+              title={productLinks.title}
+              links={productLinks.links}
+            />
+          </div>
+
+          {/* Solutions Column */}
+          <div>
+            <FooterColumn
+              title={solutionsLinks.title}
+              links={solutionsLinks.links}
+            />
+          </div>
+
+          {/* Documentation Column */}
+          <div>
+            <FooterColumn
+              title={documentationLinks.title}
+              links={documentationLinks.links}
+            />
+          </div>
+
+          {/* Pricing Column */}
+          <div>
+            <FooterColumn
+              title={pricingLinks.title}
+              links={pricingLinks.links}
+            />
           </div>
         </div>
 
-        {/* Generate columns based on data */}
-        {columns.map((column, index) => (
-          <FooterColumn key={index} title={column.title} links={column.links} />
-        ))}
+        {/* Middle Row - Compliance and More sections */}
+        <div className={componentStyles.footer.middleRow}>
+          {/* Empty column to align with logo */}
+          <div className="hidden xl:block"></div>
+
+          {/* Compliance Section (takes 2 columns, under Product and Solutions) */}
+          <div className="col-span-1 xl:col-span-2">
+            <ColumnHeader title="Compliance" />
+            <div className="mt-4 space-y-6">
+              {complianceContent.map((item) => (
+                <div key={item.id} className="flex gap-3">
+                  <div className="font-semibold text-green-400">{item.id}.</div>
+                  <div className={`${theme.fonts.body} ${theme.colors.text}`}>
+                    {item.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* More Column (takes 2 columns, under Documentation and Pricing) */}
+          <div className="col-span-1 xl:col-span-2">
+            <FooterColumn title={moreLinks.title} links={moreLinks.links} />
+          </div>
+        </div>
+
+        {/* Bottom Row - Copyright */}
+        <div className={componentStyles.footer.bottomRow}>
+          <div className="w-full text-center">
+            <div className={componentStyles.footer.copyright}>
+              @Scrubbe All rights reserved{" "}
+              <span>{new Date().getFullYear()}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
