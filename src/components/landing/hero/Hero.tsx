@@ -47,7 +47,6 @@ const Hero: React.FC = () => {
               width={507}
               height={342}
               quality={90}
-              layout="responsive"
               className="w-full h-auto object-contain"
             />
           </div>
