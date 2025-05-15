@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen w-full flex flex-col justify-center items-center`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen w-full flex flex-col justify-center items-center bg-[#1F2B71]`}
       >
         <AuthProvider>
           <NextJsTopLoader />

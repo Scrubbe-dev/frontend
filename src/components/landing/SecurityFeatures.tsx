@@ -1,4 +1,5 @@
 "use client";
+import type React from "react";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { IoChevronForwardOutline, IoChevronBackOutline } from "react-icons/io5";
@@ -68,7 +69,7 @@ const CarouselContent: React.FC<CarouselContentProps> = ({
 }) => {
   return (
     <div
-      className="overflow-hidden px-8"
+      className="overflow-hidden w-full max-w-full px-2"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
@@ -90,7 +91,7 @@ interface CarouselItemProps {
 }
 
 const CarouselItem: React.FC<CarouselItemProps> = ({ children }) => {
-  return <div className="flex-shrink-0 w-full p-2">{children}</div>;
+  return <div className="flex-shrink-0 w-full p-1">{children}</div>; // Reduced padding
 };
 
 interface CarouselButtonProps {
@@ -110,11 +111,11 @@ const CarouselButton: React.FC<CarouselButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className={`absolute top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full shadow-lg p-2 ${
+      className={`absolute top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full shadow-lg p-1.5 ${
         disabled
           ? "opacity-50 cursor-not-allowed"
           : "opacity-100 cursor-pointer"
-      } ${direction === "previous" ? "left-0" : "right-0"}`}
+      } ${direction === "previous" ? "left-1" : "right-1"}`}
       disabled={disabled}
       aria-label={direction === "previous" ? "Previous cards" : "Next cards"}
     >
@@ -234,9 +235,11 @@ const SecurityFeatures: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-auto bg-gray-50">
-      <section className="w-full max-w-[1440px] py-16 bg-gray-50 mx-auto">
-        <div className="max-w-7xl mx-auto px-4">
+    <div className="w-full h-auto bg-gray-50 overflow-x-hidden">
+      {" "}
+      {/* Added overflow-x-hidden to prevent horizontal scrolling */}
+      <section className="w-full max-w-[1440px] py-16 bg-gray-50 mx-auto overflow-x-hidden">
+        <div className="max-w-7xl mx-auto px-4 overflow-x-hidden">
           {/* Header */}
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-4">
@@ -251,7 +254,7 @@ const SecurityFeatures: React.FC = () => {
           </div>
 
           {/* Desktop Grid Layout (hidden on mobile) */}
-          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 xl:gap-6 overflow-x-hidden max-w-full">
             {features.map((feature, index) => (
               <FeatureCard
                 key={`feature-${index}`}
@@ -264,36 +267,44 @@ const SecurityFeatures: React.FC = () => {
 
           {/* Mobile Carousel (visible only on mobile) */}
           {isMobile && (
-            <Carousel className="md:hidden">
-              <CarouselButton
-                direction="previous"
-                onClick={goToPrevious}
-                disabled={isPreviousDisabled}
-              />
-
-              <CarouselContent
-                currentIndex={currentIndex}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-              >
-                {features.map((feature, idx) => (
-                  <CarouselItem key={`mobile-feature-${idx}`}>
-                    <FeatureCard
-                      icon={feature.icon}
-                      title={feature.title}
-                      description={feature.description}
-                    />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-
-              <CarouselButton
-                direction="next"
-                onClick={goToNext}
-                disabled={isNextDisabled}
-              />
-            </Carousel>
+            <div className="md:hidden max-w-full overflow-x-hidden">
+              {" "}
+              {/* Added max-width constraint */}
+              <Carousel className="max-w-[calc(100vw-40px)] mx-auto">
+                {" "}
+                {/* Set max width to viewport minus padding */}
+                <CarouselButton
+                  direction="previous"
+                  onClick={goToPrevious}
+                  disabled={isPreviousDisabled}
+                />
+                <CarouselContent
+                  currentIndex={currentIndex}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                >
+                  {features.map((feature, idx) => (
+                    <CarouselItem key={`mobile-feature-${idx}`}>
+                      <div className="max-w-[calc(100vw-56px)] mx-auto">
+                        {" "}
+                        {/* Constrain card width */}
+                        <FeatureCard
+                          icon={feature.icon}
+                          title={feature.title}
+                          description={feature.description}
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselButton
+                  direction="next"
+                  onClick={goToNext}
+                  disabled={isNextDisabled}
+                />
+              </Carousel>
+            </div>
           )}
         </div>
       </section>

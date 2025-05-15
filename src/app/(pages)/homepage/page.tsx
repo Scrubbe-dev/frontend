@@ -2,13 +2,13 @@
 import React from "react";
 import SecurityFeatures from "@/components/landing/SecurityFeatures";
 import SecurityIntelligence from "@/components/landing/SecurityIntelligence";
-import SeamlessIntegrations from "@/components/landing/SeamlessIntegrations";
+//import SeamlessIntegrations from "@/components/landing/SeamlessIntegrations";
 import CompromiseChecker from "@/components/landing/CompromiseChecker";
 import Integration from "@/components/landing/Integration";
-import ChartHome from "@/components/landing/ChartHome";
+//import ChartHome from "@/components/landing/ChartHome";
 import ScrubbeHighlights from "@/components/landing/ScrubbeHighlights";
 import BuiltForDevelopers from "@/components/landing/BuiltForDevelopers";
-import Hero from "@/components/landing/hero/Hero";
+import Hero from "@/components/landing/Hero";
 import { CodeBlock, dracula } from "react-code-blocks";
 
 export function CodeDisplay({
@@ -35,21 +35,13 @@ function HomePage() {
   return (
     <>
       <Hero />
-
       <SecurityFeatures />
-
       <BuiltForDevelopers />
-
       <SecurityIntelligence />
-
-      <SeamlessIntegrations />
-
+      {/* <SeamlessIntegrations /> */} {/* causing horizontal scroll */}
       <CompromiseChecker />
-
       <Integration />
-
-      <ChartHome />
-
+      {/*  <ChartHome />  */} {/* causing horizontal scroll */}
       <ScrubbeHighlights />
     </>
   );
