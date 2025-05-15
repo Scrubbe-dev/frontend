@@ -1,39 +1,19 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useState } from "react";
-import { useAppStore } from "@/store/StoreProvider";
+import { toast } from "sonner";
+import { DeveloperSignupFormData, developerSignupSchema } from "@/lib/validations/auth.schema";
+import { useRouter } from "next/navigation";
+import useAuthStore from "@/lib/stores/auth.store";
 
-const developerSignupSchema = z
-  .object({
-    fullName: z.string().min(1, "Full name is required"),
-    email: z.string().email("Please enter a valid email address"),
-    githubUsername: z.string().optional(),
-    experienceLevel: z.string().min(1, "Please select experience level"),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-      .regex(/[0-9]/, "Password must contain at least one number"),
-    confirmPassword: z.string().min(1, "Please confirm your password"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-type DeveloperSignupFormData = z.infer<typeof developerSignupSchema>;
 
 export default function DeveloperSignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const { devRegister, devIsLoading, devError, devClearError } = useAppStore(
-    (state) => state
-  );
-
+  const { developerSignup, isLoading , error } = useAuthStore();
+  const router = useRouter()
+  
   const {
     register,
     handleSubmit,
@@ -44,27 +24,30 @@ export default function DeveloperSignupForm() {
       fullName: "",
       email: "",
       githubUsername: "",
-      experienceLevel: "",
+      experience: "",
       password: "",
       confirmPassword: "",
     },
   });
 
   const onSubmit = async (data: DeveloperSignupFormData) => {
-    devClearError();
     try {
-      const nameParts = data.fullName.trim().split(/\s+/);
-      const firstName = nameParts[0] || "";
-      const lastName = nameParts.slice(1).join(" ") || "";
 
-      await devRegister({
-        email: data.email,
-        password: data.password,
-        firstName,
-        lastName,
+      await developerSignup(data)
+      if (error) {
+        throw new Error(error);
+      }
+
+      toast.success(`Account created successfully!`, {
+        description: `${data.fullName}, you'll be redirected to sign in shortly.`,
+        duration: 10000, 
       });
-    } catch (error) {
-      console.error("Registration error:", error);
+      router.push('/auth/signin')
+     
+    } catch (err) {
+      toast.error("Registration failed", {
+        description: (err as Error).message || "Something went wrong.",
+      });
     }
   };
 
@@ -78,16 +61,17 @@ export default function DeveloperSignupForm() {
         Developer Signup
       </h1>
 
-      {devError && (
+      {error && (
         <div
           className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
           role="alert"
         >
-          <span className="block sm:inline">{devError}</span>
+          <span className="block sm:inline">{error}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-4 md:mt-6">
+        {/* Rest of the form remains unchanged */}
         <div className="flex flex-col md:flex-row gap-3 md:gap-4 mb-3 md:mb-4">
           <div className="w-full md:flex-1">
             <label
@@ -156,7 +140,7 @@ export default function DeveloperSignupForm() {
           </label>
           <select
             id="experienceLevel"
-            {...register("experienceLevel")}
+            {...register("experience")}
             className="w-full p-2 md:p-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-900 text-sm md:text-base"
           >
             <option value="">Select experience level</option>
@@ -165,9 +149,9 @@ export default function DeveloperSignupForm() {
             <option value="advanced">Advanced</option>
             <option value="expert">Expert</option>
           </select>
-          {errors.experienceLevel && (
+          {errors.experience && (
             <p className="text-red-500 text-xs mt-1">
-              {errors.experienceLevel.message}
+              {errors.experience.message}
             </p>
           )}
         </div>
@@ -238,14 +222,14 @@ export default function DeveloperSignupForm() {
         <div className="mb-4 md:mb-5">
           <button
             type="submit"
-            disabled={devIsLoading}
+            disabled={isLoading}
             className={`w-full py-2 md:py-3 px-4 md:px-6 bg-indigo-900 text-white font-semibold uppercase rounded-md transition duration-300 text-sm md:text-base ${
-              devIsLoading
+              isLoading
                 ? "opacity-75 cursor-not-allowed"
                 : "hover:bg-indigo-700"
             }`}
           >
-            {devIsLoading ? (
+            {isLoading ? (
               <div className="flex items-center justify-center">
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"

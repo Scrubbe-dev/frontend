@@ -1,104 +1,48 @@
-/* "use client";
-import { Card, CardHeader } from "@heroui/react";
-import React from "react";
-import { security_data } from "@/features/home/security-features/dto/security-data";
-
-function SecurityFeatures() {
-  return (
-    <aside className="w-full h-full pt-20 xl:pt-0">
-      <div className="min-h-screen w-full flex items-center flex-col xl:pt-28">
-        <div className="container w-full h-full">
-          <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
-            <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold">
-              Powerful Security Features
-            </div>
-            <div className="bg-[#10b981] h-1 w-16 rounded-full"></div>
-          </div>
-
-          <div className="w-full h-full flex items-center justify-center py-8">
-            <div className="h-fit xl:w-3/6 text-wrap text-center text-md text-muted-foreground px-2 xl:px-0 font-Raleway font-[500]">
-              Scrubbe offers comprehensive security monitoring and automated
-              response capabilities to identify and neutralize threats before
-              they impact your business.
-            </div>
-          </div>
-
-          <div className="w-full flex items-center justify-center mt-6">
-            <div className="w-11/12 h-fit grid xl:grid-cols-3 gap-6">
-              {security_data.map((items) => {
-                return (
-                  <div key={items.id} className="col-span-1 w-full h-fit">
-                    <Card className="px-6 pb-4 h-full transition-all xl:h-[260px] hover:-translate-y-2 hover:transition-all">
-                      <CardHeader>
-                        <div className="w-full">
-                          <div className="h-[100px] flex items-center w-full">
-                            <div className="h-14 flex justify-center items-center w-14 rounded-full bg-slate-200">
-                              {items.icon}
-                            </div>
-                          </div>
-                          <div className="font-Poppins font-bold text-xl py-4 text-slate-900">
-                            {items.title}
-                          </div>
-                          <div className="font-Raleway text-sm font-thin">
-                            {items.description}
-                          </div>
-                        </div>
-                      </CardHeader>
-                    </Card>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
-    </aside>
-  );
-}
-
-export default SecurityFeatures;
- */
-
 "use client";
+import type React from "react";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import {
-  IoPersonOutline,
-  IoShieldOutline,
-  IoGlobeOutline,
-  IoChevronForwardOutline,
-  IoChevronBackOutline,
-} from "react-icons/io5";
-import { MdPhishing } from "react-icons/md";
+import { IoChevronForwardOutline, IoChevronBackOutline } from "react-icons/io5";
+import { FaSquareCheck } from "react-icons/fa6";
+import { FaClock } from "react-icons/fa";
+import { GiBrickWall } from "react-icons/gi";
+import { BiBarChart } from "react-icons/bi";
+import { BsExclamationOctagonFill } from "react-icons/bs";
+import { HiMiniCodeBracketSquare } from "react-icons/hi2";
 
-// Card Component
-interface CardProps {
+// Feature Card Component
+interface FeatureCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
 }
 
-const Card: React.FC<CardProps> = ({ icon, title, description }) => {
+// Feature Card Component
+const FeatureCard: React.FC<FeatureCardProps> = ({
+  icon,
+  title,
+  description,
+}) => {
   return (
-    <div className="h-full px-4 pb-4 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg rounded-xl bg-white">
-      <div className="flex flex-col items-start text-left h-full ">
-        <div className="w-full border-b-[2px] border-colorScBlue my-2">
-          <div className="text-colorScBlue text-4xl inline-block">{icon}</div>
+    <div className="h-full bg-white p-6 rounded-xl border border-gray-200 flex flex-col hover:border-blue-400 hover:shadow-sm transition-all duration-200">
+      <div className="mb-4">
+        <div className="text-blue-500 text-3xl w-12 h-12 flex items-center justify-center rounded-full border-2 border-emerald-400 bg-blue-50 [box-shadow:0_0_0_4px_rgba(59,130,246,0.1)]">
+          {icon}
         </div>
-        <h3 className="text-colorScBlue text-2xl font-bold mb-4">{title}</h3>
-        <p className="text-black mb-4">{description}</p>
-        <Link
-          href="/"
-          className="flex items-center text-colorScBlue font-bold mt-auto cursor-pointer hover:underline"
-        >
-          Learn More <IoChevronForwardOutline className="ml-1" />
-        </Link>
       </div>
+      <h3 className="text-lg font-semibold mb-2">{title}</h3>
+      <p className="text-gray-600 text-sm flex-grow">{description}</p>
+      <Link
+        href="/"
+        className="flex items-center text-blue-500 font-medium mt-4 text-sm hover:underline"
+      >
+        Learn more <IoChevronForwardOutline className="ml-1" />
+      </Link>
     </div>
   );
 };
 
-// Carousel Components
+// Mobile Carousel Components
 interface CarouselProps {
   children: React.ReactNode;
   className?: string;
@@ -111,7 +55,6 @@ const Carousel: React.FC<CarouselProps> = ({ children, className = "" }) => {
 interface CarouselContentProps {
   children: React.ReactNode;
   currentIndex: number;
-  isMobile: boolean;
   onTouchStart: (e: React.TouchEvent) => void;
   onTouchMove: (e: React.TouchEvent) => void;
   onTouchEnd: () => void;
@@ -120,14 +63,13 @@ interface CarouselContentProps {
 const CarouselContent: React.FC<CarouselContentProps> = ({
   children,
   currentIndex,
-  isMobile,
   onTouchStart,
   onTouchMove,
   onTouchEnd,
 }) => {
   return (
     <div
-      className="overflow-hidden px-8"
+      className="overflow-hidden w-full max-w-full px-2"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
@@ -135,9 +77,7 @@ const CarouselContent: React.FC<CarouselContentProps> = ({
       <div
         className="flex transition-transform duration-300 ease-in-out"
         style={{
-          transform: isMobile
-            ? `translateX(-${currentIndex * 100}%)`
-            : `translateX(-${currentIndex * (100 / 3)}%)`,
+          transform: `translateX(-${currentIndex * 100}%)`,
         }}
       >
         {children}
@@ -148,15 +88,10 @@ const CarouselContent: React.FC<CarouselContentProps> = ({
 
 interface CarouselItemProps {
   children: React.ReactNode;
-  isMobile: boolean;
 }
 
-const CarouselItem: React.FC<CarouselItemProps> = ({ children, isMobile }) => {
-  return (
-    <div className={`flex-shrink-0 ${isMobile ? "w-full" : "w-1/3"} p-2`}>
-      {children}
-    </div>
-  );
+const CarouselItem: React.FC<CarouselItemProps> = ({ children }) => {
+  return <div className="flex-shrink-0 w-full p-1">{children}</div>; // Reduced padding
 };
 
 interface CarouselButtonProps {
@@ -176,15 +111,15 @@ const CarouselButton: React.FC<CarouselButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className={`absolute top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full shadow-lg p-2 ${
+      className={`absolute top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full shadow-lg p-1.5 ${
         disabled
           ? "opacity-50 cursor-not-allowed"
           : "opacity-100 cursor-pointer"
-      } ${direction === "previous" ? "left-0" : "right-0"}`}
+      } ${direction === "previous" ? "left-1" : "right-1"}`}
       disabled={disabled}
       aria-label={direction === "previous" ? "Previous cards" : "Next cards"}
     >
-      <Icon className="text-2xl text-colorScBlue" />
+      <Icon className="text-2xl text-blue-500" />
     </button>
   );
 };
@@ -199,7 +134,7 @@ const SecurityFeatures: React.FC = () => {
   // Check if mobile on mount and when window resizes
   useEffect(() => {
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
+      setIsMobile(window.innerWidth < 768);
     };
 
     // Initial check
@@ -217,56 +152,48 @@ const SecurityFeatures: React.FC = () => {
     setCurrentIndex(0);
   }, [isMobile]);
 
-  const IconWrapper = ({ Icon }: { Icon: React.ElementType }) => (
-    <div className="p-2 bg-white rounded-full border-2 border-colorScBlue">
-      <Icon className="text-colorScBlue" />
-    </div>
-  );
-
-  const cards = [
+  const features = [
     {
-      icon: IconWrapper({ Icon: IoPersonOutline }),
+      icon: <FaClock />,
       title: "Real-Time Threat Detection",
       description:
         "Monitor and detect suspicious activities across your network with advanced analytics and machine learning algorithms.",
     },
     {
-      icon: IconWrapper({ Icon: MdPhishing }),
+      icon: <FaSquareCheck />,
       title: "Automated Response",
       description:
-        "Configure playbooks to automatically respond to security incidents, reducing response time and minimizing damage",
+        "Configure playbooks to automatically respond to security incidents reducing response time and minimizing change",
     },
     {
-      icon: IconWrapper({ Icon: IoGlobeOutline }),
+      icon: <GiBrickWall />,
       title: "Comprehensive Dashboards",
       description:
         "Visualize security data with intuitive dashboards that provide actionable insights at a glance",
     },
     {
-      icon: IconWrapper({ Icon: IoShieldOutline }),
+      icon: <HiMiniCodeBracketSquare />,
       title: "Integration Ecosystem",
       description:
         "Connect with over 200 security tools and data sources to centralize your security operations.",
     },
     {
-      icon: IconWrapper({ Icon: IoPersonOutline }),
+      icon: <BsExclamationOctagonFill />,
       title: "Mobile Alerts",
       description:
         "Stay informed with real-time notifications on critical security events via mobile app or SMS.",
     },
     {
-      icon: IconWrapper({ Icon: IoShieldOutline }),
+      icon: <BiBarChart />,
       title: "Compliance Reporting",
       description:
-        "Generate comprehensive reports for regulatory compliance including GDPR, HIPAA, PCI DSS, and more.",
+        "Visualize security data with intuitive dashboards that provide actionable insights at a glance",
     },
   ];
 
-  // Calculate visible items and max index
-  const itemsPerView = isMobile ? 1 : 3;
-  const maxIndex = cards.length - itemsPerView;
+  // Mobile carousel navigation handlers
+  const maxIndex = features.length - 1;
 
-  // Navigation handlers
   const goToPrevious = () => {
     setCurrentIndex(Math.max(0, currentIndex - 1));
   };
@@ -308,58 +235,80 @@ const SecurityFeatures: React.FC = () => {
   };
 
   return (
-    <section className="w-full h-auto bg-white flex justify-center py-12">
-      <section className="w-full max-w-[1440px] px-4 flex flex-col">
-        {/* Header */}
-        <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
-          <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold text-center px-4">
-            Powerful Security Features
+    <div className="w-full h-auto bg-gray-50 overflow-x-hidden">
+      {" "}
+      {/* Added overflow-x-hidden to prevent horizontal scrolling */}
+      <section className="w-full max-w-[1440px] py-16 bg-gray-50 mx-auto overflow-x-hidden">
+        <div className="max-w-7xl mx-auto px-4 overflow-x-hidden">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-4">
+              Powerful Security Features
+            </h2>
+            <div className="w-16 h-1 bg-emerald-500 mx-auto mb-6 rounded-full"></div>
+            <p className="max-w-3xl mx-auto text-lg text-gray-600">
+              Scrubbe offers comprehensive security monitoring and automated
+              response capabilities to identify and neutralize threats before
+              they impact your business.
+            </p>
           </div>
-          <div className="bg-emerald-500 h-1 w-16 rounded-full"></div>
-        </div>
-        {/* Subheading */}
-        <div className="w-full h-full flex items-center justify-center py-4">
-          <span className="h-fit xl:w-3/6 text-wrap text-center text-[1rem] md:text-[1.3rem]  text-muted-foreground px-2 xl:px-0 font-Raleway font-medium">
-            Scrubbe offers comprehensive security monitoring and automated
-            response capabilities to identify and neutralize threats before they
-            impact your business.
-          </span>
-        </div>
 
-        {/* Carousel */}
-        <Carousel className="my-8">
-          <CarouselButton
-            direction="previous"
-            onClick={goToPrevious}
-            disabled={isPreviousDisabled}
-          />
-
-          <CarouselContent
-            currentIndex={currentIndex}
-            isMobile={isMobile}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            {cards.map((card, idx) => (
-              <CarouselItem key={`card-${idx}`} isMobile={isMobile}>
-                <Card
-                  icon={card.icon}
-                  title={card.title}
-                  description={card.description}
-                />
-              </CarouselItem>
+          {/* Desktop Grid Layout (hidden on mobile) */}
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 xl:gap-6 overflow-x-hidden max-w-full">
+            {features.map((feature, index) => (
+              <FeatureCard
+                key={`feature-${index}`}
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+              />
             ))}
-          </CarouselContent>
+          </div>
 
-          <CarouselButton
-            direction="next"
-            onClick={goToNext}
-            disabled={isNextDisabled}
-          />
-        </Carousel>
+          {/* Mobile Carousel (visible only on mobile) */}
+          {isMobile && (
+            <div className="md:hidden max-w-full overflow-x-hidden">
+              {" "}
+              {/* Added max-width constraint */}
+              <Carousel className="max-w-[calc(100vw-40px)] mx-auto">
+                {" "}
+                {/* Set max width to viewport minus padding */}
+                <CarouselButton
+                  direction="previous"
+                  onClick={goToPrevious}
+                  disabled={isPreviousDisabled}
+                />
+                <CarouselContent
+                  currentIndex={currentIndex}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                >
+                  {features.map((feature, idx) => (
+                    <CarouselItem key={`mobile-feature-${idx}`}>
+                      <div className="max-w-[calc(100vw-56px)] mx-auto">
+                        {" "}
+                        {/* Constrain card width */}
+                        <FeatureCard
+                          icon={feature.icon}
+                          title={feature.title}
+                          description={feature.description}
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselButton
+                  direction="next"
+                  onClick={goToNext}
+                  disabled={isNextDisabled}
+                />
+              </Carousel>
+            </div>
+          )}
+        </div>
       </section>
-    </section>
+    </div>
   );
 };
 
