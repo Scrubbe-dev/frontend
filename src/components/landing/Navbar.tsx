@@ -157,6 +157,14 @@ const Navbar = () => {
     {
       label: "Pricing",
       dropdownOptions: [
+
+        { label: "AWS", href: "/documentation/aws" },
+        { label: "Splunk", href: "/documentation/splunk" },
+        { label: "Datadog", href: "/documentation/datadog" },
+        { label: "GCP", href: "/documentation/gcp" },
+        { label: "Azure", href: "/documentation/azure" },
+        { label: "Webhook API", href: "/documentation/webhook-api" },
+
         {
           label: "Authentication SDK Pricing",
           href: "#",
@@ -169,6 +177,7 @@ const Navbar = () => {
           label: "Talk To Sales",
           href: "#",
         },
+
       ],
     },
     {
