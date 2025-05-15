@@ -8,6 +8,7 @@ import Integration from "@/components/landing/Integration";
 //import ChartHome from "@/components/landing/ChartHome";
 import ScrubbeHighlights from "@/components/landing/ScrubbeHighlights";
 import BuiltForDevelopers from "@/components/landing/BuiltForDevelopers";
+import FiveEasySteps from "@/components/landing/FiveEasySteps";
 import Hero from "@/components/landing/Hero";
 import { CodeBlock, dracula } from "react-code-blocks";
 
@@ -37,6 +38,7 @@ function HomePage() {
       <Hero />
       <SecurityFeatures />
       <BuiltForDevelopers />
+      <FiveEasySteps />
       <SecurityIntelligence />
       {/* <SeamlessIntegrations /> */} {/* causing horizontal scroll */}
       <CompromiseChecker />
