@@ -110,33 +110,35 @@ function SeamlessIntegrations() {
   };
 
   return (
-    <aside className="w-full h-auto py-12 px-6 md:px-12">
-      <div className="h-full w-full flex items-center flex-col">
-        <div className="container w-full h-full">
-          <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
-            <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold text-center">
-              Seamless Integrations
+    <div className="w-full h-auto bg-white">
+      <aside className="w-full max-w-[1440px] mx-auto h-auto py-12 px-6 md:px-12">
+        <div className="h-full w-full flex items-center flex-col">
+          <div className="container w-full h-full">
+            <div className="w-full h-fit flex flex-col items-center justify-center gap-4">
+              <div className="w-fit h-fit font-Poppins text-slate-600 tracking-wider text-2xl xl:text-4xl font-semibold text-center">
+                Seamless Integrations
+              </div>
+              <div className="bg-[#10b981] h-1 w-16 rounded-full"></div>
             </div>
-            <div className="bg-[#10b981] h-1 w-16 rounded-full"></div>
-          </div>
 
-          <div className="w-full h-full flex items-center justify-center py-6">
-            <span className="h-fit xl:w-3/6 text-wrap text-center text-[1rem] md:text-[1.3rem]  text-muted-foreground px-2 xl:px-0 font-Raleway font-medium">
-              Scrubbe connects with your existing security and cloud
-              infrastructure to provide comprehensive visibility and control.
-            </span>
-          </div>
+            <div className="w-full h-full flex items-center justify-center py-6">
+              <span className="h-fit xl:w-3/6 text-wrap text-center text-[1rem] md:text-[1.3rem]  text-muted-foreground px-2 xl:px-0 font-Raleway font-medium">
+                Scrubbe connects with your existing security and cloud
+                infrastructure to provide comprehensive visibility and control.
+              </span>
+            </div>
 
-          <div className="w-full mt-6">
-            <div className="w-full overflow-hidden px-4">
-              {renderScrollingRow(firstRowData, firstRowRef)}
-              {renderScrollingRow(secondRowData, secondRowRef)}
-              {renderScrollingRow(thirdRowData, thirdRowRef)}
+            <div className="w-full mt-6">
+              <div className="w-full overflow-hidden px-4">
+                {renderScrollingRow(firstRowData, firstRowRef)}
+                {renderScrollingRow(secondRowData, secondRowRef)}
+                {renderScrollingRow(thirdRowData, thirdRowRef)}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </div>
   );
 }
 

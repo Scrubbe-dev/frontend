@@ -1,19 +1,18 @@
 import type { Metadata } from "next";
-import CounterTestComponent from "@/components/landing/CounterTestComponent";
+import Splunk from "@/components/documentation/Splunk";
 
 export const metadata: Metadata = {
-  title: "Zustand SandBox - Scrubbe",
+  title: "Documentation Splunk - Scrubbe",
   description:
     "Scrubbe's AI-driven platform combines SIEM and SOAR for automated threat detection, response, and unified security analytics.",
 };
 
-const page = () => {
+const Splunkpage = () => {
   return (
     <>
-      <div>Zustand page</div>
-      <CounterTestComponent />
+      <Splunk />
     </>
   );
 }
 
-export default page
+export default Splunkpage;

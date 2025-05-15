@@ -1,102 +1,53 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useState } from "react";
 import { toast } from "sonner";
-import { registerUser } from "@/lib/registerUserApi";
+import { DeveloperSignupFormData, developerSignupSchema } from "@/lib/validations/auth.schema";
+import { useRouter } from "next/navigation";
+import useAuthStore from "@/lib/stores/auth.store";
 
-const developerSignupSchema = z
-  .object({
-    fullName: z.string().min(1, "Full name is required"),
-    email: z.string().email("Please enter a valid email address"),
-    githubUsername: z.string().optional(),
-    experienceLevel: z.string().min(1, "Please select experience level"),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-      .regex(/[0-9]/, "Password must contain at least one number"),
-    confirmPassword: z.string().min(1, "Please confirm your password"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-type DeveloperSignupFormData = z.infer<typeof developerSignupSchema>;
 
 export default function DeveloperSignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
+  const { developerSignup, isLoading , error } = useAuthStore();
+  const router = useRouter()
+  
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<DeveloperSignupFormData>({
     resolver: zodResolver(developerSignupSchema),
     defaultValues: {
       fullName: "",
       email: "",
       githubUsername: "",
-      experienceLevel: "",
+      experience: "",
       password: "",
       confirmPassword: "",
     },
   });
 
   const onSubmit = async (data: DeveloperSignupFormData) => {
-    setError(null);
-    setIsLoading(true);
-
     try {
-      const nameParts = data.fullName.trim().split(/\s+/);
-      const firstName = nameParts[0] || "";
-      const lastName = nameParts.slice(1).join(" ") || "";
 
-      // Use our separate registration function
-      const result = await registerUser({
-        email: data.email,
-        password: data.password,
-        firstName,
-        lastName,
-      });
-
-      if (!result.success) {
-        throw new Error(result.error);
+      await developerSignup(data)
+      if (error) {
+        throw new Error(error);
       }
 
-      // Show success message for 10 seconds
       toast.success(`Account created successfully!`, {
-        description: `${firstName} ${lastName}, you'll be redirected to sign in shortly.`,
-        duration: 10000, // 10 seconds
+        description: `${data.fullName}, you'll be redirected to sign in shortly.`,
+        duration: 10000, 
       });
-
-      // Redirect after 10 seconds
-      setTimeout(() => {
-        // Pass the email as a query parameter to pre-fill the sign-in form
-        window.location.href = `/auth/signin?email=${encodeURIComponent(
-          data.email
-        )}`;
-      }, 10000);
-
-      // Clear the form after successful registration
-      reset();
+      router.push('/auth/signin')
+     
     } catch (err) {
-      console.error("Registration error:", err);
-      const errorMessage =
-        err instanceof Error ? err.message : "Registration failed";
-      setError(errorMessage);
       toast.error("Registration failed", {
-        description: errorMessage,
+        description: (err as Error).message || "Something went wrong.",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -189,7 +140,7 @@ export default function DeveloperSignupForm() {
           </label>
           <select
             id="experienceLevel"
-            {...register("experienceLevel")}
+            {...register("experience")}
             className="w-full p-2 md:p-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-900 text-sm md:text-base"
           >
             <option value="">Select experience level</option>
@@ -198,9 +149,9 @@ export default function DeveloperSignupForm() {
             <option value="advanced">Advanced</option>
             <option value="expert">Expert</option>
           </select>
-          {errors.experienceLevel && (
+          {errors.experience && (
             <p className="text-red-500 text-xs mt-1">
-              {errors.experienceLevel.message}
+              {errors.experience.message}
             </p>
           )}
         </div>

@@ -2,70 +2,49 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { toast } from "sonner";
-import { signInAction } from "@/lib/signInAction";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { LoginFormData, loginSchema } from "@/lib/validations/auth.schema";
 
-const signInSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
-});
 
-type SignInFormData = z.infer<typeof signInSchema>;
 
-interface SignInFormProps {
-  emailFromQuery?: string;
-  callbackUrl?: string;
-}
-
-export default function SignInForm({
-  emailFromQuery = "",
-  callbackUrl = "/",
-}: SignInFormProps) {
+export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<SignInFormData>({
-    resolver: zodResolver(signInSchema),
+    formState: { isSubmitting, errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: emailFromQuery,
+      email: "",
       password: "",
     },
   });
 
-  const onSubmit = async (data: SignInFormData) => {
-    setIsLoading(true);
+  const onSubmit = async (data: LoginFormData) => {
     try {
-      const formData = new FormData();
-      formData.append("email", data.email);
-      formData.append("password", data.password);
-
-      // Call the server action
-      const errorMessage = await signInAction(undefined, formData);
-
-      // If we received an error message
-      if (errorMessage) {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
+      console.log(result?.error , 'from error status  ')
+      if (!!result?.error) {
         toast.error("Sign in failed", {
-          description: errorMessage,
+          description: result?.error,
         });
-        return;
+        return 
       }
-
-      // Success case - no error returned
       toast.success(`Successfully signed in!`, {
         description: `${data.email}, you are being redirected...`,
         duration: 5000,
       });
 
-      // Redirect to dashboard or home page
-      router.push(callbackUrl);
-      router.refresh(); // Refresh to update auth state throughout the app
+      router.push('/');
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Sign in failed", {
@@ -149,7 +128,7 @@ export default function SignInForm({
                 : "hover:bg-indigo-700"
             }`}
           >
-            {isLoading ? (
+            {isSubmitting ? (
               <div className="flex items-center justify-center">
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"

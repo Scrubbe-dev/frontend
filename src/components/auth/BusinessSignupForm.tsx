@@ -1,98 +1,53 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useState } from "react";
 import { toast } from "sonner";
-import { registerUser } from "@/lib/registerUserApi";
-
-const businessSignupSchema = z
-  .object({
-    fullName: z.string().min(1, "Full name is required"),
-    email: z.string().email("Please enter a valid email address"),
-    githubUsername: z.string().optional(),
-    experienceLevel: z.string().min(1, "Please select experience level"),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-      .regex(/[0-9]/, "Password must contain at least one number"),
-    confirmPassword: z.string().min(1, "Please confirm your password"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-type BusinessSignupFormData = z.infer<typeof businessSignupSchema>;
+import useAuthStore from "@/lib/stores/auth.store";
+import { BusinessSignupFormData, businessSignupSchema } from "@/lib/validations/auth.schema";
+import { useRouter } from "next/navigation";
 
 export default function BusinessSignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { businessSignup, isLoading , error } = useAuthStore();
+  const router = useRouter()
+
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
+
   } = useForm<BusinessSignupFormData>({
     resolver: zodResolver(businessSignupSchema),
     defaultValues: {
       fullName: "",
       email: "",
       githubUsername: "",
-      experienceLevel: "",
+      experience: "",
       password: "",
       confirmPassword: "",
     },
   });
 
   const onSubmit = async (data: BusinessSignupFormData) => {
-    setError(null);
-    setIsLoading(true);
-
+    console.log(data, " business registration")
     try {
-      const nameParts = data.fullName.trim().split(/\s+/);
-      const firstName = nameParts[0] || "";
-      const lastName = nameParts.slice(1).join(" ") || "";
-
-      const result = await registerUser({
-        email: data.email,
-        password: data.password,
-        firstName,
-        lastName,
-      });
-
-      if (!result.success) {
-        throw new Error(result.error);
+      await businessSignup(data);
+      if (error) {
+        throw new Error(error);
       }
-
       toast.success(`Account created successfully!`, {
-        description: `${firstName} ${lastName}, you'll be redirected to sign in shortly.`,
+        description: `${data.fullName}, you'll be redirected to sign in shortly.`,
         duration: 10000,
       });
-
-      setTimeout(() => {
-        window.location.href = `/auth/signin?email=${encodeURIComponent(
-          data.email
-        )}`;
-      }, 10000);
-
-      reset();
+      router.push("/auth/signin");
     } catch (err) {
-      console.error("Registration error:", err);
-      const errorMessage =
-        err instanceof Error ? err.message : "Registration failed";
-      setError(errorMessage);
       toast.error("Registration failed", {
-        description: errorMessage,
+        description: (err as Error).message || "Something went wrong.",
       });
-    } finally {
-      setIsLoading(false);
-    }
+    }    
   };
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
@@ -183,7 +138,7 @@ export default function BusinessSignupForm() {
           </label>
           <select
             id="experienceLevel"
-            {...register("experienceLevel")}
+            {...register("experience")}
             className="w-full p-2 md:p-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-900 text-sm md:text-base"
           >
             <option value="">Select experience level</option>
@@ -192,9 +147,9 @@ export default function BusinessSignupForm() {
             <option value="advanced">Advanced</option>
             <option value="expert">Expert</option>
           </select>
-          {errors.experienceLevel && (
+          {errors.experience && (
             <p className="text-red-500 text-xs mt-1">
-              {errors.experienceLevel.message}
+              {errors.experience.message}
             </p>
           )}
         </div>
