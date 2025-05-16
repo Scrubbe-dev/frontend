@@ -43,7 +43,7 @@ const FiveEasySteps: React.FC = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
             Secure your business in five easy steps
           </h2>
-          <div className="w-28 h-1 bg-gradient-to-r from-blue-400 to-teal-400 mx-auto"></div>
+          <div className="w-28 h-1 bg-emerald-400 mx-auto"></div>
         </div>
 
         {/* Content container - Grid implementation */}

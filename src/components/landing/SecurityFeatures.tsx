@@ -245,7 +245,7 @@ const SecurityFeatures: React.FC = () => {
             <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-4">
               Powerful Security Features
             </h2>
-            <div className="w-16 h-1 bg-emerald-500 mx-auto mb-6 rounded-full"></div>
+            <div className="w-28 h-1 bg-emerald-400 mx-auto"></div>
             <p className="max-w-3xl mx-auto text-lg text-gray-600">
               Scrubbe offers comprehensive security monitoring and automated
               response capabilities to identify and neutralize threats before
