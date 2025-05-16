@@ -1,8 +1,10 @@
+import Hero from "@/components/landing/Hero";
 import SecurityFeatures from "@/components/landing/SecurityFeatures";
-import SecurityIntelligence from "@/components/landing/SecurityIntelligence";
 import BuiltForDevelopers from "@/components/landing/BuiltForDevelopers";
 import FiveEasySteps from "@/components/landing/FiveEasySteps";
-import Hero from "@/components/landing/Hero";
+import SecurityIntelligence from "@/components/landing/SecurityIntelligence";
+import VerifyIdentities from "@/components/landing/VerifyIdentities";
+import ContextAware from "@/components/landing/ContextAware";
 
 function HomePage() {
   return (
@@ -12,6 +14,8 @@ function HomePage() {
       <BuiltForDevelopers />
       <FiveEasySteps />
       <SecurityIntelligence />
+      <VerifyIdentities />
+      <ContextAware />
     </>
   );
 }
