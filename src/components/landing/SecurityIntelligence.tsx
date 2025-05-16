@@ -152,7 +152,7 @@ function SecurityIntelligence() {
   if (error) {
     return (
       <div className="w-full h-auto bg-[#EFF6FF]">
-        <section className="w-full max-w-[1440px] mx-auto py-12 px-4">
+        <section className="w-full max-w-[1440px] min-h-[300px] mx-auto py-12 px-4">
           <div className="text-center">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-slate-800 mb-2">
               Security Intelligence in Action

@@ -34,17 +34,17 @@ const ContextAware = () => {
  "
         >
           <div className="w-full h-full flex flex-col justify-center space-y-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 leading-tight">
+            <h2 className="text-[18px] sm:text-3xl md:text-4xl font-bold text-gray-800 leading-tight">
               Context-aware AI that thinks before it acts
             </h2>
 
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-[10px] sm:text-base text-gray-600">
               Scrubbe blends Large Language Models with a Model Context Protocol
               (MCP) to deliver intelligent, role-aware responses across your
               security stack.
             </p>
 
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-[10px] sm:text-base text-gray-600">
               It interprets raw log data, detection events, and user behavior in
               real time — converting complex alerts into clear, natural-language
               summaries.

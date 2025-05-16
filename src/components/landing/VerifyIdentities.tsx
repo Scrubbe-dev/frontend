@@ -14,18 +14,18 @@ const VerifyIdentities = () => {
  "
         >
           <div className="w-full h-full flex flex-col justify-center space-y-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 leading-tight">
+            <h2 className="text-[18px] sm:text-3xl md:text-4xl font-bold text-gray-800 leading-tight">
               Verify identities. Profile devices. Expose intent before it
               becomes fraud
             </h2>
 
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-[10px] sm:text-base text-gray-600">
               Scrubbe&apos;s KYC Fraud Intelligence Engine combines user
               verification with behavioral and device fingerprinting to assess
               trust in real time.
             </p>
 
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-[10px] sm:text-base text-gray-600">
               Detect fake accounts, repeat abusers, and high-risk identities
               across signups, transactions, or access flows. Built for
               compliance, designed for speed — all powered by AI and
