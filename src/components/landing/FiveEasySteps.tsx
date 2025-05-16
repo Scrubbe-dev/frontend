@@ -80,7 +80,7 @@ const FiveEasySteps: React.FC = () => {
             <div className="h-full flex flex-col justify-between">
               {steps.map((step) => (
                 <div key={step.number} className="flex gap-2 items-start">
-                  <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-200 flex items-center justify-center my-auto">
+                  <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-200 flex items-center justify-center my-auto ml-2">
                     <span className="text-sm sm:text-base font-bold">
                       {step.number}
                     </span>
