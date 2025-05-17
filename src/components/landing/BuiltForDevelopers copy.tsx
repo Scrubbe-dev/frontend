@@ -3,7 +3,7 @@ import Image from "next/image";
 const BuiltForDevelopers = () => {
   return (
     <div className="w-full h-auto bg-white">
-      <section className="w-full max-w-[1440px] mx-auto h-[700px] lg:h-[600px] bg-[linear-gradient(to_bottom,#DBEAFE_45%,white_45%)] flex flex-col items-center py-16">
+      <section className="w-full max-w-[1440px] mx-auto h-[700px] lg:h-[600px] bg-[linear-gradient(to_bottom,#DBEAFE_40%,white_40%)] lg:bg-[linear-gradient(to_bottom,#DBEAFE_45%,white_45%)] flex flex-col items-center">
         <aside className="w-full h-[200px] lg:h-[100px] grid grid-cols-2 lg:grid-cols-[repeat(4,minmax(0,1fr))] mx-auto mt-0">
           {/* Stat 1 */}
 

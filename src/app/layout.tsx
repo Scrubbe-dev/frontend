@@ -13,15 +13,41 @@ import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
 import AuthProvider from "@/provider/AuthProvider";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const airbnbCereal = localFont({
+  src: [
+    {
+      path: "./fonts/airbnb-cereal/AirbnbCereal_W_Lt.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "./fonts/airbnb-cereal/AirbnbCereal_W_Bk.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/airbnb-cereal/AirbnbCereal_W_Md.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/airbnb-cereal/AirbnbCereal_W_Bd.otf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "./fonts/airbnb-cereal/AirbnbCereal_W_XBd.otf",
+      weight: "800",
+      style: "normal",
+    },
+    {
+      path: "./fonts/airbnb-cereal/AirbnbCereal_W_Blk.otf",
+      weight: "900",
+      style: "normal",
+    },
+  ],
+  variable: "--font-airbnb-cereal",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -36,10 +62,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen w-full flex flex-col justify-center items-center bg-[#1F2B71]`}
-      >
+    <html lang="en" className={`${airbnbCereal.variable}`}>
+      <body className="antialiased min-h-screen w-full flex flex-col justify-center items-center bg-[#1F2B71] font-airbnb">
         <AuthProvider>
           <NextJsTopLoader />
           <StoreProvider>
