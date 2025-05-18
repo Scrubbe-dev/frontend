@@ -37,7 +37,7 @@ const FiveEasySteps: React.FC = () => {
 
   return (
     <div className="w-full bg-white overflow-hidden">
-      <section className="w-full max-w-[1440px] mx-auto px-4 py-6 md:py-10">
+      <section className="w-full max-w-[1440px] mx-auto px-4 py-6 md:py-12 lg:py-16">
         {/* Main heading */}
         <div className="text-center mb-6 md:mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
@@ -47,14 +47,13 @@ const FiveEasySteps: React.FC = () => {
         </div>
 
         {/* Content container - Grid implementation */}
-        <article className="grid grid-cols-1 lg:grid-cols-2 justify-items-center mx-auto">
+        <article className="grid grid-cols-1 xl:grid-cols-2 justify-items-center mx-auto gap-2">
           {/* Left side - Fraud Detection Workflow image */}
           <aside
             className="w-[280px] h-[284px]  relative
               sm:w-[560px] sm:h-[568px]
               md:w-[670px] md:h-[680px]
-              lg:w-[520px] lg:h-[527px]
-              xl:w-[650px] xl:h-[659px]"
+              xl:w-[560px] xl:h-[568px]"
           >
             <Image
               src="/fraud-detection.png"
@@ -71,25 +70,27 @@ const FiveEasySteps: React.FC = () => {
 
           {/* Right side - Five steps */}
           <aside
-            className="w-[280px] h-[420px] overflow-y-auto 
+            className="w-[280px] h-[454px] overflow-y-auto 
               sm:w-[560px] sm:h-[568px]
               md:w-[670px] md:h-[680px]
-              lg:w-[520px] lg:h-[527px]
-              xl:w-[650px] xl:h-[659px]"
+              xl:w-[560px] xl:h-[568px]"
           >
-            <div className="h-full flex flex-col justify-between">
+            <div className="h-full flex flex-col justify-between sm:py-2">
               {steps.map((step) => (
-                <div key={step.number} className="flex gap-2 items-start">
-                  <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-200 flex items-center justify-center my-auto ml-2">
+                <div
+                  key={step.number}
+                  className="flex gap-2 items-start mb-1 sm:mb-2"
+                >
+                  <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-200 flex items-center justify-center my-auto">
                     <span className="text-sm sm:text-base font-bold">
                       {step.number}
                     </span>
                   </div>
-                  <div>
+                  <div className="ml-2">
                     <h3 className="text-sm sm:text-lg md:text-xl font-bold leading-tight">
                       {step.title}
                     </h3>
-                    <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-tight mt-0.5">
+                    <p className="text-gray-600 text-xs sm:text-sm sm:leading-snug md:text-base leading-tight mt-0.5 sm:mt-1">
                       {step.description}
                     </p>
                   </div>
