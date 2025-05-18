@@ -61,8 +61,20 @@ const BuiltForDevelopers = () => {
           </menu>
         </aside>
         <div className="row-start-2 row-end-3 w-full">
-          <article className=" bg-[#1F2B71] text-white rounded-[10px] overflow-hidden w-full lg:w-[80%] h-full mx-auto grid grid-cols-1 grid-rows-[55fr_45fr] lg:grid-rows-1 lg:grid-cols-[55fr_45fr] justify-items-center">
-            <nav className=" w-full">AAA</nav>
+          <article className=" bg-[#1F2B71] text-white rounded-[20px] overflow-hidden w-full lg:w-[80%] h-full mx-auto grid grid-cols-1 grid-rows-[55fr_45fr] lg:grid-rows-1 lg:grid-cols-[55fr_45fr] justify-items-center">
+            <nav className=" w-full grid grid-rows-[2fr_3fr] lg:grid-rows-[1fr_1fr] grid-cols-1 justify-items-center gap-4">
+              <div className="w-full  flex flex-col justify-center items-start px-4 sm:px-8 lg:px-14 text-[0.9rem] sm:text-[1.2rem] lg:text-[1.5rem]">
+                Built for developers. Trusted by enterprises. Designed to
+                protect what fintechs value most
+              </div>
+              <div className="w-full flex flex-col justify-center items-start p-4 sm:p-8  text-[0.7rem] sm:text-[0.85rem] lg:text-[1rem]">
+                At Scrubbe, we believe cybersecurity should be powerful,
+                accessible, and intuitive for everyone not just security
+                experts. Our platform is built to empower organizations of all
+                sizes to detect, investigate, and respond to threats in real
+                time without needing deep technical knowledge.
+              </div>
+            </nav>
             <nav className=" w-full">
               <SecurityDashboard />
             </nav>
