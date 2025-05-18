@@ -1,4 +1,5 @@
 //import Image from "next/image";
+import SecurityDashboard from "./SecurityDashboard";
 
 const BuiltForDevelopers = () => {
   return (
@@ -13,15 +14,60 @@ const BuiltForDevelopers = () => {
                  [grid-template-areas:'aaa_bbb'_'ccc_ddd']
                  lg:[grid-template-areas:'aaa_bbb_ccc_ddd']"
         >
-          <menu className="bg-blue-300 [grid-area:aaa]">AAA</menu>
-          <menu className="bg-yellow-300 [grid-area:bbb]">BBB</menu>
+          <menu className="[grid-area:aaa] flex flex-col items-center justify-center border-r-2 border-[#1F2B71]">
+            <p className="text-[1.2rem] sm:text-[1.8rem] md:text-[2.2rem] text-[#1F2937] font-bold">
+              {"<"}5 mins
+            </p>
+            <p className="text-[0.7rem] sm:text-[0.9rem] md:text-[1.1rem] text-[#5E5F60]">
+              Average time to
+            </p>
+            <p className="text-[0.7rem] sm:text-[0.9rem] md:text-[1.1rem] text-[#5E5F60]">
+              investigate incident
+            </p>
+          </menu>
+          <menu className="[grid-area:bbb] flex flex-col items-center justify-center lg:border-r-2 lg:border-[#1F2B71]">
+            <p className="text-[1.2rem] sm:text-[1.8rem] md:text-[2.2rem] text-[#1F2937] font-bold">
+              90%+
+            </p>
+            <p className="text-[0.7rem] sm:text-[0.9rem] md:text-[1.1rem] text-[#5E5F60]">
+              Analyst satisfaction
+            </p>
+            <p className="text-[0.7rem] sm:text-[0.9rem] md:text-[1.1rem] text-[#5E5F60]">
+              with UI usability
+            </p>
+          </menu>
 
-          <menu className="bg-red-300 [grid-area:ccc]">CCC</menu>
-          <menu className="bg-[#E6D3B3] [grid-area:ddd]">DDD</menu>
+          <menu className=" [grid-area:ccc] flex flex-col items-center justify-center  border-r-2 border-[#1F2B71]">
+            <p className="text-[1.2rem] sm:text-[1.8rem] md:text-[2.2rem] text-[#1F2937] font-bold">
+              99.9%
+            </p>
+            <p className="text-[0.7rem] sm:text-[0.9rem] md:text-[1.1rem] text-[#5E5F60]">
+              Uptime for dashboard
+            </p>
+            <p className="text-[0.7rem] sm:text-[0.9rem] md:text-[1.1rem] text-[#5E5F60]">
+              availability
+            </p>
+          </menu>
+          <menu className=" [grid-area:ddd] flex flex-col items-center justify-center">
+            <p className="text-[1.2rem] sm:text-[1.8rem] md:text-[2.2rem] text-[#1F2937] font-bold">
+              {"<"}5%
+            </p>
+            <p className="text-[0.7rem] sm:text-[0.9rem] md:text-[1.1rem] text-[#5E5F60]">
+              False positives on
+            </p>
+            <p className="text-[0.7rem] sm:text-[0.9rem] md:text-[1.1rem] text-[#5E5F60]">
+              automated action
+            </p>
+          </menu>
         </aside>
-        <article className="row-start-2 row-end-3 bg-green-300 w-full">
-          Article
-        </article>
+        <div className="row-start-2 row-end-3 w-full">
+          <article className=" bg-[#1F2B71] text-white rounded-[10px] overflow-hidden w-full lg:w-[80%] h-full mx-auto grid grid-cols-1 grid-rows-[55fr_45fr] lg:grid-rows-1 lg:grid-cols-[55fr_45fr] justify-items-center">
+            <nav className=" w-full">AAA</nav>
+            <nav className=" w-full">
+              <SecurityDashboard />
+            </nav>
+          </article>
+        </div>
       </section>
     </div>
   );
