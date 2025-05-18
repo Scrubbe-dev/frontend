@@ -9,7 +9,7 @@ import CookieToggleButton from "@/components/landing/CookieToggleButton";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import Chatbot from "@/components/landing/Chatbot";
-import AnnouncementBar from "@/components/landing/AnnouncementBar";
+//import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
 import AuthProvider from "@/provider/AuthProvider";
 
@@ -67,7 +67,7 @@ export default function RootLayout({
         <AuthProvider>
           <NextJsTopLoader />
           <StoreProvider>
-            <AnnouncementBar />
+           {/*  <AnnouncementBar /> */} {/* disabled for now till official launch */}
             <HeroProvider>
               <Navbar />
               <main className="flex-grow h-full w-full">{children}</main>
