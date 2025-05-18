@@ -4,7 +4,7 @@ import Image from "next/image";
 const VerifyIdentities = () => {
   return (
     <div className="w-full bg-white">
-      <section className="w-full max-w-[1440px] h-auto mx-auto grid grid-cols-1 lg:grid-cols-2 justify-items-center p-4 gap-4">
+      <section className="w-full max-w-[1440px] h-auto mx-auto grid grid-cols-1 lg:grid-cols-2 justify-items-center p-4 py-6 md:py-12 lg:py-16 gap-4">
         <article
           className="  w-[280px] h-[280px]  
               sm:w-[560px] sm:h-[560px]

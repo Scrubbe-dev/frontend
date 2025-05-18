@@ -17,7 +17,7 @@ function SecurityIntelligenceError({ error }: { error: string }) {
 
   return (
     <div className="w-full h-auto bg-[#EFF6FF]">
-      <section className="w-full max-w-[1440px] mx-auto py-12 px-4">
+      <section className="w-full max-w-[1440px] mx-auto py-6 md:py-12 lg:py-16 px-4">
         {/* Error message */}
         <div className="max-w-4xl mx-auto mb-6 bg-red-100 rounded-lg p-4 text-red-600">
           <p>{error}</p>

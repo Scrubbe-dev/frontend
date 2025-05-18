@@ -156,7 +156,7 @@ function SecurityIntelligence() {
 
   return (
     <div className="w-full h-auto bg-[#EFF6FF]">
-      <section className="w-full max-w-[1440px] mx-auto py-12 px-4">
+      <section className="w-full max-w-[1440px] mx-auto py-6 md:py-12 lg:py-16 px-4">
         {/* Header */}
         <div className="text-center">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-slate-800 mb-2">
