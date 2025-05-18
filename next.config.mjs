@@ -1,14 +1,11 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: "/api/proxy/:path*",
-        destination: "https://admin-rul9.onrender.com/api/v1/:path*",
-      },
-    ];
+   images: {
+    loader: 'custom',
+    loaderFile: './Imageloader.js',
   },
+  output: 'export'
 };
 
 export default nextConfig;

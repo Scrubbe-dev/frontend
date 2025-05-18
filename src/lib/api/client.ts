@@ -1,7 +1,7 @@
 import axios from "axios";
 import { setupInterceptors } from "./interceptors";
 
-const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const baseURL =  "https://admin-rul9.onrender.com/api/v1";
 
 if (!baseURL) {
   throw new Error("Missing NEXT_PUBLIC_API_BASE_URL environment variable");
