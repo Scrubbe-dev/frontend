@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 
 // Define the structure of our knowledge base items
 interface KnowledgeItem {
@@ -229,13 +230,15 @@ const Chatbot: React.FC = () => {
         onClick={() => setIsOpen(true)}
         className="absolute bottom-0 right-0 w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-105 focus:outline-none"
       >
-        <svg
-          className="w-6 h-6 fill-white"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-        >
-          <path d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11c1.52 0 3.13-.276 4.403-.82l4.794 1.414-.993-4.247C21.31 17.372 23 14.734 23 12c0-6.075-4.925-11-11-11zm0 20c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9zm3.5-11c.828 0 1.5-.672 1.5-1.5S16.328 7 15.5 7 14 7.672 14 8.5s.672 1.5 1.5 1.5zm-7 0c.828 0 1.5-.672 1.5-1.5S9.328 7 8.5 7 7 7.672 7 8.5 7.672 10 8.5 10zm3.5 6c-2.003 0-3.887-.785-5.303-2.202l-1.405 1.405C7.185 17.097 9.493 18 12 18s4.816-.903 6.707-2.797l-1.405-1.405C15.887 15.215 14.003 16 12 16z" />
-        </svg>
+        <div className="relative w-6 h-6">
+          <Image
+            src="/scrubbe-logo-icon.png"
+            alt="Scrubbe Logo"
+            fill
+            sizes="24px"
+            className="object-contain"
+          />
+        </div>
       </button>
 
       {/* Chat dialog box */}
@@ -252,16 +255,15 @@ const Chatbot: React.FC = () => {
         {/* Chat header - make it sticky */}
         <div className="bg-blue-600 text-white p-2 sm:p-3 flex justify-between items-center sticky top-0 z-10">
           <div className="font-semibold flex items-center gap-1 text-sm sm:text-base">
-            <svg
-              className="w-4 h-4 sm:w-5 sm:h-5 fill-white"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 1c-6.075 0-11 4.925-11 11s4.925 11 11 11c1.52 0 3.13-.276 4.403-.82l4.794 1.414-.993-4.247C21.31 17.372 23 14.734 23 12c0-6.075-4.925-11-11-11zm0 20c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9z" />
-              <circle cx="8.5" cy="10.5" r="1.5" />
-              <circle cx="15.5" cy="10.5" r="1.5" />
-              <path d="M12 16c-1.654 0-3-1.346-3-3h2c0 .551.448 1 1 1s1-.449 1-1h2c0 1.654-1.346 3-3 3z" />
-            </svg>
+            <div className="relative w-4 h-4 sm:w-5 sm:h-5">
+              <Image
+                src="/scrubbe-logo-icon.png"
+                alt="Scrubbe Logo"
+                fill
+                sizes="(max-width: 640px) 16px, 20px"
+                className="object-contain"
+              />
+            </div>
             Scrubbe Assistant
           </div>
           <button

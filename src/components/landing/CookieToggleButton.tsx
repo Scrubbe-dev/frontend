@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useAppStore } from "@/store/StoreProvider";
+import { RxCookie } from "react-icons/rx";
 
 const CookieToggleButton: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -42,16 +43,10 @@ const CookieToggleButton: React.FC = () => {
       {/* Cookie toggle button */}
       <button
         onClick={() => setIsDialogOpen(true)}
-        className="fixed bottom-3 left-3 z-50 w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-105 focus:outline-none"
+        className="fixed bottom-3 left-3 z-50 w-12 h-12 rounded-full text-white bg-blue-600 hover:bg-blue-700 flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-105 focus:outline-none"
         aria-label="Cookie Settings"
       >
-        <svg
-          className="w-6 h-6 fill-white"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-        >
-          <path d="M21.598 11.064a1.006 1.006 0 0 0-.854-.172A2.938 2.938 0 0 1 20 11c-1.654 0-3-1.346-3-3 0-.217.031-.444.099-.692.069-.252.02-.518-.135-.73s-.396-.343-.662-.343H15c-1.103 0-2-.897-2-2 0-.334.082-.644.184-.958.055-.167.049-.349-.015-.518s-.185-.309-.337-.398C11.898 2.001 10.89 1.5 9.796 1.5c-3.454 0-6.247 2.849-6.247 6.302a6.3 6.3 0 0 0 1.73 4.327A6.269 6.269 0 0 0 9.796 14a6.3 6.3 0 0 0 4.344-1.739 6.3 6.3 0 0 0 1.7-3.931L16 8.368c0 2.467 1.794 4.509 4.12 4.922.195.047.333.222.333.422v.579c0 3.218-2.617 5.836-5.833 5.836-.629 0-1.237-.096-1.822-.281-.251-.079-.53.001-.726.229-.196.229-.261.54-.168.826a6.3 6.3 0 0 0 6.095 4.714 8.668 8.668 0 0 0 8.651-8.739v-3.935a1 1 0 0 0-.466-.873l-4.586-2.664zm-.355 5.433c-.181 2.26-1.241 4.572-4.133 5.928-.124-.184-.37-.271-.565-.299C18.56 21.428 20 19.39 20 17v-.579c0-1.371-.649-2.586-1.646-3.359A4.952 4.952 0 0 0 20 12.869v3.628zM9.796 12a4.297 4.297 0 0 1-4.293-4.293c0-2.44 1.981-4.418 4.417-4.418a4.42 4.42 0 0 1 .825.079c.537.526.9 1.379.9 2.128 0 2.207 1.793 4 4 4 .671 0 1.303-.173 1.854-.476C16.27 10.953 13.226 12 9.796 12zM8 8.5a1.5 1.5 0 1 1 .001-3.001A1.5 1.5 0 0 1 8 8.5zm2.5 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm3.5-5a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-6 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-        </svg>
+        <RxCookie className="w-6 h-6 fill-white" />
       </button>
 
       {/* Backdrop overlay */}
@@ -73,13 +68,7 @@ const CookieToggleButton: React.FC = () => {
         {/* Cookie dialog header */}
         <div className="bg-blue-600 text-white p-2 sm:p-3 flex justify-between items-center rounded-t-lg">
           <div className="font-semibold flex items-center gap-1 text-sm sm:text-base">
-            <svg
-              className="w-4 h-4 sm:w-5 sm:h-5 fill-white"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <path d="M21.598 11.064a1.006 1.006 0 0 0-.854-.172A2.938 2.938 0 0 1 20 11c-1.654 0-3-1.346-3-3 0-.217.031-.444.099-.692.069-.252.02-.518-.135-.73s-.396-.343-.662-.343H15c-1.103 0-2-.897-2-2 0-.334.082-.644.184-.958.055-.167.049-.349-.015-.518s-.185-.309-.337-.398C11.898 2.001 10.89 1.5 9.796 1.5c-3.454 0-6.247 2.849-6.247 6.302a6.3 6.3 0 0 0 1.73 4.327A6.269 6.269 0 0 0 9.796 14a6.3 6.3 0 0 0 4.344-1.739 6.3 6.3 0 0 0 1.7-3.931L16 8.368c0 2.467 1.794 4.509 4.12 4.922.195.047.333.222.333.422v.579c0 3.218-2.617 5.836-5.833 5.836-.629 0-1.237-.096-1.822-.281-.251-.079-.53.001-.726.229-.196.229-.261.54-.168.826a6.3 6.3 0 0 0 6.095 4.714 8.668 8.668 0 0 0 8.651-8.739v-3.935a1 1 0 0 0-.466-.873l-4.586-2.664z" />
-            </svg>
+            <RxCookie className="w-4 h-4 sm:w-5 sm:h-5 fill-white" />
             Cookie Settings
           </div>
           <button

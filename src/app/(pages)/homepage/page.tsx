@@ -5,6 +5,7 @@ import FiveEasySteps from "@/components/landing/FiveEasySteps";
 import SecurityIntelligence from "@/components/landing/SecurityIntelligence";
 import VerifyIdentities from "@/components/landing/VerifyIdentities";
 import ContextAware from "@/components/landing/ContextAware";
+import SupportedBy from "@/components/landing/SupportedBy";
 
 function HomePage() {
   return (
@@ -16,6 +17,7 @@ function HomePage() {
       <SecurityIntelligence />
       <VerifyIdentities />
       <ContextAware />
+      <SupportedBy />
     </>
   );
 }

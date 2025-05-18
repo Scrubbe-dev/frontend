@@ -1,7 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import api from "@/lib/axios";
-import SkeletonSecurityIntelligence from "@/components/landing/skeletons/SkeletonSecurityIntelligence";
+import SecurityIntelligenceSkeleton from "@/components/landing/security-intelligence/SecurityIntelligenceSkeleton";
+import SecurityIntelligenceError from "@/components/landing/security-intelligence/SecurityIntelligenceError";
 
 // Define types for the fingerprint data
 type FingerprintItem = {
@@ -146,32 +147,16 @@ function SecurityIntelligence() {
 
   // Loading and error states remain the same
   if (isLoading) {
-    return <SkeletonSecurityIntelligence />;
+    return <SecurityIntelligenceSkeleton />;
   }
 
   if (error) {
-    return (
-      <div className="w-full h-auto bg-[#EFF6FF]">
-        <section className="w-full max-w-[1440px] min-h-[300px] mx-auto py-12 px-4">
-          <div className="text-center">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-slate-800 mb-2">
-              Security Intelligence in Action
-            </h2>
-            <div className="flex justify-center items-center mb-6">
-              <div className="w-28 h-1 bg-emerald-400 mx-auto"></div>
-            </div>
-          </div>
-          <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-sm p-6 text-center text-red-500">
-            <p>{error}</p>
-          </div>
-        </section>
-      </div>
-    );
+    return <SecurityIntelligenceError error={error} />;
   }
 
   return (
     <div className="w-full h-auto bg-[#EFF6FF]">
-      <section className="w-full max-w-[1440px] mx-auto py-12 px-4">
+      <section className="w-full max-w-[1440px] mx-auto py-6 md:py-12 lg:py-16 px-4">
         {/* Header */}
         <div className="text-center">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-slate-800 mb-2">
