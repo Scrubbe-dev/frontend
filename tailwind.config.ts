@@ -1,4 +1,4 @@
-import  {heroui}  from "@heroui/react";
+import { heroui } from "@heroui/react";
 import tailwindcssAnimate from "tailwindcss-animate";
 
 import type { Config } from "tailwindcss";
@@ -19,7 +19,9 @@ const config: Config = {
         Poppins: ["Poppins", "sans-serif"],
         Inter: ["Inter", "sans-serif"],
         Roboto: ["Roboto", "sans-serif"],
-      }, //end of fontFamily
+        trebuchetMs: ["Trebuchet MS"],
+        airbnb: ["var(--font-airbnb-cereal)"],
+      },
       colors: {
         colorScBlue: "#2463e9",
         colorScPurple: "#682bd7",
