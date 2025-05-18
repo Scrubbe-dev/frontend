@@ -249,7 +249,9 @@ const Navbar = () => {
                           <Link
                             key={option.label}
                             href={option.href}
-                            className="block p-3 rounded-lg hover:bg-blue-50 transition-colors relative overflow-hidden group/item"
+                            className={`block rounded-lg hover:bg-blue-50 transition-colors relative overflow-hidden group/item ${
+                              option.description ? "p-3" : "py-1 px-3"
+                            }`}
                           >
                             {/* Left border that appears on hover */}
                             <div className="absolute left-0 top-0 h-full w-1 bg-transparent group-hover/item:bg-blue-600 transition-colors"></div>
