@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useAppStore } from "@/store/StoreProvider";
-import { fingerprintDisplay } from "@/lib/fingerprint/fingerprintdisplay";
+import { useFingerprintDisplay } from "@/lib/fingerprint/fingerprintdisplay";
 
 const CookieConsentModal: React.FC = () => {
   const [activeTab, setActiveTab] = useState("cookie-preferences");
   const [showDetailedSettings, setShowDetailedSettings] = useState(false);
-  const { handleRetry } = fingerprintDisplay();
+  const { handleRetry } = useFingerprintDisplay();
 
   const {
     cookiePreferences,

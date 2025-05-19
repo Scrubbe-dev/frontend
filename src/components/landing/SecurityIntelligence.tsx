@@ -1,16 +1,17 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
-import api from "@/lib/axios";
 import SecurityIntelligenceSkeleton from "@/components/landing/security-intelligence/SecurityIntelligenceSkeleton";
 import SecurityIntelligenceError from "@/components/landing/security-intelligence/SecurityIntelligenceError";
-import { fingerprintDisplay } from "@/lib/fingerprint/fingerprintdisplay";
+import { useFingerprintDisplay } from "@/lib/fingerprint/fingerprintdisplay";
 
 function SecurityIntelligence() {
   const {
     error,
     loading,
     formattedItems,
-  } = fingerprintDisplay();
+  } = useFingerprintDisplay();
 
   const [deviceType, setDeviceType] = useState<string>("Desktop");
 

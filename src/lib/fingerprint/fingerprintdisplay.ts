@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from 'react';
 import { getFingerprintWithConsent } from '@/lib/fingerprint/utils/handler';
 import { FingerprintResponse } from '@/types/response.type';
 
-export const fingerprintDisplay = () => {
+export const useFingerprintDisplay = () => {
   const [fingerprint, setFingerprint] = useState<FingerprintResponse>();
   const [hasConsent, setHasConsent] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
