@@ -7,14 +7,11 @@ import { fingerprintDisplay } from "@/lib/fingerprint/fingerprintdisplay";
 
 function SecurityIntelligence() {
   const {
-    hasConsent,
     error,
     loading,
-    fingerprint,
     formattedItems,
-    handleRetry,
   } = fingerprintDisplay();
-  
+
   const [deviceType, setDeviceType] = useState<string>("Desktop");
 
   useEffect(() => {

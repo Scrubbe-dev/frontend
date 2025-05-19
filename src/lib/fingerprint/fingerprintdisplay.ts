@@ -50,20 +50,28 @@ const formattedItems = [
               value: fingerprint?.data.device.deviceType || "Unavailable",
             },
             {
+              label: "Connection asn",
+              value: fingerprint?.data.usersDetails.connection.asn || "Unavailable",
+            },
+            {
+              label: "Connection isp",
+              value: fingerprint?.data.usersDetails.connection.isp || "Unavailable",
+            },
+            {
               label: "Timestamp",
               value: new Date().toLocaleString(),
             },
             {
               label: "OS Model",
-              value: fingerprint?.data.device.os || "Unknown",
+              value: fingerprint?.data.device.os || "Unavailable",
             },
             {
               label: "IP Address",
-              value: fingerprint?.data.ip || fingerprint?.data.usersDetails.ip || "Unknown",
+              value: fingerprint?.data.ip || fingerprint?.data.usersDetails.ip || "Unavailable",
             },
             {
               label: "Country",
-              value: fingerprint?.data.usersDetails.continent_name || "Unknown",
+              value: fingerprint?.data.usersDetails.continent_name || "Unavailable",
             },
             {
               label: "Region/City",
@@ -74,11 +82,11 @@ const formattedItems = [
             },
             {
               label: "Browser Information",
-              value: fingerprint?.data.device.browser || "Unknown",
+              value: fingerprint?.data.device.browser || "Unavailable",
             },
             {
               label: "ISP",
-              value: fingerprint?.data.usersDetails.connection.isp || "Unknown",
+              value: fingerprint?.data.usersDetails.connection.isp || "Unavailable",
             },
             {
               label: "Device Trust Score",
