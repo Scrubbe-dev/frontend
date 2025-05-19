@@ -1,46 +1,97 @@
-"use client"
-import { useEffect, useRef, useState } from "react"
-import * as THREE from "three"
-import Image from "next/image"
+"use client";
+import { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
+import Image from "next/image";
+
+const scrubbeData = [
+  {
+    firstLine: "Built for Scale, Trained for",
+    secondLine: "Speed",
+    specialWord: "Speed",
+    description:
+      "Scrubbe uses Large Language Models to explain risks, power fraud-aware authentication, and automate response all built for modern digital teams securing users at scale",
+  },
+  {
+    firstLine: "Fraud-Aware",
+    secondLine: "Authentication SDK",
+    specialWord: "Authentication",
+    description:
+      "Built-in intelligence for trust, not just access Fingerprint every session. Verify every intent Know your users before they even log in",
+  },
+  {
+    firstLine: "Fraud API as a",
+    secondLine: "Service",
+    specialWord: "API",
+    description:
+      "Turn on real-time fraud defense in one API call. Plug in, detect patterns, and stop scams instantly",
+  },
+  {
+    firstLine: "Incident Management &",
+    secondLine: "SOAR Automation",
+    specialWord: "Management",
+    description:
+      "From alert to action in seconds, not hours. Let playbooks handle what people shouldn't have to. Your response team's new favorite workflow",
+  },
+].map((item) => {
+  const highlight = (text: string, keyword: string) => {
+    const parts = text.split(new RegExp(`(${keyword})`, "gi"));
+    return parts.map((part, i) =>
+      part.toLowerCase() === keyword.toLowerCase() ? (
+        <span key={i} className="text-blue-600 font-semibold">
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
+
+  return {
+    ...item,
+    firstLineFormatted: highlight(item.firstLine, item.specialWord),
+    secondLineFormatted: highlight(item.secondLine, item.specialWord),
+  };
+});
 
 // Single corner animation
 function CornerAnimation({ width, height }: { width: number; height: number }) {
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return
-    const currentContainer = containerRef.current
+    if (!containerRef.current) return;
+    const currentContainer = containerRef.current;
 
-    const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
-    const renderer = new THREE.WebGLRenderer({ alpha: true })
-    renderer.setSize(width, height)
-    currentContainer.appendChild(renderer.domElement)
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(width, height);
+    currentContainer.appendChild(renderer.domElement);
 
-    const nodes: THREE.Mesh[] = []
-    const connections: { line: THREE.Line; node1: number; node2: number }[] = []
-    const nodeCount = 20
+    const nodes: THREE.Mesh[] = [];
+    const connections: { line: THREE.Line; node1: number; node2: number }[] =
+      [];
+    const nodeCount = 20;
 
     for (let i = 0; i < nodeCount; i++) {
-      const geometry = new THREE.SphereGeometry(0.2, 32, 32)
+      const geometry = new THREE.SphereGeometry(0.2, 32, 32);
       const material = new THREE.MeshBasicMaterial({
         color: new THREE.Color(0x60a5fa),
         transparent: true,
         opacity: 0.7,
-      })
-      const node = new THREE.Mesh(geometry, material)
-      node.position.x = (Math.random() - 0.5) * 30
-      node.position.y = (Math.random() - 0.5) * 15
-      node.position.z = (Math.random() - 0.5) * 10 - 15
+      });
+      const node = new THREE.Mesh(geometry, material);
+      node.position.x = (Math.random() - 0.5) * 30;
+      node.position.y = (Math.random() - 0.5) * 15;
+      node.position.z = (Math.random() - 0.5) * 10 - 15;
 
       node.userData = {
         velocityX: (Math.random() - 0.5) * 0.04,
         velocityY: (Math.random() - 0.5) * 0.04,
         velocityZ: (Math.random() - 0.5) * 0.02,
-      }
+      };
 
-      nodes.push(node)
-      scene.add(node)
+      nodes.push(node);
+      scene.add(node);
     }
 
     for (let i = 0; i < nodes.length; i++) {
@@ -50,66 +101,84 @@ function CornerAnimation({ width, height }: { width: number; height: number }) {
             color: 0x3b82f6,
             transparent: true,
             opacity: 0.3,
-          })
-          const geometry = new THREE.BufferGeometry().setFromPoints([nodes[i].position, nodes[j].position])
-          const line = new THREE.Line(geometry, material)
-          connections.push({ line, node1: i, node2: j })
-          scene.add(line)
+          });
+          const geometry = new THREE.BufferGeometry().setFromPoints([
+            nodes[i].position,
+            nodes[j].position,
+          ]);
+          const line = new THREE.Line(geometry, material);
+          connections.push({ line, node1: i, node2: j });
+          scene.add(line);
         }
       }
     }
 
-    camera.position.z = 5
+    camera.position.z = 5;
 
     const animate = () => {
-      requestAnimationFrame(animate)
+      requestAnimationFrame(animate);
 
       nodes.forEach((node) => {
-        node.position.x += node.userData.velocityX
-        node.position.y += node.userData.velocityY
-        node.position.z += node.userData.velocityZ
+        node.position.x += node.userData.velocityX;
+        node.position.y += node.userData.velocityY;
+        node.position.z += node.userData.velocityZ;
 
-        if (Math.abs(node.position.x) > 15) node.userData.velocityX *= -1
-        if (Math.abs(node.position.y) > 8) node.userData.velocityY *= -1
-        if (Math.abs(node.position.z) > 10) node.userData.velocityZ *= -1
-      })
+        if (Math.abs(node.position.x) > 15) node.userData.velocityX *= -1;
+        if (Math.abs(node.position.y) > 8) node.userData.velocityY *= -1;
+        if (Math.abs(node.position.z) > 10) node.userData.velocityZ *= -1;
+      });
 
       connections.forEach((conn) => {
-        const points = [nodes[conn.node1].position, nodes[conn.node2].position]
-        conn.line.geometry.setFromPoints(points)
-      })
+        const points = [nodes[conn.node1].position, nodes[conn.node2].position];
+        conn.line.geometry.setFromPoints(points);
+      });
 
-      renderer.render(scene, camera)
-    }
+      renderer.render(scene, camera);
+    };
 
-    animate()
+    animate();
 
     const handleResize = () => {
-      camera.aspect = width / height
-      camera.updateProjectionMatrix()
-      renderer.setSize(width, height)
-    }
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    };
 
-    window.addEventListener("resize", handleResize)
+    window.addEventListener("resize", handleResize);
 
     return () => {
       if (currentContainer.contains(renderer.domElement)) {
-        currentContainer.removeChild(renderer.domElement)
+        currentContainer.removeChild(renderer.domElement);
       }
-      window.removeEventListener("resize", handleResize)
-    }
-  }, [width, height])
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [width, height]);
 
-  return <div ref={containerRef} className="w-full h-full" />
+  return <div ref={containerRef} className="w-full h-full" />;
 }
 
 // HERO section wrapper
 export default function Hero() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
   // State to store window dimensions
   const [windowDimensions, setWindowDimensions] = useState({
     width: 0,
     height: 0,
-  })
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % scrubbeData.length);
+        setIsTransitioning(false);
+      }, 500); // Half of the transition time for smooth crossfade
+    }, 5000); // Change every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Effect to safely access window object after component mount
   useEffect(() => {
@@ -117,21 +186,21 @@ export default function Hero() {
     setWindowDimensions({
       width: window.innerWidth,
       height: window.innerHeight,
-    })
+    });
 
     // Handle resize events
     const handleResize = () => {
       setWindowDimensions({
         width: window.innerWidth,
         height: window.innerHeight,
-      })
-    }
+      });
+    };
 
-    window.addEventListener("resize", handleResize)
+    window.addEventListener("resize", handleResize);
 
     // Cleanup
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Adjusted positions with slight upward shift for each corner
   const corners = [
@@ -139,7 +208,7 @@ export default function Hero() {
     { pos: "top-0 right-0", shift: "translate-y-2" },
     { pos: "bottom-0 left-0", shift: "-translate-y-2" },
     { pos: "bottom-0 right-0", shift: "-translate-y-2" },
-  ]
+  ];
 
   return (
     <div className="w-full bg-[#d6f2ff] overflow-x-hidden">
@@ -164,15 +233,24 @@ export default function Hero() {
           {/* Text content */}
           <div className="flex flex-col items-center justify-center text-center">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
-              Built for Scale, Trained for
-              <br />
-              <span className="text-blue-600 ml-2">Speed</span>
+              <div className="h-full relative">
+                <div
+                  className={`transition-opacity duration-500 ${
+                    isTransitioning ? "opacity-0" : "opacity-100"
+                  }`}
+                >
+                  <div>{scrubbeData[currentIndex].firstLineFormatted}</div>
+                  <div>{scrubbeData[currentIndex].secondLineFormatted}</div>
+                </div>
+              </div>
             </h1>
 
-            <p className="text-gray-600 max-w-2xl mx-auto mb-6 text-sm sm:text-base md:text-lg">
-              Scrubbe uses Large Language Models to explain risks, power
-              fraud-aware authentication, and automate response all built for
-              modern digital teams securing users at scale
+            <p
+              className={`text-gray-600 max-w-2xl mx-auto mb-6 text-sm sm:text-base md:text-lg transition-opacity duration-500 ${
+                isTransitioning ? "opacity-0" : "opacity-100"
+              }`}
+            >
+              {scrubbeData[currentIndex].description}
             </p>
 
             <div className="flex space-x-4 mb-8">
