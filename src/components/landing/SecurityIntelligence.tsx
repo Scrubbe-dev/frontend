@@ -3,51 +3,21 @@ import React, { useEffect, useState } from "react";
 import api from "@/lib/axios";
 import SecurityIntelligenceSkeleton from "@/components/landing/security-intelligence/SecurityIntelligenceSkeleton";
 import SecurityIntelligenceError from "@/components/landing/security-intelligence/SecurityIntelligenceError";
-
-// Define types for the fingerprint data
-type FingerprintItem = {
-  label: string;
-  value: string;
-};
-
-type ApiResponse = {
-  ip: string;
-  location: {
-    capital?: string;
-    native_name?: string;
-    flag?: string;
-    top_level_domains?: string[];
-    calling_codes?: string[];
-  };
-  network: {
-    isProxy: boolean;
-  };
-  device: {
-    os: string;
-    browser: string;
-  };
-  usersDetails: {
-    ip: string;
-    region_name: string;
-    city: string;
-    connection: {
-      asn: number;
-      isp: string;
-    };
-    country_name: string;
-  };
-};
+import { fingerprintDisplay } from "@/lib/fingerprint/fingerprintdisplay";
 
 function SecurityIntelligence() {
-  const [fingerprintItems, setFingerprintItems] = useState<FingerprintItem[]>(
-    []
-  );
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    hasConsent,
+    error,
+    loading,
+    fingerprint,
+    formattedItems,
+    handleRetry,
+  } = fingerprintDisplay();
+  
   const [deviceType, setDeviceType] = useState<string>("Desktop");
 
   useEffect(() => {
-    // Function to determine device type based on window width
     const determineDeviceType = () => {
       const width = window.innerWidth;
       if (width < 576) return "Mobile Phone";
@@ -55,10 +25,8 @@ function SecurityIntelligence() {
       return "Desktop";
     };
 
-    // Set initial device type
     setDeviceType(determineDeviceType());
 
-    // Update device type on window resize
     const handleResize = () => {
       setDeviceType(determineDeviceType());
     };
@@ -67,86 +35,7 @@ function SecurityIntelligence() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    const fetchSystemInfo = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        const response = await api.get("/system-info");
-        const data: ApiResponse = response.data.data;
-
-        // Calculate a simple device trust score based on available data
-        const calculateTrustScore = (): string => {
-          let score = 70; // Base score
-          if (data.network.isProxy) score -= 20; // Deduct for proxy
-          if (data.device.os.includes("Windows")) score += 5; // Common OS
-          if (data.usersDetails.country_name === "Nigeria") score += 5; // Local traffic
-          return `${Math.min(Math.max(score, 0), 100)}%`; // Ensure score is between 0-100
-        };
-
-        const formattedItems: FingerprintItem[] = [
-          {
-            label: "VPN/Proxy Status",
-            value: data.network.isProxy ? "Detected" : "Not Detected",
-          },
-          {
-            label: "Device Type",
-            value: deviceType,
-          },
-          {
-            label: "Timestamp",
-            value: new Date().toLocaleString(),
-          },
-          {
-            label: "OS Model",
-            value: data.device.os || "Unknown",
-          },
-          {
-            label: "IP Address",
-            value: data.ip || data.usersDetails.ip || "Unknown",
-          },
-          {
-            label: "Country",
-            value: data.usersDetails.country_name || "Unknown",
-          },
-          {
-            label: "Region/City",
-            value:
-              data.usersDetails.region_name && data.usersDetails.city
-                ? `${data.usersDetails.region_name}/${data.usersDetails.city}`
-                : "Unknown",
-          },
-          {
-            label: "Browser Information",
-            value: data.device.browser || "Unknown",
-          },
-          {
-            label: "ISP",
-            value: data.usersDetails.connection.isp || "Unknown",
-          },
-          {
-            label: "Device Trust Score",
-            value: calculateTrustScore(),
-          },
-        ];
-
-        setFingerprintItems(formattedItems);
-      } catch (err) {
-        console.error("Failed to fetch system info:", err);
-        setError(
-          "Failed to load security information. Please try again later."
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSystemInfo();
-  }, [deviceType]);
-
-  // Loading and error states remain the same
-  if (isLoading) {
+  if (loading) {
     return <SecurityIntelligenceSkeleton />;
   }
 
@@ -193,7 +82,7 @@ function SecurityIntelligence() {
               <div className="border border-blue-100 rounded-lg overflow-hidden">
                 <table className="w-full border-collapse">
                   <tbody>
-                    {fingerprintItems.map((item, index) => (
+                    {formattedItems.map((item: any, index: number) => (
                       <tr
                         key={item.label}
                         className="hover:bg-slate-50 transition-colors"
@@ -203,7 +92,7 @@ function SecurityIntelligence() {
                         </td>
                         <td
                           className={`py-4 px-6 text-md ${
-                            index < fingerprintItems.length - 1
+                            index < formattedItems.length - 1
                               ? "border-b border-blue-100"
                               : ""
                           } ${

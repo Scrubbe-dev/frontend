@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useAppStore } from "@/store/StoreProvider";
+import { fingerprintDisplay } from "@/lib/fingerprint/fingerprintdisplay";
 
 const CookieConsentModal: React.FC = () => {
   const [activeTab, setActiveTab] = useState("cookie-preferences");
   const [showDetailedSettings, setShowDetailedSettings] = useState(false);
+  const { handleRetry } = fingerprintDisplay();
 
-  // Get cookie-related state and actions from Zustand
   const {
     cookiePreferences,
     showCookieModal,
@@ -17,16 +18,13 @@ const CookieConsentModal: React.FC = () => {
     updateCookiePreference,
   } = useAppStore((state) => state);
 
-  // Check for existing consent on component mount
   useEffect(() => {
     const checkExistingConsent = () => {
-      // Check for existing consent cookie
       const hasCookieConsent = document.cookie
         .split(";")
         .some((item) => item.trim().startsWith("cookie_consent="));
 
       if (!hasCookieConsent) {
-        // Only show modal if no consent exists
         setShowCookieModal(true);
       }
     };
@@ -34,27 +32,28 @@ const CookieConsentModal: React.FC = () => {
     checkExistingConsent();
   }, [setShowCookieModal]);
 
-  // Handle different button clicks
   const handleAcceptAll = () => {
     acceptAllCookies();
+    handleRetry();
   };
 
   const handleEssentialOnly = () => {
     acceptEssentialOnly();
+    handleRetry();
   };
 
   const handleSavePreferences = () => {
     setCookiePreferences(cookiePreferences);
+    handleRetry();
   };
 
   const handleToggleChange = (category: keyof typeof cookiePreferences) => {
-    // Don't toggle essential cookies
     if (category === "essential") return;
 
     updateCookiePreference(category, !cookiePreferences[category]);
+    handleRetry();
   };
 
-  // If modal is not shown, don't render anything
   if (!showCookieModal) return null;
 
   return (
