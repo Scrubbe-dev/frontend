@@ -243,7 +243,7 @@ const Footer: React.FC = () => {
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1">
                   <div className="relative w-8 h-8">
                     <Image
-                      src="/icon-eu.svg"
+                      src="/icon-eu-big.svg"
                       alt="EU Compliance"
                       fill
                       sizes="32px"
@@ -254,7 +254,7 @@ const Footer: React.FC = () => {
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1">
                   <div className="relative w-8 h-8">
                     <Image
-                      src="/icon-iso.svg"
+                      src="/icon-iso-big.svg"
                       alt="ISO Certification"
                       fill
                       sizes="32px"
