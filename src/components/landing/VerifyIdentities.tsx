@@ -51,7 +51,7 @@ const VerifyIdentities = () => {
  relative"
         >
           <Image
-            src="/fraud-intelligence.png"
+            src="/fraud-intelligence-big.png"
             alt="fraud-intelligence"
             fill
             className="object-contain"

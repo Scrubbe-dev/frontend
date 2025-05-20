@@ -65,7 +65,7 @@ const FiveEasySteps: React.FC = () => {
         <article className="grid grid-cols-1 xl:grid-cols-2 justify-items-center mx-auto gap-2">
           <aside className="w-[280px] h-[284px] relative sm:w-[560px] sm:h-[568px] md:w-[670px] md:h-[680px] xl:w-[560px] xl:h-[568px]">
             <Image
-              src="/fraud-detection.png"
+              src="/fraud-detection-big.png"
               alt="Fraud Detection Workflow"
               fill
               className="object-contain"

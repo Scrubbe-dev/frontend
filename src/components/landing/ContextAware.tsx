@@ -14,7 +14,7 @@ const ContextAware = () => {
  relative"
         >
           <Image
-            src="/mcp-server.png"
+            src="/mcp-server-big.png"
             alt="mcp-server"
             fill
             className="object-contain"

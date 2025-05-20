@@ -270,7 +270,7 @@ export default function Hero() {
           <div className="mt-auto w-full max-w-[95%] sm:max-w-[90%] md:max-w-4xl mx-auto">
             <div className="shadow-2xl rounded-xl overflow-hidden">
               <Image
-                src="hero-image.svg"
+                src="/hero-image.png"
                 alt="Scrubbe Dashboard Preview"
                 width={507}
                 height={342}
