@@ -5,7 +5,7 @@ import AuthTabs from "@/components/auth/AuthTabs";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-col-reverse md:flex-row h-auto w-full">
+    <div className="flex flex-col-reverse md:flex-row h-auto w-full bg-white">
       {/* Sidebar takes full width on mobile, 1/3 on desktop */}
       <div className="w-full md:w-1/3">
         <AnalyticsSidebar />
