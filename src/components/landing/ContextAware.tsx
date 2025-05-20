@@ -34,7 +34,7 @@ const ContextAware = () => {
  "
         >
           <div className="w-full h-full flex flex-col justify-center space-y-4">
-            <h2 className="text-[18px] sm:text-3xl md:text-4xl font-bold text-gray-800 leading-tight">
+            <h2 className="text-[20px] sm:text-[24px] md:text-[30px] lg:text-[36px] font-bold text-gray-800 leading-tight">
               Context-aware AI that thinks before it acts
             </h2>
 

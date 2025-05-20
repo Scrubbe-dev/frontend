@@ -4,33 +4,31 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { IoChevronForwardOutline, IoChevronBackOutline } from "react-icons/io5";
+import { FaSquareCheck } from "react-icons/fa6";
+import { FaClock } from "react-icons/fa";
+import { GiBrickWall } from "react-icons/gi";
+import { BiBarChart } from "react-icons/bi";
+import { BsExclamationOctagonFill } from "react-icons/bs";
+import { HiMiniCodeBracketSquare } from "react-icons/hi2";
 
 // Feature Card Component
 interface FeatureCardProps {
-  iconSrc: string;
-  iconAlt: string;
+  icon: React.ReactNode;
   title: string;
   description: string;
 }
 
 // Feature Card Component
 const FeatureCard: React.FC<FeatureCardProps> = ({
-  iconSrc,
-  iconAlt,
+  icon,
   title,
   description,
 }) => {
   return (
     <div className="h-full bg-white p-6 rounded-xl border border-gray-200 flex flex-col hover:border-blue-400 hover:shadow-sm transition-all duration-200">
       <div className="mb-4">
-        <div className="relative w-12 h-12 flex items-center justify-center rounded-full border-2 border-emerald-400 bg-blue-50 [box-shadow:0_0_0_4px_rgba(59,130,246,0.1)]">
-          <Image
-            src={iconSrc}
-            alt={iconAlt}
-            fill
-            sizes="32px"
-            className="object-contain"
-          />
+        <div className="text-blue-500 text-3xl w-12 h-12 flex items-center justify-center rounded-full border-2 border-emerald-400 bg-blue-50 [box-shadow:0_0_0_4px_rgba(59,130,246,0.1)]">
+          {icon}
         </div>
       </div>
       <h3 className="text-[20px] sm:text-[22px] lg:text-[24px] font-semibold mb-2">
@@ -161,43 +159,37 @@ const SecurityFeatures: React.FC = () => {
 
   const features = [
     {
-      iconSrc: "/icon-psf-realtime.svg",
-      iconAlt: "Real-Time Threat Detection Icon",
+      icon: <FaClock />,
       title: "Real-Time Threat Detection",
       description:
         "Monitor and detect suspicious activities across your network with advanced analytics and machine learning algorithms.",
     },
     {
-      iconSrc: "/icon-psf-automated.svg",
-      iconAlt: "Automated Response Icon",
+      icon: <FaSquareCheck />,
       title: "Automated Response",
       description:
         "Configure playbooks to automatically respond to security incidents reducing response time and minimizing change",
     },
     {
-      iconSrc: "/icon-psf-comprehensive.svg",
-      iconAlt: "Comprehensive Dashboards Icon",
+      icon: <GiBrickWall />,
       title: "Comprehensive Dashboards",
       description:
         "Visualize security data with intuitive dashboards that provide actionable insights at a glance",
     },
     {
-      iconSrc: "/icon-psf-integrated.svg",
-      iconAlt: "Integration Ecosystem Icon",
+      icon: <HiMiniCodeBracketSquare />,
       title: "Integration Ecosystem",
       description:
         "Connect with over 200 security tools and data sources to centralize your security operations.",
     },
     {
-      iconSrc: "/icon-psf-mobile.svg",
-      iconAlt: "Mobile Alerts Icon",
+      icon: <BsExclamationOctagonFill />,
       title: "Mobile Alerts",
       description:
         "Stay informed with real-time notifications on critical security events via mobile app or SMS.",
     },
     {
-      iconSrc: "/icon-psf-compliance.svg",
-      iconAlt: "Compliance Reporting Icon",
+      icon: <BiBarChart />,
       title: "Compliance Reporting",
       description:
         "Visualize security data with intuitive dashboards that provide actionable insights at a glance",
@@ -271,8 +263,7 @@ const SecurityFeatures: React.FC = () => {
             {features.map((feature, index) => (
               <FeatureCard
                 key={`feature-${index}`}
-                iconSrc={feature.iconSrc}
-                iconAlt={feature.iconAlt}
+                icon={feature.icon}
                 title={feature.title}
                 description={feature.description}
               />
@@ -282,7 +273,11 @@ const SecurityFeatures: React.FC = () => {
           {/* Mobile Carousel (visible only on mobile) */}
           {isMobile && (
             <div className="md:hidden max-w-full overflow-x-hidden">
+              {" "}
+              {/* Added max-width constraint */}
               <Carousel className="max-w-[calc(100vw-40px)] mx-auto">
+                {" "}
+                {/* Set max width to viewport minus padding */}
                 <CarouselButton
                   direction="previous"
                   onClick={goToPrevious}
@@ -297,9 +292,10 @@ const SecurityFeatures: React.FC = () => {
                   {features.map((feature, idx) => (
                     <CarouselItem key={`mobile-feature-${idx}`}>
                       <div className="max-w-[calc(100vw-56px)] mx-auto">
+                        {" "}
+                        {/* Constrain card width */}
                         <FeatureCard
-                          iconSrc={feature.iconSrc}
-                          iconAlt={feature.iconAlt}
+                          icon={feature.icon}
                           title={feature.title}
                           description={feature.description}
                         />

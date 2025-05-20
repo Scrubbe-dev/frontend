@@ -56,7 +56,7 @@ const FiveEasySteps: React.FC = () => {
     <div className="w-full bg-white overflow-hidden">
       <section className="w-full max-w-[1440px] mx-auto px-4 py-6 md:py-12 lg:py-16">
         <div className="text-center mb-6 md:mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+          <h2 className="text-[20px] sm:text-[24px] md:text-[30px] lg:text-[36px] font-bold text-gray-800 mb-2">
             Secure your business in five easy steps
           </h2>
           <div className="w-28 h-1 bg-emerald-400 mx-auto"></div>

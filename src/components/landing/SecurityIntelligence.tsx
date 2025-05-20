@@ -46,7 +46,7 @@ function SecurityIntelligence() {
       <section className="w-full max-w-[1440px] mx-auto py-6 md:py-12 lg:py-16 px-4">
         {/* Header */}
         <div className="text-center">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-slate-800 mb-2">
+          <h2 className="text-[20px] sm:text-[24px] md:text-[30px] lg:text-[36px] font-bold text-slate-800 mb-2">
             Security Intelligence in Action
           </h2>
           <div className="flex justify-center items-center mb-6">
@@ -56,7 +56,7 @@ function SecurityIntelligence() {
 
         {/* Subheading */}
         <div className="text-center mb-12">
-          <p className="text-base md:text-lg text-slate-600 max-w-3xl mx-auto">
+          <p className="text-[16px] sm:text-[18px] lg:text-[20px] text-slate-600 max-w-3xl mx-auto">
             Experience how Scrubbe collects and analyzes device and network data
             to enhance security monitoring.
           </p>
