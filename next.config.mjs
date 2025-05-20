@@ -4,7 +4,7 @@ const nextConfig = {
    images: {
     loader: 'custom',
     loaderFile: './Imageloader.js',
-  },
+  }, 
   /* output: 'export' */
 };
 
