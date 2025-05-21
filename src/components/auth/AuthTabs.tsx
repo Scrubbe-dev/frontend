@@ -19,6 +19,16 @@ export default function AuthTabs() {
         Sign In
       </Link>
       <Link
+        href="/auth/forgot-password"
+        className={`flex-1 py-3 md:py-4 px-2 md:px-6 text-center text-sm md:text-base ${
+          pathname === "/auth/forgot-password"
+            ? "bg-white font-bold border-b-2 border-indigo-900"
+            : "hover:bg-gray-200"
+        }`}
+      >
+        Forgot Password
+      </Link>
+      <Link
         href="/auth/business-signup"
         className={`flex-1 py-3 md:py-4 px-2 md:px-6 text-center text-sm md:text-base ${
           pathname === "/auth/business-signup"
