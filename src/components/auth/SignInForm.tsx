@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-//import Image from "next/image";
+import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -252,60 +252,90 @@ export default function SignInForm() {
           </div>
         </div>
 
-        <div className="grid grid-cols-5 gap-2">
-          <button
-            type="button"
-            className="flex justify-center items-center p-2 border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            <svg className="h-6 w-6" viewBox="0 0 24 24">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="flex justify-center items-center p-2 border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            <svg className="h-6 w-6" viewBox="0 0 36 36" fill="#FC6D26">
-              <path d="M2,12.915l2.227,6.879L18,32.569l13.773-12.775L34,12.915Z" />
-              <path d="M18,32.569l6.409-19.716H11.591Z" fill="#E24329" />
-              <path d="M18,32.569,11.591,12.853H2Z" fill="#FC6D26" />
-              <path
-                d="M2,12.853l-1.8,2.615a1.208,1.208,0,0,0,.437,1.5L18,32.569Z"
-                fill="#FCA326"
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 justify-self-center gap-2 w-full">
+          <Link href="#" className="w-full">
+            <button
+              type="button"
+              className="w-full flex items-center justify-center px-3 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              <Image
+                src="/icon-auth-github.svg"
+                alt="GitHub"
+                width={20}
+                height={20}
+                className="mr-2"
               />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="flex justify-center items-center p-2 border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="#232F3E">
-              <path d="M18.75 11.25h-4.5a.75.75 0 0 1-.75-.75V1.5a1.5 1.5 0 0 0-3 0v9a.75.75 0 0 1-.75.75h-4.5a.75.75 0 0 0-.53 1.28l6.75 6.75a.75.75 0 0 0 1.06 0l6.75-6.75a.75.75 0 0 0-.53-1.28z" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="flex justify-center items-center p-2 border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="#0078D4">
-              <path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="flex justify-center items-center p-2 border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            <svg className="h-6 w-6" viewBox="0 0 24 24">
-              <path
-                d="M10 8v6l4.7-3-4.7-3zm11.3-1.9l-1.2-1.3c-.5-.5-1.1-.8-1.8-.8h-3.3v-2c0-1.1-.9-2-2-2h-10c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-6.6c0-.4-.2-.8-.4-1.1z"
-                fill="#737373"
+              <span className="text-sm font-medium text-gray-700">GitHub</span>
+            </button>
+          </Link>
+
+          <Link href="#" className="w-full">
+            <button
+              type="button"
+              className="w-full flex items-center justify-center px-3 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              <Image
+                src="/icon-auth-gitlab.svg"
+                alt="GitLab"
+                width={20}
+                height={20}
+                className="mr-2"
               />
-            </svg>
-          </button>
+              <span className="text-sm font-medium text-gray-700">GitLab</span>
+            </button>
+          </Link>
+
+          <Link href="#" className="w-full">
+            <button
+              type="button"
+              className="w-full flex items-center justify-center px-3 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              <Image
+                src="/icon-auth-aws.svg"
+                alt="AWS"
+                width={20}
+                height={20}
+                className="mr-2"
+              />
+              <span className="text-sm font-medium text-gray-700">AWS</span>
+            </button>
+          </Link>
+
+          <Link href="#" className="w-full">
+            <button
+              type="button"
+              className="w-full flex items-center justify-center px-3 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              <Image
+                src="/icon-auth-azure.svg"
+                alt="Azure"
+                width={20}
+                height={20}
+                className="mr-2"
+              />
+              <span className="text-sm font-medium text-gray-700">Azure</span>
+            </button>
+          </Link>
+
+          <Link href="#" className="w-full">
+            <button
+              type="button"
+              className="w-full flex items-center justify-center px-3 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              <Image
+                src="/icon-auth-sso.svg"
+                alt="SSO"
+                width={20}
+                height={20}
+                className="mr-2"
+              />
+              <span className="text-sm font-medium text-gray-700">SSO</span>
+            </button>
+          </Link>
         </div>
 
         <div className="mt-6 text-center">
-          <a
+          <Link
             href="#"
             className="text-blue-600 hover:underline inline-flex items-center"
           >
@@ -324,7 +354,7 @@ export default function SignInForm() {
                 d="M14 5l7 7m0 0l-7 7m7-7H3"
               />
             </svg>
-          </a>
+          </Link>
         </div>
       </form>
     </div>
