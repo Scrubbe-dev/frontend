@@ -243,8 +243,8 @@ const Navbar = () => {
                       {item.label} <VscChevronDown className="ml-1" />
                     </button>
 
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 bg-white shadow-lg rounded-lg w-[600px] z-50 border border-gray-200 py-4 px-6 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200">
-                      <div className="grid grid-cols-2 gap-4">
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 bg-white shadow-lg rounded-lg w-[630px] z-50 border border-gray-200 py-4 px-6 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200">
+                      <div className="grid grid-cols-2 gap-2">
                         {item.dropdownOptions.map((option) => (
                           <Link
                             key={option.label}

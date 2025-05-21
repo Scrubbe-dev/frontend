@@ -30,9 +30,9 @@ const componentStyles = {
     background: "bg-gradient-to-r from-[#1E326A] to-[#3B62D0]",
     innerContainer: "max-w-7xl mx-auto",
     topRow:
-      "grid grid-cols-1 xl:grid-cols-5 gap-8 mb-8 pb-8 border-b border-blue-400/30",
+      "grid grid-cols-1 xl:grid-cols-5 gap-8 mb-8 pb-8 border-b border-grayscrubbe-100/30",
     middleRow:
-      "grid grid-cols-1 xl:grid-cols-5 gap-8 mb-8 pb-8 border-b-4 border-white",
+      "grid grid-cols-1 xl:grid-cols-5 gap-8 mb-8 pb-8 border-b border-grayscrubbe-100/30",
     bottomRow: "flex flex-col xl:flex-row xl:items-center xl:justify-between",
     address: "mb-4 xl:mb-0",
     copyright: "text-sm text-gray-300",
@@ -243,7 +243,7 @@ const Footer: React.FC = () => {
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1">
                   <div className="relative w-8 h-8">
                     <Image
-                      src="/icon-eu.svg"
+                      src="/icon-eu-big.svg"
                       alt="EU Compliance"
                       fill
                       sizes="32px"
@@ -254,7 +254,7 @@ const Footer: React.FC = () => {
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1">
                   <div className="relative w-8 h-8">
                     <Image
-                      src="/icon-iso.svg"
+                      src="/icon-iso-big.svg"
                       alt="ISO Certification"
                       fill
                       sizes="32px"

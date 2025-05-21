@@ -2,36 +2,43 @@
 import type React from "react";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { IoChevronForwardOutline, IoChevronBackOutline } from "react-icons/io5";
-import { FaSquareCheck } from "react-icons/fa6";
-import { FaClock } from "react-icons/fa";
-import { GiBrickWall } from "react-icons/gi";
-import { BiBarChart } from "react-icons/bi";
-import { BsExclamationOctagonFill } from "react-icons/bs";
-import { HiMiniCodeBracketSquare } from "react-icons/hi2";
 
 // Feature Card Component
 interface FeatureCardProps {
-  icon: React.ReactNode;
+  iconSrc: string;
+  iconAlt: string;
   title: string;
   description: string;
 }
 
 // Feature Card Component
 const FeatureCard: React.FC<FeatureCardProps> = ({
-  icon,
+  iconSrc,
+  iconAlt,
   title,
   description,
 }) => {
   return (
     <div className="h-full bg-white p-6 rounded-xl border border-gray-200 flex flex-col hover:border-blue-400 hover:shadow-sm transition-all duration-200">
       <div className="mb-4">
-        <div className="text-blue-500 text-3xl w-12 h-12 flex items-center justify-center rounded-full border-2 border-emerald-400 bg-blue-50 [box-shadow:0_0_0_4px_rgba(59,130,246,0.1)]">
-          {icon}
+        <div className="relative w-12 h-12 flex items-center justify-center rounded-full border-2 border-emerald-400 bg-blue-50 [box-shadow:0_0_0_4px_rgba(59,130,246,0.1)]">
+          <Image
+            src={iconSrc}
+            alt={iconAlt}
+            fill
+            sizes="32px"
+            className="object-contain"
+          />
         </div>
       </div>
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <p className="text-gray-600 text-sm flex-grow">{description}</p>
+      <h3 className="text-[20px] sm:text-[22px] lg:text-[24px] font-semibold mb-2">
+        {title}
+      </h3>
+      <p className="text-gray-600 text-[14px] lg:text-[16px] flex-grow">
+        {description}
+      </p>
       <Link
         href="/"
         className="flex items-center text-blue-500 font-medium mt-4 text-sm hover:underline"
@@ -154,37 +161,43 @@ const SecurityFeatures: React.FC = () => {
 
   const features = [
     {
-      icon: <FaClock />,
+      iconSrc: "/icon-psf-realtime.svg",
+      iconAlt: "Real-Time Threat Detection Icon",
       title: "Real-Time Threat Detection",
       description:
         "Monitor and detect suspicious activities across your network with advanced analytics and machine learning algorithms.",
     },
     {
-      icon: <FaSquareCheck />,
+      iconSrc: "/icon-psf-automated.svg",
+      iconAlt: "Automated Response Icon",
       title: "Automated Response",
       description:
         "Configure playbooks to automatically respond to security incidents reducing response time and minimizing change",
     },
     {
-      icon: <GiBrickWall />,
+      iconSrc: "/icon-psf-comprehensive.svg",
+      iconAlt: "Comprehensive Dashboards Icon",
       title: "Comprehensive Dashboards",
       description:
         "Visualize security data with intuitive dashboards that provide actionable insights at a glance",
     },
     {
-      icon: <HiMiniCodeBracketSquare />,
+      iconSrc: "/icon-psf-integrated.svg",
+      iconAlt: "Integration Ecosystem Icon",
       title: "Integration Ecosystem",
       description:
         "Connect with over 200 security tools and data sources to centralize your security operations.",
     },
     {
-      icon: <BsExclamationOctagonFill />,
+      iconSrc: "/icon-psf-mobile.svg",
+      iconAlt: "Mobile Alerts Icon",
       title: "Mobile Alerts",
       description:
         "Stay informed with real-time notifications on critical security events via mobile app or SMS.",
     },
     {
-      icon: <BiBarChart />,
+      iconSrc: "/icon-psf-compliance.svg",
+      iconAlt: "Compliance Reporting Icon",
       title: "Compliance Reporting",
       description:
         "Visualize security data with intuitive dashboards that provide actionable insights at a glance",
@@ -242,11 +255,11 @@ const SecurityFeatures: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 overflow-x-hidden">
           {/* Header */}
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-4">
+            <h2 className="text-[20px] sm:text-[24px] md:text-[30px] lg:text-[36px] font-bold text-gray-800 mb-4">
               Powerful Security Features
             </h2>
             <div className="w-28 h-1 bg-emerald-400 mx-auto"></div>
-            <p className="max-w-3xl mx-auto text-lg text-gray-600">
+            <p className="max-w-3xl mx-auto text-[16px] sm:text-[18px] lg:text-[20px] text-gray-600">
               Scrubbe offers comprehensive security monitoring and automated
               response capabilities to identify and neutralize threats before
               they impact your business.
@@ -258,7 +271,8 @@ const SecurityFeatures: React.FC = () => {
             {features.map((feature, index) => (
               <FeatureCard
                 key={`feature-${index}`}
-                icon={feature.icon}
+                iconSrc={feature.iconSrc}
+                iconAlt={feature.iconAlt}
                 title={feature.title}
                 description={feature.description}
               />
@@ -268,11 +282,7 @@ const SecurityFeatures: React.FC = () => {
           {/* Mobile Carousel (visible only on mobile) */}
           {isMobile && (
             <div className="md:hidden max-w-full overflow-x-hidden">
-              {" "}
-              {/* Added max-width constraint */}
               <Carousel className="max-w-[calc(100vw-40px)] mx-auto">
-                {" "}
-                {/* Set max width to viewport minus padding */}
                 <CarouselButton
                   direction="previous"
                   onClick={goToPrevious}
@@ -287,10 +297,9 @@ const SecurityFeatures: React.FC = () => {
                   {features.map((feature, idx) => (
                     <CarouselItem key={`mobile-feature-${idx}`}>
                       <div className="max-w-[calc(100vw-56px)] mx-auto">
-                        {" "}
-                        {/* Constrain card width */}
                         <FeatureCard
-                          icon={feature.icon}
+                          iconSrc={feature.iconSrc}
+                          iconAlt={feature.iconAlt}
                           title={feature.title}
                           description={feature.description}
                         />
