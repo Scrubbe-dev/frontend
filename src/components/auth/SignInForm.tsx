@@ -45,13 +45,13 @@ export default function SignInForm() {
       // Log form values
       console.log(data);
 
-      // Simulate a 7-second delay
-      await new Promise((resolve) => setTimeout(resolve, 7000));
+      // Simulate a 5-second delay
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
       // Show success toast after delay
       toast.success(`Successfully signed in!`, {
         description: `${data.email}, you are being redirected...`,
-        duration: 5000,
+        duration: 10000,
       });
 
       // In a real app, you would redirect here
@@ -256,13 +256,13 @@ export default function SignInForm() {
           <Link href="#" className="w-full">
             <button
               type="button"
-              className="w-full flex items-center justify-center px-3 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
             >
               <Image
                 src="/icon-auth-github.svg"
                 alt="GitHub"
-                width={20}
-                height={20}
+                width={38}
+                height={38}
                 className="mr-2"
               />
               <span className="text-sm font-medium text-gray-700">GitHub</span>
@@ -272,13 +272,13 @@ export default function SignInForm() {
           <Link href="#" className="w-full">
             <button
               type="button"
-              className="w-full flex items-center justify-center px-3 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
             >
               <Image
                 src="/icon-auth-gitlab.svg"
                 alt="GitLab"
-                width={20}
-                height={20}
+                width={38}
+                height={38}
                 className="mr-2"
               />
               <span className="text-sm font-medium text-gray-700">GitLab</span>
@@ -288,13 +288,13 @@ export default function SignInForm() {
           <Link href="#" className="w-full">
             <button
               type="button"
-              className="w-full flex items-center justify-center px-3 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
             >
               <Image
                 src="/icon-auth-aws.svg"
                 alt="AWS"
-                width={20}
-                height={20}
+                width={38}
+                height={38}
                 className="mr-2"
               />
               <span className="text-sm font-medium text-gray-700">AWS</span>
@@ -304,13 +304,13 @@ export default function SignInForm() {
           <Link href="#" className="w-full">
             <button
               type="button"
-              className="w-full flex items-center justify-center px-3 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
             >
               <Image
                 src="/icon-auth-azure.svg"
                 alt="Azure"
-                width={20}
-                height={20}
+                width={38}
+                height={38}
                 className="mr-2"
               />
               <span className="text-sm font-medium text-gray-700">Azure</span>
@@ -320,13 +320,13 @@ export default function SignInForm() {
           <Link href="#" className="w-full">
             <button
               type="button"
-              className="w-full flex items-center justify-center px-3 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
             >
               <Image
                 src="/icon-auth-sso.svg"
                 alt="SSO"
-                width={20}
-                height={20}
+                width={38}
+                height={38}
                 className="mr-2"
               />
               <span className="text-sm font-medium text-gray-700">SSO</span>
