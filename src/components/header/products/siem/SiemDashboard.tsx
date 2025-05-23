@@ -2,6 +2,7 @@ import SiemAdvanced from "./SiemAdvanced";
 import SiemComprehensive from "./SiemComprehensive";
 import SiemPlatform from "./SiemPlatform";
 import SiemChoose from "./SiemChoose";
+import SiemTrusted from "./SiemTrusted";
 
 const SiemDashboard = () => {
   return (
@@ -12,6 +13,7 @@ const SiemDashboard = () => {
           <SiemComprehensive />
           <SiemPlatform />
           <SiemChoose />
+          <SiemTrusted />
         </section>
       </div>
     </>
