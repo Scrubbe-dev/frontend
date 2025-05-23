@@ -249,7 +249,6 @@ const SecurityFeatures: React.FC = () => {
 
   return (
     <div className="w-full h-auto bg-gray-50 overflow-x-hidden">
-      {" "}
       {/* Added overflow-x-hidden to prevent horizontal scrolling */}
       <section className="w-full max-w-[1440px] py-16 bg-gray-50 mx-auto overflow-x-hidden">
         <div className="max-w-7xl mx-auto px-4 overflow-x-hidden">
