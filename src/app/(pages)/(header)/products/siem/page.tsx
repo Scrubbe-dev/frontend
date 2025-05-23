@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import SiemDashboard from "@/components/header/products/SiemDashboard";
+import SiemDashboard from "@/components/header/products/siem/SiemDashboard";
 
 export const metadata: Metadata = {
   title: "SIEM - Scrubbe",
@@ -13,6 +13,6 @@ const SIEMpage = () => {
       <SiemDashboard />
     </>
   );
-}
+};
 
 export default SIEMpage;
