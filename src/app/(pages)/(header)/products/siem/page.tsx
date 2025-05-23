@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import SiemDashboard from "@/components/features/SiemDashboard";
+import SiemDashboard from "@/components/header/products/SiemDashboard";
 
 export const metadata: Metadata = {
   title: "SIEM - Scrubbe",

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import StartUps from "@/components/solutions/StartUps";
+import StartUps from "@/components/header/solutions/StartUps";
 
 export const metadata: Metadata = {
   title: "Solution StartUps - Scrubbe",
@@ -13,6 +13,6 @@ const StartUpspage = () => {
       <StartUps />
     </>
   );
-}
+};
 
 export default StartUpspage;

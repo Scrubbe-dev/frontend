@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import EnterpriseOrgs from "@/components/solutions/EnterpriseOrgs";
+import EnterpriseOrgs from "@/components/header/solutions/EnterpriseOrgs";
 
 export const metadata: Metadata = {
   title: "Solution Enterprise Orgs - Scrubbe",
