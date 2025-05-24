@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import MediumSizedCompanies from "@/components/solutions/MediumSizedCompanies";
+import MediumSizedCompanies from "@/components/header/solutions/MediumSizedCompanies";
 
 export const metadata: Metadata = {
   title: "Solution Medium Sized Companies - Scrubbe",

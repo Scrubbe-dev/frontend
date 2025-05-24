@@ -62,7 +62,7 @@ const Navbar = () => {
       dropdownOptions: [
         {
           label: "SIEM Platform",
-          href: "#",
+          href: "/products/siem",
           description:
             "Real-time threat detection, log analysis, and centralized monitoring",
         },

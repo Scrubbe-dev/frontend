@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
-import StartUps from "@/components/header/solutions/StartUps";
+import ForgotPassword from "@/components/auth/ForgotPassword";
 
 export const metadata: Metadata = {
-  title: "Solution StartUps - Scrubbe",
+  title: "Forgot Password - Scrubbe",
   description:
     "Scrubbe's AI-driven platform combines SIEM and SOAR for automated threat detection, response, and unified security analytics.",
 };
 
-const StartUpspage = () => {
-  return (
-    <>
-      <StartUps />
-    </>
-  );
+const ForgotPasswordPage = () => {
+  return <ForgotPassword />;
 };
 
-export default StartUpspage;
+export default ForgotPasswordPage;

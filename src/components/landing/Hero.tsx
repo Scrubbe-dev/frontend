@@ -233,7 +233,7 @@ export default function Hero() {
           {/* Text content */}
           <div className="flex flex-col items-center justify-center text-center">
             <h1 className="text-[30px] sm:text-[37.5px] md:text-[45px] lg:text-[60px] font-bold text-gray-800 mb-4">
-              <div className="h-full relative">
+              <div className="h-[135px] lg:h-[180px] relative">
                 <div
                   className={`transition-opacity duration-500 ${
                     isTransitioning ? "opacity-0" : "opacity-100"
@@ -246,7 +246,7 @@ export default function Hero() {
             </h1>
 
             <p
-              className={`text-gray-600 max-w-2xl mx-auto mb-6 text-[16px] sm:text-[18px] md:text-[20px] transition-opacity duration-500 ${
+              className={`text-gray-600 max-w-[2xl] h-[96px] w-[360px] sm:w-[601px] md:w-[672px] mx-auto mb-6 text-[16px] sm:text-[18px] md:text-[20px] transition-opacity duration-500 ${
                 isTransitioning ? "opacity-0" : "opacity-100"
               }`}
             >

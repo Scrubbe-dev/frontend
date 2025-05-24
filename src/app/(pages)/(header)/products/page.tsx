@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 
-const FeaturesPage = () => {
-   redirect("/features/api-as-a-service");
+const ProductsPage = () => {
+   redirect("/products/siem");
 };
 
-export default FeaturesPage;
+export default ProductsPage;
 
 

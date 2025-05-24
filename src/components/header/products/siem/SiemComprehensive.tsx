@@ -132,13 +132,13 @@ const CarouselButton: React.FC<CarouselButtonProps> = ({
 };
 
 // Main Component
-const SecurityFeatures: React.FC = () => {
+const SiemComprehensive: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
 
-  // Check if mobile on mount and when window resizes
+  // Check if mobile on mount and when resizes
   useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -161,46 +161,46 @@ const SecurityFeatures: React.FC = () => {
 
   const features = [
     {
-      iconSrc: "/icon-psf-realtime.svg",
+      iconSrc: "/icon-mingcute_alert-fill.svg",
       iconAlt: "Real-Time Threat Detection Icon",
       title: "Real-Time Threat Detection",
       description:
-        "Monitor and detect suspicious activities across your network with advanced analytics and machine learning algorithms.",
+        "Monitor and analyze security events across your entire infrastructure in real-time to identify threats as they emerge",
+    },
+    {
+      iconSrc: "/icon-famicons_log-in.svg",
+      iconAlt: "Advanced Log Analysis Icon",
+      title: "Advanced Log Analysis",
+      description:
+        "Collect, normalize, and analyze logs from all sources with powerful search capabilities and correlation rulesets",
+    },
+    {
+      iconSrc: "/icon-psf-comprehensive.svg",
+      iconAlt: "Centralized Monitoring Icon",
+      title: "Centralized Monitoring",
+      description:
+        "Gain a unified view of your security posture across on-premise, cloud, and hybrid environments from a single pane of glass",
+    },
+    {
+      iconSrc: "/icon-psf-compliance.svg",
+      iconAlt: "AI-Powered Analytics Icon",
+      title: "AI-Powered Analytics",
+      description:
+        "Leverage machine learning to identify complex attack patterns, reduce false positives, and prioritize high-impact threats",
     },
     {
       iconSrc: "/icon-psf-automated.svg",
       iconAlt: "Automated Response Icon",
       title: "Automated Response",
       description:
-        "Configure playbooks to automatically respond to security incidents reducing response time and minimizing change",
+        "Implement predefined playbooks to automatically contain and mitigate threats without human intervention",
     },
     {
-      iconSrc: "/icon-psf-comprehensive.svg",
-      iconAlt: "Comprehensive Dashboards Icon",
-      title: "Comprehensive Dashboards",
-      description:
-        "Visualize security data with intuitive dashboards that provide actionable insights at a glance",
-    },
-    {
-      iconSrc: "/icon-psf-integrated.svg",
-      iconAlt: "Integration Ecosystem Icon",
-      title: "Integration Ecosystem",
-      description:
-        "Connect with over 200 security tools and data sources to centralize your security operations.",
-    },
-    {
-      iconSrc: "/icon-psf-mobile.svg",
-      iconAlt: "Mobile Alerts Icon",
-      title: "Mobile Alerts",
-      description:
-        "Stay informed with real-time notifications on critical security events via mobile app or SMS.",
-    },
-    {
-      iconSrc: "/icon-psf-compliance.svg",
+      iconSrc: "/icon-bxs_report.svg",
       iconAlt: "Compliance Reporting Icon",
       title: "Compliance Reporting",
       description:
-        "Visualize security data with intuitive dashboards that provide actionable insights at a glance",
+        "Generate comprehensive reports for regulatory frameworks like GDPR, HIPAA, PCI-DSS, and SOC 2 with minimal effort",
     },
   ];
 
@@ -248,20 +248,20 @@ const SecurityFeatures: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-auto bg-gray-50 overflow-x-hidden">
+    <div className="w-full h-auto overflow-x-hidden">
       {/* Added overflow-x-hidden to prevent horizontal scrolling */}
-      <section className="w-full max-w-[1440px] py-16 bg-gray-50 mx-auto overflow-x-hidden">
+      <section className="w-full py-16 bg-gray-50 mx-auto overflow-x-hidden">
         <div className="max-w-7xl mx-auto px-4 overflow-x-hidden">
           {/* Header */}
           <div className="text-center mb-12">
             <h2 className="text-[20px] sm:text-[24px] md:text-[30px] lg:text-[36px] font-bold text-gray-800 mb-4">
-              Powerful Security Features
+              Comprehensive Security Visibility
             </h2>
             <div className="w-28 h-1 bg-emerald-400 mx-auto"></div>
             <p className="max-w-3xl mx-auto text-[16px] sm:text-[18px] lg:text-[20px] text-gray-600">
-              Scrubbe offers comprehensive security monitoring and automated
-              response capabilities to identify and neutralize threats before
-              they impact your business.
+              Our SIEM platform combines real-time monitoring, advanced
+              analytics, and automated response to deliver complete protection
+              for your critical assets.
             </p>
           </div>
 
@@ -320,4 +320,4 @@ const SecurityFeatures: React.FC = () => {
   );
 };
 
-export default SecurityFeatures;
+export default SiemComprehensive;

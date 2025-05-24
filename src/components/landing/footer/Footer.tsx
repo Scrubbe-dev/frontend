@@ -303,7 +303,12 @@ const Footer: React.FC = () => {
             {/* Empty column to align with logo */}
             <div className="hidden xl:block"></div>
 
-            {/* Compliance Section (takes 2 columns, under Product and Solutions) */}
+            {/* More Column (takes 2 columns, under Product and Solutions) */}
+            <div className="col-span-1 xl:col-span-2">
+              <FooterColumn title={moreLinks.title} links={moreLinks.links} />
+            </div>
+
+            {/* Compliance Section (takes 2 columns, under Documentation and Pricing) */}
             <div className="col-span-1 xl:col-span-2">
               <ColumnHeader title="Compliance" />
               <div className="mt-4 space-y-6">
@@ -318,11 +323,6 @@ const Footer: React.FC = () => {
                   </div>
                 ))}
               </div>
-            </div>
-
-            {/* More Column (takes 2 columns, under Documentation and Pricing) */}
-            <div className="col-span-1 xl:col-span-2">
-              <FooterColumn title={moreLinks.title} links={moreLinks.links} />
             </div>
           </div>
 

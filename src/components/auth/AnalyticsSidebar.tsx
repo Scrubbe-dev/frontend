@@ -1,6 +1,4 @@
-// app/auth/AnalyticsSidebar.tsx
 "use client";
-
 import { useEffect, useRef } from "react";
 import { Chart, registerables } from "chart.js";
 
@@ -33,23 +31,29 @@ export default function AnalyticsSidebar() {
           signupChartInstance = new Chart(signupCtx, {
             type: "line",
             data: {
-              labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+              labels: ["Jan", "Feb", "March", "April", "May", "June", "July"],
               datasets: [
                 {
-                  label: "Business Signups",
-                  data: [35, 42, 58, 75, 89, 102, 115],
-                  borderColor: "#1B03A3",
-                  backgroundColor: "rgba(27, 3, 163, 0.1)",
+                  label: "Business",
+                  data: [40, 40, 45, 60, 65, 90, 105],
+                  borderColor: "#1a237e",
+                  backgroundColor: "#99c2ff",
                   tension: 0.3,
                   fill: true,
+                  borderWidth: 2,
+                  pointBackgroundColor: "#1a237e",
+                  pointRadius: 4,
                 },
                 {
-                  label: "Developer Signups",
-                  data: [55, 65, 75, 81, 90, 97, 110],
-                  borderColor: "#6f61e8",
-                  backgroundColor: "rgba(111, 97, 232, 0.1)",
+                  label: "Developer",
+                  data: [50, 52, 65, 67, 85, 100, 115],
+                  borderColor: "#9575cd",
+                  backgroundColor: "#e5e7eb",
                   tension: 0.3,
                   fill: true,
+                  borderWidth: 2,
+                  pointBackgroundColor: "#9575cd",
+                  pointRadius: 4,
                 },
               ],
             },
@@ -60,10 +64,35 @@ export default function AnalyticsSidebar() {
                 legend: {
                   display: false,
                 },
+                tooltip: {
+                  backgroundColor: "rgba(255, 255, 255, 0.9)",
+                  titleColor: "#333",
+                  bodyColor: "#333",
+                  borderColor: "#ddd",
+                  borderWidth: 1,
+                  padding: 10,
+                  displayColors: true,
+                  usePointStyle: true,
+                },
               },
               scales: {
                 y: {
                   beginAtZero: true,
+                  grid: {
+                    display: true,
+                    color: "rgba(255, 255, 255, 0.1)",
+                  },
+                  ticks: {
+                    color: "#333",
+                  },
+                },
+                x: {
+                  grid: {
+                    display: false,
+                  },
+                  ticks: {
+                    color: "#333",
+                  },
                 },
               },
             },
@@ -77,21 +106,39 @@ export default function AnalyticsSidebar() {
           authChartInstance = new Chart(authCtx, {
             type: "doughnut",
             data: {
-              labels: ["Email", "Social", "SSO"],
+              labels: ["Email", "SSO", "Cloud", "GitHub", "Gitlab"],
               datasets: [
                 {
-                  data: [45, 35, 20],
-                  backgroundColor: ["#1B03A3", "#6f61e8", "#9f97e8"],
+                  data: [30, 25, 20, 15, 10],
+                  backgroundColor: [
+                    "#1F3A89", // Light blue for Email
+                    "#DBEAFE", // Dark blue for SSO
+                    "#61A5F9", // Very light blue for Cloud qq
+                    "#086763", // Navy blue for GitHub
+                    "#00C9B7", // Teal for Gitlab
+                  ],
                   borderWidth: 0,
+                  borderRadius: 5,
                 },
               ],
             },
             options: {
               responsive: true,
               maintainAspectRatio: false,
+              cutout: "60%",
               plugins: {
                 legend: {
                   display: false,
+                },
+                tooltip: {
+                  backgroundColor: "rgba(255, 255, 255, 0.9)",
+                  titleColor: "#333",
+                  bodyColor: "#333",
+                  borderColor: "#ddd",
+                  borderWidth: 1,
+                  padding: 10,
+                  displayColors: true,
+                  usePointStyle: true,
                 },
               },
             },
@@ -115,61 +162,68 @@ export default function AnalyticsSidebar() {
   }, []);
 
   return (
-    <div className="w-full bg-white p-4 md:p-8 shadow-md">
-      {/* Logo Section */}
-      <div className="text-center mb-6 md:mb-8">
-        <div className="text-xl md:text-2xl font-bold text-[#1B03A3]">
-          Scrubbe
-        </div>
-        <div>SIEM & SOAR Solution</div>
+    <section className="w-full min-w-[320px] max-w-[710px] mx-auto bg-gradient-to-b from-[#1F40AE] to-[#0D1A48] p-4 md:p-8">
+      {/* Title Section */}
+      <div className="text-center mb-6">
+        <h1 className="text-[20px] sm:text-[28px] lg:text-[36px] font-bold text-white uppercase tracking-wide">
+          SIEM and SOAR Solution
+        </h1>
       </div>
 
-      {/* Charts Row on Mobile, Column on Desktop */}
-      <div className="flex flex-col md:flex-col gap-6">
+      {/* Charts Column Layout */}
+      <div className="flex flex-col gap-4 items-center">
         {/* User Signup Activity Card */}
-        <div className="bg-white rounded-md shadow mb-4 md:mb-6 p-4 md:p-6">
-          <h2 className="text-[#1B03A3] text-base md:text-lg font-semibold mb-3 md:mb-4">
-            User Signup Activity
+        <div className="bg-white rounded-lg shadow p-4 w-full max-w-[510px] aspect-[510/486]">
+          <h2 className="text-gray-800 text-base font-medium mb-4">
+            User Sign up Activity
           </h2>
-          <div className="h-48 md:h-64 relative">
+          <div className="h-[400px] relative">
             <canvas ref={signupChartRef}></canvas>
           </div>
-          <div className="flex gap-3 md:gap-4 mt-3 md:mt-4">
-            <div className="flex items-center text-xs md:text-sm">
-              <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#1B03A3] mr-1 md:mr-2"></div>
+          <div className="flex gap-4 mt-3 justify-center">
+            <div className="flex items-center text-sm">
+              <div className="w-3 h-3 rounded-full bg-blue-900 mr-2"></div>
               <span>Business</span>
             </div>
-            <div className="flex items-center text-xs md:text-sm">
-              <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#6f61e8] mr-1 md:mr-2"></div>
+            <div className="flex items-center text-sm">
+              <div className="w-3 h-3 rounded-full bg-purple-400 mr-2"></div>
               <span>Developer</span>
             </div>
           </div>
         </div>
 
         {/* Authentication Methods Card */}
-        <div className="bg-white rounded-md shadow p-4 md:p-6">
-          <h2 className="text-[#1B03A3] text-base md:text-lg font-semibold mb-3 md:mb-4">
+        <div className="bg-white rounded-lg shadow p-4 w-full max-w-[510px] aspect-[510/486]">
+          <h2 className="text-gray-800 text-base font-medium mb-4">
             Authentication Methods
           </h2>
-          <div className="h-48 md:h-64 relative">
+          <div className="h-[400px] relative">
             <canvas ref={authMethodsChartRef}></canvas>
           </div>
-          <div className="flex flex-wrap gap-2 md:gap-4 mt-3 md:mt-4">
-            <div className="flex items-center text-xs md:text-sm">
-              <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#1B03A3] mr-1 md:mr-2"></div>
+          <div className="flex flex-wrap justify-center gap-3 mt-3">
+            <div className="flex items-center text-sm">
+              <div className="w-3 h-3 rounded-full bg-[#1F3A89] mr-2"></div>
               <span>Email</span>
             </div>
-            <div className="flex items-center text-xs md:text-sm">
-              <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#6f61e8] mr-1 md:mr-2"></div>
-              <span>Social</span>
-            </div>
-            <div className="flex items-center text-xs md:text-sm">
-              <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#9f97e8] mr-1 md:mr-2"></div>
+            <div className="flex items-center text-sm">
+              <div className="w-3 h-3 rounded-full bg-[#DBEAFE] mr-2"></div>
               <span>SSO</span>
+            </div>
+            <div className="flex items-center text-sm">
+              <div className="w-3 h-3 rounded-full bg-[#61A5F9] mr-2"></div>
+              <span>Cloud</span>
+            </div>
+            <div className="flex items-center text-sm">
+              <div className="w-3 h-3 rounded-full bg-[#086763] mr-2"></div>
+              <span>GitHub</span>
+            </div>
+            <div className="flex items-center text-sm">
+              <div className="w-3 h-3 rounded-full bg-[#00C9B7] mr-2"></div>
+              <span>Gitlab</span>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

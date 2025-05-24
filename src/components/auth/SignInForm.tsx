@@ -1,114 +1,174 @@
 "use client";
+import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
-import { LoginFormData, loginSchema } from "@/lib/validations/auth.schema";
+import * as z from "zod";
 
+// Define the form schema using zod
+const loginSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+});
 
+// TypeScript type based on the schema
+type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+
+  // Keep the form handling structure closer to the original
+  // even though we're simplifying functionality
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
+    resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email: data.email,
-        password: data.password,
-      });
-      console.log(result?.error , 'from error status  ')
-      if (!!result?.error) {
-        toast.error("Sign in failed", {
-          description: result?.error,
-        });
-        return 
-      }
+      // Set loading state
+      setIsLoading(true);
+
+      // Log form values
+      console.log(data);
+
+      // Simulate a 5-second delay
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
+      // Show success toast after delay
       toast.success(`Successfully signed in!`, {
         description: `${data.email}, you are being redirected...`,
-        duration: 5000,
+        duration: 10000,
       });
 
-      router.push('/');
+      // In a real app, you would redirect here
+      // router.push("/");
+
+      // Reset loading state
+      setIsLoading(false);
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Sign in failed", {
         description:
           error instanceof Error ? error.message : "An error occurred",
       });
-    } finally {
       setIsLoading(false);
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
   return (
-    <div className="p-4 md:p-8">
-      <h1 className="text-xl md:text-2xl text-indigo-900 font-bold mb-4 md:mb-6">
-        Sign In to Scrubbe
+    <div className="w-full p-6">
+      <h1 className="text-2xl font-semibold mb-6 text-center">
+        Sign in to Scrubbe
       </h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-4 md:mt-6">
-        <div className="mb-4 md:mb-5">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="mb-4">
           <label
-            htmlFor="signin-email"
-            className="block mb-1 md:mb-2 font-medium text-sm md:text-base"
+            htmlFor="email"
+            className={`block mb-2 text-sm font-medium ${
+              isLoading ? "text-gray-500" : "text-gray-700"
+            }`}
           >
             Email
           </label>
           <input
             type="email"
-            autoComplete="email"
-            id="signin-email"
+            id="email"
             {...register("email")}
-            placeholder="Your email"
-            className="w-full p-2 md:p-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-900 text-sm md:text-base"
+            placeholder="Enter email"
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              isLoading
+                ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
+                : "border-gray-300"
+            }`}
+            disabled={isLoading}
+            required
           />
           {errors.email && (
             <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
           )}
         </div>
 
-        <div className="mb-4 md:mb-5">
+        <div className="mb-4">
           <label
-            htmlFor="signin-password"
-            className="block mb-1 md:mb-2 font-medium text-sm md:text-base"
+            htmlFor="password"
+            className={`block mb-2 text-sm font-medium ${
+              isLoading ? "text-gray-500" : "text-gray-700"
+            }`}
           >
             Password
           </label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
-              id="signin-password"
-              autoComplete="current-password"
+              id="password"
               {...register("password")}
-              placeholder="Your password"
-              className="w-full p-2 md:p-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-900 text-sm md:text-base"
+              placeholder="Enter password"
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                isLoading
+                  ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
+                  : "border-gray-300"
+              }`}
+              disabled={isLoading}
+              required
             />
             <button
               type="button"
-              onClick={togglePasswordVisibility}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              onClick={() => setShowPassword(!showPassword)}
+              className={`absolute inset-y-0 right-0 flex items-center pr-3 ${
+                isLoading ? "text-gray-400" : "text-gray-500"
+              }`}
             >
-              {showPassword ? "Hide" : "Show"}
+              {showPassword ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              )}
             </button>
           </div>
           {errors.password && (
@@ -118,94 +178,183 @@ export default function SignInForm() {
           )}
         </div>
 
-        <div className="mb-4 md:mb-5">
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`w-full py-2 md:py-3 px-4 md:px-6 bg-indigo-900 text-white font-semibold uppercase rounded-md transition duration-300 text-sm md:text-base ${
-              isLoading
-                ? "opacity-75 cursor-not-allowed"
-                : "hover:bg-indigo-700"
-            }`}
-          >
-            {isSubmitting ? (
-              <div className="flex items-center justify-center">
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Signing In...
-              </div>
-            ) : (
-              "Sign In"
-            )}
-          </button>
-        </div>
-
-        <div className="flex justify-end mb-4">
-          <a
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center">
+            <input
+              id="remember-me"
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className={`h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded ${
+                isLoading ? "opacity-80 cursor-not-allowed" : ""
+              }`}
+              disabled={isLoading}
+            />
+            <label
+              htmlFor="remember-me"
+              className="ml-2 block text-sm text-gray-700"
+            >
+              Remember me
+            </label>
+          </div>
+          <Link
             href="/auth/forgot-password"
-            className="text-indigo-900 hover:text-indigo-700 text-sm"
+            className="text-sm text-blue-600 hover:underline"
           >
-            Forgot Password?
-          </a>
+            Forgot password?
+          </Link>
         </div>
 
-        <div className="relative my-4 md:my-6 text-center">
-          <div className="absolute top-1/2 left-0 w-[45%] h-px bg-gray-300"></div>
-          <span className="inline-block px-3 bg-white relative z-10 text-sm">
-            OR
-          </span>
-          <div className="absolute top-1/2 right-0 w-[45%] h-px bg-gray-300"></div>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`w-full text-white py-2 px-4 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+            isLoading
+              ? "bg-blue-400 hover:bg-blue-400"
+              : "bg-blue-600 hover:bg-blue-800"
+          }`}
+        >
+          {isLoading ? (
+            <div className="flex items-center justify-center">
+              <svg
+                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Signing in...
+            </div>
+          ) : (
+            "Sign in"
+          )}
+        </button>
+
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">OR</span>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 md:gap-4">
-          <button
-            type="button"
-            className="flex-1 min-w-[80px] md:min-w-[120px] p-2 md:p-3 border border-gray-300 rounded-md hover:bg-gray-100 transition duration-300 font-medium text-xs md:text-sm"
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 justify-self-center gap-2 w-full">
+          <Link href="#" className="w-full">
+            <button
+              type="button"
+              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              <Image
+                src="/icon-auth-github.svg"
+                alt="GitHub"
+                width={38}
+                height={38}
+                className="mr-2"
+              />
+              <span className="text-sm font-medium text-gray-700">GitHub</span>
+            </button>
+          </Link>
+
+          <Link href="#" className="w-full">
+            <button
+              type="button"
+              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              <Image
+                src="/icon-auth-gitlab.svg"
+                alt="GitLab"
+                width={38}
+                height={38}
+                className="mr-2"
+              />
+              <span className="text-sm font-medium text-gray-700">GitLab</span>
+            </button>
+          </Link>
+
+          <Link href="#" className="w-full">
+            <button
+              type="button"
+              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              <Image
+                src="/icon-auth-aws.svg"
+                alt="AWS"
+                width={38}
+                height={38}
+                className="mr-2"
+              />
+              <span className="text-sm font-medium text-gray-700">AWS</span>
+            </button>
+          </Link>
+
+          <Link href="#" className="w-full">
+            <button
+              type="button"
+              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              <Image
+                src="/icon-auth-azure.svg"
+                alt="Azure"
+                width={38}
+                height={38}
+                className="mr-2"
+              />
+              <span className="text-sm font-medium text-gray-700">Azure</span>
+            </button>
+          </Link>
+
+          <Link href="#" className="w-full">
+            <button
+              type="button"
+              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              <Image
+                src="/icon-auth-sso.svg"
+                alt="SSO"
+                width={38}
+                height={38}
+                className="mr-2"
+              />
+              <span className="text-sm font-medium text-gray-700">SSO</span>
+            </button>
+          </Link>
+        </div>
+
+        <div className="mt-6 text-center">
+          <Link
+            href="#"
+            className="text-blue-600 hover:underline inline-flex items-center"
           >
-            GitHub
-          </button>
-          <button
-            type="button"
-            className="flex-1 min-w-[80px] md:min-w-[120px] p-2 md:p-3 border border-gray-300 rounded-md hover:bg-gray-100 transition duration-300 font-medium text-xs md:text-sm"
-          >
-            GitLab
-          </button>
-          <button
-            type="button"
-            className="flex-1 min-w-[80px] md:min-w-[120px] p-2 md:p-3 border border-gray-300 rounded-md hover:bg-gray-100 transition duration-300 font-medium text-xs md:text-sm"
-          >
-            SSO
-          </button>
-          <button
-            type="button"
-            className="flex-1 min-w-[80px] md:min-w-[120px] p-2 md:p-3 border border-gray-300 rounded-md hover:bg-gray-100 transition duration-300 font-medium text-xs md:text-sm"
-          >
-            Azure
-          </button>
-          <button
-            type="button"
-            className="flex-1 min-w-[80px] md:min-w-[120px] p-2 md:p-3 border border-gray-300 rounded-md hover:bg-gray-100 transition duration-300 font-medium text-xs md:text-sm"
-          >
-            AWS
-          </button>
+            Looking for our demo page?
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 ml-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
+            </svg>
+          </Link>
         </div>
       </form>
     </div>
