@@ -58,7 +58,7 @@ const Chatbot: React.FC = () => {
     contact: {
       title: "Contact Us",
       content:
-        "You can reach our support team at support@scrubbe.com or call us at (XXX) XXX-XXXX. Our business hours are Monday to Friday, 9 AM - 5 PM EST.",
+        "You can reach our support team at support@scrubbe.com",
     },
     installation: {
       title: "Installation Guide",
