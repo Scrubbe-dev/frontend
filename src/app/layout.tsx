@@ -63,7 +63,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${airbnbCereal.variable}`}>
-      <body className="antialiased min-h-screen w-full flex flex-col justify-center items-center bg-[#1F2B71] font-airbnb">
+      <body className="antialiased min-h-screen w-full flex flex-col bg-[#1F2B71] font-airbnb">
         <AuthProvider>
           <NextJsTopLoader />
           <StoreProvider>
