@@ -1,5 +1,6 @@
 "use client";
 import { useAppStore } from "@/store/StoreProvider";
+import { TeamMember } from "@/store/slices/sliceEnterpriseSetup";
 import type React from "react";
 
 import { useForm } from "react-hook-form";
@@ -34,6 +35,9 @@ const AccountSetup = () => {
     toggleIncidentPriority,
     submitEnterpriseSetup,
     isSubmitting,
+    addTeamMember,
+    updateTeamMember,
+    removeTeamMember,
   } = useAppStore((state) => state);
 
   // Fixed: Initialize with the file from companyLogo object
@@ -148,6 +152,71 @@ const AccountSetup = () => {
     }
 
     return null;
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
+  const [memberForm, setMemberForm] = useState({
+    name: "",
+    email: "",
+    role: "",
+    permissions: {
+      viewDashboard: true,
+      modifyDashboard: false,
+      executeActions: false,
+      manageUsers: false,
+    },
+  });
+
+  const resetMemberForm = () => {
+    setMemberForm({
+      name: "",
+      email: "",
+      role: "",
+      permissions: {
+        viewDashboard: true,
+        modifyDashboard: false,
+        executeActions: false,
+        manageUsers: false,
+      },
+    });
+  };
+
+  const handleAddMember = () => {
+    setEditingMember(null);
+    resetMemberForm();
+    setIsModalOpen(true);
+  };
+
+  const handleEditMember = (member: TeamMember) => {
+    setEditingMember(member);
+    setMemberForm({
+      name: member.name,
+      email: member.email,
+      role: member.role,
+      permissions: { ...member.permissions },
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleSaveMember = () => {
+    if (!memberForm.name.trim() || !memberForm.email.trim()) {
+      return;
+    }
+
+    if (editingMember) {
+      updateTeamMember(editingMember.id, memberForm);
+    } else {
+      addTeamMember(memberForm);
+    }
+
+    setIsModalOpen(false);
+    resetMemberForm();
+    setEditingMember(null);
+  };
+
+  const handleDeleteMember = (id: string) => {
+    removeTeamMember(id);
   };
 
   return (
@@ -512,11 +581,122 @@ const AccountSetup = () => {
             </h2>
 
             <div className="space-y-6">
-              {/* Team Member Form */}
-              <div className="border border-gray-200 rounded-lg p-6">
+              {/* Team Members List */}
+              {enterpriseSetup.teamMembers.length > 0 && (
+                <div className="space-y-4">
+                  {enterpriseSetup.teamMembers.map((member) => (
+                    <div
+                      key={member.id}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border border-gray-200 rounded-lg gap-3"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 truncate">
+                          {member.name}
+                        </h3>
+                        <p className="text-gray-600 text-sm sm:text-base truncate">
+                          {member.email}
+                        </p>
+                        <span className="inline-block mt-1 sm:mt-2 px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-full border">
+                          {member.role}
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-2 self-end sm:self-auto">
+                        <button
+                          type="button"
+                          onClick={() => handleEditMember(member)}
+                          className="px-2 py-1 sm:px-4 sm:py-2 text-blue-600 border border-blue-200 rounded-md hover:bg-blue-50 transition-colors text-xs sm:text-sm font-medium flex items-center space-x-1 sm:space-x-2"
+                        >
+                          <svg
+                            className="w-3 h-3 sm:w-4 sm:h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
+                          </svg>
+                          <span className="text-xs sm:text-sm">Edit</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteMember(member.id)}
+                          className="px-2 py-1 sm:px-4 sm:py-2 text-blue-600 border border-blue-200 rounded-md hover:bg-blue-50 transition-colors text-xs sm:text-sm font-medium flex items-center space-x-1 sm:space-x-2"
+                        >
+                          <svg
+                            className="w-3 h-3 sm:w-4 sm:h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                          <span className="text-xs sm:text-sm">Delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Add Team Member Button */}
+              <div className="flex justify-start">
+                <button
+                  type="button"
+                  onClick={handleAddMember}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors text-sm font-medium border border-gray-300"
+                >
+                  + Add Another Team Member
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        {/* Team Member Modal */}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {editingMember ? "Edit Team Member" : "Add Team Member"}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    resetMemberForm();
+                    setEditingMember(null);
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="space-y-6">
                 {/* Name and Email Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  {/* Name */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">
                       Name<span className="text-red-500">*</span>
@@ -524,11 +704,17 @@ const AccountSetup = () => {
                     <input
                       type="text"
                       placeholder="Enter Name"
+                      value={memberForm.name}
+                      onChange={(e) =>
+                        setMemberForm((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     />
                   </div>
 
-                  {/* Email */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">
                       Email<span className="text-red-500">*</span>
@@ -536,18 +722,34 @@ const AccountSetup = () => {
                     <input
                       type="email"
                       placeholder="Enter Email"
+                      value={memberForm.email}
+                      onChange={(e) =>
+                        setMemberForm((prev) => ({
+                          ...prev,
+                          email: e.target.value,
+                        }))
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     />
                   </div>
                 </div>
 
                 {/* Role */}
-                <div className="space-y-2 mb-6">
+                <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700">
                     Role
                   </label>
                   <div className="relative">
-                    <select className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white pr-10 transition-colors">
+                    <select
+                      value={memberForm.role}
+                      onChange={(e) =>
+                        setMemberForm((prev) => ({
+                          ...prev,
+                          role: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white pr-10 transition-colors"
+                    >
                       <option value="">Select role</option>
                       <option value="Admin">Admin</option>
                       <option value="Manager">Manager</option>
@@ -559,66 +761,101 @@ const AccountSetup = () => {
                 </div>
 
                 {/* Access Permissions */}
-                <div className="space-y-4 mb-6">
-                  <h3 className="text-sm font-medium text-gray-700">
+                <div className="space-y-4">
+                  <h4 className="text-sm font-medium text-gray-700">
                     Access Permissions
-                  </h3>
+                  </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {/* View Dashboard */}
                     <div className="flex items-center space-x-2">
                       <input
                         type="checkbox"
-                        id="viewDashboard"
-                        defaultChecked
+                        id="modal-viewDashboard"
+                        checked={memberForm.permissions.viewDashboard}
+                        onChange={(e) =>
+                          setMemberForm((prev) => ({
+                            ...prev,
+                            permissions: {
+                              ...prev.permissions,
+                              viewDashboard: e.target.checked,
+                            },
+                          }))
+                        }
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                       />
                       <label
-                        htmlFor="viewDashboard"
+                        htmlFor="modal-viewDashboard"
                         className="text-sm text-gray-700"
                       >
                         View Dashboard
                       </label>
                     </div>
 
-                    {/* Modify Dashboard */}
                     <div className="flex items-center space-x-2">
                       <input
                         type="checkbox"
-                        id="modifyDashboard"
+                        id="modal-modifyDashboard"
+                        checked={memberForm.permissions.modifyDashboard}
+                        onChange={(e) =>
+                          setMemberForm((prev) => ({
+                            ...prev,
+                            permissions: {
+                              ...prev.permissions,
+                              modifyDashboard: e.target.checked,
+                            },
+                          }))
+                        }
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                       />
                       <label
-                        htmlFor="modifyDashboard"
+                        htmlFor="modal-modifyDashboard"
                         className="text-sm text-gray-700"
                       >
                         Modify Dashboard
                       </label>
                     </div>
 
-                    {/* Execute Actions */}
                     <div className="flex items-center space-x-2">
                       <input
                         type="checkbox"
-                        id="executeActions"
+                        id="modal-executeActions"
+                        checked={memberForm.permissions.executeActions}
+                        onChange={(e) =>
+                          setMemberForm((prev) => ({
+                            ...prev,
+                            permissions: {
+                              ...prev.permissions,
+                              executeActions: e.target.checked,
+                            },
+                          }))
+                        }
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                       />
                       <label
-                        htmlFor="executeActions"
+                        htmlFor="modal-executeActions"
                         className="text-sm text-gray-700"
                       >
                         Execute Actions
                       </label>
                     </div>
 
-                    {/* Manage Users */}
                     <div className="flex items-center space-x-2">
                       <input
                         type="checkbox"
-                        id="manageUsers"
+                        id="modal-manageUsers"
+                        checked={memberForm.permissions.manageUsers}
+                        onChange={(e) =>
+                          setMemberForm((prev) => ({
+                            ...prev,
+                            permissions: {
+                              ...prev.permissions,
+                              manageUsers: e.target.checked,
+                            },
+                          }))
+                        }
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                       />
                       <label
-                        htmlFor="manageUsers"
+                        htmlFor="modal-manageUsers"
                         className="text-sm text-gray-700"
                       >
                         Manage Users
@@ -627,29 +864,31 @@ const AccountSetup = () => {
                   </div>
                 </div>
 
-                {/* Delete Button */}
-                <div className="flex justify-end">
+                {/* Modal Actions */}
+                <div className="flex justify-end space-x-3 pt-6">
                   <button
                     type="button"
-                    className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors text-sm font-medium"
+                    onClick={() => {
+                      setIsModalOpen(false);
+                      resetMemberForm();
+                      setEditingMember(null);
+                    }}
+                    className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                   >
-                    Delete Details
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSaveMember}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  >
+                    Save
                   </button>
                 </div>
               </div>
-
-              {/* Add Another Team Member Button */}
-              <div className="flex justify-start">
-                <button
-                  type="button"
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors text-sm font-medium border border-gray-300"
-                >
-                  + Add Another Team Member
-                </button>
-              </div>
             </div>
           </div>
-        </article>
+        )}
         {/* Dashboard Preferences Section */}
         <article className="w-full max-w-4xl mx-auto mt-12 mb-8">
           <div className="bg-white">
