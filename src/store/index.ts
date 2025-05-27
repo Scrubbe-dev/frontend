@@ -18,14 +18,10 @@ export const createBoundStore = () => {
       {
         name: "bound-store", // Key in localStorage
         partialize: (state) => ({
-          // Only persist these fields
+          // Only persist cookie preferences
           cookieConsent: state.cookieConsent,
           cookiePreferences: state.cookiePreferences,
-          // Add other persistent state properties here
-          // Enterprise setup - persist completed setup data
-          enterpriseSetup: state.enterpriseSetup,
-          // Note: Don't persist currentStep, isSubmitting, or errors
-          // as these should reset on page reload
+          // Enterprise setup will not be persisted - goes directly to backend API
         }),
       }
     )

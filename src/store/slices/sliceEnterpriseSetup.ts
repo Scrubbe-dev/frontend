@@ -13,13 +13,18 @@ export interface TeamMember {
   };
 }
 
+export interface CompanyLogo {
+  file: File | null;
+  base64: string | null;
+}
+
 export interface EnterpriseSetup {
   // Company Information
   companyName: string;
   industry: string;
   companySize: string;
   primaryRegion: string;
-  companyLogo: File | null;
+  companyLogo: CompanyLogo | null;
 
   // Admin Contact
   adminName: string;
@@ -131,12 +136,32 @@ export const createEnterpriseSetupSlice: StateCreator<
 
   // Set company logo
   setCompanyLogo: (file) => {
-    set((state) => ({
-      enterpriseSetup: {
-        ...state.enterpriseSetup,
-        companyLogo: file,
-      },
-    }));
+    if (!file) {
+      set((state) => ({
+        enterpriseSetup: {
+          ...state.enterpriseSetup,
+          companyLogo: null,
+        },
+      }));
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result;
+      if (typeof result === "string") {
+        set((state) => ({
+          enterpriseSetup: {
+            ...state.enterpriseSetup,
+            companyLogo: {
+              file,
+              base64: result,
+            },
+          },
+        }));
+      }
+    };
+    reader.readAsDataURL(file);
   },
 
   // Set admin contact information
@@ -379,8 +404,8 @@ export const createEnterpriseSetupSlice: StateCreator<
       formData.append("companySize", enterpriseSetup.companySize);
       formData.append("primaryRegion", enterpriseSetup.primaryRegion);
 
-      if (enterpriseSetup.companyLogo) {
-        formData.append("companyLogo", enterpriseSetup.companyLogo);
+      if (enterpriseSetup.companyLogo?.file) {
+        formData.append("companyLogo", enterpriseSetup.companyLogo.file);
       }
 
       // Add admin contact
