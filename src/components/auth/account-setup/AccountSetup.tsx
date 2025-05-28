@@ -223,7 +223,7 @@ const AccountSetup = () => {
     <section className="w-full h-auto bg-[#F9FAFB]">
       {/* Skip Button */}
       <div className="flex justify-end max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <Link href="/dashboard">
+        <Link href="/data-sources">
           <button
             type="button"
             className="px-4 py-2 text-blue-600 border border-blue-200 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors text-[16px] font-medium flex items-center space-x-2"
