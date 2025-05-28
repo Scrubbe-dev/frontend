@@ -2,7 +2,7 @@
 import { useAppStore } from "@/store/StoreProvider";
 import { TeamMember } from "@/store/slices/sliceEnterpriseSetup";
 import type React from "react";
-import Link from "next/link";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -221,30 +221,6 @@ const AccountSetup = () => {
 
   return (
     <section className="w-full h-auto bg-[#F9FAFB]">
-      {/* Skip Button */}
-      <div className="flex justify-end max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <Link href="/dashboard">
-          <button
-            type="button"
-            className="px-4 py-2 text-blue-600 border border-blue-200 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors text-[16px] font-medium flex items-center space-x-2"
-          >
-            <span>Skip</span>
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 8l4 4m0 0l-4 4m4-4H3"
-              />
-            </svg>
-          </button>
-        </Link>
-      </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="h-full max-w-[1440px] w-full mx-auto flex flex-col px-4 sm:px-6 lg:px-8"
