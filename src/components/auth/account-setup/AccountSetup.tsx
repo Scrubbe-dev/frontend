@@ -220,7 +220,7 @@ const AccountSetup = () => {
   };
 
   return (
-    <section className="w-full h-auto bg-white">
+    <section className="w-full h-auto bg-[#F9FAFB]">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="h-full max-w-[1440px] w-full mx-auto flex flex-col px-4 sm:px-6 lg:px-8"
@@ -231,7 +231,7 @@ const AccountSetup = () => {
         </h1>
 
         <article className="w-full max-w-4xl mx-auto">
-          <div className="bg-white">
+          <div className="bg-white p-6">
             <h2 className="text-[24px] font-semibold text-gray-900 mb-8">
               Enterprise Setup
             </h2>
@@ -476,7 +476,7 @@ const AccountSetup = () => {
         </article>
         {/* Admin Contact Section */}
         <article className="w-full max-w-4xl mx-auto mt-12">
-          <div className="bg-white">
+          <div className="bg-white p-6">
             <h2 className="text-[24px] font-semibold text-gray-900 mb-8">
               Admin Contact
             </h2>
@@ -575,7 +575,7 @@ const AccountSetup = () => {
 
         {/* Team Members Section */}
         <article className="w-full max-w-4xl mx-auto mt-12">
-          <div className="bg-white">
+          <div className="bg-white p-6">
             <h2 className="text-[24px] font-semibold text-gray-900 mb-8">
               Invite Team Members
             </h2>
@@ -891,7 +891,7 @@ const AccountSetup = () => {
         )}
         {/* Dashboard Preferences Section */}
         <article className="w-full max-w-4xl mx-auto mt-12 mb-8">
-          <div className="bg-white">
+          <div className="bg-white p-6">
             <h2 className="text-[24px] font-semibold text-gray-900 mb-2">
               Dashboard Preferences
             </h2>
@@ -1092,21 +1092,23 @@ const AccountSetup = () => {
 
               {/* Notification Channels */}
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">
-                      Notification Channels
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      You can select more than one
-                    </p>
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:gap-8">
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900">
+                        Notification Channels
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        You can select more than one
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      className="self-start px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-50 text-blue-600 rounded-md border border-blue-200 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors text-xs sm:text-sm font-medium whitespace-nowrap"
+                    >
+                      Go to notification settings
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    className="px-4 py-2 bg-blue-50 text-blue-600 rounded-md border border-blue-200 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors text-sm font-medium"
-                  >
-                    Go to notification settings
-                  </button>
                 </div>
                 <div className="flex flex-wrap gap-4">
                   {["Slack", "Microsoft Teams", "Email", "SMS"].map(
