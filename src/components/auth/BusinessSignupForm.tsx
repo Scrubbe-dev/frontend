@@ -632,7 +632,7 @@ export default function BusinessSignupForm() {
             {/* Demo Page Link */}
             <div className="text-center">
               <Link
-                href="#"
+                href="/auth/demo-page"
                 className="text-blue-600 hover:underline inline-flex items-center"
               >
                 Looking for our demo page?
