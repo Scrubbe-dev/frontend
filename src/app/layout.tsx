@@ -6,7 +6,7 @@ import { HeroProvider } from "@/provider/hero-provider";
 import { StoreProvider } from "@/store/StoreProvider";
 import CookieConsentModal from "@/components/landing/CookieConsentModal";
 import CookieToggleButton from "@/components/landing/CookieToggleButton";
-import Navbar from "@/components/landing/Navbar";
+import NavbarWrapper from "@/components/landing/header/NavbarWrapper";
 import FooterWrapper from "@/components/landing/footer/FooterWrapper";
 import Chatbot from "@/components/landing/Chatbot";
 //import AnnouncementBar from "@/components/landing/AnnouncementBar";
@@ -70,7 +70,7 @@ export default function RootLayout({
             {/*  <AnnouncementBar /> */}{" "}
             {/* disabled for now till official launch */}
             <HeroProvider>
-              <Navbar />
+              <NavbarWrapper />
               <main className="flex-grow h-full w-full">{children}</main>
               <FooterWrapper />
               <CookieConsentModal />
