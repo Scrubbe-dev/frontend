@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 
 export type StatusColor = "green" | "yellow" | "red" | "gray";
 type TabName = "Overview" | "Configure" | "Logs" | "Metrics";
 
 interface CardProps {
-  logo: StaticImageData | string;
+  logo: string | null;
   title: string;
   status: string;
   statusColor: StatusColor;
@@ -54,15 +54,18 @@ const Card: React.FC<CardProps> = ({
     <div className="w-[345px] h-[312px] bg-white rounded-lg shadow-lg border border-gray-200 flex flex-col">
       {/* Header with logo and title */}
       <div className="flex items-center gap-3 p-4 border-b border-gray-100">
-        <div className="w-8 h-8 relative">
-          <Image
-            src={logo}
-            alt={title}
-            fill
-            sizes="(min-width: 360px) 100vw"
-            className="object-contain"
-          />
-        </div>
+        {/* Only show logo if it exists */}
+        {logo && (
+          <div className="w-8 h-8 relative">
+            <Image
+              src={logo}
+              alt={title}
+              fill
+              sizes="(min-width: 360px) 100vw"
+              className="object-contain"
+            />
+          </div>
+        )}
         <span className="text-gray-700 font-medium text-sm">{title}</span>
       </div>
 

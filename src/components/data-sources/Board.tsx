@@ -1,9 +1,10 @@
 "use client";
 import React from "react";
 import Card, { StatusColor } from "./Card";
+import AddSourceCard from "./AddSourceCard";
 
 interface CardData {
-  logo: string;
+  logo: string | null;
   title: string;
   status: string;
   statusColor: StatusColor;
@@ -41,6 +42,24 @@ const Board: React.FC = () => {
       timestamp: "2025-05-22",
       processedData: "1.2 TB",
     },
+    {
+      logo: "icon-postgres.svg",
+      title: "Postgres",
+      status: "connected",
+      statusColor: "green",
+      buttonText: "Disconnect",
+      timestamp: "2025-05-22",
+      processedData: "1.2 TB",
+    },
+    {
+      logo: null, // Explicitly null instead of empty string
+      title: "APIs",
+      status: "connected",
+      statusColor: "green",
+      buttonText: "Disconnect",
+      timestamp: "2025-05-22",
+      processedData: "1.2 TB",
+    },
   ];
 
   const handleTabClick = (tab: string) => {
@@ -49,6 +68,10 @@ const Board: React.FC = () => {
 
   const handleButtonClick = (buttonText: string, status: string) => {
     console.log(`Button clicked: ${buttonText} for status: ${status}`);
+  };
+
+  const handleGetStartedClick = () => {
+    console.log("Get started clicked for Add new source");
   };
 
   return (
@@ -65,6 +88,12 @@ const Board: React.FC = () => {
             onButtonClick={handleButtonClick}
           />
         ))}
+        {/* Add new source card */}
+        <AddSourceCard
+          title="Add new source"
+          onTabClick={handleTabClick}
+          onGetStartedClick={handleGetStartedClick}
+        />
       </div>
     </div>
   );
