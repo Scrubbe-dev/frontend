@@ -5,8 +5,7 @@ import Footer from "./Footer";
 export default function FooterWrapper() {
   const pathname = usePathname();
 
-  // Don't render footer for auth routes
-  if (pathname.startsWith("/auth")) {
+  if (pathname.startsWith("/auth") || pathname.startsWith("/data-sources")) {
     return null;
   }
 

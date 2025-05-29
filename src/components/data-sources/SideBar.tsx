@@ -1,16 +1,15 @@
 "use client";
 import { useState } from "react";
 import {
-  FiDatabase,
-  FiActivity,
   FiSettings,
   FiHelpCircle,
   FiChevronDown,
   FiChevronRight,
   FiLogOut,
   FiPlus,
-  FiBarChart,
 } from "react-icons/fi";
+import { GiOrganigram } from "react-icons/gi";
+import { LuRoute } from "react-icons/lu";
 
 type SectionKey =
   | "menu"
@@ -71,14 +70,14 @@ const SideBar = () => {
   ];
 
   return (
-    <div className="w-72 max-w-[288px] h-screen border-r border-gray-200 flex flex-col">
+    <div className="w-72 max-w-[288px] h-screen border-r border-gray-200 flex flex-col text-base">
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto">
         {/* Menu Section */}
         <div className="p-4 border-b border-gray-100">
           <button
             onClick={() => toggleSection("menu")}
-            className="flex items-center justify-between w-full text-left text-sm font-medium text-gray-600 hover:text-gray-900"
+            className="flex items-center justify-between w-full text-left font-medium text-gray-600 hover:text-gray-900"
           >
             <span>Menu</span>
             {expandedSections.menu ? (
@@ -94,10 +93,10 @@ const SideBar = () => {
               <div>
                 <button
                   onClick={() => toggleSection("dataSources")}
-                  className="flex items-center justify-between w-full text-left py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+                  className="flex items-center justify-between w-full text-left py-2 font-medium text-gray-700 hover:text-gray-900"
                 >
                   <div className="flex items-center space-x-2">
-                    <FiDatabase className="w-4 h-4" />
+                    <GiOrganigram className="w-6 h-6" />
                     <span>Data Sources</span>
                   </div>
                   {expandedSections.dataSources ? (
@@ -119,7 +118,7 @@ const SideBar = () => {
                           <button
                             key={item.id}
                             onClick={() => selectDataSource(item.id)}
-                            className={`flex items-center space-x-2 w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
+                            className={`flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md transition-colors ${
                               isSelected
                                 ? "bg-blue-500 text-white font-medium"
                                 : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
@@ -141,10 +140,10 @@ const SideBar = () => {
               <div>
                 <button
                   onClick={() => toggleSection("logsAnalytics")}
-                  className="flex items-center justify-between w-full text-left py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+                  className="flex items-center justify-between w-full text-left py-2 font-medium text-gray-700 hover:text-gray-900"
                 >
                   <div className="flex items-center space-x-2">
-                    <FiBarChart className="w-4 h-4" />
+                    <LuRoute className="w-6 h-6" />
                     <span>Logs and Analytics</span>
                   </div>
                   {expandedSections.logsAnalytics ? (
@@ -162,12 +161,9 @@ const SideBar = () => {
         <div className="px-4 py-2">
           <button
             onClick={() => toggleSection("activities")}
-            className="flex items-center justify-between w-full text-left py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+            className="flex items-center justify-between w-full text-left py-2 font-medium text-gray-700 hover:text-gray-900"
           >
-            <div className="flex items-center space-x-2">
-              <FiActivity className="w-4 h-4" />
-              <span>Activities</span>
-            </div>
+            <span>Activities</span>
             {expandedSections.activities ? (
               <FiChevronDown className="w-4 h-4" />
             ) : (
@@ -181,10 +177,10 @@ const SideBar = () => {
               <div>
                 <button
                   onClick={() => toggleSection("settings")}
-                  className="flex items-center justify-between w-full text-left py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+                  className="flex items-center justify-between w-full text-left py-2 font-medium text-gray-700 hover:text-gray-900"
                 >
                   <div className="flex items-center space-x-2">
-                    <FiSettings className="w-4 h-4" />
+                    <FiSettings className="w-6 h-6" />
                     <span>Settings</span>
                   </div>
                   {expandedSections.settings ? (
@@ -199,10 +195,10 @@ const SideBar = () => {
               <div>
                 <button
                   onClick={() => toggleSection("support")}
-                  className="flex items-center justify-between w-full text-left py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+                  className="flex items-center justify-between w-full text-left py-2 font-medium text-gray-700 hover:text-gray-900"
                 >
                   <div className="flex items-center space-x-2">
-                    <FiHelpCircle className="w-4 h-4" />
+                    <FiHelpCircle className="w-6 h-6" />
                     <span>Support</span>
                   </div>
                   {expandedSections.support ? (
@@ -219,7 +215,7 @@ const SideBar = () => {
 
       {/* Footer - Log out */}
       <div className="border-t border-gray-200 p-4">
-        <button className="flex items-center justify-between w-full text-left py-2 text-sm text-gray-600 hover:text-gray-900">
+        <button className="flex items-center justify-between w-full text-left py-2 text-gray-600 hover:text-gray-900">
           <span>Log out</span>
           <FiLogOut className="w-4 h-4" />
         </button>
