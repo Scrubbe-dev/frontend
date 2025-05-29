@@ -1,78 +1,24 @@
 "use client";
-import React from "react";
-import Card, { StatusColor } from "./Card";
+import Card from "./Card";
 import AddSourceCard from "./AddSourceCard";
-
-interface CardData {
-  logo: string | null;
-  title: string;
-  status: string;
-  statusColor: StatusColor;
-  buttonText: string;
-  timestamp: string;
-  processedData: string;
-}
+import { useAppStore } from "@/store/StoreProvider";
 
 const Board: React.FC = () => {
-  const cardData: CardData[] = [
-    {
-      logo: "icon-auth-aws.svg",
-      title: "AWS",
-      status: "connected",
-      statusColor: "green",
-      buttonText: "Disconnect",
-      timestamp: "2025-05-22",
-      processedData: "1.2 TB",
-    },
-    {
-      logo: "icon-auth-azure.svg",
-      title: "Azure",
-      status: "ingesting",
-      statusColor: "yellow",
-      buttonText: "Pause",
-      timestamp: "2025-05-22",
-      processedData: "1.2 TB",
-    },
-    {
-      logo: "icon-gcp.svg",
-      title: "GCP",
-      status: "error",
-      statusColor: "red",
-      buttonText: "Retry",
-      timestamp: "2025-05-22",
-      processedData: "1.2 TB",
-    },
-    {
-      logo: "icon-postgres.svg",
-      title: "Postgres",
-      status: "connected",
-      statusColor: "green",
-      buttonText: "Disconnect",
-      timestamp: "2025-05-22",
-      processedData: "1.2 TB",
-    },
-    {
-      logo: null, // Explicitly null instead of empty string
-      title: "APIs",
-      status: "connected",
-      statusColor: "green",
-      buttonText: "Disconnect",
-      timestamp: "2025-05-22",
-      processedData: "1.2 TB",
-    },
-  ];
+  // Use Zustand store
+  const {
+    selectedDataSource,
+    getFilteredCards,
+    handleTabClick,
+    handleButtonClick,
+    handleGetStartedClick,
+  } = useAppStore((state) => state);
 
-  const handleTabClick = (tab: string) => {
-    console.log(`Tab clicked: ${tab}`);
-  };
+  // Get filtered cards based on selected data source
+  const filteredCards = getFilteredCards();
 
-  const handleButtonClick = (buttonText: string, status: string) => {
-    console.log(`Button clicked: ${buttonText} for status: ${status}`);
-  };
-
-  const handleGetStartedClick = () => {
-    console.log("Get started clicked for Add new source");
-  };
+  // Determine if we should show the AddSourceCard
+  const showAddSourceCard =
+    selectedDataSource === "dashboard" || selectedDataSource === "add-new";
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
@@ -80,20 +26,30 @@ const Board: React.FC = () => {
         Scrubbe Data Ingestion Dashboard
       </h1>
       <div className="grid grid-cols-[repeat(auto-fit,_minmax(345px,_1fr))] gap-6">
-        {cardData.map((card, index) => (
+        {/* Render filtered cards */}
+        {filteredCards.map((card) => (
           <Card
-            key={index}
-            {...card}
+            key={card.id}
+            logo={card.logo}
+            title={card.title}
+            status={card.status}
+            statusColor={card.statusColor}
+            buttonText={card.buttonText}
+            timestamp={card.timestamp}
+            processedData={card.processedData}
             onTabClick={handleTabClick}
             onButtonClick={handleButtonClick}
           />
         ))}
-        {/* Add new source card */}
-        <AddSourceCard
-          title="Add new source"
-          onTabClick={handleTabClick}
-          onGetStartedClick={handleGetStartedClick}
-        />
+
+        {/* Conditionally render Add new source card */}
+        {showAddSourceCard && (
+          <AddSourceCard
+            title="Add new source"
+            onTabClick={handleTabClick}
+            onGetStartedClick={handleGetStartedClick}
+          />
+        )}
       </div>
     </div>
   );

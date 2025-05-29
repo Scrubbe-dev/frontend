@@ -10,6 +10,8 @@ import {
 } from "react-icons/fi";
 import { GiOrganigram } from "react-icons/gi";
 import { LuRoute } from "react-icons/lu";
+import { useAppStore } from "@/store/StoreProvider";
+import type { DataSourceId } from "@/store/slices/dataSourcesSlice";
 
 type SectionKey =
   | "menu"
@@ -18,35 +20,22 @@ type SectionKey =
   | "activities"
   | "settings"
   | "support";
-type DataSourceId =
-  | "dashboard"
-  | "aws"
-  | "azure"
-  | "gcp"
-  | "postgres"
-  | "api"
-  | "add-new";
-
-interface DataSourceItem {
-  id: DataSourceId;
-  name: string;
-  icon: React.ComponentType<{ className?: string }> | null;
-}
 
 const SideBar = () => {
   const [expandedSections, setExpandedSections] = useState<
     Record<SectionKey, boolean>
   >({
     menu: true,
-    dataSources: false,
+    dataSources: true, // Default to expanded to show data sources
     logsAnalytics: false,
     activities: true,
     settings: false,
     support: false,
   });
 
-  const [selectedDataSource, setSelectedDataSource] =
-    useState<DataSourceId | null>(null);
+  // Use Zustand store
+  const { selectedDataSource, dataSourceItems, setSelectedDataSource } =
+    useAppStore((state) => state);
 
   const toggleSection = (section: SectionKey) => {
     setExpandedSections((prev) => ({
@@ -59,15 +48,11 @@ const SideBar = () => {
     setSelectedDataSource(source);
   };
 
-  const dataSourceItems: DataSourceItem[] = [
-    { id: "dashboard", name: "Dashboard", icon: null },
-    { id: "aws", name: "AWS", icon: null },
-    { id: "azure", name: "Azure", icon: null },
-    { id: "gcp", name: "GCP", icon: null },
-    { id: "postgres", name: "Postgres", icon: null },
-    { id: "api", name: "API", icon: null },
-    { id: "add-new", name: "Add New Source", icon: FiPlus },
-  ];
+  // Add the FiPlus icon for "Add New Source" item
+  const dataSourceItemsWithIcons = dataSourceItems.map((item) => ({
+    ...item,
+    icon: item.id === "add-new" ? FiPlus : item.icon,
+  }));
 
   return (
     <div className="w-72 max-w-[288px] h-screen border-r border-gray-200 flex flex-col text-base">
@@ -110,7 +95,7 @@ const SideBar = () => {
                   <div className="ml-6 mt-2 space-y-1">
                     {/* Data Source Items */}
                     <div className="space-y-1">
-                      {dataSourceItems.map((item) => {
+                      {dataSourceItemsWithIcons.map((item) => {
                         const IconComponent = item.icon;
                         const isSelected = selectedDataSource === item.id;
 

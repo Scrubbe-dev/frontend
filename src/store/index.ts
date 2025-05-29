@@ -1,12 +1,18 @@
 import { createStore } from "zustand/vanilla";
 import { devtools, persist } from "zustand/middleware";
-import { createCookiesSlice, SliceCookiesType } from "./slices/sliceCookies";
+import { createCookiesSlice, cookiesSliceType } from "./slices/cookiesSlice";
 import {
   createEnterpriseSetupSlice,
-  SliceEnterpriseSetupType,
-} from "./slices/sliceEnterpriseSetup";
+  enterpriseSetupSliceType,
+} from "./slices/enterpriseSetupSlice";
+import {
+  createDataSourcesSlice,
+  dataSourcesSliceType,
+} from "./slices/dataSourcesSlice";
 
-export type BoundStoreType = SliceCookiesType & SliceEnterpriseSetupType;
+export type BoundStoreType = cookiesSliceType &
+  enterpriseSetupSliceType &
+  dataSourcesSliceType;
 
 export const createBoundStore = () => {
   const store = createStore<BoundStoreType>()(
@@ -14,6 +20,7 @@ export const createBoundStore = () => {
       devtools((set, get, store) => ({
         ...createCookiesSlice(set, get, store),
         ...createEnterpriseSetupSlice(set, get, store),
+        ...createDataSourcesSlice(set, get, store),
       })),
       {
         name: "bound-store", // Key in localStorage

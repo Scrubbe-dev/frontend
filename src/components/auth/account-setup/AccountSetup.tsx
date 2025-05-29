@@ -1,6 +1,6 @@
 "use client";
 import { useAppStore } from "@/store/StoreProvider";
-import { TeamMember } from "@/store/slices/sliceEnterpriseSetup";
+import { TeamMember } from "@/store/slices/enterpriseSetupSlice";
 import type React from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";

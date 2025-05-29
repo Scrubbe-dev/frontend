@@ -46,7 +46,7 @@ export interface EnterpriseSetup {
   defaultIncidentPriority: string[]; // ['High', 'Medium', 'Low']
 }
 
-export type SliceEnterpriseSetupType = {
+export type enterpriseSetupSliceType = {
   enterpriseSetup: EnterpriseSetup;
   currentStep: number;
   isSubmitting: boolean;
@@ -116,9 +116,10 @@ const initialEnterpriseSetup: EnterpriseSetup = {
   defaultIncidentPriority: ["High"],
 };
 
-export const createEnterpriseSetupSlice: StateCreator<
-  SliceEnterpriseSetupType
-> = (set, get) => ({
+export const createEnterpriseSetupSlice: StateCreator<enterpriseSetupSliceType> = (
+  set,
+  get
+) => ({
   enterpriseSetup: initialEnterpriseSetup,
   currentStep: 0,
   isSubmitting: false,
