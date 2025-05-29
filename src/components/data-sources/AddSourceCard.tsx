@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import { useAppStore } from "@/store/StoreProvider";
+import type { ModalType } from "@/store/slices/modalSlice";
 
 type TabName = "Overview" | "Configure" | "Logs";
 
@@ -15,12 +17,33 @@ const AddSourceCard: React.FC<AddSourceCardProps> = ({
   onGetStartedClick = () => {},
 }) => {
   const [activeTab, setActiveTab] = useState<TabName>("Overview");
+  const { openModal } = useAppStore((state) => state);
 
   const tabs: TabName[] = ["Overview", "Configure", "Logs"];
 
   const handleTabClick = (tab: TabName) => {
     setActiveTab(tab);
     onTabClick(tab);
+
+    // Open modal with the selected tab
+    const modalType = tab.toLowerCase() as ModalType;
+    openModal({
+      type: modalType,
+      title: tab,
+      dataSourceId: "add-new",
+      dataSourceName: title,
+    });
+  };
+
+  const handleGetStartedClick = () => {
+    onGetStartedClick();
+    // Open modal in configure mode for adding new source
+    openModal({
+      type: "configure",
+      title: "Configure New Source",
+      dataSourceId: "add-new",
+      dataSourceName: title,
+    });
   };
 
   return (
@@ -72,7 +95,7 @@ const AddSourceCard: React.FC<AddSourceCardProps> = ({
         {/* Get started button */}
         <div className="flex justify-end">
           <button
-            onClick={onGetStartedClick}
+            onClick={handleGetStartedClick}
             className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-500 rounded hover:bg-blue-50 transition-colors"
           >
             Get started

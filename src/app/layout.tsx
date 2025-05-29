@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { HeroProvider } from "@/provider/hero-provider";
 import { StoreProvider } from "@/store/StoreProvider";
 import CookieConsentModal from "@/components/landing/CookieConsentModal";
 import CookieToggleButton from "@/components/landing/CookieToggleButton";
@@ -12,6 +11,7 @@ import Chatbot from "@/components/landing/Chatbot";
 //import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
 import AuthProvider from "@/provider/AuthProvider";
+import ModalManager from "@/components/landing/ModalManager";
 
 const airbnbCereal = localFont({
   src: [
@@ -67,16 +67,14 @@ export default function RootLayout({
         <AuthProvider>
           <NextJsTopLoader />
           <StoreProvider>
-            {/*  <AnnouncementBar /> */}{" "}
-            {/* disabled for now till official launch */}
-            <HeroProvider>
-              <NavbarWrapper />
-              <main className="flex-grow h-full w-full">{children}</main>
-              <FooterWrapper />
-              <CookieConsentModal />
-              <CookieToggleButton />
-              <Chatbot />
-            </HeroProvider>
+            {/*  <AnnouncementBar /> disabled for now till official launch */}
+            <NavbarWrapper />
+            <main className="flex-grow h-full w-full">{children}</main>
+            <FooterWrapper />
+            <CookieConsentModal />
+            <CookieToggleButton />
+            <Chatbot />
+            <ModalManager />
           </StoreProvider>
           <Toaster position="top-center" />
         </AuthProvider>

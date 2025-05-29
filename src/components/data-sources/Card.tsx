@@ -1,6 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import { useAppStore } from "@/store/StoreProvider";
+import type { DataSourceId } from "@/store/slices/dataSourcesSlice";
+import type { ModalType } from "@/store/slices/modalSlice";
 
 export type StatusColor = "green" | "yellow" | "red" | "gray";
 type TabName = "Overview" | "Configure" | "Logs" | "Metrics";
@@ -13,6 +16,7 @@ interface CardProps {
   buttonText: string;
   timestamp: string;
   processedData: string;
+  dataSourceId?: DataSourceId;
   onTabClick?: (tab: TabName) => void;
   onButtonClick?: (buttonText: string, status: string) => void;
 }
@@ -25,16 +29,27 @@ const Card: React.FC<CardProps> = ({
   buttonText,
   timestamp,
   processedData,
+  dataSourceId,
   onTabClick = () => {},
   onButtonClick = () => {},
 }) => {
   const [activeTab, setActiveTab] = useState<TabName>("Overview");
+  const { openModal } = useAppStore((state) => state);
 
   const tabs: TabName[] = ["Overview", "Configure", "Logs", "Metrics"];
 
   const handleTabClick = (tab: TabName) => {
     setActiveTab(tab);
     onTabClick(tab);
+
+    // Open modal with the selected tab
+    const modalType = tab.toLowerCase() as ModalType;
+    openModal({
+      type: modalType,
+      title: tab,
+      dataSourceId,
+      dataSourceName: title,
+    });
   };
 
   const getStatusColor = (): string => {

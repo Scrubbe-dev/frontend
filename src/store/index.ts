@@ -9,10 +9,12 @@ import {
   createDataSourcesSlice,
   dataSourcesSliceType,
 } from "./slices/dataSourcesSlice";
+import { createModalSlice, ModalSliceType } from "./slices/modalSlice";
 
 export type BoundStoreType = cookiesSliceType &
   enterpriseSetupSliceType &
-  dataSourcesSliceType;
+  dataSourcesSliceType &
+  ModalSliceType;
 
 export const createBoundStore = () => {
   const store = createStore<BoundStoreType>()(
@@ -21,6 +23,7 @@ export const createBoundStore = () => {
         ...createCookiesSlice(set, get, store),
         ...createEnterpriseSetupSlice(set, get, store),
         ...createDataSourcesSlice(set, get, store),
+        ...createModalSlice(set, get, store),
       })),
       {
         name: "bound-store", // Key in localStorage
