@@ -42,14 +42,16 @@ const Card: React.FC<CardProps> = ({
     setActiveTab(tab);
     onTabClick(tab);
 
-    // Open modal with the selected tab
-    const modalType = tab.toLowerCase() as ModalType;
-    openModal({
-      type: modalType,
-      title: tab,
-      dataSourceId,
-      dataSourceName: title,
-    });
+    // Only open modal for non-Overview tabs
+    if (tab !== "Overview") {
+      const modalType = tab.toLowerCase() as ModalType;
+      openModal({
+        type: modalType,
+        title: tab,
+        dataSourceId,
+        dataSourceName: title,
+      });
+    }
   };
 
   const getStatusColor = (): string => {

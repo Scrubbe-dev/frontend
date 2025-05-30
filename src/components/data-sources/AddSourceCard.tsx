@@ -25,14 +25,16 @@ const AddSourceCard: React.FC<AddSourceCardProps> = ({
     setActiveTab(tab);
     onTabClick(tab);
 
-    // Open modal with the selected tab
-    const modalType = tab.toLowerCase() as ModalType;
-    openModal({
-      type: modalType,
-      title: tab,
-      dataSourceId: "add-new",
-      dataSourceName: title,
-    });
+    // Only open modal for non-Overview tabs
+    if (tab !== "Overview") {
+      const modalType = tab.toLowerCase() as ModalType;
+      openModal({
+        type: modalType,
+        title: tab,
+        dataSourceId: "add-new",
+        dataSourceName: title,
+      });
+    }
   };
 
   const handleGetStartedClick = () => {
