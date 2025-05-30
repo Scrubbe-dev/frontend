@@ -2,10 +2,9 @@
 import { useEffect } from "react";
 import { X } from "lucide-react";
 import { useAppStore } from "@/store/StoreProvider";
-import { ModalType } from "@/store/slices/modalSlice";
 
 const ModalManager: React.FC = () => {
-  const { isOpen, modalData, closeModal, setModalType } = useAppStore(
+  const { isOpen, modalData, closeModal } = useAppStore(
     (state) => state
   );
 
@@ -32,10 +31,17 @@ const ModalManager: React.FC = () => {
   // Don't render anything if modal is not open
   if (!isOpen || !modalData) return null;
 
-  const tabs: ModalType[] = ["overview", "configure", "logs", "metrics"];
+  // Capitalize first letter for display
+  const capitalizeFirstLetter = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
 
-  const handleTabClick = (tab: ModalType) => {
-    setModalType(tab);
+  // Get the header title with data source name and current tab
+  const getHeaderTitle = () => {
+    const dataSourceName =
+      modalData.dataSourceName || modalData.title || "Data Source";
+    const currentTab = capitalizeFirstLetter(modalData.type || "overview");
+    return `${dataSourceName} - ${currentTab}`;
   };
 
   return (
@@ -55,7 +61,7 @@ const ModalManager: React.FC = () => {
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-800">
-            {modalData.dataSourceName || modalData.title}
+            {getHeaderTitle()}
           </h2>
           <button
             onClick={closeModal}
@@ -63,23 +69,6 @@ const ModalManager: React.FC = () => {
           >
             <X size={20} className="text-gray-500" />
           </button>
-        </div>
-
-        {/* Navigation tabs */}
-        <div className="flex border-b border-gray-200">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => handleTabClick(tab)}
-              className={`flex-1 px-4 py-3 text-sm font-medium transition-colors capitalize ${
-                modalData.type === tab
-                  ? "bg-blue-500 text-white"
-                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
         </div>
 
         {/* Content - Empty for now */}
