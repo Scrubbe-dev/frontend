@@ -55,7 +55,7 @@ const SideBar = () => {
   }));
 
   return (
-    <div className="w-72 max-w-[288px] h-screen border-r border-gray-200 flex flex-col text-base">
+    <div className="w-72 max-w-[288px] border-r border-gray-200 flex flex-col text-base">
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto">
         {/* Menu Section */}

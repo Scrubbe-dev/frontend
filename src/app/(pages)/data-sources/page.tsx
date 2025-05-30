@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const DataSourcesPage = () => {
   return (
     <div className="w-full h-auto">
-      <section className="w-screen max-w-[1440px] mx-auto h-full grid grid-cols-[1fr_4fr] grid-rows-[1fr] bg-white">
+      <section className="w-full max-w-[1440px] mx-auto h-full grid grid-cols-[1fr_4fr] grid-rows-[1fr] bg-white overflow-hidden">
         <article className="col-start-1 col-end-2 row-start-1 row-end-2">
           <SideBar />
         </article>

@@ -66,7 +66,7 @@ const Card: React.FC<CardProps> = ({
   };
 
   return (
-    <div className="w-[345px] h-[312px] bg-white rounded-lg shadow-lg border border-gray-200 flex flex-col">
+    <div className="w-[345px] h-[312px] bg-white rounded-lg shadow-lg border border-gray-200 flex flex-col justify-self-center">
       {/* Header with logo and title */}
       <div className="flex items-center gap-3 p-4 border-b border-gray-100">
         {/* Only show logo if it exists */}

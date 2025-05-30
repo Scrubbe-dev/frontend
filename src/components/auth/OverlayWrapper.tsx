@@ -23,7 +23,7 @@ export default function OverlayWrapper({
   const shouldShowOverlay = overlayRoutes.includes(pathname);
 
   return (
-    <section className="flex flex-col-reverse lg:grid lg:[grid-template-columns:71fr_73fr] h-full max-w-[1440px] w-screen mx-auto overflow-hidden">
+    <section className="flex flex-col-reverse lg:grid lg:[grid-template-columns:71fr_73fr] h-full max-w-[1440px] w-full mx-auto overflow-hidden">
       {/* Sidebar - first column in grid (71fr) */}
       <article
         className={`w-full transition-all duration-300 ${

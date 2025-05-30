@@ -8,7 +8,7 @@ const NavbarDataS = () => {
     <>
       {/* Navbar Container */}
       <section className="w-full h-auto bg-white sticky top-0 z-50">
-        <nav className="grid grid-cols-[1fr_4fr] grid-rows-[1fr] text-gray-800 h-16 w-screen max-w-[1440px] mx-auto sticky top-0 z-50 bg-white shadow-sm">
+        <nav className="grid grid-cols-[1fr_4fr] grid-rows-[1fr] text-gray-800 h-16 w-full max-w-[1440px] mx-auto sticky top-0 z-50 bg-white shadow-sm">
           {/* Logo - 20% width (1 column) */}
           <div className="col-start-1 col-end-2 row-start-1 row-end-2 flex items-center justify-start w-full h-full pl-4">
             <Link

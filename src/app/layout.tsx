@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   description:
     "Scrubbe's AI-driven platform combines SIEM and SOAR for automated threat detection, response, and unified security analytics.",
 };
-
+//overflow-hidden
 export default function RootLayout({
   children,
 }: Readonly<{
