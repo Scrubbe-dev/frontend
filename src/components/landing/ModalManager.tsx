@@ -1,14 +1,18 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { X } from "lucide-react";
 import { useAppStore } from "@/store/StoreProvider";
+import { getModalContent } from "@/lib/modal/modalContentMapper";
+
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center p-8">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+  </div>
+);
 
 const ModalManager: React.FC = () => {
-  const { isOpen, modalData, closeModal } = useAppStore(
-    (state) => state
-  );
+  const { isOpen, modalData, closeModal } = useAppStore((state) => state);
 
-  // Handle escape key to close modal
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -18,7 +22,6 @@ const ModalManager: React.FC = () => {
 
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
-      // Prevent body scrolling when modal is open
       document.body.style.overflow = "hidden";
     }
 
@@ -28,15 +31,12 @@ const ModalManager: React.FC = () => {
     };
   }, [isOpen, closeModal]);
 
-  // Don't render anything if modal is not open
   if (!isOpen || !modalData) return null;
 
-  // Capitalize first letter for display
   const capitalizeFirstLetter = (str: string) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
-  // Get the header title with data source name and current tab
   const getHeaderTitle = () => {
     const dataSourceName =
       modalData.dataSourceName || modalData.title || "Data Source";
@@ -44,36 +44,54 @@ const ModalManager: React.FC = () => {
     return `${dataSourceName} - ${currentTab}`;
   };
 
+  // Get the appropriate content component
+  const ContentComponent =
+    modalData.dataSourceId && modalData.type
+      ? getModalContent(modalData.dataSourceId, modalData.type)
+      : null;
+
   return (
     <>
-      {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
         onClick={closeModal}
       />
 
-      {/* Modal */}
       <div
         className={`fixed top-0 right-0 h-full w-[600px] bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-800">
-            {getHeaderTitle()}
-          </h2>
-          <button
-            onClick={closeModal}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <X size={20} className="text-gray-500" />
-          </button>
-        </div>
+        <div className="flex flex-col h-full">
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-200 shrink-0">
+            <h2 className="text-xl font-semibold text-gray-800">
+              {getHeaderTitle()}
+            </h2>
+            <button
+              onClick={closeModal}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <X size={20} className="text-gray-500" />
+            </button>
+          </div>
 
-        {/* Content - Empty for now */}
-        <div className="flex-1 overflow-y-auto">
-          {/* Content will be added here */}
+          {/* Scrollable Content Area */}
+          <div className="flex-1 overflow-y-auto">
+            <Suspense fallback={<LoadingSpinner />}>
+              {ContentComponent ? (
+                <ContentComponent />
+              ) : (
+                <div className="p-8 text-center text-gray-500">
+                  <p className="text-lg font-medium">Content not available</p>
+                  <p className="text-sm mt-2">
+                    No content found for {modalData.dataSourceName} -{" "}
+                    {modalData.type}
+                  </p>
+                </div>
+              )}
+            </Suspense>
+          </div>
         </div>
       </div>
     </>

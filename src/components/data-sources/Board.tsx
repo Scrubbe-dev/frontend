@@ -37,6 +37,7 @@ const Board: React.FC = () => {
             buttonText={card.buttonText}
             timestamp={card.timestamp}
             processedData={card.processedData}
+            dataSourceId={card.id}
             onTabClick={handleTabClick}
             onButtonClick={handleButtonClick}
           />

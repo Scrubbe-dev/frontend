@@ -48,7 +48,7 @@ const Card: React.FC<CardProps> = ({
       openModal({
         type: modalType,
         title: tab,
-        dataSourceId,
+        dataSourceId: dataSourceId,
         dataSourceName: title,
       });
     }
