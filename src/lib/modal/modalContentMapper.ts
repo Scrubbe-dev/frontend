@@ -34,21 +34,25 @@ const contentMap: ContentMap = {
     logs: lazy(() => import("@/components/data-sources/postgres/Logs")),
     metrics: lazy(() => import("@/components/data-sources/postgres/Metrics")),
   },
-  /* api: {
-    configure: lazy(
-      () => import("@/components/data-sources/api/Configuration")
-    ),
+  api: {
+    configure: lazy(() => import("@/components/data-sources/api/Configure")),
     logs: lazy(() => import("@/components/data-sources/api/Logs")),
     metrics: lazy(() => import("@/components/data-sources/api/Metrics")),
-  }, */
+  },
+  "add-new": {
+    configure: lazy(
+      () => import("@/components/data-sources/add-new/Configure")
+    ),
+    /*     logs: lazy(() => import("@/components/data-sources/add-new/Logs")), */
+  },
 };
 
 export const getModalContent = (
   dataSourceId: DataSourceId,
   modalType: ModalType
 ): React.LazyExoticComponent<React.ComponentType> | null => {
-  // Handle special cases
-  if (dataSourceId === "dashboard" || dataSourceId === "add-new") {
+  // Handle special cases - only dashboard returns null now
+  if (dataSourceId === "dashboard") {
     return null;
   }
 
