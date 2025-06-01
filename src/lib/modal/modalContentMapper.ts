@@ -15,16 +15,14 @@ const contentMap: ContentMap = {
   aws: {
     configure: lazy(() => import("@/components/data-sources/aws/Configure")),
     logs: lazy(() => import("@/components/data-sources/aws/Logs")),
-     metrics: lazy(() => import("@/components/data-sources/aws/Metrics")),
+    metrics: lazy(() => import("@/components/data-sources/aws/Metrics")),
   },
-  /* azure: {
-    configure: lazy(
-      () => import("@/components/data-sources/azure/Configuration")
-    ),
-    logs: lazy(() => import("@/components/data-sources/azure/Logs")),
-    metrics: lazy(() => import("@/components/data-sources/azure/Metrics")),
+  azure: {
+    configure: lazy(() => import("@/components/data-sources/azure/Configure")),
+    /*  logs: lazy(() => import("@/components/data-sources/azure/Logs")),
+    metrics: lazy(() => import("@/components/data-sources/azure/Metrics")), */
   },
-  gcp: {
+  /* gcp: {
     configure: lazy(
       () => import("@/components/data-sources/gcp/Configuration")
     ),
