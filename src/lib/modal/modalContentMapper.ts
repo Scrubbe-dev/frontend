@@ -15,8 +15,7 @@ const contentMap: ContentMap = {
   aws: {
     configure: lazy(() => import("@/components/data-sources/aws/Configure")),
     logs: lazy(() => import("@/components/data-sources/aws/Logs")),
-    /* metrics: lazy(() => import("@/components/data-sources/aws/Metrics")),
-    overview: lazy(() => import("@/components/data-sources/aws/Overview")), */
+     metrics: lazy(() => import("@/components/data-sources/aws/Metrics")),
   },
   /* azure: {
     configure: lazy(
@@ -24,7 +23,6 @@ const contentMap: ContentMap = {
     ),
     logs: lazy(() => import("@/components/data-sources/azure/Logs")),
     metrics: lazy(() => import("@/components/data-sources/azure/Metrics")),
-    overview: lazy(() => import("@/components/data-sources/azure/Overview")),
   },
   gcp: {
     configure: lazy(
@@ -32,7 +30,6 @@ const contentMap: ContentMap = {
     ),
     logs: lazy(() => import("@/components/data-sources/gcp/Logs")),
     metrics: lazy(() => import("@/components/data-sources/gcp/Metrics")),
-    overview: lazy(() => import("@/components/data-sources/gcp/Overview")),
   },
   postgres: {
     configure: lazy(
@@ -40,7 +37,6 @@ const contentMap: ContentMap = {
     ),
     logs: lazy(() => import("@/components/data-sources/postgres/Logs")),
     metrics: lazy(() => import("@/components/data-sources/postgres/Metrics")),
-    overview: lazy(() => import("@/components/data-sources/postgres/Overview")),
   },
   api: {
     configure: lazy(
@@ -48,7 +44,6 @@ const contentMap: ContentMap = {
     ),
     logs: lazy(() => import("@/components/data-sources/api/Logs")),
     metrics: lazy(() => import("@/components/data-sources/api/Metrics")),
-    overview: lazy(() => import("@/components/data-sources/api/Overview")),
   }, */
 };
 
