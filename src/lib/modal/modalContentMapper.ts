@@ -24,17 +24,17 @@ const contentMap: ContentMap = {
   },
   gcp: {
     configure: lazy(() => import("@/components/data-sources/gcp/Configure")),
-    /*  logs: lazy(() => import("@/components/data-sources/gcp/Logs")),
-    metrics: lazy(() => import("@/components/data-sources/gcp/Metrics")), */
+    logs: lazy(() => import("@/components/data-sources/gcp/Logs")),
+    metrics: lazy(() => import("@/components/data-sources/gcp/Metrics")),
   },
-  /* postgres: {
+  postgres: {
     configure: lazy(
-      () => import("@/components/data-sources/postgres/Configuration")
+      () => import("@/components/data-sources/postgres/Configure")
     ),
     logs: lazy(() => import("@/components/data-sources/postgres/Logs")),
     metrics: lazy(() => import("@/components/data-sources/postgres/Metrics")),
   },
-  api: {
+  /* api: {
     configure: lazy(
       () => import("@/components/data-sources/api/Configuration")
     ),
