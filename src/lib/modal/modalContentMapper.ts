@@ -13,11 +13,9 @@ type ContentMap = {
 // Lazy load all possible components
 const contentMap: ContentMap = {
   aws: {
-    configure: lazy(
-      () => import("@/components/data-sources/aws/Configure")
-    ),
-  /*   logs: lazy(() => import("@/components/data-sources/aws/Logs")),
-    metrics: lazy(() => import("@/components/data-sources/aws/Metrics")),
+    configure: lazy(() => import("@/components/data-sources/aws/Configure")),
+    logs: lazy(() => import("@/components/data-sources/aws/Logs")),
+    /* metrics: lazy(() => import("@/components/data-sources/aws/Metrics")),
     overview: lazy(() => import("@/components/data-sources/aws/Overview")), */
   },
   /* azure: {
