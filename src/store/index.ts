@@ -1,23 +1,37 @@
 import { createStore } from "zustand/vanilla";
 import { devtools, persist } from "zustand/middleware";
-import { createCookiesSlice, SliceCookiesType } from "./slices/sliceCookies";
+import { createCookiesSlice, cookiesSliceType } from "./slices/cookiesSlice";
+import {
+  createEnterpriseSetupSlice,
+  enterpriseSetupSliceType,
+} from "./slices/enterpriseSetupSlice";
+import {
+  createDataSourcesSlice,
+  dataSourcesSliceType,
+} from "./slices/dataSourcesSlice";
+import { createModalSlice, ModalSliceType } from "./slices/modalSlice";
 
-export type BoundStoreType = SliceCookiesType;
+export type BoundStoreType = cookiesSliceType &
+  enterpriseSetupSliceType &
+  dataSourcesSliceType &
+  ModalSliceType;
 
 export const createBoundStore = () => {
   const store = createStore<BoundStoreType>()(
     persist(
       devtools((set, get, store) => ({
         ...createCookiesSlice(set, get, store),
+        ...createEnterpriseSetupSlice(set, get, store),
+        ...createDataSourcesSlice(set, get, store),
+        ...createModalSlice(set, get, store),
       })),
       {
         name: "bound-store", // Key in localStorage
         partialize: (state) => ({
-          // Only persist these fields
-          // Add cookie preferences to persisted state
+          // Only persist cookie preferences
           cookieConsent: state.cookieConsent,
           cookiePreferences: state.cookiePreferences,
-          // Add other persistent state properties here
+          // Enterprise setup will not be persisted - goes directly to backend API
         }),
       }
     )

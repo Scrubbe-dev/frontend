@@ -336,7 +336,7 @@ export default function SignInForm() {
 
         <div className="mt-6 text-center">
           <Link
-            href="#"
+            href="/auth/demo-page"
             className="text-blue-600 hover:underline inline-flex items-center"
           >
             Looking for our demo page?

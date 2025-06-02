@@ -7,7 +7,7 @@ export interface CookiePreferences {
   marketing: boolean;
 }
 
-export type SliceCookiesType = {
+export type cookiesSliceType = {
   cookieConsent: boolean;
   cookiePreferences: CookiePreferences;
   showCookieModal: boolean;
@@ -23,7 +23,7 @@ export type SliceCookiesType = {
   ) => void;
 };
 
-export const createCookiesSlice: StateCreator<SliceCookiesType> = (set) => ({
+export const createCookiesSlice: StateCreator<cookiesSliceType> = (set) => ({
   cookieConsent: false,
   cookiePreferences: {
     essential: true, // Always required

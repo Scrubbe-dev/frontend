@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { HeroProvider } from "@/provider/hero-provider";
 import { StoreProvider } from "@/store/StoreProvider";
 import CookieConsentModal from "@/components/landing/CookieConsentModal";
 import CookieToggleButton from "@/components/landing/CookieToggleButton";
-import Navbar from "@/components/landing/Navbar";
+import NavbarWrapper from "@/components/landing/header/NavbarWrapper";
 import FooterWrapper from "@/components/landing/footer/FooterWrapper";
 import Chatbot from "@/components/landing/Chatbot";
 //import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
 import AuthProvider from "@/provider/AuthProvider";
+import ModalManager from "@/components/landing/ModalManager";
 
 const airbnbCereal = localFont({
   src: [
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   description:
     "Scrubbe's AI-driven platform combines SIEM and SOAR for automated threat detection, response, and unified security analytics.",
 };
-
+//overflow-hidden
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -63,20 +63,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${airbnbCereal.variable}`}>
-      <body className="antialiased min-h-screen w-full flex flex-col justify-center items-center bg-[#1F2B71] font-airbnb">
+      <body className="antialiased min-h-screen w-full flex flex-col bg-[#1F2B71] font-airbnb">
         <AuthProvider>
           <NextJsTopLoader />
           <StoreProvider>
-            {/*  <AnnouncementBar /> */}{" "}
-            {/* disabled for now till official launch */}
-            <HeroProvider>
-              <Navbar />
-              <main className="flex-grow h-full w-full">{children}</main>
-              <FooterWrapper />
-              <CookieConsentModal />
-              <CookieToggleButton />
-              <Chatbot />
-            </HeroProvider>
+            {/*  <AnnouncementBar /> disabled for now till official launch */}
+            <NavbarWrapper />
+            <main className="flex-grow h-full w-full">{children}</main>
+            <FooterWrapper />
+            <CookieConsentModal />
+            <CookieToggleButton />
+            <Chatbot />
+            <ModalManager />
           </StoreProvider>
           <Toaster position="top-center" />
         </AuthProvider>

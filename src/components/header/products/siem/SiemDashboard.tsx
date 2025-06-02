@@ -8,7 +8,7 @@ const SiemDashboard = () => {
   return (
     <>
       <div className="w-full h-auto bg-white">
-        <section className="h-full w-screen max-w-[1440px] mx-auto flex flex-col justify-center items-center">
+        <section className="h-full w-full max-w-[1440px] mx-auto flex flex-col justify-center items-center">
           <SiemAdvanced />
           <SiemComprehensive />
           <SiemPlatform />

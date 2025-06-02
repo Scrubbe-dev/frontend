@@ -32,7 +32,7 @@ const SupportedBy = () => {
   return (
     <div className="w-full">
       {/* Blue gradient background section */}
-      <section className="w-full max-w-[1440px]">
+      <section className="w-full max-w-[1440px] mx-auto">
         <article className="w-full bg-gradient-to-r from-[#1F2B71] to-[#3B52D7] py-6 md:py-12 lg:py-16">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold text-white text-center">
