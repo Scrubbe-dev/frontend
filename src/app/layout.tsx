@@ -13,6 +13,23 @@ import NextJsTopLoader from "@/lib/NextJsTopLoader";
 import AuthProvider from "@/provider/AuthProvider";
 import ModalManager from "@/components/landing/ModalManager";
 
+const bersley = localFont({
+  src: [
+    {
+      path: "./fonts/bersley/Besley-Bold.ttf",
+      weight: "800",
+      style: "normal",
+    },
+    {
+      path: "./fonts/bersley/Besley-ExtraBold.ttf",
+      weight: "900",
+      style: "normal",
+    },
+  ],
+  variable: "--font-bersley",
+  display: "swap",
+});
+
 const airbnbCereal = localFont({
   src: [
     {
@@ -62,7 +79,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${airbnbCereal.variable}`}>
+    <html lang="en" className={`${airbnbCereal.variable} ${bersley.variable}`}>
       <body className="antialiased min-h-screen w-full flex flex-col bg-[#1F2B71] font-airbnb">
         <AuthProvider>
           <NextJsTopLoader />
