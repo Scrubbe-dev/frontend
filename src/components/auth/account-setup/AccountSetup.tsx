@@ -8,7 +8,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState, useRef } from "react";
 import Image from "next/image";
-import { FiUpload, FiChevronDown } from "react-icons/fi";
+import { FiUpload } from "react-icons/fi";
+
+import { Controller } from "react-hook-form";
+import Select from "@/components/ui/select";
+import Input from "@/components/ui/input";
+import CButton from "@/components/ui/Cbutton";
+import { PenLine } from "lucide-react";
 
 // Zod schema for form validation
 const companyInfoSchema = z.object({
@@ -48,10 +54,9 @@ const AccountSetup = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
-    register,
     handleSubmit,
     formState: { errors: formErrors },
-    setValue,
+    control,
   } = useForm<CompanyInfoFormData>({
     resolver: zodResolver(companyInfoSchema),
     defaultValues: {
@@ -128,15 +133,6 @@ const AccountSetup = () => {
 
     // Call the submitEnterpriseSetup function
     await submitEnterpriseSetup();
-  };
-
-  const handleInputChange = (
-    field: keyof CompanyInfoFormData,
-    value: string
-  ) => {
-    setValue(field, value);
-    setCompanyInfo({ [field]: value });
-    clearError(field);
   };
 
   // Helper function to get image source for preview
@@ -222,7 +218,7 @@ const AccountSetup = () => {
   return (
     <section className="w-full h-auto bg-[#F9FAFB]">
       {/* Skip Button */}
-      <div className="flex justify-end max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <div className="flex justify-end  w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <Link href="/data-sources">
           <button
             type="button"
@@ -254,7 +250,7 @@ const AccountSetup = () => {
           dashboard.
         </h1>
 
-        <article className="w-full max-w-4xl mx-auto">
+        <article className="w-full mx-auto">
           <div className="bg-white p-6">
             <h2 className="text-[24px] font-semibold text-gray-900 mb-8">
               Enterprise Setup
@@ -264,116 +260,92 @@ const AccountSetup = () => {
               {/* Company Name and Industry Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Company Name */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Company Name<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    {...register("companyName")}
-                    type="text"
-                    placeholder="Flutterwave"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    onChange={(e) =>
-                      handleInputChange("companyName", e.target.value)
-                    }
-                  />
-                  {(formErrors.companyName || errors.companyName) && (
-                    <p className="text-sm text-red-600">
-                      {formErrors.companyName?.message || errors.companyName}
-                    </p>
+                <Controller
+                  name="companyName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      label="Company Name"
+                      placeholder="Flutterwave"
+                      error={
+                        formErrors.companyName?.message || errors.companyName
+                      }
+                      isLoading={isSubmitting}
+                      {...field}
+                    />
                   )}
-                </div>
+                />
 
                 {/* Industry */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Industry
-                  </label>
-                  <div className="relative">
-                    <select
-                      {...register("industry")}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white pr-10 transition-colors"
-                      onChange={(e) =>
-                        handleInputChange("industry", e.target.value)
-                      }
-                    >
-                      <option value="">Finance</option>
-                      {industryOptions.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                    <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-                  </div>
-                  {(formErrors.industry || errors.industry) && (
-                    <p className="text-sm text-red-600">
-                      {formErrors.industry?.message || errors.industry}
-                    </p>
+                <Controller
+                  name="industry"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      label="Industry"
+                      options={[
+                        { value: "", label: "Select Industry" },
+                        ...industryOptions.map((option) => ({
+                          value: option,
+                          label: option,
+                        })),
+                      ]}
+                      error={formErrors.industry?.message || errors.industry}
+                      isLoading={isSubmitting}
+                      {...field}
+                    />
                   )}
-                </div>
+                />
               </div>
 
               {/* Company Size and Primary Region Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Company Size */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Company size
-                  </label>
-                  <div className="relative">
-                    <select
-                      {...register("companySize")}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white pr-10 transition-colors"
-                      onChange={(e) =>
-                        handleInputChange("companySize", e.target.value)
+                <Controller
+                  name="companySize"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      label="Company Size"
+                      options={[
+                        { value: "", label: "Select Company Size" },
+                        ...companySizeOptions.map((option) => ({
+                          value: option,
+                          label: option,
+                        })),
+                      ]}
+                      error={
+                        formErrors.companySize?.message || errors.companySize
                       }
-                    >
-                      <option value="">1-50 employees</option>
-                      {companySizeOptions.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                    <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-                  </div>
-                  {(formErrors.companySize || errors.companySize) && (
-                    <p className="text-sm text-red-600">
-                      {formErrors.companySize?.message || errors.companySize}
-                    </p>
+                      isLoading={isSubmitting}
+                      {...field}
+                    />
                   )}
-                </div>
+                />
 
                 {/* Primary Region */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Primary Region
-                  </label>
-                  <div className="relative">
-                    <select
-                      {...register("primaryRegion")}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white pr-10 transition-colors"
-                      onChange={(e) =>
-                        handleInputChange("primaryRegion", e.target.value)
+                <Controller
+                  name="primaryRegion"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      label="Primary Region"
+                      options={[
+                        { value: "", label: "Select Region" },
+                        ...regionOptions.map((option) => ({
+                          value: option,
+                          label: option,
+                        })),
+                      ]}
+                      error={
+                        formErrors.primaryRegion?.message ||
+                        errors.primaryRegion
                       }
-                    >
-                      <option value="">London</option>
-                      {regionOptions.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                    <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-                  </div>
-                  {(formErrors.primaryRegion || errors.primaryRegion) && (
-                    <p className="text-sm text-red-600">
-                      {formErrors.primaryRegion?.message ||
-                        errors.primaryRegion}
-                    </p>
+                      isLoading={isSubmitting}
+                      {...field}
+                    />
                   )}
-                </div>
+                />
               </div>
 
               {/* Company Logo Upload */}
@@ -499,7 +471,7 @@ const AccountSetup = () => {
           </div>
         </article>
         {/* Admin Contact Section */}
-        <article className="w-full max-w-4xl mx-auto mt-12">
+        <article className="w-full  mx-auto mt-12">
           <div className="bg-white p-6">
             <h2 className="text-[24px] font-semibold text-gray-900 mb-8">
               Admin Contact
@@ -509,96 +481,66 @@ const AccountSetup = () => {
               {/* Admin Name and Email Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Admin Name */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Admin Name<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter Name"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    value={enterpriseSetup.adminName}
-                    onChange={(e) => {
-                      setAdminContact({ adminName: e.target.value });
-                      clearError("adminName");
-                    }}
-                  />
-                  {errors.adminName && (
-                    <p className="text-sm text-red-600">{errors.adminName}</p>
-                  )}
-                </div>
-
+                <Input
+                  label="Admin Name"
+                  placeholder="Enter Name"
+                  value={enterpriseSetup.adminName}
+                  onChange={(e) => {
+                    setAdminContact({ adminName: e.target.value });
+                    clearError("adminName");
+                  }}
+                  error={errors.adminName}
+                  isLoading={isSubmitting}
+                />
                 {/* Admin Email */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Admin Email<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="Enter Email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    value={enterpriseSetup.adminEmail}
-                    onChange={(e) => {
-                      setAdminContact({ adminEmail: e.target.value });
-                      clearError("adminEmail");
-                    }}
-                  />
-                  {errors.adminEmail && (
-                    <p className="text-sm text-red-600">{errors.adminEmail}</p>
-                  )}
-                </div>
+                <Input
+                  label="Admin Email"
+                  placeholder="Enter Email"
+                  type="email"
+                  value={enterpriseSetup.adminEmail}
+                  onChange={(e) => {
+                    setAdminContact({ adminEmail: e.target.value });
+                    clearError("adminEmail");
+                  }}
+                  error={errors.adminEmail}
+                  isLoading={isSubmitting}
+                />
               </div>
 
               {/* Admin Phone and Job Title Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Admin Phone */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Admin Phone number
-                  </label>
-                  <input
-                    type="tel"
-                    placeholder="Enter Phone number"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    value={enterpriseSetup.adminPhone}
-                    onChange={(e) => {
-                      setAdminContact({ adminPhone: e.target.value });
-                      clearError("adminPhone");
-                    }}
-                  />
-                  {errors.adminPhone && (
-                    <p className="text-sm text-red-600">{errors.adminPhone}</p>
-                  )}
-                </div>
-
+                <Input
+                  label="Admin Phone number"
+                  placeholder="Enter Phone number"
+                  type="tel"
+                  value={enterpriseSetup.adminPhone}
+                  onChange={(e) => {
+                    setAdminContact({ adminPhone: e.target.value });
+                    clearError("adminPhone");
+                  }}
+                  error={errors.adminPhone}
+                  isLoading={isSubmitting}
+                />
                 {/* Admin Job Title */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Admin Job title<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter job title"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    value={enterpriseSetup.adminJobTitle}
-                    onChange={(e) => {
-                      setAdminContact({ adminJobTitle: e.target.value });
-                      clearError("adminJobTitle");
-                    }}
-                  />
-                  {errors.adminJobTitle && (
-                    <p className="text-sm text-red-600">
-                      {errors.adminJobTitle}
-                    </p>
-                  )}
-                </div>
+                <Input
+                  label="Admin Job title"
+                  placeholder="Enter job title"
+                  value={enterpriseSetup.adminJobTitle}
+                  onChange={(e) => {
+                    setAdminContact({ adminJobTitle: e.target.value });
+                    clearError("adminJobTitle");
+                  }}
+                  error={errors.adminJobTitle}
+                  isLoading={isSubmitting}
+                />
               </div>
             </div>
           </div>
         </article>
 
         {/* Team Members Section */}
-        <article className="w-full max-w-4xl mx-auto mt-12">
+        <article className="w-full mx-auto mt-12">
           <div className="bg-white p-6">
             <h2 className="text-[24px] font-semibold text-gray-900 mb-8">
               Invite Team Members
@@ -614,13 +556,13 @@ const AccountSetup = () => {
                       className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border border-gray-200 rounded-lg gap-3"
                     >
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 truncate">
+                        <h3 className="font-semibold text-gray-900 truncate capitalize">
                           {member.name}
                         </h3>
                         <p className="text-gray-600 text-sm sm:text-base truncate">
                           {member.email}
                         </p>
-                        <span className="inline-block mt-1 sm:mt-2 px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-full border">
+                        <span className="inline-block mt-1 sm:mt-2 px-2 py-1 sm:px-3 sm:py-1 text-xs sm:text-sm border-darkEzra rounded-full border">
                           {member.role}
                         </span>
                       </div>
@@ -630,20 +572,11 @@ const AccountSetup = () => {
                           onClick={() => handleEditMember(member)}
                           className="px-2 py-1 sm:px-4 sm:py-2 text-blue-600 border border-blue-200 rounded-md hover:bg-blue-50 transition-colors text-xs sm:text-sm font-medium flex items-center space-x-1 sm:space-x-2"
                         >
-                          <svg
-                            className="w-3 h-3 sm:w-4 sm:h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                            />
-                          </svg>
-                          <span className="text-xs sm:text-sm">Edit</span>
+                          <PenLine size={17} />
+
+                          <span className="text-xs sm:text-sm">
+                            Edit details
+                          </span>
                         </button>
                         <button
                           type="button"
@@ -721,68 +654,49 @@ const AccountSetup = () => {
               <div className="space-y-6">
                 {/* Name and Email Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Name<span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter Name"
-                      value={memberForm.name}
-                      onChange={(e) =>
-                        setMemberForm((prev) => ({
-                          ...prev,
-                          name: e.target.value,
-                        }))
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Email<span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      placeholder="Enter Email"
-                      value={memberForm.email}
-                      onChange={(e) =>
-                        setMemberForm((prev) => ({
-                          ...prev,
-                          email: e.target.value,
-                        }))
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    />
-                  </div>
+                  <Input
+                    label="Name"
+                    placeholder="Enter Name"
+                    value={memberForm.name}
+                    onChange={(e) =>
+                      setMemberForm((prev) => ({
+                        ...prev,
+                        name: e.target.value,
+                      }))
+                    }
+                  />
+                  <Input
+                    label="Email"
+                    placeholder="Enter Email"
+                    type="email"
+                    value={memberForm.email}
+                    onChange={(e) =>
+                      setMemberForm((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
+                  />
                 </div>
 
                 {/* Role */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Role
-                  </label>
-                  <div className="relative">
-                    <select
-                      value={memberForm.role}
-                      onChange={(e) =>
-                        setMemberForm((prev) => ({
-                          ...prev,
-                          role: e.target.value,
-                        }))
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white pr-10 transition-colors"
-                    >
-                      <option value="">Select role</option>
-                      <option value="Admin">Admin</option>
-                      <option value="Manager">Manager</option>
-                      <option value="Analyst">Analyst</option>
-                      <option value="Viewer">Viewer</option>
-                    </select>
-                    <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-                  </div>
-                </div>
+                <Select
+                  label="Role"
+                  options={[
+                    { value: "", label: "Select role" },
+                    { value: "Admin", label: "Admin" },
+                    { value: "Manager", label: "Manager" },
+                    { value: "Analyst", label: "Analyst" },
+                    { value: "Viewer", label: "Viewer" },
+                  ]}
+                  value={memberForm.role}
+                  onChange={(e) =>
+                    setMemberForm((prev) => ({
+                      ...prev,
+                      role: (e.target as HTMLSelectElement).value,
+                    }))
+                  }
+                />
 
                 {/* Access Permissions */}
                 <div className="space-y-4">
@@ -914,7 +828,7 @@ const AccountSetup = () => {
           </div>
         )}
         {/* Dashboard Preferences Section */}
-        <article className="w-full max-w-4xl mx-auto mt-12 mb-8">
+        <article className="w-full mx-auto mt-12 mb-8">
           <div className="bg-white p-6">
             <h2 className="text-[24px] font-semibold text-gray-900 mb-2">
               Dashboard Preferences
@@ -929,7 +843,7 @@ const AccountSetup = () => {
                 <h3 className="text-lg font-medium text-gray-900">
                   Colour Scheme
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex gap-6">
                   {/* Primary Color */}
                   <div className="space-y-3">
                     <label className="block text-sm font-medium text-gray-700">
@@ -957,7 +871,7 @@ const AccountSetup = () => {
                             },
                           });
                         }}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        className=" px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                         placeholder="Red"
                       />
                     </div>
@@ -990,7 +904,7 @@ const AccountSetup = () => {
                             },
                           });
                         }}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        className=" px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                         placeholder="Green"
                       />
                     </div>
@@ -1194,16 +1108,17 @@ const AccountSetup = () => {
               </div>
 
               {/* Submit Button */}
-              <div className="flex justify-end pt-6">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-8 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? "Submitting..." : "Submit"}
-                </button>
-              </div>
             </div>
+          </div>
+          <div className="flex justify-end pt-6">
+            <CButton
+              type="submit"
+              disabled={isSubmitting}
+              isLoading={isSubmitting}
+              className=" w-fit px-10"
+            >
+              {isSubmitting ? "Submitting..." : "Submit"}
+            </CButton>
           </div>
         </article>
       </form>
