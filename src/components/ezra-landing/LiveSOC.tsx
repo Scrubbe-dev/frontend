@@ -58,9 +58,9 @@ const LiveSOC = () => {
           prioritizing alerts and recommending actions.
         </p>
         <div className="w-full overflow-x-auto mb-12">
-          <table className="min-w-full border-separate border-spacing-0 rounded-b-none rounded-xl overflow-hidden">
+          <table className="min-w-full border-separate border-spacing-0 rounded-b-none rounded-xl overflow-hidden dashboard-table bg-subDarkEzra">
             <thead>
-              <tr className="bg-blue-500 text-white">
+              <tr className="bg-blue-500 text-white ">
                 <th className="px-4 py-3 text-left font-semibold">Timestamp</th>
                 <th className="px-4 py-3 text-left font-semibold">Incident</th>
                 <th className="px-4 py-3 text-left font-semibold">Source</th>

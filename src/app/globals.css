@@ -539,3 +539,93 @@ While there's no universally fixed "acceptable" max height, sticking to 400–70
   animation: scrubbe-pulse-angled-2 3s infinite ease-in-out;
   animation-delay: 1.5s;
 }
+
+.log-entry {
+  animation: slideUp 10s linear infinite;
+}
+
+.summary-entry:nth-child(1) {
+  animation: slideUpSummary 12s linear infinite;
+}
+
+.summary-entry:nth-child(2) {
+  animation: slideUpSummary 12s linear infinite 2s;
+}
+
+.summary-entry:nth-child(3) {
+  animation: slideUpSummary 12s linear infinite 4s;
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  20% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideUpSummary {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  20% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.dashboard-table tr {
+  animation: slideUpDashboard 12s linear infinite;
+}
+
+.dashboard-table tr:nth-child(2) {
+  animation-delay: 2.4s;
+}
+.dashboard-table tr:nth-child(3) {
+  animation-delay: 4.8s;
+}
+.dashboard-table tr:nth-child(4) {
+  animation-delay: 7.2s;
+}
+.dashboard-table tr:nth-child(5) {
+  animation-delay: 9.6s;
+}
+
+@keyframes slideUpDashboard {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  20% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}

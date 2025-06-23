@@ -33,7 +33,7 @@ const RealTimeLogs = () => {
               {rawLogs.map((log, idx) => (
                 <div
                   key={idx}
-                  className="bg-subDarkEzra text-zinc-200 rounded-sm px-4 py-3 text-sm sm:text-base"
+                  className="bg-subDarkEzra text-zinc-200 rounded-sm px-4 py-3 text-sm sm:text-base log-entry"
                 >
                   {log}
                 </div>
@@ -49,7 +49,7 @@ const RealTimeLogs = () => {
               {incidentSummaries.map((incident, idx) => (
                 <div
                   key={idx}
-                  className="bg-subDarkEzra text-zinc-200 rounded-md px-4 py-3 text-sm sm:text-base"
+                  className="bg-subDarkEzra text-zinc-200 rounded-md px-4 py-3 text-sm sm:text-base summary-entry"
                 >
                   {incident}
                 </div>
