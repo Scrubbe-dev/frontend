@@ -850,16 +850,33 @@ const AccountSetup = () => {
                       Primary Colour
                     </label>
                     <div className="flex items-center space-x-3">
-                      <div
-                        className="w-16 h-10 rounded border border-gray-300 flex items-center justify-center text-xs text-gray-500"
-                        style={{
-                          backgroundColor:
-                            enterpriseSetup.colorScheme.primaryColor ||
-                            "#F73737",
-                        }}
-                      >
-                        {!enterpriseSetup.colorScheme.primaryColor && "Red"}
-                      </div>
+                      <label htmlFor={`primary`} className="">
+                        <div
+                          className="w-16 h-10 rounded border border-gray-300 flex items-center justify-center text-xs text-gray-500"
+                          style={{
+                            backgroundColor:
+                              enterpriseSetup.colorScheme.primaryColor ||
+                              "#F73737",
+                          }}
+                        >
+                          <input
+                            type="color"
+                            id={`primary`}
+                            name="colorPicker"
+                            className="invisible w-full h-full"
+                            value={enterpriseSetup.colorScheme.primaryColor}
+                            onChange={(e) => {
+                              setDashboardPreferences({
+                                colorScheme: {
+                                  ...enterpriseSetup.colorScheme,
+                                  primaryColor: e.target.value,
+                                },
+                              });
+                            }}
+                          />
+                          {!enterpriseSetup.colorScheme.primaryColor && "Red"}
+                        </div>
+                      </label>
                       <input
                         type="text"
                         value={enterpriseSetup.colorScheme.primaryColor}
@@ -883,16 +900,32 @@ const AccountSetup = () => {
                       Secondary Colour
                     </label>
                     <div className="flex items-center space-x-3">
-                      <div
-                        className="w-16 h-10 rounded border border-gray-300 flex items-center justify-center text-xs text-gray-500"
-                        style={{
-                          backgroundColor:
-                            enterpriseSetup.colorScheme.secondaryColor ||
-                            "#1F9237",
-                        }}
-                      >
-                        {!enterpriseSetup.colorScheme.secondaryColor && "Green"}
-                      </div>
+                      <label htmlFor={`secondary`} className="">
+                        <div
+                          className="w-16 h-10 rounded border border-gray-300 flex items-center justify-center text-xs text-gray-500"
+                          style={{
+                            backgroundColor:
+                              enterpriseSetup.colorScheme.secondaryColor ||
+                              "#1F9237",
+                          }}
+                        >
+                          <input
+                            type="color"
+                            id={`secondary`}
+                            name="colorPicker"
+                            className="invisible w-full h-full"
+                            value={enterpriseSetup.colorScheme.secondaryColor}
+                            onChange={(e) => {
+                              setDashboardPreferences({
+                                colorScheme: {
+                                  ...enterpriseSetup.colorScheme,
+                                  secondaryColor: e.target.value,
+                                },
+                              });
+                            }}
+                          />
+                        </div>
+                      </label>
                       <input
                         type="text"
                         value={enterpriseSetup.colorScheme.secondaryColor}

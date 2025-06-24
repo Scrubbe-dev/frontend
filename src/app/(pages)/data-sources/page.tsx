@@ -10,12 +10,12 @@ export const metadata: Metadata = {
 
 const DataSourcesPage = () => {
   return (
-    <div className="w-full h-auto bg-white">
-      <section className="w-full max-w-[1440px] mx-auto h-full grid grid-cols-[1fr_4fr] grid-rows-[1fr] bg-white overflow-hidden">
-        <article className="col-start-1 col-end-2 row-start-1 row-end-2">
+    <div className="w-full h-[calc(100vh-63px)] bg-white">
+      <section className="w-full  mx-auto h-full flex flex-row bg-white overflow-hidden">
+        <article className="">
           <SideBar />
         </article>
-        <article className="col-start-2 col-end-3 row-start-1 row-end-2 bg-red-100">
+        <article className=" border w-full">
           <Board />
         </article>
       </section>
