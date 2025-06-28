@@ -5,7 +5,7 @@ import OverlayWrapper from "@/components/auth/OverlayWrapper"; // Adjust path as
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="w-full h-auto bg-white relative">
+    <div className="w-full h-auto relative ">
       <OverlayWrapper sidebarContent={<AnalyticsSidebar />}>
         <AuthTabs />
         {children}

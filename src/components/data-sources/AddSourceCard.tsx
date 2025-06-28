@@ -49,22 +49,22 @@ const AddSourceCard: React.FC<AddSourceCardProps> = ({
   };
 
   return (
-    <section className="w-[345px] h-[312px] bg-white rounded-lg shadow-lg border border-gray-200 flex flex-col justify-self-center">
+    <section className="w-[345px] min-h-[312px] bg-white rounded-lg flex flex-col justify-self-center">
       {/* Header with title only */}
       <div className="flex items-center gap-3 p-4 border-b border-gray-100">
-        <span className="text-gray-700 font-medium text-sm">{title}</span>
+        <span className="text-gray-700 font-semibold text-sm">{title}</span>
       </div>
 
       {/* Navigation tabs (no Metrics tab) */}
-      <div className="flex border-b border-gray-100">
+      <div className="flex p-4 gap-3 flex-wrap">
         {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => handleTabClick(tab)}
-            className={`flex-1 px-3 py-2 text-sm font-medium transition-colors ${
+            className={` px-3 py-2 text-sm font-medium transition-colors rounded-md w-fit ${
               activeTab === tab
                 ? "bg-blue-500 text-white"
-                : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                : "text-gray-600 hover:text-gray-800 hover:bg-gray-50 bg-blue-50"
             }`}
           >
             {tab}
@@ -95,7 +95,7 @@ const AddSourceCard: React.FC<AddSourceCardProps> = ({
         </div>
 
         {/* Get started button */}
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-3">
           <button
             onClick={handleGetStartedClick}
             className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-500 rounded hover:bg-blue-50 transition-colors"

@@ -162,7 +162,7 @@ export default function AnalyticsSidebar() {
   }, []);
 
   return (
-    <section className="w-full min-w-[320px] max-w-[710px] mx-auto bg-gradient-to-b from-[#1F40AE] to-[#0D1A48] p-4 md:p-8">
+    <section className="w-full mx-auto bg-gradient-to-b from-[#1F40AE] to-[#0D1A48] p-4 md:p-8">
       {/* Title Section */}
       <div className="text-center mb-6">
         <h1 className="text-[20px] sm:text-[28px] lg:text-[36px] font-bold text-white uppercase tracking-wide">
@@ -173,14 +173,14 @@ export default function AnalyticsSidebar() {
       {/* Charts Column Layout */}
       <div className="flex flex-col gap-4 items-center">
         {/* User Signup Activity Card */}
-        <div className="bg-white rounded-lg shadow p-4 w-full max-w-[510px] aspect-[510/486]">
+        <div className="bg-white rounded-lg shadow p-4 w-full max-w-[510px]">
           <h2 className="text-gray-800 text-base font-medium mb-4">
             User Sign up Activity
           </h2>
           <div className="h-[400px] relative">
             <canvas ref={signupChartRef}></canvas>
           </div>
-          <div className="flex gap-4 mt-3 justify-center">
+          <div className="flex gap-4 mt-3 ">
             <div className="flex items-center text-sm">
               <div className="w-3 h-3 rounded-full bg-blue-900 mr-2"></div>
               <span>Business</span>
@@ -193,7 +193,7 @@ export default function AnalyticsSidebar() {
         </div>
 
         {/* Authentication Methods Card */}
-        <div className="bg-white rounded-lg shadow p-4 w-full max-w-[510px] aspect-[510/486]">
+        <div className="bg-white rounded-lg shadow p-4 w-full max-w-[510px] ">
           <h2 className="text-gray-800 text-base font-medium mb-4">
             Authentication Methods
           </h2>

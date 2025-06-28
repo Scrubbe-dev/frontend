@@ -3,7 +3,14 @@ import { useState, useRef, useEffect } from "react";
 import type React from "react";
 
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import Input from "../ui/input";
+import CButton from "../ui/Cbutton";
+import OtpInput from "../ui/OtpInput";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
 export default function ForgotPassword() {
   const [stage, setStage] = useState<number>(1);
@@ -11,14 +18,36 @@ export default function ForgotPassword() {
   const [verificationCode, setVerificationCode] = useState<string[]>(
     Array(6).fill("")
   );
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState<boolean>(false);
   const [resendTimer, setResendTimer] = useState<number>(51);
   const [isResendDisabled, setIsResendDisabled] = useState<boolean>(true);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const router = useRouter();
+  // Add zod schema for password reset
+  const passwordSchema = z
+    .object({
+      password: z
+        .string()
+        .min(6, { message: "Password must be at least 6 characters" }),
+      confirmPassword: z
+        .string()
+        .min(6, { message: "Confirm password must be at least 6 characters" }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords don't match",
+      path: ["confirmPassword"],
+    });
+
+  type PasswordFormData = z.infer<typeof passwordSchema>;
+
+  const {
+    control: passwordControl,
+    handleSubmit: handlePasswordFormSubmit,
+    formState: { errors: passwordErrors },
+    reset: resetPasswordForm,
+  } = useForm<PasswordFormData>({
+    resolver: zodResolver(passwordSchema),
+    defaultValues: { password: "", confirmPassword: "" },
+  });
 
   // Handle timer for resend code
   useEffect(() => {
@@ -48,18 +77,6 @@ export default function ForgotPassword() {
   };
 
   // Handle verification code input
-  const handleCodeChange = (index: number, value: string) => {
-    if (value.length <= 1) {
-      const newCode = [...verificationCode];
-      newCode[index] = value;
-      setVerificationCode(newCode);
-
-      // Auto-focus next input
-      if (value && index < 5) {
-        inputRefs.current[index + 1]?.focus();
-      }
-    }
-  };
 
   // Handle verification code submission
   const handleVerificationSubmit = (e: React.FormEvent) => {
@@ -70,11 +87,9 @@ export default function ForgotPassword() {
   };
 
   // Handle password creation
-  const handlePasswordSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password && confirmPassword && password === confirmPassword) {
-      setStage(4);
-    }
+  const handlePasswordSubmit = () => {
+    setStage(4);
+    resetPasswordForm();
   };
 
   // Handle resend code
@@ -95,44 +110,45 @@ export default function ForgotPassword() {
     switch (stage) {
       case 1:
         return (
-          <div className="w-full min-w-[320px] max-w-[730px] mx-auto">
+          <div className="w-full mx-auto">
+            <div
+              className=" flex gap-2 items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer"
+              onClick={() => router.back()}
+            >
+              <ChevronLeft />
+              <p>back</p>
+            </div>
             <h1 className="text-2xl font-semibold mb-2">Forgot Password?</h1>
             <p className="text-gray-600 mb-6">
               Put your email address to get started
             </p>
 
             <form onSubmit={handleEmailSubmit}>
-              <div className="mb-6">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter email"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
+              <Input
+                label="Email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
 
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
+              <CButton type="submit" disabled={!email}>
                 Sign in
-              </button>
+              </CButton>
             </form>
           </div>
         );
 
       case 2:
         return (
-          <div className="w-full min-w-[320px] max-w-[730px] mx-auto">
+          <div className="w-full  mx-auto">
+            <div
+              className=" flex gap-2 items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer"
+              onClick={() => setStage(1)}
+            >
+              <ChevronLeft />
+              <p>back</p>
+            </div>
             <h1 className="text-2xl font-semibold mb-2">Email Verification</h1>
             <p className="text-gray-600 mb-4">
               We have to sent a code to your email address to confirm it&rsquo;s
@@ -143,30 +159,16 @@ export default function ForgotPassword() {
 
             <form onSubmit={handleVerificationSubmit}>
               <div className="flex gap-2 mb-6">
-                {[0, 1, 2, 3, 4, 5].map((index) => (
-                  <input
-                    key={index}
-                    ref={(el) => {
-                      inputRefs.current[index] = el;
-                    }}
-                    type="text"
-                    maxLength={1}
-                    value={verificationCode[index]}
-                    onChange={(e) => handleCodeChange(index, e.target.value)}
-                    className={`w-12 h-12 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-medium`}
-                    required
-                  />
-                ))}
+                <OtpInput
+                  value={verificationCode}
+                  onChange={setVerificationCode}
+                  disabled={false}
+                />
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-4"
-              >
-                Continue
-              </button>
+              <CButton type="submit">Continue</CButton>
 
-              <div className="text-center">
+              <div className="text-center mt-2">
                 <button
                   type="button"
                   onClick={handleResendCode}
@@ -186,75 +188,41 @@ export default function ForgotPassword() {
 
       case 3:
         return (
-          <div className="w-full min-w-[320px] max-w-[730px] mx-auto">
+          <div className="w-full  mx-auto">
             <h1 className="text-2xl font-semibold mb-2">Create New Password</h1>
             <p className="text-gray-600 mb-6">
               Enter a password you will remember
             </p>
 
-            <form onSubmit={handlePasswordSubmit}>
-              <div className="mb-4">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Create Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
+            <form onSubmit={handlePasswordFormSubmit(handlePasswordSubmit)}>
+              <Controller
+                name="password"
+                control={passwordControl}
+                render={({ field }) => (
+                  <Input
+                    label="New Password"
                     id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
+                    type="password"
+                    error={passwordErrors.password?.message}
+                    {...field}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <label
-                  htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
+                )}
+              />
+              <Controller
+                name="confirmPassword"
+                control={passwordControl}
+                render={({ field }) => (
+                  <Input
+                    label="Confirm Password"
                     id="confirmPassword"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm Password"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
+                    type="password"
+                    error={passwordErrors.confirmPassword?.message}
+                    {...field}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500"
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
+                )}
+              />
               <button
                 type="submit"
                 className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -267,51 +235,16 @@ export default function ForgotPassword() {
 
       case 4:
         return (
-          <div className="w-full min-w-[320px] max-w-[730px] mx-auto flex flex-col items-center justify-center">
+          <div className="w-full  mx-auto flex flex-col items-center justify-center">
             <div className="mb-8">
-              <div className="relative flex items-center justify-center">
-                <svg
-                  width="200"
-                  height="200"
-                  viewBox="0 0 200 200"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  {/* Outermost light blue circle */}
-                  <circle
-                    cx="100"
-                    cy="100"
-                    r="95"
-                    fill="#E6F3FF"
-                    opacity="0.4"
-                  />
-                  {/* Second light blue circle */}
-                  <circle
-                    cx="100"
-                    cy="100"
-                    r="75"
-                    fill="#CCE7FF"
-                    opacity="0.6"
-                  />
-                  {/* Third medium blue circle */}
-                  <circle
-                    cx="100"
-                    cy="100"
-                    r="55"
-                    fill="#99D6FF"
-                    opacity="0.8"
-                  />
-                  {/* Inner dark blue circle */}
-                  <circle cx="100" cy="100" r="35" fill="#2563EB" />
-                  {/* Checkmark */}
-                  <path
-                    d="M85 100L95 110L115 90"
-                    stroke="white"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+              <div className="relative flex items-center justify-center scale-85">
+                <div className="size-[110px] bg-blue-300 rounded-full absolute z-10" />
+                <div className="size-[120px] bg-blue-200/70 rounded-full absolute z-10" />
+                <div className="size-[130px] bg-blue-100/50 rounded-full absolute z-10" />
+                <div className="size-[140px] bg-blue-100/30 rounded-full absolute z-10" />
+                <div className="flex items-center size-[100px] rounded-full justify-center bg-blue-700 z-20">
+                  <img src={"/check.svg"} alt="" />
+                </div>
               </div>
             </div>
 
@@ -337,9 +270,5 @@ export default function ForgotPassword() {
     }
   };
 
-  return (
-    <div className="w-full min-w-[320px] max-w-[730px] mx-auto p-6">
-      {renderStage()}
-    </div>
-  );
+  return <div className="w-full  mx-auto p-6">{renderStage()}</div>;
 }

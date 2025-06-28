@@ -21,8 +21,11 @@ const config: Config = {
         Roboto: ["Roboto", "sans-serif"],
         trebuchetMs: ["Trebuchet MS"],
         airbnb: ["var(--font-airbnb-cereal)"],
+        besley: ["var(--font-bersley)"],
       },
       colors: {
+        darkEzra: "#110F0F",
+        subDarkEzra: "#1F1F24",
         colorScBlue: "#2463e9",
         colorScPurple: "#682bd7",
         colorScRed: "#ff0000",
