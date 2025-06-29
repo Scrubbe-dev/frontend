@@ -43,7 +43,7 @@ const CookieToggleButton: React.FC = () => {
       {/* Cookie toggle button */}
       <button
         onClick={() => setIsDialogOpen(true)}
-        className="fixed bottom-3 left-3 z-50 w-12 h-12 rounded-full text-white bg-blue-600 hover:bg-blue-700 flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-105 focus:outline-none"
+        className="fixed bottom-3 left-3 z-50 w-12 h-12 rounded-full text-white bg-colorScBlack hover:bg-blue-700 flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-105 focus:outline-none"
         aria-label="Cookie Settings"
       >
         <RxCookie className="w-6 h-6 fill-white" />

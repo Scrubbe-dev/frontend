@@ -629,3 +629,21 @@ While there's no universally fixed "acceptable" max height, sticking to 400–70
     opacity: 0;
   }
 }
+
+@keyframes gradient-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient {
+  background: linear-gradient(270deg, #e11d48, #2563eb, #22c55e, #e11d48);
+  background-size: 400% 400%;
+  animation: gradient-move 4s ease-in-out infinite;
+}

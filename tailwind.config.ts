@@ -26,7 +26,13 @@ const config: Config = {
       colors: {
         darkEzra: "#110F0F",
         subDarkEzra: "#1F1F24",
+        colorScBlack: "#1D2838",
+        colorScGreen: "#009FA4",
         colorScBlue: "#2463e9",
+        colorScIndigo: "#6A5ACD",
+        colorScPale: "#C481B0",
+        colorScYello: "#FBDFC1",
+        colorScLightBlue: "#DBEAFE",
         colorScPurple: "#682bd7",
         colorScRed: "#ff0000",
         colorScPink: "#ebeaff",

@@ -12,6 +12,7 @@ import GoogleMeetParameter from "./GoogleMeetParameter";
 import OthersParameter from "./OthersParameter";
 import WhatsappParameter from "./WhatsappParameter";
 import Select from "../ui/select";
+import AuditLogs from "./AuditLogs";
 
 const settingOptions = [
   {
@@ -178,7 +179,7 @@ const AlertSettings = () => {
           </p>
 
           {/* Header */}
-          <div className="flex justify-between items-center mt-4">
+          <div className="flex md:flex-row flex-col justify-between md:items-center  mt-4">
             <div className=" flex gap-4">
               <p className=" pt-2 font-medium">User Roles:</p>
               <Select
@@ -219,125 +220,129 @@ const AlertSettings = () => {
             </div>
           </div>
 
-          <div className=" mt-4 flex flex-col gap-4">
-            {settings.map((setting, index) => (
-              <div
-                key={setting.id}
-                className=" grid grid-cols-[.6fr,1.4fr,1fr] h-[89px] place-content-center px-4 bg-gray-100 rounded-md"
-              >
-                <div className="items-center flex flex-row gap-2">
-                  <input
-                    id={setting.id}
-                    type="checkbox"
-                    checked={setting.enable ? true : false}
-                    onChange={() => handleEnableSetting(index)}
-                    className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                  />
-                  <label htmlFor={setting.id} className="text-sm font-semibold">
-                    {setting.title}
-                  </label>
-                </div>
-
-                <div className=" flex gap-3 w-full justify-center items-center">
-                  <div className="flex items-center gap-2">
-                    <div
-                      onClick={() => handleShowSeverities(index)}
-                      className=" bg-zinc-200 w-fit px-4 py-1 rounded-sm cursor-pointer"
+          <div className="mt-4 w-full overflow-x-auto">
+            <div className="min-w-[800px] flex flex-col gap-4">
+              {settings.map((setting, index) => (
+                <div
+                  key={setting.id}
+                  className="grid grid-cols-[.6fr,1.4fr,1fr] h-[89px] gap-3 place-content-center px-4 bg-gray-100 rounded-md"
+                >
+                  <div className="items-center flex flex-row gap-2">
+                    <input
+                      id={setting.id}
+                      type="checkbox"
+                      checked={setting.enable ? true : false}
+                      onChange={() => handleEnableSetting(index)}
+                      className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                    />
+                    <label
+                      htmlFor={setting.id}
+                      className="text-sm font-semibold"
                     >
-                      <p className=" text-sm font-semibold text-zinc-500">
-                        {setting.showSeverities ? "Hide" : "Show"} severities
+                      {setting.title}
+                    </label>
+                  </div>
+
+                  <div className="flex gap-3 w-full justify-center items-center">
+                    <div className="flex items-center gap-2">
+                      <div
+                        onClick={() => handleShowSeverities(index)}
+                        className="bg-zinc-200 w-fit px-4 py-1 rounded-sm cursor-pointer"
+                      >
+                        <p className=" text-xs md:text-sm font-semibold text-zinc-500">
+                          {setting.showSeverities ? "Hide" : "Show"} severities
+                        </p>
+                      </div>
+                      {setting.showSeverities ? (
+                        <div className="flex items-center gap-2">
+                          <div className="items-center flex flex-row gap-2">
+                            <input
+                              id={"high"}
+                              type="checkbox"
+                              checked={setting.severity === "high"}
+                              onChange={() => handleSetSeverity(index, "high")}
+                              className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                            />
+                            <label
+                              htmlFor={"high"}
+                              className="text-sm text-zinc-500 "
+                            >
+                              High
+                            </label>
+                          </div>
+                          <div className="items-center flex flex-row gap-2">
+                            <input
+                              id={"medium"}
+                              type="checkbox"
+                              checked={setting.severity === "medium"}
+                              onChange={() =>
+                                handleSetSeverity(index, "medium")
+                              }
+                              className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                            />
+                            <label
+                              htmlFor={"medium"}
+                              className="text-sm text-zinc-500 "
+                            >
+                              Medium
+                            </label>
+                          </div>
+                          <div className="items-center flex flex-row gap-2">
+                            <input
+                              id={"low"}
+                              type="checkbox"
+                              checked={setting.severity === "low"}
+                              onChange={() => handleSetSeverity(index, "low")}
+                              className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                            />
+                            <label
+                              htmlFor={"low"}
+                              className="text-sm text-zinc-500 "
+                            >
+                              Low
+                            </label>
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                    <div>
+                      <p className="text-sm text-zinc-500 font-medium">
+                        Parameter:{" "}
+                        {setting.isConfigure ? "Configure" : "Not Configured"}
                       </p>
                     </div>
-                    {setting.showSeverities ? (
-                      <div className="flex items-center gap-2">
-                        <div className="items-center flex flex-row gap-2">
-                          <input
-                            id={"high"}
-                            type="checkbox"
-                            checked={setting.severity === "high"}
-                            onChange={() => handleSetSeverity(index, "high")}
-                            className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                          />
-                          <label
-                            htmlFor={"high"}
-                            className="text-sm text-zinc-500 "
-                          >
-                            High
-                          </label>
-                        </div>
-                        <div className="items-center flex flex-row gap-2">
-                          <input
-                            id={"medium"}
-                            type="checkbox"
-                            checked={setting.severity === "medium"}
-                            onChange={() => handleSetSeverity(index, "medium")}
-                            className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                          />
-                          <label
-                            htmlFor={"medium"}
-                            className="text-sm text-zinc-500 "
-                          >
-                            Medium
-                          </label>
-                        </div>
-                        <div className="items-center flex flex-row gap-2">
-                          <input
-                            id={"low"}
-                            type="checkbox"
-                            checked={setting.severity === "low"}
-                            onChange={() => handleSetSeverity(index, "low")}
-                            className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                          />
-                          <label
-                            htmlFor={"low"}
-                            className="text-sm text-zinc-500 "
-                          >
-                            Low
-                          </label>
-                        </div>
-                      </div>
-                    ) : null}
                   </div>
-                  <div>
-                    <p className=" text-sm text-zinc-500 font-medium">
-                      Parameter:{" "}
-                      {setting.isConfigure ? "Configure" : "Not Configured"}
-                    </p>
-                    {/* <p className=" text-sm text-zinc-500 font-medium">
-                      channel: (not set)
-                    </p> */}
+
+                  <div className="w-full flex items-center gap-3 justify-end">
+                    <Button
+                      onClick={() => handleOpenConfigureParams(setting.id)}
+                      className="shadow-none bg-blue-600 h-[32px]"
+                    >
+                      Configure Parameter
+                    </Button>
+                    <Button className="shadow-none border border-blue-600 text-blue-600 h-[32px]">
+                      Test Notification
+                    </Button>
                   </div>
-                </div>
 
-                <div className=" w-full flex items-center gap-3 justify-end">
-                  <Button
-                    onClick={() => handleOpenConfigureParams(setting.id)}
-                    className=" shadow-none bg-blue-600  hover:bg-blue-700 h-[32px]"
-                  >
-                    Configure Parameter
-                  </Button>
-                  <Button className=" shadow-none border border-blue-600 text-blue-600 h-[32px]">
-                    Test Notification
-                  </Button>
-                </div>
-
-                {isModalOpen && (
-                  <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
-                      <div className=" flex justify-end">
-                        <div
-                          onClick={() => setIsModalOpen(false)}
-                          className=" bg-neutral-100 rounded-sm p-1 w-fit"
-                        >
-                          <X />
+                  {isModalOpen && (
+                    <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
+                      <div className="bg-white rounded-lg p-2 sm:p-6 w-full  sm:max-w-2xl mx-2 max-h-[90vh] overflow-y-auto">
+                        <div className="flex justify-end">
+                          <div
+                            onClick={() => setIsModalOpen(false)}
+                            className="bg-neutral-100 rounded-sm p-1 w-fit"
+                          >
+                            <X />
+                          </div>
                         </div>
+                        {content}
                       </div>
-                      {content}
                     </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className=" justify-end mt-10 flex ">
@@ -347,6 +352,8 @@ const AlertSettings = () => {
           </div>
         </div>
       </div>
+
+      <AuditLogs />
     </div>
   );
 };
