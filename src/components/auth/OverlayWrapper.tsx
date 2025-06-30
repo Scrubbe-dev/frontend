@@ -23,11 +23,17 @@ export default function OverlayWrapper({
   const shouldShowOverlay = overlayRoutes.includes(pathname);
 
   return (
-    <section className="flex flex-col-reverse lg:grid lg:[grid-template-columns:71fr_73fr] h-full max-w-[1440px] w-full mx-auto overflow-hidden">
+    <section
+      className={`${
+        shouldShowOverlay
+          ? "bg-neutral-100 items-center"
+          : " bg-neutral-100 md:bg-white"
+      } flex flex-col-reverse justify-center  md:flex-row min-h-screen h-full  w-full overflow-hidden`}
+    >
       {/* Sidebar - first column in grid (71fr) */}
       <article
         className={`w-full transition-all duration-300 ${
-          shouldShowOverlay ? "relative" : ""
+          shouldShowOverlay ? "relative hidden" : " md:flex hidden "
         }`}
       >
         {sidebarContent}
@@ -43,7 +49,9 @@ export default function OverlayWrapper({
           shouldShowOverlay ? "relative z-20" : ""
         }`}
       >
-        {children}
+        <div className={` max-w-2xl w-full bg-white rounded-t-3xl `}>
+          {children}
+        </div>
       </article>
     </section>
   );

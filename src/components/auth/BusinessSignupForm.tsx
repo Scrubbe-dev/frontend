@@ -1,11 +1,14 @@
 "use client";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import Image from "next/image";
 import * as z from "zod";
+import Input from "../ui/input";
+import Select from "../ui/select";
+import CButton from "../ui/Cbutton";
 
 // Define the form schema using zod
 const businessSignupSchema = z
@@ -42,16 +45,14 @@ interface SuccessPageProps {
 }
 
 export default function BusinessSignupForm() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState<BusinessSignupFormData | null>(null);
 
   const {
-    register,
     handleSubmit,
-    formState: { errors },
+    control,
+    formState: { errors, isValid },
   } = useForm<BusinessSignupFormData>({
     resolver: zodResolver(businessSignupSchema),
     defaultValues: {
@@ -64,6 +65,7 @@ export default function BusinessSignupForm() {
       password: "",
       confirmPassword: "",
     },
+    mode: "onChange",
   });
 
   // Success Page Component
@@ -139,10 +141,6 @@ export default function BusinessSignupForm() {
     }
   };
 
-  const togglePasswordVisibility = () => setShowPassword(!showPassword);
-  const toggleConfirmPasswordVisibility = () =>
-    setShowConfirmPassword(!showConfirmPassword);
-
   return (
     <div className="w-full p-6">
       {showSuccess && formData ? (
@@ -152,383 +150,158 @@ export default function BusinessSignupForm() {
         />
       ) : (
         <>
-          <h1 className="text-2xl font-semibold mb-6 text-center">
+          <h1 className="text-xl md:text-2xl font-semibold mb-6 ">
             Business Signup
           </h1>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* First Name and Last Name Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label
-                  htmlFor="firstName"
-                  className={`block mb-2 text-sm font-medium ${
-                    isLoading ? "text-gray-500" : "text-gray-700"
-                  }`}
-                >
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  {...register("firstName")}
-                  placeholder="First Name"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    isLoading
-                      ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
-                      : "border-gray-300"
-                  }`}
-                  disabled={isLoading}
-                />
-                {errors.firstName && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.firstName.message}
-                  </p>
+              <Controller
+                name="firstName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="First Name"
+                    placeholder="First Name"
+                    {...field}
+                    error={errors.firstName?.message}
+                  />
                 )}
-              </div>
-              <div>
-                <label
-                  htmlFor="lastName"
-                  className={`block mb-2 text-sm font-medium ${
-                    isLoading ? "text-gray-500" : "text-gray-700"
-                  }`}
-                >
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  {...register("lastName")}
-                  placeholder="Last Name"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    isLoading
-                      ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
-                      : "border-gray-300"
-                  }`}
-                  disabled={isLoading}
-                />
-                {errors.lastName && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.lastName.message}
-                  </p>
+              />
+
+              <Controller
+                name="lastName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Last Name"
+                    placeholder="Last Name"
+                    {...field}
+                    error={errors.lastName?.message}
+                  />
                 )}
-              </div>
+              />
             </div>
 
             {/* Business Email and Business Address Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label
-                  htmlFor="businessEmail"
-                  className={`block mb-2 text-sm font-medium ${
-                    isLoading ? "text-gray-500" : "text-gray-700"
-                  }`}
-                >
-                  Business Email
-                </label>
-                <input
-                  type="email"
-                  id="businessEmail"
-                  {...register("businessEmail")}
-                  placeholder="Enter Business Email"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    isLoading
-                      ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
-                      : "border-gray-300"
-                  }`}
-                  disabled={isLoading}
-                />
-                {errors.businessEmail && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.businessEmail.message}
-                  </p>
+              <Controller
+                name="businessEmail"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Business Email"
+                    placeholder="Enter Business Email"
+                    {...field}
+                    error={errors.businessEmail?.message}
+                  />
                 )}
-              </div>
-              <div>
-                <label
-                  htmlFor="businessAddress"
-                  className={`block mb-2 text-sm font-medium ${
-                    isLoading ? "text-gray-500" : "text-gray-700"
-                  }`}
-                >
-                  Business Address
-                </label>
-                <input
-                  type="text"
-                  id="businessAddress"
-                  {...register("businessAddress")}
-                  placeholder="Enter Business Address"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    isLoading
-                      ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
-                      : "border-gray-300"
-                  }`}
-                  disabled={isLoading}
-                />
-                {errors.businessAddress && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.businessAddress.message}
-                  </p>
+              />
+              <Controller
+                name="businessAddress"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Business Address"
+                    placeholder="Enter Business Address"
+                    {...field}
+                    error={errors.businessAddress?.message}
+                  />
                 )}
-              </div>
+              />
             </div>
 
             {/* Company Size and Purpose Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label
-                  htmlFor="companySize"
-                  className={`block mb-2 text-sm font-medium ${
-                    isLoading ? "text-gray-500" : "text-gray-700"
-                  }`}
-                >
-                  Company&apos;s size
-                </label>
-                <select
-                  id="companySize"
-                  {...register("companySize")}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    isLoading
-                      ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
-                      : "border-gray-300"
-                  }`}
-                  disabled={isLoading}
-                >
-                  <option value="">Select Size</option>
-                  <option value="1-10">1-10 employees</option>
-                  <option value="11-50">11-50 employees</option>
-                  <option value="51-200">51-200 employees</option>
-                  <option value="201-500">201-500 employees</option>
-                  <option value="500+">500+ employees</option>
-                </select>
-                {errors.companySize && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.companySize.message}
-                  </p>
+              <Controller
+                name="companySize"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    label="Company's size"
+                    options={[
+                      { value: "", label: "Select Size" },
+                      { value: "1-10", label: "1-10 employees" },
+                      { value: "11-50", label: "11-50 employees" },
+                      { value: "51-200", label: "51-200 employees" },
+                      { value: "201-500", label: "201-500 employees" },
+                      { value: "500+", label: "500+ employees" },
+                    ]}
+                    error={errors.companySize?.message}
+                    isLoading={isLoading}
+                    {...field}
+                  />
                 )}
-              </div>
-              <div>
-                <label
-                  htmlFor="purpose"
-                  className={`block mb-2 text-sm font-medium ${
-                    isLoading ? "text-gray-500" : "text-gray-700"
-                  }`}
-                >
-                  What do you need scrubbe for?
-                </label>
-                <select
-                  id="purpose"
-                  {...register("purpose")}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    isLoading
-                      ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
-                      : "border-gray-300"
-                  }`}
-                  disabled={isLoading}
-                >
-                  <option value="">Select Purpose</option>
-                  <option value="code-review">Code Review</option>
-                  <option value="security-scanning">Security Scanning</option>
-                  <option value="quality-assurance">Quality Assurance</option>
-                  <option value="compliance">Compliance</option>
-                  <option value="other">Other</option>
-                </select>
-                {errors.purpose && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.purpose.message}
-                  </p>
+              />
+              <Controller
+                name="purpose"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    label="What do you need scrubbe for?"
+                    options={[
+                      { value: "", label: "Select Purpose" },
+                      { value: "code-review", label: "Code Review" },
+                      {
+                        value: "security-scanning",
+                        label: "Security Scanning",
+                      },
+                      {
+                        value: "quality-assurance",
+                        label: "Quality Assurance",
+                      },
+                      { value: "compliance", label: "Compliance" },
+                      { value: "other", label: "Other" },
+                    ]}
+                    error={errors.purpose?.message}
+                    isLoading={isLoading}
+                    {...field}
+                  />
                 )}
-              </div>
+              />
             </div>
 
             {/* Password Fields Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div>
-                <label
-                  htmlFor="password"
-                  className={`block mb-2 text-sm font-medium ${
-                    isLoading ? "text-gray-500" : "text-gray-700"
-                  }`}
-                >
-                  Create Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    {...register("password")}
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Create Password"
                     placeholder="Enter password"
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      isLoading
-                        ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
-                        : "border-gray-300"
-                    }`}
-                    disabled={isLoading}
+                    type="password"
+                    error={errors.password?.message}
+                    isLoading={isLoading}
+                    {...field}
                   />
-                  <button
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    className={`absolute inset-y-0 right-0 flex items-center pr-3 ${
-                      isLoading ? "text-gray-400" : "text-gray-500"
-                    }`}
-                  >
-                    {showPassword ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
-                        />
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.640 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-                {errors.password && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.password.message}
-                  </p>
                 )}
-              </div>
-              <div>
-                <label
-                  htmlFor="confirmPassword"
-                  className={`block mb-2 text-sm font-medium ${
-                    isLoading ? "text-gray-500" : "text-gray-700"
-                  }`}
-                >
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    id="confirmPassword"
-                    {...register("confirmPassword")}
+              />
+              <Controller
+                name="confirmPassword"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Confirm Password"
                     placeholder="Confirm Password"
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      isLoading
-                        ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
-                        : "border-gray-300"
-                    }`}
-                    disabled={isLoading}
+                    type="password"
+                    error={errors.confirmPassword?.message}
+                    isLoading={isLoading}
+                    {...field}
                   />
-                  <button
-                    type="button"
-                    onClick={toggleConfirmPasswordVisibility}
-                    className={`absolute inset-y-0 right-0 flex items-center pr-3 ${
-                      isLoading ? "text-gray-400" : "text-gray-500"
-                    }`}
-                  >
-                    {showConfirmPassword ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
-                        />
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.640 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-                {errors.confirmPassword && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.confirmPassword.message}
-                  </p>
                 )}
-              </div>
+              />
             </div>
 
             {/* Submit Button */}
-            <button
+            <CButton
               type="submit"
-              disabled={isLoading}
-              className={`w-full text-white py-3 px-4 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-6 ${
-                isLoading
-                  ? "bg-blue-400 hover:bg-blue-400"
-                  : "bg-blue-600 hover:bg-blue-800"
-              }`}
+              disabled={isLoading || !isValid}
+              isLoading={isLoading}
             >
-              {isLoading ? (
-                <div className="flex items-center justify-center">
-                  <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Processing...
-                </div>
-              ) : (
-                "Create Account"
-              )}
-            </button>
+              {isLoading ? "Processing..." : "Create Account"}
+            </CButton>
 
             {/* Divider */}
             <div className="relative my-6">

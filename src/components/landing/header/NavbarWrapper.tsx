@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import NavbarDataS from "./NavbarDataS";
 import NavbarEzra from "./NavbarEzra";
+import NewNavbar from "./NewNavbar";
 
 export default function NavbarWrapper() {
   const pathname = usePathname();
@@ -12,6 +13,7 @@ export default function NavbarWrapper() {
   ) : pathname.startsWith("/ezra") ? (
     <NavbarEzra />
   ) : (
-    <Navbar />
+    // <Navbar />
+    <NewNavbar />
   );
 }

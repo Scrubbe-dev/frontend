@@ -1,10 +1,11 @@
 import { FingerprintResponse } from "@/types/response.type";
 
+const BaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 export const fetchFingerprint = async (): Promise<FingerprintResponse> => {
-  const response = await fetch('https://admin-rul9.onrender.com/api/v1/system-info', {
-    method: 'GET',
+  const response = await fetch(`${BaseUrl}/system-info`, {
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   });
 

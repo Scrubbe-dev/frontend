@@ -22,7 +22,7 @@ const Board: React.FC = () => {
 
   return (
     <div className="p-8 bg-gray-50 h-full">
-      <h1 className="text-2xl font-bold text-gray-800 mb-8">
+      <h1 className="text-2xl font-semibold text-gray-600 mb-8">
         Scrubbe Data Ingestion Dashboard
       </h1>
       <div className="grid grid-cols-[repeat(auto-fit,_minmax(345px,_1fr))] gap-6">

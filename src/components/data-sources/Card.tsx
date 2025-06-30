@@ -68,47 +68,47 @@ const Card: React.FC<CardProps> = ({
   };
 
   return (
-    <div className="w-[345px] h-[312px] bg-white rounded-lg shadow-lg border border-gray-200 flex flex-col justify-self-center">
+    <div className="w-[345px] h-[312px] bg-white  rounded-lg flex flex-col justify-between">
       {/* Header with logo and title */}
-      <div className="flex items-center gap-3 p-4 border-b border-gray-100">
-        {/* Only show logo if it exists */}
-        {logo && (
-          <div className="w-8 h-8 relative">
-            <Image
-              src={logo}
-              alt={title}
-              fill
-              sizes="(min-width: 360px) 100vw"
-              className="object-contain"
-            />
-          </div>
-        )}
-        <span className="text-gray-700 font-medium text-sm">{title}</span>
-      </div>
+      <div className=" flex-1">
+        <div className="flex items-center gap-3 p-4 border-b border-gray-100 ">
+          {/* Only show logo if it exists */}
+          {logo && (
+            <div className="w-8 h-8 relative">
+              <Image
+                src={logo}
+                alt={title}
+                fill
+                sizes="(min-width: 360px) 100vw"
+                className="object-contain"
+              />
+            </div>
+          )}
+          <span className="text-gray-700 font-semibold text-sm">{title}</span>
+        </div>
 
-      {/* Navigation tabs */}
-      <div className="flex border-b border-gray-100">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => handleTabClick(tab)}
-            className={`flex-1 px-3 py-2 text-sm font-medium transition-colors ${
-              activeTab === tab
-                ? "bg-blue-500 text-white"
-                : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-            } ${tab === tabs[0] ? "rounded-tl-none" : ""} ${
-              tab === tabs[tabs.length - 1] ? "rounded-tr-none" : ""
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
+        {/* Navigation tabs */}
+        <div className="flex p-4 flex-wrap gap-3 ">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => handleTabClick(tab)}
+              className={` px-3 py-2 text-sm font-medium transition-colors rounded-md w-fit ${
+                activeTab === tab
+                  ? "bg-blue-500 text-white"
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-50 bg-blue-50"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Content area */}
-      <div className="flex-1 p-4 flex flex-col justify-between">
+      <div className=" p-4 flex flex-col gap-2 ">
         {/* Status indicator and button */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${getStatusColor()}`}></div>
             <span className="text-sm text-gray-600 capitalize">{status}</span>
@@ -128,7 +128,7 @@ const Card: React.FC<CardProps> = ({
         </div>
 
         {/* Data info */}
-        <div className="text-xs text-gray-500 space-y-1">
+        <div className="text-xs  space-y-1 font-medium">
           <div>Processed: {processedData}</div>
           <div>Last Update: {timestamp}</div>
         </div>

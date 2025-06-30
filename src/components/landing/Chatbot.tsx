@@ -57,8 +57,7 @@ const Chatbot: React.FC = () => {
     },
     contact: {
       title: "Contact Us",
-      content:
-        "You can reach our support team at support@scrubbe.com",
+      content: "You can reach our support team at support@scrubbe.com",
     },
     installation: {
       title: "Installation Guide",
@@ -228,7 +227,7 @@ const Chatbot: React.FC = () => {
       {/* Chat toggle button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="absolute bottom-0 right-0 w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-105 focus:outline-none"
+        className="absolute bottom-0 right-0 w-12 h-12 rounded-full bg-colorScBlack hover:bg-blue-700 flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-105 focus:outline-none"
       >
         <div className="relative w-6 h-6">
           <Image

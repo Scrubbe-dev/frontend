@@ -1,7 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
-import Footer from "./Footer";
 import FooterEzra from "./FooterEzra";
+import NewFooter from "./NewFooter";
 
 export default function FooterWrapper() {
   const pathname = usePathname();
@@ -14,5 +14,5 @@ export default function FooterWrapper() {
     return <FooterEzra />;
   }
 
-  return <Footer />;
+  return <NewFooter />;
 }
