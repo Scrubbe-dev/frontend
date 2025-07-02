@@ -9,6 +9,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   isLoading?: boolean;
   type?: string;
   icon?: React.ReactNode;
+  labelClassName?: string;
 }
 
 const Input = ({
@@ -18,6 +19,7 @@ const Input = ({
   type = "text",
   icon,
   className = "",
+  labelClassName = "",
   ...props
 }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,9 +30,9 @@ const Input = ({
       {label && (
         <label
           htmlFor={props.id}
-          className={`block mb-2 text-sm font-medium ${
+          className={`block dark:text-white mb-2 text-sm font-medium ${
             isLoading ? "text-gray-500" : "text-gray-700"
-          }`}
+          } ${labelClassName}`}
         >
           {label}
         </label>
@@ -38,7 +40,7 @@ const Input = ({
       <div className="relative">
         <input
           type={isPasswordType ? (showPassword ? "text" : "password") : type}
-          className={`w-full h-[48px] px-3 text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+          className={`w-full bg-transparent h-[48px] px-3 text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
             isLoading
               ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
               : "border-gray-300"

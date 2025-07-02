@@ -51,7 +51,7 @@ const Fingerprint = () => {
             instantly
           </motion.p>
           <motion.div
-            className=" max-w-5xl mx-auto bg-white rounded-2xl shadow p-6 md:p-10 border border-blue-200"
+            className=" max-w-5xl mx-auto bg-white rounded-2xl shadow p-6 md:p-10 border border-blue-200 mt-10"
             variants={itemVariants}
           >
             <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">

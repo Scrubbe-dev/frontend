@@ -8,6 +8,7 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   error?: string;
   isLoading?: boolean;
   options: { value: string; label: string }[];
+  labelClassName?: string;
 }
 
 const Select = ({
@@ -16,6 +17,7 @@ const Select = ({
   isLoading = false,
   options,
   className = "",
+  labelClassName = "",
   ...props
 }: SelectProps) => {
   return (
@@ -23,15 +25,15 @@ const Select = ({
       {label && (
         <label
           htmlFor={props.id}
-          className={`block mb-2 text-sm font-medium ${
+          className={`block mb-2 dark:text-white text-sm font-medium ${
             isLoading ? "text-gray-500" : "text-gray-700"
-          }`}
+          } ${labelClassName}`}
         >
           {label}
         </label>
       )}
       <select
-        className={`w-full h-[48px] text-sm px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+        className={`w-full dark:text-white h-[48px] bg-transparent text-sm px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
           isLoading
             ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
             : "border-gray-300"

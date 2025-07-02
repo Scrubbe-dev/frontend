@@ -1,6 +1,7 @@
 "use client";
 import Cbutton from "@/components/ezra-landing/Cbutton";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const navItem = [
@@ -17,7 +18,7 @@ const NavbarEzra = () => {
   const textColor = "text-gray-800";
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 30) {
@@ -106,7 +107,7 @@ const NavbarEzra = () => {
           </p>
         </div>
         <div className="hidden md:block">
-          <Cbutton>Log In</Cbutton>
+          <Cbutton onClick={() => router.push("/auth")}>Log In</Cbutton>
         </div>
         {/* Mobile menu dropdown */}
         {menuOpen && (
@@ -122,7 +123,9 @@ const NavbarEzra = () => {
               </Link>
             ))}
             <div className="w-full flex justify-center py-4">
-              <Cbutton className="w-11/12">Log In</Cbutton>
+              <Cbutton onClick={() => router.push("/auth")} className="w-11/12">
+                Log In
+              </Cbutton>
             </div>
           </div>
         )}
