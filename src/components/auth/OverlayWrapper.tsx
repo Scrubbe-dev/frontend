@@ -26,8 +26,8 @@ export default function OverlayWrapper({
     <section
       className={`${
         shouldShowOverlay
-          ? "bg-neutral-100 items-center"
-          : " bg-neutral-100 md:bg-white"
+          ? "bg-neutral-100 dark:bg-dark items-center"
+          : "dark:bg-dark bg-neutral-100 md:bg-white"
       } flex flex-col-reverse justify-center  md:flex-row min-h-screen h-full  w-full overflow-hidden`}
     >
       {/* Sidebar - first column in grid (71fr) */}
@@ -49,7 +49,9 @@ export default function OverlayWrapper({
           shouldShowOverlay ? "relative z-20" : ""
         }`}
       >
-        <div className={` max-w-2xl w-full bg-white rounded-t-3xl `}>
+        <div
+          className={` max-w-2xl w-full dark:bg-subDark bg-white rounded-t-3xl `}
+        >
           {children}
         </div>
       </article>

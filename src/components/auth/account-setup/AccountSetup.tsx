@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { FiUpload } from "react-icons/fi";
 
@@ -15,6 +15,7 @@ import Select from "@/components/ui/select";
 import Input from "@/components/ui/input";
 import CButton from "@/components/ui/Cbutton";
 import { PenLine } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 // Zod schema for form validation
 const companyInfoSchema = z.object({
@@ -44,6 +45,7 @@ const AccountSetup = () => {
     addTeamMember,
     updateTeamMember,
     removeTeamMember,
+    isSuccess,
   } = useAppStore((state) => state);
 
   // Fixed: Initialize with the file from companyLogo object
@@ -215,6 +217,18 @@ const AccountSetup = () => {
     removeTeamMember(id);
   };
 
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isSuccess) {
+      const timeout = setTimeout(() => {
+        router.push("/alert-settings");
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isSuccess, router]);
+
   return (
     <section className="w-full h-auto bg-[#F9FAFB]">
       {/* Skip Button */}
@@ -267,6 +281,8 @@ const AccountSetup = () => {
                     <Input
                       label="Company Name"
                       placeholder="Flutterwave"
+                      className="dark:!text-black"
+                      labelClassName="dark:!text-black"
                       error={
                         formErrors.companyName?.message || errors.companyName
                       }
@@ -283,6 +299,8 @@ const AccountSetup = () => {
                   render={({ field }) => (
                     <Select
                       label="Industry"
+                      className="dark:!text-black"
+                      labelClassName="dark:!text-black"
                       options={[
                         { value: "", label: "Select Industry" },
                         ...industryOptions.map((option) => ({
@@ -307,6 +325,8 @@ const AccountSetup = () => {
                   render={({ field }) => (
                     <Select
                       label="Company Size"
+                      className="dark:!text-black"
+                      labelClassName="dark:!text-black"
                       options={[
                         { value: "", label: "Select Company Size" },
                         ...companySizeOptions.map((option) => ({
@@ -330,6 +350,8 @@ const AccountSetup = () => {
                   render={({ field }) => (
                     <Select
                       label="Primary Region"
+                      className="dark:!text-black"
+                      labelClassName="dark:!text-black"
                       options={[
                         { value: "", label: "Select Region" },
                         ...regionOptions.map((option) => ({
@@ -350,7 +372,7 @@ const AccountSetup = () => {
 
               {/* Company Logo Upload */}
               <div className="space-y-4">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 ">
                   Upload company Logo
                 </label>
                 {/* Upload Area */}
@@ -485,6 +507,8 @@ const AccountSetup = () => {
                   label="Admin Name"
                   placeholder="Enter Name"
                   value={enterpriseSetup.adminName}
+                  className="dark:!text-black"
+                  labelClassName="dark:!text-black"
                   onChange={(e) => {
                     setAdminContact({ adminName: e.target.value });
                     clearError("adminName");
@@ -498,6 +522,8 @@ const AccountSetup = () => {
                   placeholder="Enter Email"
                   type="email"
                   value={enterpriseSetup.adminEmail}
+                  className="dark:!text-black"
+                  labelClassName="dark:!text-black"
                   onChange={(e) => {
                     setAdminContact({ adminEmail: e.target.value });
                     clearError("adminEmail");
@@ -515,6 +541,8 @@ const AccountSetup = () => {
                   placeholder="Enter Phone number"
                   type="tel"
                   value={enterpriseSetup.adminPhone}
+                  className="dark:!text-black"
+                  labelClassName="dark:!text-black"
                   onChange={(e) => {
                     setAdminContact({ adminPhone: e.target.value });
                     clearError("adminPhone");
@@ -527,6 +555,8 @@ const AccountSetup = () => {
                   label="Admin Job title"
                   placeholder="Enter job title"
                   value={enterpriseSetup.adminJobTitle}
+                  className="dark:!text-black"
+                  labelClassName="dark:!text-black"
                   onChange={(e) => {
                     setAdminContact({ adminJobTitle: e.target.value });
                     clearError("adminJobTitle");
@@ -658,6 +688,8 @@ const AccountSetup = () => {
                     label="Name"
                     placeholder="Enter Name"
                     value={memberForm.name}
+                    className="dark:!text-black"
+                    labelClassName="dark:!text-black"
                     onChange={(e) =>
                       setMemberForm((prev) => ({
                         ...prev,
@@ -670,6 +702,8 @@ const AccountSetup = () => {
                     placeholder="Enter Email"
                     type="email"
                     value={memberForm.email}
+                    className="dark:!text-black"
+                    labelClassName="dark:!text-black"
                     onChange={(e) =>
                       setMemberForm((prev) => ({
                         ...prev,
@@ -682,6 +716,8 @@ const AccountSetup = () => {
                 {/* Role */}
                 <Select
                   label="Role"
+                  className="dark:!text-black"
+                  labelClassName="dark:!text-black"
                   options={[
                     { value: "", label: "Select role" },
                     { value: "Admin", label: "Admin" },

@@ -73,7 +73,7 @@ export default function SignInForm() {
 
   return (
     <div className="w-full p-6">
-      <h1 className=" text-xl md:text-2xl font-semibold mb-6">
+      <h1 className=" text-xl md:text-2xl dark:text-white font-semibold mb-6">
         Sign in to Scrubbe
       </h1>
 
@@ -162,7 +162,9 @@ export default function SignInForm() {
                 height={38}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700">GitHub</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-white">
+                GitHub
+              </span>
             </button>
           </Link>
 
@@ -178,7 +180,9 @@ export default function SignInForm() {
                 height={38}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700">GitLab</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-white">
+                GitLab
+              </span>
             </button>
           </Link>
 
@@ -194,7 +198,9 @@ export default function SignInForm() {
                 height={38}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700">AWS</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-white">
+                AWS
+              </span>
             </button>
           </Link>
 
@@ -210,7 +216,9 @@ export default function SignInForm() {
                 height={38}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700">Azure</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-white">
+                Azure
+              </span>
             </button>
           </Link>
 
@@ -226,7 +234,9 @@ export default function SignInForm() {
                 height={38}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700">SSO</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-white">
+                SSO
+              </span>
             </button>
           </Link>
         </div>

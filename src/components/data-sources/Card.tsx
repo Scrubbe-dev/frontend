@@ -68,7 +68,7 @@ const Card: React.FC<CardProps> = ({
   };
 
   return (
-    <div className="w-[345px] h-[312px] bg-white  rounded-lg flex flex-col justify-between">
+    <div className=" w-full min-w-[345px] h-[312px] bg-white  rounded-lg flex flex-col justify-between">
       {/* Header with logo and title */}
       <div className=" flex-1">
         <div className="flex items-center gap-3 p-4 border-b border-gray-100 ">

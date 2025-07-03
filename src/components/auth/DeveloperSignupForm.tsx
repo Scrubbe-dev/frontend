@@ -9,6 +9,7 @@ import * as z from "zod";
 import Input from "../ui/input";
 import { Controller } from "react-hook-form";
 import CButton from "../ui/Cbutton";
+import Select from "../ui/select";
 
 // Define the form schema using zod
 const developerSignupSchema = z
@@ -101,11 +102,11 @@ export default function DeveloperSignupForm() {
           </div>
         </div>
 
-        <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
           Successful
         </h1>
 
-        <p className="text-gray-600 text-center">
+        <p className="text-gray-600 dark:text-gray-300 text-center">
           Welcome {firstName} {lastName}! You have successfully created an
           account.
         </p>
@@ -149,7 +150,7 @@ export default function DeveloperSignupForm() {
         />
       ) : (
         <>
-          <h1 className=" text-xl md:text-2xl font-semibold mb-6 ">
+          <h1 className=" text-xl md:text-2xl font-semibold mb-6 dark:text-white">
             Developer Signup
           </h1>
 
@@ -217,16 +218,16 @@ export default function DeveloperSignupForm() {
 
             {/* Experience Level Full Row */}
             <div className="mb-4">
-              <label
-                htmlFor="experience"
-                className={`block mb-2 text-sm font-medium ${
-                  isLoading ? "text-gray-500" : "text-gray-700"
-                }`}
-              >
-                Experience Level
-              </label>
-              <select
+              <Select
+                label="Experience Level
+"
                 id="experience"
+                options={[
+                  { label: "Beginner", value: "beginner" },
+                  { label: "Intermediate", value: "intermediate" },
+                  { label: "Advanced", value: "advanced" },
+                  { label: "Expert", value: "expert" },
+                ]}
                 {...register("experience")}
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                   isLoading
@@ -234,13 +235,8 @@ export default function DeveloperSignupForm() {
                     : "border-gray-300"
                 }`}
                 disabled={isLoading}
-              >
-                <option value="">Select experience level</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-                <option value="expert">Expert</option>
-              </select>
+              />
+
               {errors.experience && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.experience.message}
@@ -313,7 +309,7 @@ export default function DeveloperSignupForm() {
                     height={38}
                     className="mr-2"
                   />
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium text-gray-700 dark:text-white">
                     GitHub
                   </span>
                 </button>
@@ -331,7 +327,7 @@ export default function DeveloperSignupForm() {
                     height={38}
                     className="mr-2"
                   />
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium text-gray-700 dark:text-white  ">
                     GitLab
                   </span>
                 </button>
@@ -349,7 +345,9 @@ export default function DeveloperSignupForm() {
                     height={38}
                     className="mr-2"
                   />
-                  <span className="text-sm font-medium text-gray-700">AWS</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-white">
+                    AWS
+                  </span>
                 </button>
               </Link>
 
@@ -365,7 +363,7 @@ export default function DeveloperSignupForm() {
                     height={38}
                     className="mr-2"
                   />
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium text-gray-700 dark:text-white">
                     Azure
                   </span>
                 </button>
@@ -383,7 +381,9 @@ export default function DeveloperSignupForm() {
                     height={38}
                     className="mr-2"
                   />
-                  <span className="text-sm font-medium text-gray-700">SSO</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-white">
+                    SSO
+                  </span>
                 </button>
               </Link>
             </div>

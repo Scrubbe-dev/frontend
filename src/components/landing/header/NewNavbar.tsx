@@ -342,7 +342,7 @@ const NewNavbar = () => {
                   </Link>
                 </div>
                 <Link
-                  href="/auth"
+                  href="/auth/signin"
                   className="px-6 py-2 rounded-2xl font-medium text-colorScBlue border border-colorScBlue hover:border-blue-700 transition-colors whitespace-nowrap focus:outline-none"
                 >
                   Get Started
@@ -445,7 +445,7 @@ const NewNavbar = () => {
                   </Link>
                 </div>
                 <Link
-                  href="/auth"
+                  href="/auth/signin"
                   onClick={() => setIsModalOpen(false)}
                   className="block w-full text-center py-3 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors focus:outline-none text-lg font-medium"
                 >
