@@ -27,7 +27,7 @@ const NewNavbar = () => {
     {}
   );
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-
+  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
   const textColor = "text-gray-800";
 
   // Toggle dropdown visibility in mobile menu
@@ -63,7 +63,7 @@ const NewNavbar = () => {
       dropdownOptions: [
         {
           label: "SIEM Platform",
-          href: "/products/siem",
+          href: "/home/products/siem",
           description:
             "Real-time threat detection, log analysis, and centralized monitoring",
         },
@@ -304,9 +304,30 @@ const NewNavbar = () => {
                 >
                   <RiSearchLine size={24} />
                 </button>
-                <button className="p-2 rounded-full text-black cursor-pointer">
-                  <FiGlobe size={24} />
-                </button>
+                <div className="relative group">
+                  <button
+                    onClick={() => setIsLanguageModalOpen((prev) => !prev)}
+                    className="p-2 rounded-full text-black cursor-pointer"
+                  >
+                    <FiGlobe size={24} />
+                  </button>
+                  {isLanguageModalOpen && (
+                    <div className=" w-[130px] border z-50 border-gray-200 p-2 absolute   h-fit bg-white rounded-md top-full left-1/2 transform -translate-x-1/2 mt-1">
+                      <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                        English
+                      </div>
+                      <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                        French
+                      </div>
+                      <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                        Spanish
+                      </div>
+                      <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                        German
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="flex justify-center items-center gap-2  min-w-[141px] h-[40px] sm:min-w-[176px] sm:h-[50px] lg:min-w-[180px] lg:h-[60px] bg-white rounded-3xl px-4">
@@ -333,7 +354,7 @@ const NewNavbar = () => {
 
         {/* Mobile Menu Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-white z-50 lg:hidden ">
+          <div className="fixed inset-0 bg-white z-50 xl:hidden ">
             {/* Modal Header */}
             <div className="flex justify-between items-center px-4 h-16 border-b border-gray-200">
               <Link
@@ -412,7 +433,17 @@ const NewNavbar = () => {
                 </div>
               ))}
 
-              <div className="pt-6 border-t border-gray-200">
+              <div className="pt-6 border-t border-gray-200 space-y-3">
+                <div className="animated-gradient p-[2px] rounded-3xl">
+                  <Link
+                    href={"/ezra"}
+                    className=" bg-[#111827] w-full gap-2 px-6 py-2 text-white rounded-3xl font-medium flex items-center justify-center"
+                  >
+                    Explore Ezra Ai
+                    <img src="/ezrastar1.svg" />
+                    {/* <PiStarFourFill className=" text-blue-500" size={22} /> */}
+                  </Link>
+                </div>
                 <Link
                   href="/auth"
                   onClick={() => setIsModalOpen(false)}

@@ -1,9 +1,9 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CButton from "../ui/Cbutton";
 import { X } from "lucide-react";
 import { TypeAnimation } from "react-type-animation";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const textVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -15,6 +15,14 @@ const textVariants = {
 };
 
 const MachineDetection = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (isModalOpen) {
+      setTimeout(() => {
+        setIsModalOpen(false);
+      }, 3000);
+    }
+  }, [isModalOpen]);
   return (
     <section className="h-full bg-gradient-to-b from-white to-gray-50 px-4 md:px-6 lg:px-20 xl:px-20 py-20 relative overflow-clip">
       <div className=" max-w-[1440px] mx-auto space-y-8 ">
@@ -67,11 +75,11 @@ const MachineDetection = () => {
                 <div className=" border border-zinc-200 p-2 py-3 rounded-md text-xs">
                   <TypeAnimation
                     sequence={[
-                      `eg if a user logs in more than 5 times from a new location, send an alert to SOC analyst`, // Types 'One'
+                      `If a user logs in more than 5 times from a new location, send an alert to SOC analyst`, // Types 'One'
                       2000, // Waits 1s
-                      `eg if a user logs in more than 5 times from a new location, send an alert to SOC analyst.`, // Deletes 'One' and types 'Two'
+                      `If a user logs in more than 5 times from a new location, send an alert to SOC analyst.`, // Deletes 'One' and types 'Two'
                       2000, // Waits 2s
-                      `eg if a user logs in more than 5 times from a new location, send an alert to SOC analyst..`,
+                      `If a user logs in more than 5 times from a new location, send an alert to SOC analyst.`,
                       2000, // Types 'Three' without deleting 'Two'
                       () => {},
                     ]}
@@ -115,28 +123,51 @@ const MachineDetection = () => {
                 <CButton className=" hover:bg-white bg-white border border-colorScBlue text-colorScBlue w-fit text-base h-[40px] ">
                   Close
                 </CButton>
-                <CButton className=" bg-colorScBlue text-white w-fit text-base h-[40px]">
-                  Schedule
-                </CButton>
+                <motion.div
+                  initial={{
+                    scale: 1,
+                  }}
+                  whileInView={{
+                    scale: 1.2,
+                  }}
+                  whileHover={{
+                    scale: 1,
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    duration: 0.4,
+                    delay: 1,
+                    ease: "easeOut",
+                  }}
+                >
+                  <CButton
+                    onClick={() => setIsModalOpen(true)}
+                    className=" bg-colorScBlue text-white w-fit text-base h-[40px]"
+                  >
+                    Schedule
+                  </CButton>
+                </motion.div>
               </div>
             </div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.7 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                repeat: Infinity,
-                repeatType: "reverse",
-                duration: 1,
-                delay: 4,
-                repeatDelay: 4,
-                ease: "easeOut",
-              }}
-              className=" absolute flex flex-col justify-center items-center md:w-[80%] w-full h-[80%] bg-white z-10 rounded-md p-4 space-y-3 shadow-xl md:scale-100 scale-80"
-            >
-              <img src="/success.svg" />
-              <p className=" font-semibold text-xl">Successful</p>
-              <p>Alert has been sent successfully to SOC analyst</p>
-            </motion.div>
+            <AnimatePresence>
+              {isModalOpen && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.7 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  className=" absolute top-10  flex flex-row items-center  w-[76%]  bg-white z-10 rounded-md p-4 space-y-3 shadow-xl md:scale-100 scale-80"
+                >
+                  <img src="/success.svg" className=" size-10" />
+                  <div>
+                    <p className=" font-semibold text-lg">Successful</p>
+                    <p className=" text-sm">
+                      Alert has been sent successfully to SOC analyst
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
           <motion.div
             className="bg-colorScGreen w-full p-8 py-10 space-y-3"
@@ -154,10 +185,10 @@ const MachineDetection = () => {
                 key={i}
                 className={
                   i % 2 === 0
-                    ? " text-xl font-medium text-white text-justify md:text-2xl"
+                    ? " text-base font-medium text-white text-justify md:text-lg"
                     : i === 2 || i === 4
-                    ? " text-white text-lg md:text-xl"
-                    : " text-xl font-medium text-white text-justify md:text-2xl"
+                    ? " text-white text-sm md:text-base"
+                    : " text-base font-medium text-white text-justify md:text-lg"
                 }
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -173,7 +204,7 @@ const MachineDetection = () => {
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.7, delay: 0.8 }}
             >
-              <CButton className=" bg-white text-colorScBlue w-fit text-base ">
+              <CButton className=" bg-white hover:bg-white  text-colorScBlue w-fit text-base mt-10  ">
                 Write your first rule
               </CButton>
             </motion.div>

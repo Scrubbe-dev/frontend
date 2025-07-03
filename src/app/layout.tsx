@@ -85,9 +85,9 @@ export default function RootLayout({
           <NextJsTopLoader />
           <StoreProvider>
             {/*  <AnnouncementBar /> disabled for now till official launch */}
-            <NavbarWrapper />
+            {/* <NavbarWrapper /> */}
             <main className="flex-grow h-full w-full">{children}</main>
-            <FooterWrapper />
+            {/* <FooterWrapper /> */}
             <CookieConsentModal />
             <CookieToggleButton />
             <Chatbot />
