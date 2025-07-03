@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import Navbar from "./Navbar";
+// import Navbar from "./Navbar";
 import NavbarDataS from "./NavbarDataS";
 import NavbarEzra from "./NavbarEzra";
 import NewNavbar from "./NewNavbar";
