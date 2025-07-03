@@ -1,5 +1,3 @@
-
-
 interface LogEntry {
   id: string;
   timeStamp: string;

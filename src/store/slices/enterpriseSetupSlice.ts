@@ -50,6 +50,7 @@ export type enterpriseSetupSliceType = {
   enterpriseSetup: EnterpriseSetup;
   currentStep: number;
   isSubmitting: boolean;
+  isSuccess: boolean;
   errors: Record<string, string>;
 
   // Actions
@@ -116,13 +117,13 @@ const initialEnterpriseSetup: EnterpriseSetup = {
   defaultIncidentPriority: ["High"],
 };
 
-export const createEnterpriseSetupSlice: StateCreator<enterpriseSetupSliceType> = (
-  set,
-  get
-) => ({
+export const createEnterpriseSetupSlice: StateCreator<
+  enterpriseSetupSliceType
+> = (set, get) => ({
   enterpriseSetup: initialEnterpriseSetup,
   currentStep: 0,
   isSubmitting: false,
+  isSuccess: false,
   errors: {},
 
   // Set company information
@@ -452,6 +453,7 @@ export const createEnterpriseSetupSlice: StateCreator<enterpriseSetupSliceType> 
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       console.log("Enterprise setup submitted successfully", enterpriseSetup);
+      set({ isSuccess: true });
     } catch (error) {
       console.error("Error submitting enterprise setup:", error);
       set({

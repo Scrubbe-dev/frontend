@@ -13,6 +13,7 @@ import OthersParameter from "./OthersParameter";
 import WhatsappParameter from "./WhatsappParameter";
 import Select from "../ui/select";
 import AuditLogs from "./AuditLogs";
+import { useRouter } from "next/navigation";
 
 const settingOptions = [
   {
@@ -164,6 +165,12 @@ const AlertSettings = () => {
       break;
   }
   console.log(settings);
+
+  const router = useRouter();
+  const handleSaveSettings = () => {
+    console.log(settings);
+    router.push("/data-sources");
+  };
   return (
     <div className=" min-h-screen bg-neutral-50">
       <div className="flex flex-col h-full w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
@@ -346,7 +353,10 @@ const AlertSettings = () => {
           </div>
 
           <div className=" justify-end mt-10 flex ">
-            <Button className=" shadow-none bg-blue-600 px-10">
+            <Button
+              onClick={handleSaveSettings}
+              className=" shadow-none bg-blue-600 px-10"
+            >
               Save Settings
             </Button>
           </div>

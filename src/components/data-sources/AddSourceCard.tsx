@@ -49,7 +49,7 @@ const AddSourceCard: React.FC<AddSourceCardProps> = ({
   };
 
   return (
-    <section className="w-[345px] min-h-[312px] bg-white rounded-lg flex flex-col justify-self-center">
+    <section className="w-full min-w-[345px] min-h-[312px] bg-white rounded-lg flex flex-col justify-self-center">
       {/* Header with title only */}
       <div className="flex items-center gap-3 p-4 border-b border-gray-100">
         <span className="text-gray-700 font-semibold text-sm">{title}</span>

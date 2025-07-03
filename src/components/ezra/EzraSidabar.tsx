@@ -11,13 +11,18 @@ import { BsQuestionOctagon } from "react-icons/bs";
 import Link from "next/link";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
-import { Switch } from "@heroui/react";
+import Switch from "../ui/Switch";
 
 export const navItem = [
   {
     name: "Dashboard",
     Icon: LayoutDashboard,
     link: "/ezra/dashboard",
+  },
+  {
+    name: "Data Source",
+    Icon: FaCodepen,
+    link: "/ezra/dashboard/data-source",
   },
   {
     name: "Natural Language Rule Input",
@@ -27,27 +32,27 @@ export const navItem = [
   {
     name: "Anomaly Detection",
     Icon: LayoutDashboard,
-    link: "detection",
+    link: "/ezra/dashboard/anotomy-detection",
   },
-  {
-    name: "Playbook Builder",
-    Icon: FaCodepen,
-    link: "ezra/dashboard",
-  },
+  // {
+  //   name: "Playbook Builder",
+  //   Icon: FaCodepen,
+  //   link: "ezra/dashboard",
+  // },
   {
     name: "Incident Ticket",
     Icon: ShieldCheck,
-    link: "ezra/dashboard",
+    link: "/ezra/dashboard/incident-ticket",
   },
   {
     name: "Notification Settings",
     Icon: Settings,
-    link: "ezra/dashboard",
+    link: "/ezra/dashboard/notification-settings",
   },
   {
     name: "Support",
     Icon: BsQuestionOctagon,
-    link: "ezra/dashboard",
+    link: "/ezra/dashboard/support",
   },
 ];
 const EzraSidebar = () => {
@@ -89,7 +94,7 @@ const EzraSidebar = () => {
 
       <div className="flex flex-col mb-6">
         <Link
-          href={"/"}
+          href={"/ezra/dashboard/settings"}
           className={clsx(
             "flex items-center bg-transparent opacity-60 hover:opacity-100 dark:text-white gap-2 max-h-10 h-full rounded-lg  cursor-pointer transition-all duration-300 px-3 py-3 w-full"
           )}
@@ -113,7 +118,7 @@ const EzraSidebar = () => {
               Dark Mode
             </p>
           </div>
-          <Switch />
+          <Switch checked={true} onChange={() => {}} />
         </div>
       </div>
     </div>

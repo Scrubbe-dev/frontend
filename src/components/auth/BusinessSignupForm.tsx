@@ -1,7 +1,7 @@
 "use client";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import Image from "next/image";
@@ -9,6 +9,7 @@ import * as z from "zod";
 import Input from "../ui/input";
 import Select from "../ui/select";
 import CButton from "../ui/Cbutton";
+import { useRouter } from "next/navigation";
 
 // Define the form schema using zod
 const businessSignupSchema = z
@@ -17,7 +18,36 @@ const businessSignupSchema = z
     lastName: z.string().min(1, { message: "Last name is required" }),
     businessEmail: z
       .string()
-      .email({ message: "Please enter a valid email address" }),
+      .email({ message: "Please enter a valid email address" })
+      .refine(
+        (email) => {
+          // List of common public email domains
+          const publicDomains = [
+            "gmail.com",
+            "yahoo.com",
+            "hotmail.com",
+            "outlook.com",
+            "aol.com",
+            "icloud.com",
+            "mail.com",
+            "gmx.com",
+            "protonmail.com",
+            "zoho.com",
+            "yandex.com",
+            "msn.com",
+            "live.com",
+            "ymail.com",
+            "inbox.com",
+            "me.com",
+          ];
+          const domain = email.split("@")[1]?.toLowerCase();
+          return domain && !publicDomains.includes(domain);
+        },
+        {
+          message:
+            "Please use your business email address (not a public provider)",
+        }
+      ),
     businessAddress: z
       .string()
       .min(1, { message: "Business address is required" }),
@@ -48,7 +78,7 @@ export default function BusinessSignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState<BusinessSignupFormData | null>(null);
-
+  const router = useRouter();
   const {
     handleSubmit,
     control,
@@ -102,11 +132,11 @@ export default function BusinessSignupForm() {
           </div>
         </div>
 
-        <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
           Successful
         </h1>
 
-        <p className="text-gray-600 text-center">
+        <p className="text-gray-600 dark:text-gray-300 text-center">
           Welcome {firstName} {lastName}! You have successfully created an
           account.
         </p>
@@ -141,6 +171,16 @@ export default function BusinessSignupForm() {
     }
   };
 
+  useEffect(() => {
+    if (showSuccess) {
+      const timeout = setTimeout(() => {
+        router.push("/auth/account-setup");
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [showSuccess, router]);
+
   return (
     <div className="w-full p-6">
       {showSuccess && formData ? (
@@ -150,7 +190,7 @@ export default function BusinessSignupForm() {
         />
       ) : (
         <>
-          <h1 className="text-xl md:text-2xl font-semibold mb-6 ">
+          <h1 className="text-xl md:text-2xl dark:text-white font-semibold mb-6 ">
             Business Signup
           </h1>
 
@@ -314,7 +354,7 @@ export default function BusinessSignupForm() {
             </div>
 
             {/* OAuth Buttons */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
               <Link href="#" className="w-full">
                 <button
                   type="button"
@@ -327,7 +367,7 @@ export default function BusinessSignupForm() {
                     height={38}
                     className="mr-2"
                   />
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium text-gray-700 dark:text-white">
                     GitHub
                   </span>
                 </button>
@@ -345,7 +385,7 @@ export default function BusinessSignupForm() {
                     height={38}
                     className="mr-2"
                   />
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium text-gray-700 dark:text-white">
                     GitLab
                   </span>
                 </button>
@@ -363,7 +403,9 @@ export default function BusinessSignupForm() {
                     height={38}
                     className="mr-2"
                   />
-                  <span className="text-sm font-medium text-gray-700">AWS</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-white">
+                    AWS
+                  </span>
                 </button>
               </Link>
 
@@ -379,7 +421,7 @@ export default function BusinessSignupForm() {
                     height={38}
                     className="mr-2"
                   />
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium text-gray-700 dark:text-white">
                     Azure
                   </span>
                 </button>
@@ -397,7 +439,9 @@ export default function BusinessSignupForm() {
                     height={38}
                     className="mr-2"
                   />
-                  <span className="text-sm font-medium text-gray-700">SSO</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-white">
+                    SSO
+                  </span>
                 </button>
               </Link>
             </div>

@@ -56,7 +56,7 @@ const NaturalLanguageRule = () => {
         </CButton>
       </div>
 
-      <div className="mt-5 dark:bg-[#111827] bg-white p-6  space-y-3 h-full rounded-xl">
+      <div className="mt-5 dark:bg-dark bg-white p-6  space-y-3 h-full rounded-xl">
         <div className="grid grid-cols-2 gap-x-5">
           <Input
             placeholder="search rule by name or tag"

@@ -35,7 +35,7 @@ export default function AnalyticsSidebar() {
               datasets: [
                 {
                   label: "Business",
-                  data: [40, 40, 45, 60, 65, 90, 105],
+                  data: [2, 2, 3, 4, 4, 4, 6],
                   borderColor: "#1a237e",
                   backgroundColor: "#99c2ff",
                   tension: 0.3,
@@ -46,7 +46,7 @@ export default function AnalyticsSidebar() {
                 },
                 {
                   label: "Developer",
-                  data: [50, 52, 65, 67, 85, 100, 115],
+                  data: [2, 3, 3, 4, 5, 5, 6],
                   borderColor: "#9575cd",
                   backgroundColor: "#e5e7eb",
                   tension: 0.3,
@@ -109,7 +109,7 @@ export default function AnalyticsSidebar() {
               labels: ["Email", "SSO", "Cloud", "GitHub", "Gitlab"],
               datasets: [
                 {
-                  data: [30, 25, 20, 15, 10],
+                  data: [1, 2, 1, 1, 1],
                   backgroundColor: [
                     "#1F3A89", // Light blue for Email
                     "#DBEAFE", // Dark blue for SSO
