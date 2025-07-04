@@ -156,12 +156,14 @@ const MachineDetection = () => {
                   initial={{ opacity: 0, scale: 0.7 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.7 }}
-                  className=" absolute top-10  flex flex-row items-center  w-[76%]  bg-white z-10 rounded-md p-4 space-y-3 shadow-xl md:scale-100 scale-80"
+                  className=" absolute top-10  flex flex-row items-center  w-[76%]  bg-white z-10 rounded-md p-2 sm:p-4 space-y-3 shadow-xl md:scale-100 scale-80"
                 >
                   <img src="/success.svg" className=" size-10" />
                   <div>
-                    <p className=" font-semibold text-lg">Successful</p>
-                    <p className=" text-sm">
+                    <p className=" font-semibold text-sm sm:text-lg">
+                      Successful
+                    </p>
+                    <p className=" text-xs sm:text-sm">
                       Alert has been sent successfully to SOC analyst
                     </p>
                   </div>

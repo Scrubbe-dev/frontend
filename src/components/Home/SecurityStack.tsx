@@ -14,7 +14,7 @@ const securityStack = [
       "Slack/email alerts with context and playbook audit trail",
     ],
     featureName: "Automate",
-    bgColor: "bg-colorScBlue",
+    bgColor: "bg-colorScBlue top-[100px]",
     color: "text-white",
     cta: "Get started",
   },
@@ -28,7 +28,7 @@ const securityStack = [
       "Auto-correlation of multi-source behavior",
     ],
     featureName: "Include",
-    bgColor: "bg-colorScIndigo",
+    bgColor: "bg-colorScIndigo top-[150px]",
     color: "text-white",
     cta: "Get started",
   },
@@ -42,7 +42,7 @@ const securityStack = [
       "Auto-correlation of multi-source behavior",
     ],
     featureName: "Includes",
-    bgColor: "bg-colorScPale",
+    bgColor: "bg-cyan-500 top-[200px]",
     color: "text-white",
     cta: "Go to API Documentation",
   },
@@ -56,7 +56,7 @@ const securityStack = [
       "Analyst assignment & response timeline",
     ],
     featureName: "What It Includes",
-    bgColor: "bg-colorScYello",
+    bgColor: "bg-orange-400 top-[250px]",
     color: "text-black",
     cta: "Explore the Incident Dashboard",
   },
@@ -70,7 +70,7 @@ const securityStack = [
       "Analyst filters, timestamps, and live updates",
     ],
     featureName: "Feature",
-    bgColor: "bg-colorScGreen",
+    bgColor: "bg-colorScGreen top-[300px]",
     color: "text-white",
     cta: "Get started",
   },
@@ -83,7 +83,7 @@ const securityStack = [
       "Custom event tracking",
     ],
     featureName: "Support",
-    bgColor: "bg-colorScLightBlue",
+    bgColor: "bg-colorScLightBlue top-[350px]",
     color: "text-black",
     cta: "Install the SDK Now",
   },
@@ -119,7 +119,7 @@ const SecurityStack = () => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const isMobile = useIsMobile();
   return (
-    <section className="h-full bg-gradient-to-b from-white to-gray-50 px-4 md:px-6 lg:px-20 xl:px-20 py-20 relative overflow-clip">
+    <section className="h-full relative bg-gradient-to-b from-white to-gray-50 px-4 md:px-6 lg:px-20 xl:px-20 py-20 overflow-clip">
       <div className=" max-w-[1600px] mx-auto space-y-8 ">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -157,7 +157,7 @@ const SecurityStack = () => {
           connected platform.
         </motion.p>
         <motion.div
-          className="flex lg:flex-row flex-col lg:-space-x-[10%] lg:space-y-0 -space-y-[400px] items-center justify-center"
+          className="hidden lg:flex lg:flex-row flex-col lg:-space-x-[10%] lg:space-y-0 -space-y-[400px] items-center justify-center"
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
@@ -234,6 +234,39 @@ const SecurityStack = () => {
             );
           })}
         </motion.div>
+
+        <div className="min-h-[1800px] relative md:hidden">
+          <div className="flex flex-col gap-4 items-center justify-center">
+            {securityStack.map((stack, index) => (
+              <div
+                key={index}
+                className={`sticky w-[300px] md:w-[362px] ${stack.bgColor} ${stack.color} min-h-[473px] rounded-xl shadow-sm transition-all duration-200 hover:shadow-2xl  cursor-pointer`}
+              >
+                <div className="flex flex-col justify-between p-4 h-[473px] relative">
+                  <img
+                    src="/card-bg.png"
+                    className="absolute inset-0 h-full w-full object-cover opacity-25"
+                  />
+                  <div className="space-y-3 h-full">
+                    <h2 className="font-medium text-xl">{stack.title}</h2>
+                    <p>{stack.description}</p>
+                    <div>
+                      <p>{stack.featureName}:</p>
+                      <ul className="list-disc pl-5">
+                        {stack.features.map((feature) => (
+                          <li key={feature}>{feature}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 font-medium text-sm flex-1 cursor-pointer">
+                    {stack.cta} <MoveRight />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

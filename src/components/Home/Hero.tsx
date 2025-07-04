@@ -57,7 +57,7 @@ const Hero = () => {
   const step = steps[activeStep - 1];
 
   // SVG circle constants
-  const size = 60;
+  const size = window.innerWidth > 768 ? 60 : 40;
   const stroke = 4;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -85,8 +85,8 @@ const Hero = () => {
                   activeStep === step.number ? "scale-[1.02]" : ""
                 }`}
               >
-                <div className="relative flex-shrink-0 w-[30px] sm:w-[60px] h-[30px] sm:h-[60px] rounded-full bg-white flex items-center justify-center mr-4 sm:mr-5">
-                  <span className="text-[20px] md:text-[24px] font-bold">
+                <div className="relative flex-shrink-0 w-[40px] sm:w-[60px] h-[40px] sm:h-[60px] rounded-full bg-white flex items-center justify-center mr-4 sm:mr-5">
+                  <span className="text-[20px] sm:text-[24px] font-bold">
                     {step.number}
                   </span>
                   {activeStep === step.number && (
