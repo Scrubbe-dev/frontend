@@ -6,10 +6,7 @@ import {
   FiChevronDown,
   FiChevronRight,
   FiLogOut,
-  FiPlus,
 } from "react-icons/fi";
-import { GiOrganigram } from "react-icons/gi";
-import { LuRoute } from "react-icons/lu";
 import { useAppStore } from "@/store/StoreProvider";
 import type { DataSourceId } from "@/store/slices/dataSourcesSlice";
 
