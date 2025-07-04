@@ -5,81 +5,6 @@ import { BsSendFill } from "react-icons/bs";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 
-const summary = [
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-  {
-    incident:
-      "Incident: Failed Login Attempt; Priority: High; Action: Block IP, Notify Admin; Impact: Potential Credential Stuffing",
-  },
-];
-
 const containerVariants = {
   hidden: {},
   show: {
@@ -251,7 +176,7 @@ const EzraConversation = () => {
                           <strong>Ezra’s Summary Recommendation:</strong>
                           <div className=" border border-zinc-100 bg-zinc-50 rounded-md p-2">
                             <p className=" border-l-2 border-zinc-500 pl-2">
-                              “There's an elevated risks tied to automated
+                              “There&apos;s an elevated risks tied to automated
                               credential abuse, fingerprint spoofing, and
                               session irregularities. Security teams should
                               escalate fingerprint correlation, enable adaptive

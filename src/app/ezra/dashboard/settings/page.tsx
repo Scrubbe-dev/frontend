@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "@/components/ui/select";
 import Switch from "@/components/ui/Switch";
 
@@ -11,6 +11,10 @@ const Page = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [compactView, setCompactView] = useState(true);
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setDisplayName(user.name);
+  }, []);
   return (
     <div className=" mx-auto space-y-8">
       {/* Display Preference Card */}
