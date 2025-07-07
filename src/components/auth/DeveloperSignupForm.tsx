@@ -10,9 +10,10 @@ import Input from "../ui/input";
 import { Controller } from "react-hook-form";
 import CButton from "../ui/Cbutton";
 import Select from "../ui/select";
+import useAuthStore from "@/lib/stores/auth.store";
 
 // Define the form schema using zod
-const developerSignupSchema = z
+export const developerSignupSchema = z
   .object({
     firstName: z.string().min(1, { message: "First name is required" }),
     lastName: z.string().min(1, { message: "Last name is required" }),
@@ -43,14 +44,12 @@ interface SuccessPageProps {
 }
 
 export default function DeveloperSignupForm() {
-  const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState<DeveloperSignupFormData | null>(
     null
   );
-
+  const { developerSignup, isLoading } = useAuthStore();
   const {
-    register,
     handleSubmit,
     formState: { errors, isValid },
     control,
@@ -116,28 +115,20 @@ export default function DeveloperSignupForm() {
 
   const onSubmit = async (data: DeveloperSignupFormData) => {
     try {
-      // Set loading state
-      setIsLoading(true);
-
       // Log form values
       console.log(data, " developer registration");
 
       // Simulate a 5-second delay
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
+      await developerSignup(data);
       // Store form data and show success page
       setFormData(data);
       setShowSuccess(true);
-
-      // Reset loading state
-      setIsLoading(false);
     } catch (error) {
       console.error("Registration error:", error);
       toast.error("Registration failed", {
         description:
           error instanceof Error ? error.message : "Something went wrong.",
       });
-      setIsLoading(false);
     }
   };
 
@@ -218,25 +209,29 @@ export default function DeveloperSignupForm() {
 
             {/* Experience Level Full Row */}
             <div className="mb-4">
-              <Select
-                label="Experience Level
-"
-                id="experience"
-                options={[
-                  { label: "Beginner", value: "beginner" },
-                  { label: "Intermediate", value: "intermediate" },
-                  { label: "Advanced", value: "advanced" },
-                  { label: "Expert", value: "expert" },
-                ]}
-                {...register("experience")}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  isLoading
-                    ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
-                    : "border-gray-300"
-                }`}
-                disabled={isLoading}
+              <Controller
+                name="experience"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    label="Experience Level"
+                    {...field}
+                    id="experience"
+                    options={[
+                      { label: "Beginner", value: "beginner" },
+                      { label: "Intermediate", value: "intermediate" },
+                      { label: "Advanced", value: "advanced" },
+                      { label: "Expert", value: "expert" },
+                    ]}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      isLoading
+                        ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
+                        : "border-gray-300"
+                    }`}
+                    disabled={isLoading}
+                  />
+                )}
               />
-
               {errors.experience && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.experience.message}

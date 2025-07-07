@@ -51,7 +51,7 @@ const Table = <TData extends object>({
           className={cn("w-full caption-bottom text-sm", className)}
           {...props}
         >
-          <thead className="dark:bg-[#0b0b0b] bg-neutral-50">
+          <thead className="dark:bg-[#374151] dark:text-white bg-blue-50">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
@@ -91,7 +91,7 @@ const Table = <TData extends object>({
               </tr>
             ))}
           </thead>
-          <tbody className="[&_tr:last-child]:border-0 ">
+          <tbody className="[&_tr:last-child]:border-0 dark:bg-[#1F2937] dark:text-white">
             {table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}

@@ -10,6 +10,9 @@ import Input from "../ui/input";
 import Select from "../ui/select";
 import CButton from "../ui/Cbutton";
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
+import { Loader2 } from "lucide-react";
+import useAuthStore from "@/lib/stores/auth.store";
 
 // Define the form schema using zod
 const businessSignupSchema = z
@@ -75,10 +78,11 @@ interface SuccessPageProps {
 }
 
 export default function BusinessSignupForm() {
-  const [isLoading, setIsLoading] = useState(false);
+  console.log("client id", process.env.NEXT_PUBLIC_GITHUB_CLIENT_SECRET);
   const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState<BusinessSignupFormData | null>(null);
   const router = useRouter();
+  const { businessSignup, isLoading } = useAuthStore();
   const {
     handleSubmit,
     control,
@@ -97,6 +101,9 @@ export default function BusinessSignupForm() {
     },
     mode: "onChange",
   });
+  const session = useSession();
+
+  console.log(session);
 
   // Success Page Component
   const SuccessPage = ({ firstName, lastName }: SuccessPageProps) => {
@@ -147,27 +154,24 @@ export default function BusinessSignupForm() {
   const onSubmit = async (data: BusinessSignupFormData) => {
     try {
       // Set loading state
-      setIsLoading(true);
 
       // Log form values
       console.log(data, " business registration");
 
       // Simulate a 5-second delay
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await businessSignup(data);
 
       // Store form data and show success page
       setFormData(data);
       setShowSuccess(true);
 
       // Reset loading state
-      setIsLoading(false);
     } catch (error) {
       console.error("Registration error:", error);
       toast.error("Registration failed", {
         description:
           error instanceof Error ? error.message : "Something went wrong.",
       });
-      setIsLoading(false);
     }
   };
 
@@ -183,6 +187,11 @@ export default function BusinessSignupForm() {
 
   return (
     <div className="w-full p-6">
+      {session.status == "loading" && (
+        <div className=" absolute inset-0 bg-black/20 z-50 flex justify-center pt-[20%]">
+          <Loader2 className=" animate-spin text-primary-500" size={30} />
+        </div>
+      )}
       {showSuccess && formData ? (
         <SuccessPage
           firstName={formData.firstName}
@@ -355,95 +364,90 @@ export default function BusinessSignupForm() {
 
             {/* OAuth Buttons */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-github.svg"
-                    alt="GitHub"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700 dark:text-white">
-                    GitHub
-                  </span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                onClick={() =>
+                  signIn("github", {
+                    // callbackUrl: "/auth/account-setup",
+                  })
+                }
+              >
+                <Image
+                  src="/icon-auth-github.svg"
+                  alt="GitHub"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700 dark:text-white">
+                  GitHub
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-gitlab.svg"
-                    alt="GitLab"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700 dark:text-white">
-                    GitLab
-                  </span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                <Image
+                  src="/icon-auth-gitlab.svg"
+                  alt="GitLab"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700 dark:text-white">
+                  GitLab
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-aws.svg"
-                    alt="AWS"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700 dark:text-white">
-                    AWS
-                  </span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                <Image
+                  src="/icon-auth-aws.svg"
+                  alt="AWS"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700 dark:text-white">
+                  AWS
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-azure.svg"
-                    alt="Azure"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700 dark:text-white">
-                    Azure
-                  </span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                <Image
+                  src="/icon-auth-azure.svg"
+                  alt="Azure"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700 dark:text-white">
+                  Azure
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-sso.svg"
-                    alt="SSO"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700 dark:text-white">
-                    SSO
-                  </span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                <Image
+                  src="/icon-auth-sso.svg"
+                  alt="SSO"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700 dark:text-white">
+                  SSO
+                </span>
+              </button>
             </div>
 
             {/* Demo Page Link */}

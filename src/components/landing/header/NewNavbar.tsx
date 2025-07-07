@@ -232,9 +232,30 @@ const NewNavbar = () => {
               >
                 <RiSearchLine size={20} />
               </button>
-              <button className="p-2 rounded-full hover:bg-gray-100 cursor-pointer">
-                <FiGlobe size={20} />
-              </button>
+              <div className="relative group">
+                <button
+                  onClick={() => setIsLanguageModalOpen((prev) => !prev)}
+                  className="p-2 rounded-full text-black cursor-pointer"
+                >
+                  <FiGlobe size={24} />
+                </button>
+                {isLanguageModalOpen && (
+                  <div className=" w-[130px] border z-50 border-gray-200 p-2 absolute   h-fit bg-white rounded-md top-full left-1/2 transform -translate-x-1/2 mt-1">
+                    <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                      English
+                    </div>
+                    <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                      French
+                    </div>
+                    <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                      Spanish
+                    </div>
+                    <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                      German
+                    </div>
+                  </div>
+                )}
+              </div>
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="p-2 hover:bg-gray-100 rounded-lg cursor-pointer"

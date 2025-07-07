@@ -1,12 +1,7 @@
 import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import { z } from "zod";
-import api from "@/lib/axios";
-
-const signInSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
+import Github from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
+import Gitlab from "next-auth/providers/gitlab";
 
 interface Token {
   sub?: string;
@@ -15,76 +10,100 @@ interface Token {
   isVerified?: boolean;
   accessToken?: string;
   refreshToken?: string;
+  email?: string;
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
-    Credentials({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+    Github({
+      authorization: {
+        params: {
+          scope: "read_user",
+        },
       },
-      authorize: async (credentials) => {
-        try {
-          
-          const { email, password } = await signInSchema.parseAsync(
-            credentials
-          );
-
-          
-          const response = await api.post("/login", {
-            email,
-            password,
-          });
-
-          
-          return {
-            id: response.data.user.id,
-            email: response.data.user.email,
-            name: `${response.data.user.firstName} ${response.data.user.lastName}`,
-            firstName: response.data.user.firstName,
-            lastName: response.data.user.lastName,
-            isVerified: response.data.user.isVerified,
-            accessToken: response.data.tokens.accessToken,
-            refreshToken: response.data.tokens.refreshToken,
-          };
-        } catch (error) {
-          console.error("Authentication error:", error);
-          return null;
-        }
+      async profile(profile) {
+        console.log({ profile });
+        return {
+          id: profile.id.toString(),
+          name: profile.name || profile.login,
+          email: profile.email || `${profile.login}`,
+          image: profile.avatar_url,
+          firstName: profile.name?.split(" ")[0] || profile.login,
+          lastName: profile.name?.split(" ").slice(1).join(" ") || "",
+          isVerified: true,
+        };
       },
     }),
+    Google({
+      async profile(profile) {
+        return { ...profile };
+      },
+    }),
+    Gitlab({
+      clientId: process.env.GITLAB_CLIENT_ID!,
+      clientSecret: process.env.GITLAB_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          scope: "read_user",
+        },
+      },
+      async profile(profile) {
+        console.log({ gitlabProfile: profile });
+        return {
+          id: profile.id.toString(),
+          name: profile.name || profile.username,
+          email: profile.email,
+          image: profile.avatar_url,
+          firstName: profile.name?.split(" ")[0] || profile.username,
+          lastName: profile.name?.split(" ").slice(1).join(" ") || "",
+          isVerified: true,
+        };
+      },
+    }),
+    // Cognito({
+    //   clientId: process.env.COGNITO_CLIENT_ID!,
+    //   clientSecret: process.env.COGNITO_CLIENT_SECRET!,
+    //   issuer: process.env.COGNITO_ISSUER!,
+    // }),
+    // AzureAD({
+    //   clientId: process.env.AZURE_AD_CLIENT_ID!,
+    //   clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
+    // }),
   ],
   callbacks: {
-    
+    // authorized: async ({ auth }) => {
+    //   return !!auth;
+    // },
     async jwt({ token, user }) {
       if (user) {
+        console.log({ user });
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
         token.firstName = user.firstName;
         token.lastName = user.lastName;
+        token.email = user.email;
         token.isVerified = user.isVerified;
       }
       return token;
     },
     async session({ session, token }) {
       const typedToken = token as Token;
-
+      console.log({ token });
       session.user.id = typedToken.sub || "";
       session.user.firstName = typedToken.firstName;
       session.user.lastName = typedToken.lastName;
       session.user.isVerified = typedToken.isVerified;
       session.accessToken = typedToken.accessToken;
       session.refreshToken = typedToken.refreshToken;
+      session.user.email = typedToken.email || "";
       return session;
     },
   },
   pages: {
-    signIn: "/auth/signin", 
+    signIn: "/auth/business-signup",
+    signOut: "/auth/signin",
   },
 });
-
 
 declare module "next-auth" {
   interface User {
@@ -93,6 +112,7 @@ declare module "next-auth" {
     isVerified?: boolean;
     accessToken?: string;
     refreshToken?: string;
+    email?: string;
   }
 
   interface Session {
@@ -101,6 +121,7 @@ declare module "next-auth" {
       firstName?: string;
       lastName?: string;
       isVerified?: boolean;
+      email?: string;
     };
     accessToken?: string;
     refreshToken?: string;
