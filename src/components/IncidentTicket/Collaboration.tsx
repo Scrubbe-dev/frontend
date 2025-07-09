@@ -57,27 +57,27 @@ const Collaboration = () => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-200px)]">
+    <div className="flex flex-col h-[calc(100vh-300px)]">
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-2 space-y-4 dark:bg-transparent bg-white">
         {messages.map((msg) =>
           msg.isMe ? (
             <div key={msg.id} className="flex justify-end">
-              <div className="max-w-[60%] bg-yellow-50 rounded-xl px-6 py-4 mb-2">
-                <div className="text-gray-800 mb-2">{msg.message}</div>
-                <div className="text-gray-400 text-sm text-right">
+              <div className="max-w-[60%] bg-yellow-50 rounded-xl px-4 py-2 mb-2">
+                <div className="text-gray-800 mb-2 text-sm">{msg.message}</div>
+                <div className="text-gray-400 text-xs text-right">
                   {msg.time}
                 </div>
               </div>
             </div>
           ) : (
             <div key={msg.id} className="flex justify-start">
-              <div className="max-w-[60%] bg-blue-50 rounded-xl px-6 py-4 mb-2">
-                <div className="font-medium text-blue-600 mb-1">
+              <div className="max-w-[60%] bg-blue-50 rounded-xl px-4 py-2 mb-2">
+                <div className="font-medium text-sm text-blue-600 mb-1">
                   {msg.author}
                 </div>
-                <div className="text-gray-800 mb-2">{msg.message}</div>
-                <div className="text-gray-400 text-sm text-right">
+                <div className="text-gray-800 text-sm mb-2">{msg.message}</div>
+                <div className="text-gray-400 text-xs text-right">
                   {msg.time}
                 </div>
               </div>

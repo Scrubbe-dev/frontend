@@ -1,10 +1,4 @@
-import {
-  LayoutDashboard,
-  Moon,
-  Settings,
-  SettingsIcon,
-  ShieldCheck,
-} from "lucide-react";
+import { LayoutDashboard, Moon, Settings, ShieldCheck } from "lucide-react";
 import { TbRouteSquare } from "react-icons/tb";
 import { FaCodepen } from "react-icons/fa6";
 import { BsQuestionOctagon } from "react-icons/bs";
@@ -162,13 +156,13 @@ export const navItem = [
   {
     name: "Settings",
     Icon: Settings,
-    link: "/ezra/dashboard/general-settings",
+    link: "/ezra/dashboard/settings",
     isMenu: true,
     isActive: false,
     menu: [
       {
         name: "General Settings",
-        link: "/ezra/dashboard/general-settings",
+        link: "/ezra/dashboard/settings",
       },
 
       {
@@ -219,7 +213,9 @@ const EzraSidebar = () => {
   return (
     <div className="min-w-[300px] h-full p-4 border-r border-blue-400/50 flex flex-col justify-between">
       <div>
-        <p className=" text-colorScBlue text-4xl font-bold">Ezra</p>
+        <p className=" text-colorScBlue text-4xl font-bold  font-besley">
+          EZRA
+        </p>
 
         <div className="flex flex-col gap-1 items-center mt-[15%] flex-1 w-full">
           {navItem.map((item) => {
@@ -278,21 +274,7 @@ const EzraSidebar = () => {
         </div>
       </div>
 
-      <div className="flex flex-col mb-6">
-        <Link
-          href={"/ezra/dashboard/settings"}
-          className={clsx(
-            "flex items-center bg-transparent opacity-60 hover:opacity-100 dark:text-white gap-2 max-h-10 h-full rounded-lg  cursor-pointer transition-all duration-300 px-3 py-3 w-full"
-          )}
-        >
-          <div className="">
-            <SettingsIcon size={20} className={clsx("")} />
-          </div>
-          <p className={clsx("text-sm transition-all delay-200 duration-100")}>
-            Settings
-          </p>
-        </Link>
-        <hr />
+      <div className="flex flex-col ">
         <div className="flex items-center gap-2 justify-between py-3 px-3">
           <div className="flex items-center gap-2">
             <Moon size={26} className={clsx(" fill-colorScBlue")} />
@@ -305,6 +287,14 @@ const EzraSidebar = () => {
             </p>
           </div>
           <Switch checked={true} onChange={() => {}} />
+        </div>
+
+        <div className="flex text-sm items-center gap-2 dark:text-white/60 text-black/60 justify-center ">
+          <p>Powered by</p>
+          <img
+            src="/scrubbe-logo-01.png"
+            className="w-10 h-10 scale-[2] ml-4 object-contain"
+          />
         </div>
       </div>
     </div>

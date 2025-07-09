@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdClose } from "react-icons/io";
 import { VscChevronDown, VscChevronUp } from "react-icons/vsc";
@@ -29,6 +29,23 @@ const NewNavbar = () => {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
   const textColor = "text-gray-800";
+  const statusFilterRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isLanguageModalOpen) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        statusFilterRef.current &&
+        !statusFilterRef.current.contains(event.target as Node)
+      ) {
+        setIsLanguageModalOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isLanguageModalOpen]);
 
   // Toggle dropdown visibility in mobile menu
   const toggleMobileDropdown = (label: string) => {
@@ -69,13 +86,13 @@ const NewNavbar = () => {
         },
         {
           label: "SOAR Automation",
-          href: "#",
+          href: "/home/products/soar",
           description:
             "Automated workflows to respond to incidents faster and smarter",
         },
         {
           label: "Incident Management",
-          href: "#",
+          href: "/home/products/incident-management",
           description:
             "End-to-end visibility, manage security events from detection to resolution",
         },
@@ -93,13 +110,13 @@ const NewNavbar = () => {
         },
         {
           label: "Compliance Tools",
-          href: "#",
+          href: "/home/products/compliance",
           description:
             "Automate reporting and meet standards like SOC 2, ISO 27001",
         },
         {
           label: "Dashboard Preview",
-          href: "#",
+          href: "/home/products/dashboard-preview",
           description:
             "Get a sneak peak of the Scrubbe control center in action",
         },
@@ -232,7 +249,7 @@ const NewNavbar = () => {
               >
                 <RiSearchLine size={20} />
               </button>
-              <div className="relative group">
+              <div className="relative group" ref={statusFilterRef}>
                 <button
                   onClick={() => setIsLanguageModalOpen((prev) => !prev)}
                   className="p-2 rounded-full text-black cursor-pointer"
@@ -325,7 +342,7 @@ const NewNavbar = () => {
                 >
                   <RiSearchLine size={24} />
                 </button>
-                <div className="relative group">
+                <div className="relative group" ref={statusFilterRef}>
                   <button
                     onClick={() => setIsLanguageModalOpen((prev) => !prev)}
                     className="p-2 rounded-full text-black cursor-pointer"

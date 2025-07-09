@@ -2,7 +2,7 @@
 import CButton from "@/components/ui/Cbutton";
 import React from "react";
 import { useRouter, usePathname } from "next/navigation";
-
+import { motion } from "framer-motion";
 const tabs = [
   {
     label: "Personalization",
@@ -60,7 +60,14 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
             );
           })}
         </div>
-        {children}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          key={pathname}
+        >
+          {children}
+        </motion.div>
       </div>
     </div>
   );

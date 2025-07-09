@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 interface ProgressBarProps {
   value: number;
   color: string;
@@ -5,7 +7,12 @@ interface ProgressBarProps {
 
 const ProgressBar = ({ value, color }: ProgressBarProps) => (
   <div className="w-full h-1.5 bg-gray-700 rounded">
-    <div className={`h-1.5 rounded ${color}`} style={{ width: `${value}%` }} />
+    <motion.div
+      initial={{ width: 0 }}
+      animate={{ width: `${value}%` }}
+      transition={{ duration: 1, delay: 0.5, ease: "circIn", type: "spring" }}
+      className={`h-1.5 rounded ${color}`}
+    />
   </div>
 );
 

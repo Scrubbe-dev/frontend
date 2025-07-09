@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "../ui/Modal";
 import { IoWarning } from "react-icons/io5";
 import Select from "../ui/select";
@@ -45,6 +45,7 @@ const NotificationSettings = ({
   const [actionSelected, setActionSelected] = useState<{
     [key: string]: string;
   }>({});
+  const statusFilterRef = useRef<HTMLDivElement>(null);
 
   console.log(isCreateIncident);
 
@@ -60,6 +61,23 @@ const NotificationSettings = ({
     }
     console.log(id);
   };
+
+  useEffect(() => {
+    if (!dropdownOpenId) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        statusFilterRef.current &&
+        !statusFilterRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpenId(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpenId]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-4">
@@ -93,9 +111,13 @@ const NotificationSettings = ({
               </div>
 
               {/* change this to a menu */}
-              <div className="relative">
+              <div className="relative" ref={statusFilterRef}>
                 <button
-                  onClick={() => setDropdownOpenId(item.id)}
+                  onClick={() =>
+                    setDropdownOpenId((prev) =>
+                      prev === item.id ? null : item.id
+                    )
+                  }
                   className="w-fit min-w-[180px] px-4 py-2 text-left dark:bg-transparent bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex items-center justify-between !text-sm !h-10"
                   type="button"
                 >
@@ -183,8 +205,10 @@ const NotificationSettings = ({
 
           <div className="flex gap-2 justify-end">
             <CButton
-              className="w-fit border border-gray-300 text-colorScBlue dark:border-gray-700 bg-transparent"
-              onClick={() => setIsCreateIncident(false)}
+              className="w-fit border hover:text-white border-gray-300 text-colorScBlue dark:border-gray-700 bg-transparent"
+              onClick={() => {
+                setIsNotifyIncident(false);
+              }}
             >
               Close
             </CButton>
@@ -237,7 +261,7 @@ const NotificationSettings = ({
 
           <div className="flex gap-2 justify-end">
             <CButton
-              className="w-fit border border-gray-300 text-colorScBlue dark:border-gray-700 bg-transparent"
+              className="w-fit border hover:text-white border-gray-300 text-colorScBlue dark:border-gray-700 bg-transparent"
               onClick={() => {
                 setIsMuteAlerts(false);
                 setMuteOption("");

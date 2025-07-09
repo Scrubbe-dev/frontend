@@ -21,8 +21,8 @@ const Board: React.FC = () => {
     selectedDataSource === "dashboard" || selectedDataSource === "add-new";
 
   return (
-    <div className="p-8 bg-gray-50 h-full">
-      <h1 className="text-2xl font-semibold text-gray-600 mb-8">
+    <div className="p-8 dark:bg-subDark bg-gray-50 h-full">
+      <h1 className="text-2xl font-semibold dark:text-white text-gray-600 mb-8">
         Scrubbe Data Ingestion Dashboard
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

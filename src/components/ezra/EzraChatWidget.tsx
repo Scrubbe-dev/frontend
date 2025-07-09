@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React from "react";
 import { BsSendFill } from "react-icons/bs";
 
@@ -12,7 +13,20 @@ const EzraChatWidget = () => {
 
       <div className="flex gap-3 items-center w-full px-6 pb-6">
         <div className=" w-full bg-white dark:bg-zinc-800 flex gap-3 items-center border border-zinc-600 rounded-lg h-[48px] px-2">
-          <img src="/ezrastar.svg" />
+          <motion.img
+            animate={{
+              rotate: [0, 180, 360],
+              // backgroundColor: ["#14D8C8", "#2563eb", "#14D8C8"],
+            }}
+            transition={{
+              duration: 3,
+              times: [0, 0.7, 1],
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "mirror",
+            }}
+            src="/ezrastar.svg"
+          />
           <input
             type="text"
             placeholder="Ask Ezra to summarise incidents for today"

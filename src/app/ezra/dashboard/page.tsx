@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import StatCard from "@/components/ezra/StatCard";
 import AlertCard from "@/components/ezra/AlertCard";
@@ -6,10 +7,16 @@ import { Button } from "@/components/ui/button";
 import EzraChatWidget from "@/components/ezra/EzraChatWidget";
 import Cbutton from "@/components/ezra-landing/Cbutton";
 import { Check } from "lucide-react";
+import { motion } from "framer-motion";
 const Dashboard = () => {
   return (
     <div className=" p-4 space-y-7">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="grid grid-cols-1 md:grid-cols-3 gap-5"
+      >
         <StatCard
           title="Security Score"
           value={20}
@@ -80,9 +87,14 @@ const Dashboard = () => {
             </span>
           }
         />
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.3 }}
+        className="grid grid-cols-1 md:grid-cols-2 gap-5"
+      >
         <div className="dark:bg-[#151e2e] bg-white rounded-xl dark:shadow-md p-6 border-t-4 border-blue-400/60 min-h-[220px] flex flex-col">
           <div className="text-sm font-semibold text-colorScBlue mb-3">
             Real time alerts
@@ -144,9 +156,14 @@ const Dashboard = () => {
             <ProgressBar value={25} color="bg-green-500" />
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.6 }}
+        className="grid grid-cols-1 md:grid-cols-2 gap-5"
+      >
         <div className="dark:bg-[#151e2e] bg-white rounded-xl dark:shadow-md p-6 border-t-4 border-blue-400/60 min-h-[220px] flex flex-col gap-2">
           <div className="text-sm font-semibold text-colorScBlue mb-3">
             Auto-Respond Status
@@ -204,9 +221,14 @@ const Dashboard = () => {
             </span>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.9 }}
+        className="grid grid-cols-1 md:grid-cols-2 gap-5"
+      >
         <div className="dark:bg-[#151e2e] bg-white rounded-xl dark:shadow-md p-6 border-t-4 border-blue-400/60 min-h-[220px] flex flex-col gap-2">
           <div className="text-sm font-semibold text-colorScBlue mb-3">
             System Integration{" "}
@@ -262,9 +284,15 @@ const Dashboard = () => {
             Email Full reports
           </Button>
         </div>
-      </div>
+      </motion.div>
 
-      <EzraChatWidget />
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 1.2 }}
+      >
+        <EzraChatWidget />
+      </motion.div>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import TicketComments from "./TicketComments";
 import Collaboration from "./Collaboration";
 import History from "./History";
 import TreatIntel from "./TreatIntel";
+import { motion } from "framer-motion";
 // import { Ticket } from './IncidateTicketPage';
 
 const TABS = [
@@ -97,212 +98,221 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
           ))}
         </div>
         {/* Details Tab */}
-        {tab === 0 && (
-          <div>
-            <div className="grid grid-cols-2 gap-x-8 gap-y-2 mb-4">
-              <div className="text-gray-500 dark:text-gray-200">
-                Incident ID :
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          key={tab}
+        >
+          {tab === 0 && (
+            <div>
+              <div className="grid grid-cols-2 gap-x-8 gap-y-2 mb-4">
+                <div className="text-gray-500 dark:text-gray-200">
+                  Incident ID :
+                </div>
+                <div className=" text-right dark:text-white">INC25423</div>
+                <div className="text-gray-500 dark:text-gray-200">
+                  Username :
+                </div>
+                <div className=" text-right dark:text-white">David Wilson</div>
+                <div className="text-gray-500 dark:text-gray-200">Reason:</div>
+                <div className="text-right dark:text-white">
+                  Multiple failed attempt
+                </div>
+                <div className="text-gray-500 dark:text-gray-200">Created:</div>
+                <div className="text-right dark:text-white">
+                  2025-05-29 10:54:57
+                </div>
+                <div className="text-gray-500 dark:text-gray-200">
+                  Risk Score:
+                </div>
+                <div className="text-right dark:text-white">74</div>
+                <div className="text-gray-500 dark:text-gray-200">
+                  SLA status:
+                </div>
+                <div className="text-right dark:text-white">
+                  Due 2025-05-29 14:54:57
+                </div>
+                <div className="text-gray-500 dark:text-gray-200">
+                  Recommended Actions :
+                </div>
+                <div className="text-right dark:text-white">
+                  Lock Account , Notify User
+                </div>
+                <div className="text-gray-500 dark:text-gray-200">
+                  Related Logs :
+                </div>
+                <div className="text-right dark:text-white">
+                  <a href="#" className="text-blue-700 underline">
+                    View SIEM logs
+                  </a>
+                </div>
               </div>
-              <div className=" text-right dark:text-white">INC25423</div>
-              <div className="text-gray-500 dark:text-gray-200">Username :</div>
-              <div className=" text-right dark:text-white">David Wilson</div>
-              <div className="text-gray-500 dark:text-gray-200">Reason:</div>
-              <div className="text-right dark:text-white">
-                Multiple failed attempt
+              <div className="mb-4">
+                <div className="font-semibold dark:text-white mb-2">
+                  Recommended Playbooks :
+                </div>
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <span className="w-44 dark:text-white">Lock Account</span>
+                  <div>
+                    <span className="bg-yellow-100 text-yellow-700 rounded px-3 py-1 text-xs font-medium">
+                      Pending
+                    </span>
+                    <button
+                      className="ml-2 border border-blue-500 text-blue-600 rounded text-sm px-3 py-1 font-medium hover:bg-blue-50 transition-colors"
+                      onClick={() => setIsExcuteLockAccount(true)}
+                    >
+                      Execute
+                    </button>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <span className="w-44 dark:text-white">Notify User</span>
+                  <div>
+                    <span className="bg-yellow-100 text-yellow-700 rounded px-3 py-1 text-xs font-medium">
+                      Pending
+                    </span>
+                    <button className="ml-2 border border-blue-500 text-blue-600 rounded text-sm px-3 py-1 font-medium hover:bg-blue-50 transition-colors">
+                      Execute
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div className="text-gray-500 dark:text-gray-200">Created:</div>
-              <div className="text-right dark:text-white">
-                2025-05-29 10:54:57
-              </div>
-              <div className="text-gray-500 dark:text-gray-200">
-                Risk Score:
-              </div>
-              <div className="text-right dark:text-white">74</div>
-              <div className="text-gray-500 dark:text-gray-200">
-                SLA status:
-              </div>
-              <div className="text-right dark:text-white">
-                Due 2025-05-29 14:54:57
-              </div>
-              <div className="text-gray-500 dark:text-gray-200">
-                Recommended Actions :
-              </div>
-              <div className="text-right dark:text-white">
-                Lock Account , Notify User
-              </div>
-              <div className="text-gray-500 dark:text-gray-200">
-                Related Logs :
-              </div>
-              <div className="text-right dark:text-white">
-                <a href="#" className="text-blue-700 underline">
-                  View SIEM logs
-                </a>
-              </div>
-            </div>
-            <div className="mb-4">
-              <div className="font-semibold dark:text-white mb-2">
-                Recommended Playbooks :
-              </div>
-              <div className="flex items-center justify-between gap-3 mb-2">
-                <span className="w-44 dark:text-white">Lock Account</span>
-                <div>
+              <div className="mb-4">
+                <div className="font-semibold dark:text-white mb-2">
+                  Playbook Status
+                </div>
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <span className="w-44 dark:text-white">Lock Account</span>
                   <span className="bg-yellow-100 text-yellow-700 rounded px-3 py-1 text-xs font-medium">
                     Pending
                   </span>
-                  <button
-                    className="ml-2 border border-blue-500 text-blue-600 rounded text-sm px-3 py-1 font-medium hover:bg-blue-50 transition-colors"
-                    onClick={() => setIsExcuteLockAccount(true)}
-                  >
-                    Execute
-                  </button>
                 </div>
-              </div>
-              <div className="flex items-center justify-between gap-3 mb-2">
-                <span className="w-44 dark:text-white">Notify User</span>
-                <div>
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <span className="w-44 dark:text-white">Notify User</span>
                   <span className="bg-yellow-100 text-yellow-700 rounded px-3 py-1 text-xs font-medium">
                     Pending
                   </span>
-                  <button className="ml-2 border border-blue-500 text-blue-600 rounded text-sm px-3 py-1 font-medium hover:bg-blue-50 transition-colors">
-                    Execute
-                  </button>
                 </div>
               </div>
+              <hr className="my-6" />
+              <div className="grid grid-cols-2 gap-6 mb-6">
+                <div>
+                  <Select
+                    value={mitre}
+                    label="Mitre Attack"
+                    options={selectOptions.mitre}
+                    onChange={(e) => setMitre(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Select
+                    value={compliance}
+                    label="Compliance"
+                    options={selectOptions.compliance}
+                    onChange={(e) => setCompliance(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Input
+                    label="Custom Field"
+                    value={customField}
+                    onChange={(e) => setCustomField(e.target.value)}
+                    placeholder="Enter custom data"
+                  />
+                </div>
+                <div>
+                  <Select
+                    label="Status"
+                    options={selectOptions.status}
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Select
+                    label="Priority"
+                    options={selectOptions.priority}
+                    value={priority}
+                    onChange={(e) => setPriority(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Select
+                    label="Assigned to"
+                    options={selectOptions.assigned}
+                    value={assigned}
+                    onChange={(e) => setAssigned(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Select
+                    label="Custom Action"
+                    options={selectOptions.customAction}
+                    value={customAction}
+                    onChange={(e) => setCustomAction(e.target.value)}
+                  />
+                </div>
+              </div>
+              {/* Action Buttons */}
+              <div className="grid grid-cols-3 gap-3 mb-3">
+                <button className="bg-blue-600 text-white border border-blue-500 rounded-lg py-2 font-medium hover:bg-blue-700">
+                  Joggle JSON view
+                </button>
+                <button
+                  className="bg-blue-600 text-white border border-blue-500 rounded-lg py-2 font-medium hover:bg-blue-700"
+                  onClick={() => setIsMergeTicket(true)}
+                >
+                  Merge Tickets
+                </button>
+                <button
+                  onClick={() => setIsEscalateTicket(true)}
+                  className="bg-blue-600 text-white border border-blue-500 rounded-lg py-2 font-medium hover:bg-blue-700"
+                >
+                  Escalate
+                </button>
+              </div>
+              <div className="grid grid-cols-3 gap-3 mb-3">
+                <button className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700">
+                  Sync to Jira
+                </button>
+                <button className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700">
+                  Sync to Servicenow
+                </button>
+                <button className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700">
+                  Sync to Freshdesk
+                </button>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <button className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700">
+                  Execute Action
+                </button>
+                <button className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700">
+                  Update Ticket
+                </button>
+                <button
+                  onClick={onClose}
+                  className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700"
+                >
+                  Close
+                </button>
+              </div>
             </div>
-            <div className="mb-4">
-              <div className="font-semibold dark:text-white mb-2">
-                Playbook Status
-              </div>
-              <div className="flex items-center justify-between gap-3 mb-2">
-                <span className="w-44 dark:text-white">Lock Account</span>
-                <span className="bg-yellow-100 text-yellow-700 rounded px-3 py-1 text-xs font-medium">
-                  Pending
-                </span>
-              </div>
-              <div className="flex items-center justify-between gap-3 mb-2">
-                <span className="w-44 dark:text-white">Notify User</span>
-                <span className="bg-yellow-100 text-yellow-700 rounded px-3 py-1 text-xs font-medium">
-                  Pending
-                </span>
-              </div>
-            </div>
-            <hr className="my-6" />
-            <div className="grid grid-cols-2 gap-6 mb-6">
-              <div>
-                <Select
-                  value={mitre}
-                  label="Mitre Attack"
-                  options={selectOptions.mitre}
-                  onChange={(e) => setMitre(e.target.value)}
-                />
-              </div>
-              <div>
-                <Select
-                  value={compliance}
-                  label="Compliance"
-                  options={selectOptions.compliance}
-                  onChange={(e) => setCompliance(e.target.value)}
-                />
-              </div>
-              <div>
-                <Input
-                  label="Custom Field"
-                  value={customField}
-                  onChange={(e) => setCustomField(e.target.value)}
-                  placeholder="Enter custom data"
-                />
-              </div>
-              <div>
-                <Select
-                  label="Status"
-                  options={selectOptions.status}
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                />
-              </div>
-              <div>
-                <Select
-                  label="Priority"
-                  options={selectOptions.priority}
-                  value={priority}
-                  onChange={(e) => setPriority(e.target.value)}
-                />
-              </div>
-              <div>
-                <Select
-                  label="Assigned to"
-                  options={selectOptions.assigned}
-                  value={assigned}
-                  onChange={(e) => setAssigned(e.target.value)}
-                />
-              </div>
-              <div>
-                <Select
-                  label="Custom Action"
-                  options={selectOptions.customAction}
-                  value={customAction}
-                  onChange={(e) => setCustomAction(e.target.value)}
-                />
-              </div>
-            </div>
-            {/* Action Buttons */}
-            <div className="grid grid-cols-3 gap-3 mb-3">
-              <button className="bg-blue-600 text-white border border-blue-500 rounded-lg py-2 font-medium hover:bg-blue-700">
-                Joggle JSON view
-              </button>
-              <button
-                className="bg-blue-600 text-white border border-blue-500 rounded-lg py-2 font-medium hover:bg-blue-700"
-                onClick={() => setIsMergeTicket(true)}
-              >
-                Merge Tickets
-              </button>
-              <button
-                onClick={() => setIsEscalateTicket(true)}
-                className="bg-blue-600 text-white border border-blue-500 rounded-lg py-2 font-medium hover:bg-blue-700"
-              >
-                Escalate
-              </button>
-            </div>
-            <div className="grid grid-cols-3 gap-3 mb-3">
-              <button className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700">
-                Sync to Jira
-              </button>
-              <button className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700">
-                Sync to Servicenow
-              </button>
-              <button className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700">
-                Sync to Freshdesk
-              </button>
-            </div>
-            <div className="grid grid-cols-3 gap-3">
-              <button className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700">
-                Execute Action
-              </button>
-              <button className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700">
-                Update Ticket
-              </button>
-              <button
-                onClick={onClose}
-                className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
+          )}
 
-        {/* Comments Tab */}
-        {tab === 1 && <TicketComments />}
+          {/* Comments Tab */}
+          {tab === 1 && <TicketComments />}
 
-        {/* Collaboration Tab */}
-        {tab === 2 && <Collaboration />}
+          {/* Collaboration Tab */}
+          {tab === 2 && <Collaboration />}
 
-        {/* History Tab */}
-        {tab === 3 && <History />}
+          {/* History Tab */}
+          {tab === 3 && <History />}
 
-        {/* Threat intel Tab */}
-        {tab === 4 && <TreatIntel />}
-        {/* Other tabs can be implemented as needed */}
+          {/* Threat intel Tab */}
+          {tab === 4 && <TreatIntel />}
+          {/* Other tabs can be implemented as needed */}
+        </motion.div>
       </div>
 
       <Modal

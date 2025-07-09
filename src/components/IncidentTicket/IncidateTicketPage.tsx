@@ -6,12 +6,13 @@ import { CellContext } from "@tanstack/react-table";
 import { Table } from "../ui/table";
 import clsx from "clsx";
 import AdvanceFilter from "./AdvanceFilter";
-import { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Pagination from "../alert-setting/Pagination";
 import NotificationSettings from "./NotificationSettings";
 import CreateIncident from "./CreateIncident";
 import MangePlaybook from "./MangePlaybook";
 import TicketDetails from "./TicketDetails";
+import IncidentAnalysis from "./IncidentAnalysis";
 
 export type Ticket = {
   id: string;
@@ -196,7 +197,28 @@ const IncidentTicketPage = () => {
   const [isCreateIncidentOpen, setIsCreateIncidentOpen] = useState(false);
   const [isManagePlaybookOpen, setIsManagePlaybookOpen] = useState(false);
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
+  const [isIncidentAnalysisOpen, setIsIncidentAnalysisOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+  // const [statusFilter, setStatusFilter] = useState<string>("");
+  const [openStatusFilter, setOpenStatusFilter] = useState<boolean>(false);
+  const statusFilterRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!openStatusFilter) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        statusFilterRef.current &&
+        !statusFilterRef.current.contains(event.target as Node)
+      ) {
+        setOpenStatusFilter(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openStatusFilter]);
+
   const handleRowClick = (ticket: Ticket) => {
     console.log(ticket);
     setSelectedTicket(ticket);
@@ -228,10 +250,13 @@ const IncidentTicketPage = () => {
           >
             New Incident
           </CButton>
-          <CButton className="w-fit border-colorScBlue border bg-transparent text-colorScBlue">
+          <CButton
+            onClick={() => setIsIncidentAnalysisOpen(true)}
+            className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue"
+          >
             Analytics
           </CButton>
-          <CButton className="w-fit border-colorScBlue border bg-transparent text-colorScBlue">
+          <CButton className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue">
             Reports
           </CButton>
           <CButton
@@ -251,12 +276,40 @@ const IncidentTicketPage = () => {
           </div>
 
           <div className="flex gap-2 ">
-            <CButton className="w-fit border-colorScBlue border bg-transparent text-colorScBlue">
-              Filter by Status
-            </CButton>
+            <div className="relative" ref={statusFilterRef}>
+              <CButton
+                onClick={() => setOpenStatusFilter(!openStatusFilter)}
+                className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue"
+              >
+                Filter by Status
+              </CButton>
+              {/* click outside to close */}
+              {openStatusFilter && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 text-sm rounded-md shadow-lg">
+                  {[
+                    { label: "Open", value: "open" },
+                    { label: "Closed", value: "closed" },
+                    { label: "In Progress", value: "in-progress" },
+                    { label: "On Hold", value: "on-hold" },
+                  ].map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => {
+                        // setStatusFilter(option.value);
+                        setOpenStatusFilter(false);
+                      }}
+                      className="w-full px-4 py-2 text-left hover:bg-gray-50 focus:outline-none focus:bg-gray-50 text-gray-900 first:rounded-t-md last:rounded-b-md"
+                      type="button"
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <CButton
               onClick={() => setIsAdvanceFilterOpen(true)}
-              className="w-fit border-colorScBlue border bg-transparent text-colorScBlue"
+              className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue"
             >
               More Filter
             </CButton>
@@ -275,6 +328,7 @@ const IncidentTicketPage = () => {
           isOpen={isAdvanceFilterOpen}
           onClose={() => setIsAdvanceFilterOpen(false)}
         />
+        {/* Notification center */}
         <NotificationSettings
           isOpen={isNotificationSettingsOpen}
           onClose={() => setIsNotificationSettingsOpen(false)}
@@ -294,6 +348,10 @@ const IncidentTicketPage = () => {
             ticket={selectedTicket}
           />
         )}
+        <IncidentAnalysis
+          isOpen={isIncidentAnalysisOpen}
+          onClose={() => setIsIncidentAnalysisOpen(false)}
+        />
       </div>
     </div>
   );

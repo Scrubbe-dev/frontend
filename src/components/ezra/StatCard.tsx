@@ -1,3 +1,5 @@
+"use client";
+import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
 interface StatCardProps {
@@ -33,9 +35,16 @@ const StatCard = ({
     {subtitle && <div className={`text-sm ${subtitleColor}`}>{subtitle}</div>}
     {progress !== undefined && (
       <div className="w-full h-1 bg-gray-700 rounded">
-        <div
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{
+            duration: 1,
+            delay: 0.5,
+            ease: "circIn",
+            type: "spring",
+          }}
           className={`h-1 rounded ${progressColor}`}
-          style={{ width: `${progress}%` }}
         />
       </div>
     )}
