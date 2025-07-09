@@ -112,14 +112,16 @@ export default function ForgotPassword() {
         return (
           <div className="w-full mx-auto">
             <div
-              className=" flex gap-2 items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer"
+              className=" flex gap-2 items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer dark:text-white"
               onClick={() => router.back()}
             >
               <ChevronLeft />
               <p>back</p>
             </div>
-            <h1 className="text-2xl font-semibold mb-2">Forgot Password?</h1>
-            <p className="text-gray-600 mb-6">
+            <h1 className="text-2xl font-semibold mb-2 dark:text-white">
+              Forgot Password?
+            </h1>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
               Put your email address to get started
             </p>
 
@@ -149,9 +151,11 @@ export default function ForgotPassword() {
               <ChevronLeft />
               <p>back</p>
             </div>
-            <h1 className="text-2xl font-semibold mb-2">Email Verification</h1>
-            <p className="text-gray-600 mb-4">
-              We have to sent a code to your email address to confirm it&rsquo;s
+            <h1 className="text-2xl font-semibold mb-2 dark:text-white">
+              Email Verification
+            </h1>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
+              We have sent a code to your email address to confirm it&rsquo;s
               yours
             </p>
 
@@ -189,8 +193,10 @@ export default function ForgotPassword() {
       case 3:
         return (
           <div className="w-full  mx-auto">
-            <h1 className="text-2xl font-semibold mb-2">Create New Password</h1>
-            <p className="text-gray-600 mb-6">
+            <h1 className="text-2xl font-semibold mb-2 dark:text-white">
+              Create New Password
+            </h1>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
               Enter a password you will remember
             </p>
 
@@ -248,11 +254,11 @@ export default function ForgotPassword() {
               </div>
             </div>
 
-            <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
               Successful
             </h1>
 
-            <p className="text-gray-600 text-center mb-8">
+            <p className="text-gray-600 dark:text-gray-300 text-center mb-8">
               Your password has been reseted successfully
             </p>
 

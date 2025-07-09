@@ -68,7 +68,7 @@ const Card: React.FC<CardProps> = ({
   };
 
   return (
-    <div className="w-[345px] h-[312px] bg-white  rounded-lg flex flex-col justify-between">
+    <div className=" w-full min-w-[345px] h-[312px] dark:bg-dark bg-white  rounded-lg flex flex-col justify-between">
       {/* Header with logo and title */}
       <div className=" flex-1">
         <div className="flex items-center gap-3 p-4 border-b border-gray-100 ">
@@ -84,7 +84,9 @@ const Card: React.FC<CardProps> = ({
               />
             </div>
           )}
-          <span className="text-gray-700 font-semibold text-sm">{title}</span>
+          <span className="text-gray-700 dark:text-white font-semibold text-sm ">
+            {title}
+          </span>
         </div>
 
         {/* Navigation tabs */}
@@ -111,7 +113,9 @@ const Card: React.FC<CardProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${getStatusColor()}`}></div>
-            <span className="text-sm text-gray-600 capitalize">{status}</span>
+            <span className="text-sm text-gray-600 dark:text-white capitalize ">
+              {status}
+            </span>
           </div>
           <button
             onClick={() => onButtonClick(buttonText, status)}
@@ -129,8 +133,12 @@ const Card: React.FC<CardProps> = ({
 
         {/* Data info */}
         <div className="text-xs  space-y-1 font-medium">
-          <div>Processed: {processedData}</div>
-          <div>Last Update: {timestamp}</div>
+          <div className="dark:text-white text-gray-600">
+            Processed: {processedData}
+          </div>
+          <div className="dark:text-white text-gray-600">
+            Last Update: {timestamp}
+          </div>
         </div>
       </div>
     </div>

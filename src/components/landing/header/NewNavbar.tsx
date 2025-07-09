@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdClose } from "react-icons/io";
 import { VscChevronDown, VscChevronUp } from "react-icons/vsc";
@@ -27,8 +27,25 @@ const NewNavbar = () => {
     {}
   );
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-
+  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
   const textColor = "text-gray-800";
+  const statusFilterRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isLanguageModalOpen) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        statusFilterRef.current &&
+        !statusFilterRef.current.contains(event.target as Node)
+      ) {
+        setIsLanguageModalOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isLanguageModalOpen]);
 
   // Toggle dropdown visibility in mobile menu
   const toggleMobileDropdown = (label: string) => {
@@ -63,19 +80,19 @@ const NewNavbar = () => {
       dropdownOptions: [
         {
           label: "SIEM Platform",
-          href: "/products/siem",
+          href: "/home/products/siem",
           description:
             "Real-time threat detection, log analysis, and centralized monitoring",
         },
         {
           label: "SOAR Automation",
-          href: "#",
+          href: "/home/products/soar",
           description:
             "Automated workflows to respond to incidents faster and smarter",
         },
         {
           label: "Incident Management",
-          href: "#",
+          href: "/home/products/incident-management",
           description:
             "End-to-end visibility, manage security events from detection to resolution",
         },
@@ -93,13 +110,13 @@ const NewNavbar = () => {
         },
         {
           label: "Compliance Tools",
-          href: "#",
+          href: "/home/products/compliance",
           description:
             "Automate reporting and meet standards like SOC 2, ISO 27001",
         },
         {
           label: "Dashboard Preview",
-          href: "#",
+          href: "/home/products/dashboard-preview",
           description:
             "Get a sneak peak of the Scrubbe control center in action",
         },
@@ -232,9 +249,30 @@ const NewNavbar = () => {
               >
                 <RiSearchLine size={20} />
               </button>
-              <button className="p-2 rounded-full hover:bg-gray-100 cursor-pointer">
-                <FiGlobe size={20} />
-              </button>
+              <div className="relative group" ref={statusFilterRef}>
+                <button
+                  onClick={() => setIsLanguageModalOpen((prev) => !prev)}
+                  className="p-2 rounded-full text-black cursor-pointer"
+                >
+                  <FiGlobe size={24} />
+                </button>
+                {isLanguageModalOpen && (
+                  <div className=" w-[130px] border z-50 border-gray-200 p-2 absolute   h-fit bg-white rounded-md top-full left-1/2 transform -translate-x-1/2 mt-1">
+                    <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                      English
+                    </div>
+                    <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                      French
+                    </div>
+                    <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                      Spanish
+                    </div>
+                    <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                      German
+                    </div>
+                  </div>
+                )}
+              </div>
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="p-2 hover:bg-gray-100 rounded-lg cursor-pointer"
@@ -304,9 +342,30 @@ const NewNavbar = () => {
                 >
                   <RiSearchLine size={24} />
                 </button>
-                <button className="p-2 rounded-full text-black cursor-pointer">
-                  <FiGlobe size={24} />
-                </button>
+                <div className="relative group" ref={statusFilterRef}>
+                  <button
+                    onClick={() => setIsLanguageModalOpen((prev) => !prev)}
+                    className="p-2 rounded-full text-black cursor-pointer"
+                  >
+                    <FiGlobe size={24} />
+                  </button>
+                  {isLanguageModalOpen && (
+                    <div className=" w-[130px] border z-50 border-gray-200 p-2 absolute   h-fit bg-white rounded-md top-full left-1/2 transform -translate-x-1/2 mt-1">
+                      <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                        English
+                      </div>
+                      <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                        French
+                      </div>
+                      <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                        Spanish
+                      </div>
+                      <div className="text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
+                        German
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="flex justify-center items-center gap-2  min-w-[141px] h-[40px] sm:min-w-[176px] sm:h-[50px] lg:min-w-[180px] lg:h-[60px] bg-white rounded-3xl px-4">
@@ -321,7 +380,7 @@ const NewNavbar = () => {
                   </Link>
                 </div>
                 <Link
-                  href="/auth"
+                  href="/auth/signin"
                   className="px-6 py-2 rounded-2xl font-medium text-colorScBlue border border-colorScBlue hover:border-blue-700 transition-colors whitespace-nowrap focus:outline-none"
                 >
                   Get Started
@@ -333,7 +392,7 @@ const NewNavbar = () => {
 
         {/* Mobile Menu Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-white z-50 lg:hidden ">
+          <div className="fixed inset-0 bg-white z-50 xl:hidden ">
             {/* Modal Header */}
             <div className="flex justify-between items-center px-4 h-16 border-b border-gray-200">
               <Link
@@ -412,9 +471,19 @@ const NewNavbar = () => {
                 </div>
               ))}
 
-              <div className="pt-6 border-t border-gray-200">
+              <div className="pt-6 border-t border-gray-200 space-y-3">
+                <div className="animated-gradient p-[2px] rounded-3xl">
+                  <Link
+                    href={"/ezra"}
+                    className=" bg-[#111827] w-full gap-2 px-6 py-2 text-white rounded-3xl font-medium flex items-center justify-center"
+                  >
+                    Explore Ezra Ai
+                    <img src="/ezrastar1.svg" />
+                    {/* <PiStarFourFill className=" text-blue-500" size={22} /> */}
+                  </Link>
+                </div>
                 <Link
-                  href="/auth"
+                  href="/auth/signin"
                   onClick={() => setIsModalOpen(false)}
                   className="block w-full text-center py-3 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors focus:outline-none text-lg font-medium"
                 >

@@ -6,10 +6,7 @@ import {
   FiChevronDown,
   FiChevronRight,
   FiLogOut,
-  // FiPlus,
 } from "react-icons/fi";
-// import { GiOrganigram } from "react-icons/gi";
-// import { LuRoute } from "react-icons/lu";
 import { useAppStore } from "@/store/StoreProvider";
 import type { DataSourceId } from "@/store/slices/dataSourcesSlice";
 
@@ -55,14 +52,14 @@ const SideBar = () => {
   }));
 
   return (
-    <div className="w-72 max-w-[250px] border-r border-gray-200 flex flex-col text-base h-full">
+    <div className="w-72 max-w-[250px] dark:bg-dark dark:border-gray-500 border-r border-gray-200 flex flex-col text-base h-full">
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto">
         {/* Menu Section */}
-        <div className="p-4 border-b border-gray-100">
+        <div className="p-4 border-b dark:border-gray-700 border-gray-100">
           <button
             onClick={() => toggleSection("menu")}
-            className="flex items-center justify-between w-full text-left  text-gray-400 hover:text-gray-900"
+            className="flex items-center justify-between w-full text-left dark:text-gray-300 dark:hover:text-white text-gray-400 hover:text-gray-900"
           >
             <span>Menu</span>
             {expandedSections.menu ? (
@@ -78,7 +75,7 @@ const SideBar = () => {
               <div>
                 <button
                   onClick={() => toggleSection("dataSources")}
-                  className="flex items-center justify-between w-full text-left py-2  text-gray-700 hover:text-gray-900"
+                  className="flex items-center justify-between w-full text-left py-2 dark:text-gray-300 dark:hover:text-white  text-gray-700 hover:text-gray-900"
                 >
                   <div className="flex items-center space-x-2">
                     {/* <GiOrganigram className="w-6 h-6" /> */}
@@ -108,7 +105,7 @@ const SideBar = () => {
                             className={`flex items-center space-x-2 w-full text-left px-5 py-2 rounded-md transition-colors ${
                               isSelected
                                 ? "bg-blue-500 text-white font-medium"
-                                : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                                : "dark:text-gray-300  text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                             }`}
                           >
                             {IconComponent && (
@@ -127,7 +124,7 @@ const SideBar = () => {
               <div>
                 <button
                   onClick={() => toggleSection("logsAnalytics")}
-                  className="flex items-center justify-between w-full text-left py-2  text-gray-700 hover:text-gray-900"
+                  className="flex items-center justify-between w-full text-left py-2 dark:text-gray-300 dark:hover:text-white  text-gray-700 hover:text-gray-900"
                 >
                   <div className="flex items-center space-x-2">
                     {/* <LuRoute className="w-6 h-6" /> */}
@@ -149,7 +146,7 @@ const SideBar = () => {
         <div className="px-4 py-2">
           <button
             onClick={() => toggleSection("activities")}
-            className="flex items-center justify-between w-full text-left py-2  text-gray-400 hover:text-gray-900"
+            className="flex items-center justify-between w-full text-left py-2  dark:text-gray-300 dark:hover:text-white text-gray-400 hover:text-gray-900"
           >
             <span>Activities</span>
             {expandedSections.activities ? (
@@ -165,7 +162,7 @@ const SideBar = () => {
               <div>
                 <button
                   onClick={() => toggleSection("settings")}
-                  className="flex items-center justify-between w-full text-left py-2  text-gray-700 hover:text-gray-900"
+                  className="flex items-center justify-between w-full text-left py-2 dark:text-gray-300 dark:hover:text-white  text-gray-700 hover:text-gray-900"
                 >
                   <div className="flex items-center space-x-2">
                     <FiSettings className="w-6 h-6 text-gray-500" size={18} />
@@ -183,7 +180,7 @@ const SideBar = () => {
               <div>
                 <button
                   onClick={() => toggleSection("support")}
-                  className="flex items-center justify-between w-full text-left py-2  text-gray-700 hover:text-gray-900"
+                  className="flex items-center justify-between w-full text-left py-2 dark:text-gray-300 dark:hover:text-white text-gray-700 hover:text-gray-900"
                 >
                   <div className="flex items-center space-x-2">
                     <FiHelpCircle className="w-6 h-6 text-gray-500" />
@@ -203,7 +200,7 @@ const SideBar = () => {
 
       {/* Footer - Log out */}
       <div className="border-t border-gray-200 p-4">
-        <button className="flex items-center justify-between w-full text-left py-2 text-gray-600 hover:text-gray-900">
+        <button className="flex items-center justify-between w-full text-left py-2 dark:text-gray-300 dark:hover:text-white text-gray-600 hover:text-gray-900">
           <span>Log out</span>
           <FiLogOut className="w-4 h-4" />
         </button>

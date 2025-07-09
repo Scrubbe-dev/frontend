@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import * as z from "zod";
 import Input from "../ui/input";
 import CButton from "../ui/Cbutton";
+import useAuthStore from "@/lib/stores/auth.store";
+import { useRouter } from "next/navigation";
 
 // Define the form schema using zod
 const loginSchema = z.object({
@@ -22,8 +24,8 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function SignInForm() {
   const [rememberMe, setRememberMe] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
+  const { login, isLoading } = useAuthStore();
+  const router = useRouter();
   // Keep the form handling structure closer to the original
   // even though we're simplifying functionality
   const {
@@ -42,38 +44,35 @@ export default function SignInForm() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       // Set loading state
-      setIsLoading(true);
 
       // Log form values
       console.log(data);
 
       // Simulate a 5-second delay
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
-      // Show success toast after delay
+      await login(data.email, data.password);
       toast.success(`Successfully signed in!`, {
         description: `${data.email}, you are being redirected...`,
         duration: 10000,
       });
 
+      // Show success toast after delay
+
       // In a real app, you would redirect here
-      // router.push("/");
+      router.push("/");
 
       // Reset loading state
-      setIsLoading(false);
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Sign in failed", {
         description:
           error instanceof Error ? error.message : "An error occurred",
       });
-      setIsLoading(false);
     }
   };
 
   return (
     <div className="w-full p-6">
-      <h1 className=" text-xl md:text-2xl font-semibold mb-6">
+      <h1 className=" text-xl md:text-2xl dark:text-white font-semibold mb-6">
         Sign in to Scrubbe
       </h1>
 
@@ -162,7 +161,9 @@ export default function SignInForm() {
                 height={38}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700">GitHub</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-white">
+                GitHub
+              </span>
             </button>
           </Link>
 
@@ -178,7 +179,9 @@ export default function SignInForm() {
                 height={38}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700">GitLab</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-white">
+                GitLab
+              </span>
             </button>
           </Link>
 
@@ -194,7 +197,9 @@ export default function SignInForm() {
                 height={38}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700">AWS</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-white">
+                AWS
+              </span>
             </button>
           </Link>
 
@@ -210,7 +215,9 @@ export default function SignInForm() {
                 height={38}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700">Azure</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-white">
+                Azure
+              </span>
             </button>
           </Link>
 
@@ -226,7 +233,9 @@ export default function SignInForm() {
                 height={38}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700">SSO</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-white">
+                SSO
+              </span>
             </button>
           </Link>
         </div>

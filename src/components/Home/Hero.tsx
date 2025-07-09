@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CButton from "../ui/Cbutton";
 import { motion } from "framer-motion";
 
@@ -19,6 +19,9 @@ const steps = [
 ];
 const Hero = () => {
   const [activeStep, setActiveStep] = useState(1);
+  const [progress, setProgress] = useState(1); // 1 = 100%, 0 = 0%
+  const progressInterval = useRef<NodeJS.Timeout | null>(null);
+
   console.log(activeStep);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -33,7 +36,32 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, [steps.length]);
 
+  // Progress countdown effect
+  useEffect(() => {
+    setProgress(1); // Reset progress to full
+    if (progressInterval.current) clearInterval(progressInterval.current);
+    const start = Date.now();
+    progressInterval.current = setInterval(() => {
+      const elapsed = Date.now() - start;
+      const newProgress = Math.max(0, 1 - elapsed / 10000);
+      setProgress(newProgress);
+      if (newProgress === 0) {
+        if (progressInterval.current) clearInterval(progressInterval.current);
+      }
+    }, 16); // ~60fps
+    return () => {
+      if (progressInterval.current) clearInterval(progressInterval.current);
+    };
+  }, [activeStep]);
+
   const step = steps[activeStep - 1];
+
+  // SVG circle constants
+  const size = window.innerWidth > 768 ? 60 : 40;
+  const stroke = 4;
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const dashOffset = circumference * (1 - progress);
 
   return (
     <section className=" bg-white px-4 md:px-6 lg:px-20 xl:px-20 py-10 ">
@@ -57,24 +85,45 @@ const Hero = () => {
                   activeStep === step.number ? "scale-[1.02]" : ""
                 }`}
               >
-                <div className="relative flex-shrink-0 w-[30px] sm:w-[60px] h-[30px] sm:h-[60px] rounded-full bg-white flex items-center justify-center mr-4 sm:mr-5">
-                  <span className="text-[20px] md:text-[24px] font-bold">
+                <div className="relative flex-shrink-0 w-[40px] sm:w-[60px] h-[40px] sm:h-[60px] rounded-full bg-white flex items-center justify-center mr-4 sm:mr-5">
+                  <span className="text-[20px] sm:text-[24px] font-bold">
                     {step.number}
                   </span>
                   {activeStep === step.number && (
-                    <div
-                      className="absolute inset-0 rounded-full border-4 border-transparent 
-                        animate-[spin_4s_cubic-bezier(0.4,0,0.2,1)_infinite]
-                        border-t-[#1F3A89]"
-                    />
+                    <svg
+                      width={size}
+                      height={size}
+                      className="absolute inset-0"
+                      style={{ transform: "rotate(-90deg)" }}
+                    >
+                      <circle
+                        cx={size / 2}
+                        cy={size / 2}
+                        r={radius}
+                        fill="none"
+                        stroke="#e5e7eb"
+                        strokeWidth={stroke}
+                      />
+                      <circle
+                        cx={size / 2}
+                        cy={size / 2}
+                        r={radius}
+                        fill="none"
+                        stroke="#1F3A89"
+                        strokeWidth={stroke}
+                        strokeDasharray={circumference}
+                        strokeDashoffset={dashOffset}
+                        style={{ transition: "stroke-dashoffset 0.05s linear" }}
+                      />
+                    </svg>
                   )}
                 </div>
 
-                <div className="">
+                <div className="min-h-[100px]">
                   <p
                     className={`${
                       activeStep === step.number ? "text-white" : "text-white"
-                    } text-lg sm:text-xl leading-relaxed max-w-lg font-medium 2xl:w-full lg:w-[56%] w-full`}
+                    } text-lg sm:text-xl leading-relaxed max-w-lg font-medium 2xl:w-full lg:w-[70%] w-full`}
                   >
                     {step.description}
                   </p>

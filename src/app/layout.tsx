@@ -4,10 +4,6 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { StoreProvider } from "@/store/StoreProvider";
 import CookieConsentModal from "@/components/landing/CookieConsentModal";
-import CookieToggleButton from "@/components/landing/CookieToggleButton";
-import NavbarWrapper from "@/components/landing/header/NavbarWrapper";
-import FooterWrapper from "@/components/landing/footer/FooterWrapper";
-import Chatbot from "@/components/landing/Chatbot";
 //import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
 import AuthProvider from "@/provider/AuthProvider";
@@ -85,12 +81,11 @@ export default function RootLayout({
           <NextJsTopLoader />
           <StoreProvider>
             {/*  <AnnouncementBar /> disabled for now till official launch */}
-            <NavbarWrapper />
+            {/* <NavbarWrapper /> */}
             <main className="flex-grow h-full w-full">{children}</main>
-            <FooterWrapper />
+            {/* <FooterWrapper /> */}
             <CookieConsentModal />
-            <CookieToggleButton />
-            <Chatbot />
+
             <ModalManager />
           </StoreProvider>
           <Toaster position="top-center" />

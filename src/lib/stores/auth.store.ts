@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { loginSchema, developerSignupSchema, businessSignupSchema } from "../validations/auth.schema";
+import { loginSchema, businessSignupSchema } from "../validations/auth.schema";
 import { apiClient } from "../api/client";
+import Zod from "zod";
+import { developerSignupSchema } from "@/components/auth/DeveloperSignupForm";
 
 type User = {
   id: string;
@@ -38,9 +40,9 @@ const useAuthStore = create<AuthState & AuthActions>()(
         try {
           set({ isLoading: true, error: null });
           const validatedData = loginSchema.parse({ email, password });
-          
+
           const { data } = await apiClient.post("/login", validatedData);
-          
+
           set({ user: data.user, isLoading: false });
         } catch (error) {
           set({
@@ -54,20 +56,19 @@ const useAuthStore = create<AuthState & AuthActions>()(
         try {
           set({ isLoading: true, error: null });
           const validatedData = developerSignupSchema.parse(signupData);
-          const nameParts = validatedData.fullName.trim().split(/\s+/);
-          const firstName = nameParts[0] || "";
-          const lastName = nameParts.slice(1).join(" ") || "";
+          const firstName = validatedData.firstName;
+          const lastName = validatedData.lastName;
           const newBusinessData = {
             email: validatedData.email,
             password: validatedData.password,
             firstName,
             lastName,
-            username:validatedData.githubUsername,
-            experience: validatedData.experience, 
-          }  
+            username: validatedData.githubUsername,
+            experience: validatedData.experience,
+          };
           const { data } = await apiClient.post("/register", newBusinessData);
-          console.log(newBusinessData , data)
-          
+          console.log(newBusinessData, data);
+
           set({ user: data.user, isLoading: false });
         } catch (error) {
           set({
@@ -82,21 +83,18 @@ const useAuthStore = create<AuthState & AuthActions>()(
           set({ isLoading: true, error: null });
           const validatedData = businessSignupSchema.parse(signupData);
 
-          const nameParts = validatedData.fullName.trim().split(/\s+/);
-          const firstName = nameParts[0] || "";
-          const lastName = nameParts.slice(1).join(" ") || "";
+          const firstName = validatedData.firstName || "";
+          const lastName = validatedData.lastName || "";
           const newBusinessData = {
-            email: validatedData.email,
+            email: validatedData.businessEmail,
             password: validatedData.password,
             firstName,
             lastName,
-            username:validatedData.githubUsername,
-            experience: validatedData.experience, 
-
-          }
+            //  add other fields
+          };
 
           const { data } = await apiClient.post("/register", newBusinessData);
-          console.log(newBusinessData , data) 
+          console.log(newBusinessData, data);
           set({ user: data.user, isLoading: false });
         } catch (error) {
           set({

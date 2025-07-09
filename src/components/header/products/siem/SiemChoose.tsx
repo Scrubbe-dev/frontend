@@ -75,7 +75,7 @@ const SiemChoose = () => {
     <>
       <div className="w-full bg-white">
         <section className="w-full mx-auto px-4 py-6 md:py-10">
-          <article className="w-[90%] mx-auto rounded-[20px] overflow-hidden bg-[url('/background-siemchoose.svg'),linear-gradient(to_bottom,#2664EA,#153884)] bg-cover bg-center bg-no-repeat">
+          <article className=" max-w-[1440px] mx-auto rounded-[20px] overflow-hidden bg-[url('/siem-background.png')] bg-blend-saturation bg-colorScGreen bg-cover bg-center bg-no-repeat">
             {/* Content Container */}
             <div className="relative z-10 px-6 sm:px-8 lg:px-10 py-8 lg:py-10">
               {/* Header Section */}
@@ -83,15 +83,17 @@ const SiemChoose = () => {
                 <h2 className="text-[24px] sm:text-[28px] md:text-[32px] lg:text-[36px] font-bold text-white mb-3 lg:mb-4">
                   Why Choose Our SIEM Platform
                 </h2>
-                <p className="max-w-4xl text-[14px] sm:text-[16px] lg:text-[18px] text-blue-100 leading-relaxed">
-                  Our SIEM platform combines real-time monitoring, advanced
+                <p className="max-w-4xl text-[14px] sm:text-[16px] lg:text-[18px] text-white font-medium leading-relaxed">
+                  Our SIEM platform combines real-time monitoring, advanced{" "}
+                  <br className="hidden sm:block" />
                   analytics, and automated response to deliver complete
-                  protection for your critical assets.
+                  protection for <br className="hidden sm:block" /> your
+                  critical assets.
                 </p>
               </div>
 
               {/* Benefits Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 w-full mx-auto">
                 {benefits.map((benefit, index) => (
                   <BenefitCard
                     key={`benefit-${index}`}

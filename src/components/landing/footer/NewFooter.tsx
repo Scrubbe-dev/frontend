@@ -25,7 +25,7 @@ const theme = {
 // Component-specific styles grouped together
 const componentStyles = {
   footer: {
-    container: "w-full max-w-[1440px] mx-auto px-4 py-8 z-10",
+    container: "w-full max-w-[1440px] mx-auto px-10 py-8 z-10",
     background: "bg-[#111827]",
     innerContainer: " w-full mx-auto",
     topRow:
@@ -168,11 +168,11 @@ const NewFooter: React.FC = () => {
   const pricingLinks: ColumnData = {
     title: "Pricing",
     links: [
-      { text: "Authentication SDK Pricing", href: "#" },
-      { text: "SIEM and SOAR monitoring Pricing", href: "#" },
+      // { text: "Authentication SDK Pricing", href: "#" },
+      // { text: "SIEM and SOAR monitoring Pricing", href: "#" },
+      { text: "Contact Us", href: "#" },
       { text: "Talk to sales", href: "#" },
-      { text: "Community", href: "#" },
-      { text: "Support", href: "#" },
+      { text: "Contact Us", href: "#" },
     ],
   };
 
@@ -195,14 +195,10 @@ const NewFooter: React.FC = () => {
   const complianceContent = [
     {
       id: 1,
-      text: "Our services are hosted on AWS Cloud, which makes scrubbe to be ISO 27017, ISO compliant.",
-    },
-    {
-      id: 2,
       text: "Your personal Data Protection in the cloud such as PII, KYC and Authentication information is guaranteed - compliant with ISO 27018.",
     },
     {
-      id: 3,
+      id: 2,
       text: "Scrubbe is compliant with ISO 27001 - Information Security Management global standards necessary for controlling, processing and protecting customer data, internal systems and software assets.",
     },
   ];
@@ -233,11 +229,11 @@ const NewFooter: React.FC = () => {
                 <br />
                 Wilmington, DE 19806, United States
               </div>
-              <div className={componentStyles.logoSection.socialContainer}>
+              {/* <div className={componentStyles.logoSection.socialContainer}>
                 <SocialLink icon={FaSquareXTwitter} href="#" />
                 <SocialLink icon={FaLinkedin} href="#" />
                 <SocialLink icon={FaGithub} href="#" />
-              </div>
+              </div> */}
               <div className="flex items-center gap-3 mt-4">
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1">
                   <div className="relative w-8 h-8">

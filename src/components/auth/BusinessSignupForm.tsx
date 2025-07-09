@@ -1,7 +1,7 @@
 "use client";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import Image from "next/image";
@@ -9,6 +9,10 @@ import * as z from "zod";
 import Input from "../ui/input";
 import Select from "../ui/select";
 import CButton from "../ui/Cbutton";
+import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
+import { Loader2 } from "lucide-react";
+import useAuthStore from "@/lib/stores/auth.store";
 
 // Define the form schema using zod
 const businessSignupSchema = z
@@ -17,7 +21,36 @@ const businessSignupSchema = z
     lastName: z.string().min(1, { message: "Last name is required" }),
     businessEmail: z
       .string()
-      .email({ message: "Please enter a valid email address" }),
+      .email({ message: "Please enter a valid email address" })
+      .refine(
+        (email) => {
+          // List of common public email domains
+          const publicDomains = [
+            "gmail.com",
+            "yahoo.com",
+            "hotmail.com",
+            "outlook.com",
+            "aol.com",
+            "icloud.com",
+            "mail.com",
+            "gmx.com",
+            "protonmail.com",
+            "zoho.com",
+            "yandex.com",
+            "msn.com",
+            "live.com",
+            "ymail.com",
+            "inbox.com",
+            "me.com",
+          ];
+          const domain = email.split("@")[1]?.toLowerCase();
+          return domain && !publicDomains.includes(domain);
+        },
+        {
+          message:
+            "Please use your business email address (not a public provider)",
+        }
+      ),
     businessAddress: z
       .string()
       .min(1, { message: "Business address is required" }),
@@ -45,10 +78,11 @@ interface SuccessPageProps {
 }
 
 export default function BusinessSignupForm() {
-  const [isLoading, setIsLoading] = useState(false);
+  console.log("client id", process.env.NEXT_PUBLIC_GITHUB_CLIENT_SECRET);
   const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState<BusinessSignupFormData | null>(null);
-
+  const router = useRouter();
+  const { businessSignup, isLoading } = useAuthStore();
   const {
     handleSubmit,
     control,
@@ -67,6 +101,9 @@ export default function BusinessSignupForm() {
     },
     mode: "onChange",
   });
+  const session = useSession();
+
+  console.log(session);
 
   // Success Page Component
   const SuccessPage = ({ firstName, lastName }: SuccessPageProps) => {
@@ -102,11 +139,11 @@ export default function BusinessSignupForm() {
           </div>
         </div>
 
-        <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
           Successful
         </h1>
 
-        <p className="text-gray-600 text-center">
+        <p className="text-gray-600 dark:text-gray-300 text-center">
           Welcome {firstName} {lastName}! You have successfully created an
           account.
         </p>
@@ -117,32 +154,44 @@ export default function BusinessSignupForm() {
   const onSubmit = async (data: BusinessSignupFormData) => {
     try {
       // Set loading state
-      setIsLoading(true);
 
       // Log form values
       console.log(data, " business registration");
 
       // Simulate a 5-second delay
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await businessSignup(data);
 
       // Store form data and show success page
       setFormData(data);
       setShowSuccess(true);
 
       // Reset loading state
-      setIsLoading(false);
     } catch (error) {
       console.error("Registration error:", error);
       toast.error("Registration failed", {
         description:
           error instanceof Error ? error.message : "Something went wrong.",
       });
-      setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (showSuccess) {
+      const timeout = setTimeout(() => {
+        router.push("/auth/account-setup");
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [showSuccess, router]);
+
   return (
     <div className="w-full p-6">
+      {session.status == "loading" && (
+        <div className=" absolute inset-0 bg-black/20 z-50 flex justify-center pt-[20%]">
+          <Loader2 className=" animate-spin text-primary-500" size={30} />
+        </div>
+      )}
       {showSuccess && formData ? (
         <SuccessPage
           firstName={formData.firstName}
@@ -150,7 +199,7 @@ export default function BusinessSignupForm() {
         />
       ) : (
         <>
-          <h1 className="text-xl md:text-2xl font-semibold mb-6 ">
+          <h1 className="text-xl md:text-2xl dark:text-white font-semibold mb-6 ">
             Business Signup
           </h1>
 
@@ -314,92 +363,91 @@ export default function BusinessSignupForm() {
             </div>
 
             {/* OAuth Buttons */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6">
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-github.svg"
-                    alt="GitHub"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">
-                    GitHub
-                  </span>
-                </button>
-              </Link>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
+              <button
+                type="button"
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                onClick={() =>
+                  signIn("github", {
+                    // callbackUrl: "/auth/account-setup",
+                  })
+                }
+              >
+                <Image
+                  src="/icon-auth-github.svg"
+                  alt="GitHub"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700 dark:text-white">
+                  GitHub
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-gitlab.svg"
-                    alt="GitLab"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">
-                    GitLab
-                  </span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                <Image
+                  src="/icon-auth-gitlab.svg"
+                  alt="GitLab"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700 dark:text-white">
+                  GitLab
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-aws.svg"
-                    alt="AWS"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">AWS</span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                <Image
+                  src="/icon-auth-aws.svg"
+                  alt="AWS"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700 dark:text-white">
+                  AWS
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-azure.svg"
-                    alt="Azure"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">
-                    Azure
-                  </span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                <Image
+                  src="/icon-auth-azure.svg"
+                  alt="Azure"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700 dark:text-white">
+                  Azure
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-sso.svg"
-                    alt="SSO"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">SSO</span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                <Image
+                  src="/icon-auth-sso.svg"
+                  alt="SSO"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700 dark:text-white">
+                  SSO
+                </span>
+              </button>
             </div>
 
             {/* Demo Page Link */}

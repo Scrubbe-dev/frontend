@@ -4,11 +4,13 @@ import { Button } from "../ui/button";
 type Props = {
   children: ReactNode;
   className?: string;
+  onClick?: () => void;
 };
-const Cbutton = ({ children, className }: Props) => {
+const Cbutton = ({ children, className, onClick }: Props) => {
   return (
     <Button
       className={`bg-gradient-to-t to-colorScBlue from-blue-800 ${className}`}
+      onClick={onClick}
     >
       {children}
     </Button>
