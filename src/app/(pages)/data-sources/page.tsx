@@ -8,7 +8,11 @@ export const metadata: Metadata = {
 };
 
 const DataSourcesPage = () => {
-  return <Board />;
+  return (
+    <div className=" overflow-y-auto">
+      <Board />
+    </div>
+  );
 };
 
 export default DataSourcesPage;

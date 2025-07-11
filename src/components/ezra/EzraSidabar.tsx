@@ -34,10 +34,6 @@ export const navItem = [
     isActive: false,
     menu: [
       {
-        name: "Data Source",
-        link: "/ezra/dashboard/data-source",
-      },
-      {
         name: "Source Categories (Cloud, Apps)",
         link: "/ezra/dashboard/source-categories",
       },

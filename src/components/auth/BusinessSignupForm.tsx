@@ -9,10 +9,13 @@ import * as z from "zod";
 import Input from "../ui/input";
 import Select from "../ui/select";
 import CButton from "../ui/Cbutton";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import useAuthStore from "@/lib/stores/auth.store";
+import CompleteBusinessProfile, {
+  BusinessProfileSignupFormData,
+} from "./CompleteBusinessProfile";
 
 // Define the form schema using zod
 const businessSignupSchema = z
@@ -78,11 +81,15 @@ interface SuccessPageProps {
 }
 
 export default function BusinessSignupForm() {
-  console.log("client id", process.env.NEXT_PUBLIC_GITHUB_CLIENT_SECRET);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [formData, setFormData] = useState<BusinessSignupFormData | null>(null);
+  const [formData, setFormData] =
+    useState<Partial<BusinessSignupFormData> | null>(null);
   const router = useRouter();
-  const { businessSignup, isLoading } = useAuthStore();
+  const [profileComplete, setProfileComplete] = useState(false);
+  const { businessSignup, businessProfileSignup, isLoading } = useAuthStore();
+  const searchParams = useSearchParams();
+  const path = searchParams.get("to");
+
   const {
     handleSubmit,
     control,
@@ -103,9 +110,77 @@ export default function BusinessSignupForm() {
   });
   const session = useSession();
 
-  console.log(session);
+  const onSubmit = async (data: BusinessSignupFormData) => {
+    try {
+      // Set loading state
+      // Log form values
+      console.log(data, " business registration");
 
-  // Success Page Component
+      // Simulate a 5-second delay
+      await businessSignup(data);
+
+      // Store form data and show success page
+      setFormData(data);
+      setShowSuccess(true);
+
+      // Reset loading state
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("Registration failed", {
+        description:
+          error instanceof Error ? error.message : "Something went wrong.",
+      });
+    }
+  };
+
+  const onProfileSubmit = async (data: BusinessProfileSignupFormData) => {
+    try {
+      // Set loading state
+
+      // Log form values
+      console.log(data, " business registration");
+
+      // Simulate a 5-second delay
+      const details = {
+        ...data,
+        ...session.data?.user,
+      };
+      await businessProfileSignup(details);
+
+      // Store form data and show success page
+      setFormData({ ...data, ...session.data?.user });
+      setShowSuccess(true);
+
+      // Reset loading state
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("Registration failed", {
+        description:
+          error instanceof Error ? error.message : "Something went wrong.",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (session.status == "authenticated" && !profileComplete) {
+      setProfileComplete(true);
+    }
+  }, [session.status, profileComplete]);
+
+  useEffect(() => {
+    if (showSuccess) {
+      const timeout = setTimeout(() => {
+        if (path) {
+          router.push(`/auth/account-setup?=${path}`);
+        } else {
+          router.push(`/auth/account-setup`);
+        }
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [showSuccess, router]);
+
   const SuccessPage = ({ firstName, lastName }: SuccessPageProps) => {
     return (
       <div className="w-full p-6 flex flex-col items-center justify-center min-h-96">
@@ -151,40 +226,6 @@ export default function BusinessSignupForm() {
     );
   };
 
-  const onSubmit = async (data: BusinessSignupFormData) => {
-    try {
-      // Set loading state
-
-      // Log form values
-      console.log(data, " business registration");
-
-      // Simulate a 5-second delay
-      await businessSignup(data);
-
-      // Store form data and show success page
-      setFormData(data);
-      setShowSuccess(true);
-
-      // Reset loading state
-    } catch (error) {
-      console.error("Registration error:", error);
-      toast.error("Registration failed", {
-        description:
-          error instanceof Error ? error.message : "Something went wrong.",
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (showSuccess) {
-      const timeout = setTimeout(() => {
-        router.push("/auth/account-setup");
-      }, 3000);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [showSuccess, router]);
-
   return (
     <div className="w-full p-6">
       {session.status == "loading" && (
@@ -194,286 +235,309 @@ export default function BusinessSignupForm() {
       )}
       {showSuccess && formData ? (
         <SuccessPage
-          firstName={formData.firstName}
-          lastName={formData.lastName}
+          firstName={formData.firstName || ""}
+          lastName={formData.lastName || ""}
         />
       ) : (
         <>
-          <h1 className="text-xl md:text-2xl dark:text-white font-semibold mb-6 ">
-            Business Signup
-          </h1>
+          {profileComplete ? (
+            <>
+              <h1 className="text-xl md:text-2xl dark:text-white font-semibold mb-2 ">
+                Complete Your Profile
+              </h1>
+              <p className="text-gray-600 dark:text-gray-300 mb-6">
+                Just a few more details to get started
+              </p>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {/* First Name and Last Name Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <Controller
-                name="firstName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="First Name"
-                    placeholder="First Name"
-                    {...field}
-                    error={errors.firstName?.message}
-                  />
-                )}
+              <CompleteBusinessProfile
+                onSubmit={onProfileSubmit}
+                isLoading={isLoading}
               />
+            </>
+          ) : (
+            <>
+              <h1 className="text-xl md:text-2xl dark:text-white font-semibold mb-6 ">
+                Business Signup
+              </h1>
 
-              <Controller
-                name="lastName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="Last Name"
-                    placeholder="Last Name"
-                    {...field}
-                    error={errors.lastName?.message}
+              <form onSubmit={handleSubmit(onSubmit)}>
+                {/* First Name and Last Name Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <Controller
+                    name="firstName"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        label="First Name"
+                        placeholder="First Name"
+                        {...field}
+                        error={errors.firstName?.message}
+                      />
+                    )}
                   />
-                )}
-              />
-            </div>
 
-            {/* Business Email and Business Address Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <Controller
-                name="businessEmail"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="Business Email"
-                    placeholder="Enter Business Email"
-                    {...field}
-                    error={errors.businessEmail?.message}
+                  <Controller
+                    name="lastName"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        label="Last Name"
+                        placeholder="Last Name"
+                        {...field}
+                        error={errors.lastName?.message}
+                      />
+                    )}
                   />
-                )}
-              />
-              <Controller
-                name="businessAddress"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="Business Address"
-                    placeholder="Enter Business Address"
-                    {...field}
-                    error={errors.businessAddress?.message}
+                </div>
+
+                {/* Business Email and Business Address Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <Controller
+                    name="businessEmail"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        label="Business Email"
+                        placeholder="Enter Business Email"
+                        {...field}
+                        error={errors.businessEmail?.message}
+                      />
+                    )}
                   />
-                )}
-              />
-            </div>
-
-            {/* Company Size and Purpose Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <Controller
-                name="companySize"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    label="Company's size"
-                    options={[
-                      { value: "", label: "Select Size" },
-                      { value: "1-10", label: "1-10 employees" },
-                      { value: "11-50", label: "11-50 employees" },
-                      { value: "51-200", label: "51-200 employees" },
-                      { value: "201-500", label: "201-500 employees" },
-                      { value: "500+", label: "500+ employees" },
-                    ]}
-                    error={errors.companySize?.message}
-                    isLoading={isLoading}
-                    {...field}
+                  <Controller
+                    name="businessAddress"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        label="Business Address"
+                        placeholder="Enter Business Address"
+                        {...field}
+                        error={errors.businessAddress?.message}
+                      />
+                    )}
                   />
-                )}
-              />
-              <Controller
-                name="purpose"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    label="What do you need scrubbe for?"
-                    options={[
-                      { value: "", label: "Select Purpose" },
-                      { value: "code-review", label: "Code Review" },
-                      {
-                        value: "security-scanning",
-                        label: "Security Scanning",
-                      },
-                      {
-                        value: "quality-assurance",
-                        label: "Quality Assurance",
-                      },
-                      { value: "compliance", label: "Compliance" },
-                      { value: "other", label: "Other" },
-                    ]}
-                    error={errors.purpose?.message}
-                    isLoading={isLoading}
-                    {...field}
+                </div>
+
+                {/* Company Size and Purpose Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <Controller
+                    name="companySize"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        label="Company's size"
+                        options={[
+                          { value: "", label: "Select Size" },
+                          { value: "1-10", label: "1-10 employees" },
+                          { value: "11-50", label: "11-50 employees" },
+                          { value: "51-200", label: "51-200 employees" },
+                          { value: "201-500", label: "201-500 employees" },
+                          { value: "500+", label: "500+ employees" },
+                        ]}
+                        error={errors.companySize?.message}
+                        isLoading={isLoading}
+                        {...field}
+                      />
+                    )}
                   />
-                )}
-              />
-            </div>
-
-            {/* Password Fields Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <Controller
-                name="password"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="Create Password"
-                    placeholder="Enter password"
-                    type="password"
-                    error={errors.password?.message}
-                    isLoading={isLoading}
-                    {...field}
+                  <Controller
+                    name="purpose"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        label="What do you need scrubbe for?"
+                        options={[
+                          { value: "", label: "Select Purpose" },
+                          { value: "code-review", label: "Code Review" },
+                          {
+                            value: "security-scanning",
+                            label: "Security Scanning",
+                          },
+                          {
+                            value: "quality-assurance",
+                            label: "Quality Assurance",
+                          },
+                          { value: "compliance", label: "Compliance" },
+                          { value: "other", label: "Other" },
+                        ]}
+                        error={errors.purpose?.message}
+                        isLoading={isLoading}
+                        {...field}
+                      />
+                    )}
                   />
-                )}
-              />
-              <Controller
-                name="confirmPassword"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="Confirm Password"
-                    placeholder="Confirm Password"
-                    type="password"
-                    error={errors.confirmPassword?.message}
-                    isLoading={isLoading}
-                    {...field}
+                </div>
+
+                {/* Password Fields Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <Controller
+                    name="password"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        label="Create Password"
+                        placeholder="Enter password"
+                        type="password"
+                        error={errors.password?.message}
+                        isLoading={isLoading}
+                        {...field}
+                      />
+                    )}
                   />
-                )}
-              />
-            </div>
+                  <Controller
+                    name="confirmPassword"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        label="Confirm Password"
+                        placeholder="Confirm Password"
+                        type="password"
+                        error={errors.confirmPassword?.message}
+                        isLoading={isLoading}
+                        {...field}
+                      />
+                    )}
+                  />
+                </div>
 
-            {/* Submit Button */}
-            <CButton
-              type="submit"
-              disabled={isLoading || !isValid}
-              isLoading={isLoading}
-            >
-              {isLoading ? "Processing..." : "Create Account"}
-            </CButton>
-
-            {/* Divider */}
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">OR</span>
-              </div>
-            </div>
-
-            {/* OAuth Buttons */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
-              <button
-                type="button"
-                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                onClick={() =>
-                  signIn("github", {
-                    // callbackUrl: "/auth/account-setup",
-                  })
-                }
-              >
-                <Image
-                  src="/icon-auth-github.svg"
-                  alt="GitHub"
-                  width={38}
-                  height={38}
-                  className="mr-2"
-                />
-                <span className="text-sm font-medium text-gray-700 dark:text-white">
-                  GitHub
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-              >
-                <Image
-                  src="/icon-auth-gitlab.svg"
-                  alt="GitLab"
-                  width={38}
-                  height={38}
-                  className="mr-2"
-                />
-                <span className="text-sm font-medium text-gray-700 dark:text-white">
-                  GitLab
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-              >
-                <Image
-                  src="/icon-auth-aws.svg"
-                  alt="AWS"
-                  width={38}
-                  height={38}
-                  className="mr-2"
-                />
-                <span className="text-sm font-medium text-gray-700 dark:text-white">
-                  AWS
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-              >
-                <Image
-                  src="/icon-auth-azure.svg"
-                  alt="Azure"
-                  width={38}
-                  height={38}
-                  className="mr-2"
-                />
-                <span className="text-sm font-medium text-gray-700 dark:text-white">
-                  Azure
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-              >
-                <Image
-                  src="/icon-auth-sso.svg"
-                  alt="SSO"
-                  width={38}
-                  height={38}
-                  className="mr-2"
-                />
-                <span className="text-sm font-medium text-gray-700 dark:text-white">
-                  SSO
-                </span>
-              </button>
-            </div>
-
-            {/* Demo Page Link */}
-            <div className="text-center">
-              <Link
-                href="/auth/demo-page"
-                className="text-blue-600 hover:underline inline-flex items-center"
-              >
-                Looking for our demo page?
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 ml-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                {/* Submit Button */}
+                <CButton
+                  type="submit"
+                  disabled={isLoading || !isValid}
+                  isLoading={isLoading}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </Link>
-            </div>
-          </form>
+                  {isLoading ? "Processing..." : "Create Account"}
+                </CButton>
+
+                {/* Divider */}
+                <div className="relative my-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-300"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-white text-gray-500">OR</span>
+                  </div>
+                </div>
+
+                {/* OAuth Buttons */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    onClick={() =>
+                      signIn("github", {
+                        // callbackUrl: "/auth/account-setup",
+                      })
+                    }
+                  >
+                    <Image
+                      src="/icon-auth-github.svg"
+                      alt="GitHub"
+                      width={38}
+                      height={38}
+                      className="mr-2"
+                    />
+                    <span className="text-sm font-medium text-gray-700 dark:text-white">
+                      GitHub
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    onClick={() =>
+                      signIn("gitlab", {
+                        // callbackUrl: "/auth/account-setup",
+                      })
+                    }
+                  >
+                    <Image
+                      src="/icon-auth-gitlab.svg"
+                      alt="GitLab"
+                      width={38}
+                      height={38}
+                      className="mr-2"
+                    />
+                    <span className="text-sm font-medium text-gray-700 dark:text-white">
+                      GitLab
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                  >
+                    <Image
+                      src="/icon-auth-aws.svg"
+                      alt="AWS"
+                      width={38}
+                      height={38}
+                      className="mr-2"
+                    />
+                    <span className="text-sm font-medium text-gray-700 dark:text-white">
+                      AWS
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                  >
+                    <Image
+                      src="/icon-auth-azure.svg"
+                      alt="Azure"
+                      width={38}
+                      height={38}
+                      className="mr-2"
+                    />
+                    <span className="text-sm font-medium text-gray-700 dark:text-white">
+                      Azure
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                  >
+                    <Image
+                      src="/icon-auth-sso.svg"
+                      alt="SSO"
+                      width={38}
+                      height={38}
+                      className="mr-2"
+                    />
+                    <span className="text-sm font-medium text-gray-700 dark:text-white">
+                      SSO
+                    </span>
+                  </button>
+                </div>
+
+                {/* Demo Page Link */}
+                <div className="text-center">
+                  <Link
+                    href="/auth/demo-page"
+                    className="text-blue-600 hover:underline inline-flex items-center"
+                  >
+                    Looking for our demo page?
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 ml-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      />
+                    </svg>
+                  </Link>
+                </div>
+              </form>
+            </>
+          )}
         </>
       )}
     </div>

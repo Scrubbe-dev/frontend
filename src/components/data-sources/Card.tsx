@@ -36,7 +36,10 @@ const Card: React.FC<CardProps> = ({
   const [activeTab, setActiveTab] = useState<TabName>("Overview");
   const { openModal } = useAppStore((state) => state);
 
-  const tabs: TabName[] = ["Overview", "Configure", "Logs", "Metrics"];
+  const tabs: TabName[] =
+    title == "FingerPrint"
+      ? ["Overview", "Configure"]
+      : ["Overview", "Configure", "Logs", "Metrics"];
 
   const handleTabClick = (tab: TabName) => {
     setActiveTab(tab);

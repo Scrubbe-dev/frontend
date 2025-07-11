@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Database,
   LayoutDashboard,
@@ -14,8 +15,22 @@ import { usePathname } from "next/navigation";
 import Switch from "../ui/Switch";
 import { FiChevronRight } from "react-icons/fi";
 import Image from "next/image";
+import { useAppStore } from "@/store/StoreProvider";
 
-export const navItem = [
+type Item = {
+  name: string;
+  Icon: any;
+  link: string;
+  isMenu: boolean;
+  isActive: boolean;
+  menu: ItemChild[];
+};
+type ItemChild = {
+  name: string;
+  link: string;
+  childMenu?: Partial<{ name: string; link: "dashboard" | "telemetry" }[]>;
+};
+export const navItem: Item[] = [
   {
     name: "Dashboard",
     Icon: LayoutDashboard,
@@ -43,16 +58,14 @@ export const navItem = [
       {
         name: "Data Source",
         link: "/dashboard/data-source",
-        isMenu: true,
-        isActive: false,
-        menu: [
+        childMenu: [
           {
             name: "Dashboard",
-            link: "data-source",
+            link: "dashboard",
           },
           {
             name: "Telemetry + Detection",
-            link: "telemetry-detection",
+            link: "telemetry",
           },
         ],
       },
@@ -234,8 +247,12 @@ export const navItem = [
     ],
   },
 ];
-const EzraSidebar = () => {
+const Sidebar = () => {
   const pathname = usePathname();
+  const { selectedDataSource, setSelectedDataSource } = useAppStore(
+    (state) => state
+  );
+
   // Only open parent if current route matches parent or any child
   const isParentOpen = (item: (typeof navItem)[number]) => {
     if (pathname === item.link) return true;
@@ -306,20 +323,49 @@ const EzraSidebar = () => {
                 {/* Nested children */}
                 {menu && menu.length > 0 && parentOpen && (
                   <div className="ml-8 flex flex-col gap-1 py-1">
-                    {menu.map((child) => (
-                      <Link
-                        href={child.link}
-                        key={child.name}
-                        className={clsx(
-                          "flex items-center gap-2 rounded px-2 py-2 text-sm transition-all duration-200",
-                          isChildActive(child.link)
-                            ? "bg-colorScBlue text-white font-semibold "
-                            : "hover:bg-blue-50 dark:hover:bg-blue-800 dark:text-white opacity-80 hover:opacity-100"
-                        )}
-                      >
-                        {child.name}
-                      </Link>
-                    ))}
+                    {menu.map(({ name, link, childMenu }) => {
+                      return (
+                        <div key={name}>
+                          <Link
+                            href={link}
+                            className={clsx(
+                              "flex items-center gap-2 rounded px-2 py-2 text-sm transition-all duration-200",
+                              isChildActive(link)
+                                ? "bg-colorScBlue text-white font-semibold "
+                                : "hover:bg-blue-50 dark:hover:bg-blue-800 dark:text-white opacity-80 hover:opacity-100"
+                            )}
+                          >
+                            {name}
+                          </Link>
+
+                          {childMenu && childMenu.length > 0 ? (
+                            <div className="ml-8 space-y-2 mt-2">
+                              {childMenu.map((item) => {
+                                const isSelected =
+                                  selectedDataSource === item?.link;
+
+                                return (
+                                  <div
+                                    onClick={() =>
+                                      setSelectedDataSource(item!.link)
+                                    }
+                                    key={item?.name}
+                                    className={clsx(
+                                      "flex items-center cursor-pointer gap-2 rounded px-2 py-2 text-sm transition-all duration-200",
+                                      isSelected
+                                        ? "bg-colorScBlue text-white font-semibold "
+                                        : "hover:bg-blue-50 dark:hover:bg-blue-800 dark:text-white opacity-80 hover:opacity-100"
+                                    )}
+                                  >
+                                    {item?.name}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ) : null}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -355,4 +401,4 @@ const EzraSidebar = () => {
   );
 };
 
-export default EzraSidebar;
+export default Sidebar;

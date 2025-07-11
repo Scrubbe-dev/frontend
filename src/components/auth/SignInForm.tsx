@@ -9,7 +9,7 @@ import * as z from "zod";
 import Input from "../ui/input";
 import CButton from "../ui/Cbutton";
 import useAuthStore from "@/lib/stores/auth.store";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // Define the form schema using zod
 const loginSchema = z.object({
@@ -26,6 +26,9 @@ export default function SignInForm() {
   const [rememberMe, setRememberMe] = useState(false);
   const { login, isLoading } = useAuthStore();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const path = searchParams.get("to");
+  console.log(path);
   // Keep the form handling structure closer to the original
   // even though we're simplifying functionality
   const {
@@ -58,7 +61,11 @@ export default function SignInForm() {
       // Show success toast after delay
 
       // In a real app, you would redirect here
-      router.push("/");
+      if (path === "ezra") {
+        router.push(`/ezra/dashboard`);
+      } else {
+        router.push(`/dashboard`);
+      }
 
       // Reset loading state
     } catch (error) {

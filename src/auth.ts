@@ -40,13 +40,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
     Gitlab({
-      clientId: process.env.GITLAB_CLIENT_ID!,
-      clientSecret: process.env.GITLAB_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          scope: "read_user",
-        },
-      },
       async profile(profile) {
         console.log({ gitlabProfile: profile });
         return {
@@ -116,14 +109,17 @@ declare module "next-auth" {
   }
 
   interface Session {
-    user: {
-      id: string;
-      firstName?: string;
-      lastName?: string;
-      isVerified?: boolean;
-      email?: string;
-    };
+    user: UserSession;
     accessToken?: string;
     refreshToken?: string;
   }
+}
+
+export interface UserSession {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  isVerified?: boolean;
+  email?: string;
+  image?: string;
 }
