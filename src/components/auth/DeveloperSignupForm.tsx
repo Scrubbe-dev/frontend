@@ -432,6 +432,11 @@ export default function DeveloperSignupForm() {
                   <button
                     type="button"
                     className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    onClick={() =>
+                      signIn("microsoft-entra-id", {
+                        // callbackUrl: "/auth/account-setup",
+                      })
+                    }
                   >
                     <Image
                       src="/icon-auth-azure.svg"

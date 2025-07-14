@@ -1,14 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Database,
-  LayoutDashboard,
-  Moon,
-  Settings,
-  ShieldCheck,
-} from "lucide-react";
-import { TbRouteSquare } from "react-icons/tb";
-import { FaCodepen } from "react-icons/fa6";
-import { BsQuestionOctagon } from "react-icons/bs";
+import { Moon } from "lucide-react";
 import Link from "next/link";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
@@ -16,247 +7,33 @@ import Switch from "../ui/Switch";
 import { FiChevronRight } from "react-icons/fi";
 import Image from "next/image";
 import { useAppStore } from "@/store/StoreProvider";
+import {
+  developerNavItem,
+  ezraNavItem,
+  navItem,
+  NavItem,
+} from "@/lib/constant";
 
-type Item = {
-  name: string;
-  Icon: any;
-  link: string;
-  isMenu: boolean;
-  isActive: boolean;
-  menu: ItemChild[];
+type Props = {
+  type?: "dashboard" | "ezra" | "developer";
 };
-type ItemChild = {
-  name: string;
-  link: string;
-  childMenu?: Partial<{ name: string; link: "dashboard" | "telemetry" }[]>;
-};
-export const navItem: Item[] = [
-  {
-    name: "Dashboard",
-    Icon: LayoutDashboard,
-    link: "/dashboard",
-    isMenu: true,
-    isActive: true,
-    menu: [
-      {
-        name: "Global Overview",
-        link: "/dashboard",
-      },
-      {
-        name: "Quick Access Panel",
-        link: "/dashboard/incident-overview",
-      },
-    ],
-  },
-  {
-    name: "SIEM",
-    Icon: FaCodepen,
-    link: "/dashboard/data-source",
-    isMenu: true,
-    isActive: false,
-    menu: [
-      {
-        name: "Data Source",
-        link: "/dashboard/data-source",
-        childMenu: [
-          {
-            name: "Dashboard",
-            link: "dashboard",
-          },
-          {
-            name: "Telemetry + Detection",
-            link: "telemetry",
-          },
-        ],
-      },
-      {
-        name: "Source Categories (Cloud, Apps)",
-        link: "/dashboard/source-categories",
-      },
-      {
-        name: "Event Streams",
-        link: "/dashboard/event-streams",
-      },
-    ],
-  },
-  {
-    name: "SOAR",
-    Icon: TbRouteSquare,
-    link: "/dashboard/playbook-builder",
-    isMenu: true,
-    isActive: false,
-    menu: [
-      {
-        name: "Playbook Builder",
-        link: "/dashboard/playbook-builder",
-      },
-      // {
-      //   name: "Incident Ticket",
-      //   link: "/dashboard/incident-ticket",
-      // },
-      {
-        name: "Actions & Triggers",
-        link: "/dashboard/actions-triggers",
-      },
-      {
-        name: "Scheduling",
-        link: "/dashboard/scheduling",
-      },
-    ],
-  },
-  {
-    name: "Fraud Detection",
-    Icon: LayoutDashboard,
-    link: "/dashboard/anotomy-detection",
-    isMenu: true,
-    isActive: false,
-    menu: [
-      {
-        name: "Fraud Overview",
-        link: "/dashboard/fraud-overview",
-      },
-      {
-        name: "Anomaly Detection",
-        link: "/dashboard/anotomy-detection",
-      },
-    ],
-  },
-
-  {
-    name: "Data Management",
-    Icon: ShieldCheck,
-    link: "/dashboard/control-log",
-    isMenu: true,
-    isActive: false,
-    menu: [
-      {
-        name: "Control log",
-        link: "/dashboard/control-log",
-      },
-      {
-        name: "Retention Policies",
-        link: "/dashboard/retention-policy",
-      },
-    ],
-  },
-  {
-    name: "Security & Compliance",
-    Icon: Settings,
-    link: "/dashboard/audit-logs",
-    isMenu: true,
-    isActive: false,
-    menu: [
-      {
-        name: "Audit Logs",
-        link: "/dashboard/audit-logs",
-      },
-      {
-        name: "Compliance Reports",
-        link: "/dashboard/compliance-reports",
-      },
-      {
-        name: "Policy Management",
-        link: "/dashboard/policy-management",
-      },
-    ],
-  },
-  {
-    name: "Organization Settings",
-    Icon: Settings,
-    link: "/dashboard/user-management",
-    isMenu: true,
-    isActive: false,
-    menu: [
-      {
-        name: "User Management",
-        link: "/dashboard/user-management",
-      },
-      {
-        name: "Role & Permissions",
-        link: "/dashboard/role-management",
-      },
-      {
-        name: "SSO/Identity Providers",
-        link: "/dashboard/sso-identity-providers",
-      },
-    ],
-  },
-  {
-    name: "Settings",
-    Icon: Settings,
-    link: "/dashboard/settings",
-    isMenu: true,
-    isActive: false,
-    menu: [
-      {
-        name: "General Settings",
-        link: "/dashboard/settings",
-      },
-
-      {
-        name: "Notification Settings",
-        link: "/dashboard/notification-settings",
-      },
-    ],
-  },
-  {
-    name: "Developer Portal",
-    Icon: Database,
-    link: "/dashboard/api-keys",
-    isMenu: true,
-    isActive: false,
-    menu: [
-      {
-        name: "API Keys",
-        link: "/dashboard/api-keys",
-      },
-
-      {
-        name: "API Documentation",
-        link: "/dashboard/api-documentation",
-      },
-      {
-        name: "Webhooks Management",
-        link: "/dashboard/webhooks-management",
-      },
-      {
-        name: "SDK Download",
-        link: "/dashboard/sdk-download",
-      },
-      {
-        name: "Integration Guides",
-        link: "/dashboard/integration-guides",
-      },
-    ],
-  },
-  {
-    name: "Support",
-    Icon: BsQuestionOctagon,
-    link: "/dashboard/support",
-    isMenu: true,
-    isActive: false,
-    menu: [
-      {
-        name: "Support Ticket",
-        link: "/dashboard/support",
-      },
-      {
-        name: "Community Forum",
-        link: "/dashboard/community-forum",
-      },
-    ],
-  },
-];
-const Sidebar = () => {
+const Sidebar = ({ type = "dashboard" }: Props) => {
   const pathname = usePathname();
   const { selectedDataSource, setSelectedDataSource } = useAppStore(
     (state) => state
   );
 
+  const sideBarItem: NavItem[] =
+    type == "dashboard"
+      ? navItem
+      : type == "ezra"
+      ? ezraNavItem
+      : developerNavItem;
+
   // Only open parent if current route matches parent or any child
-  const isParentOpen = (item: (typeof navItem)[number]) => {
+  const isParentOpen = (item: (typeof sideBarItem)[number]) => {
     if (pathname === item.link) return true;
-    if (item.menu && item.menu.some((child) => pathname === child.link))
+    if (item.menu && item.menu.some((child) => pathname === child?.link))
       return true;
     return false;
   };
@@ -267,7 +44,7 @@ const Sidebar = () => {
   // Helper: is a parent active (current route matches parent or any child)?
   const isParentActive = (item: (typeof navItem)[number]) => {
     if (pathname === item.link) return true;
-    if (item.menu && item.menu.some((child) => pathname === child.link))
+    if (item.menu && item.menu.some((child: any) => pathname === child.link))
       return true;
     return false;
   };
@@ -279,17 +56,23 @@ const Sidebar = () => {
           href="/dashboard"
           className="relative w-[141px] h-[40px] sm:w-[176px] sm:h-[50px] lg:w-[211px] lg:h-[60px] "
         > */}
-        <Image
-          src="/scrubbe-logo-01.png"
-          alt="scrubbe-logo-01.png"
-          height={200}
-          width={200}
-          className="object-contain"
-        />
+        {type == "ezra" ? (
+          <p className=" text-colorScBlue text-4xl font-bold  font-besley">
+            EZRA
+          </p>
+        ) : (
+          <Image
+            src="/scrubbe-logo-01.png"
+            alt="scrubbe-logo-01.png"
+            height={200}
+            width={200}
+            className="object-contain"
+          />
+        )}
         {/* </Link> */}
 
         <div className="flex flex-col gap-1 items-center mt-[15%] flex-1 w-full">
-          {navItem.map((item) => {
+          {sideBarItem.map((item) => {
             const parentActive = isParentActive(item);
             const parentOpen = isParentOpen(item);
             const { Icon, link, name, menu } = item;
@@ -323,7 +106,7 @@ const Sidebar = () => {
                 {/* Nested children */}
                 {menu && menu.length > 0 && parentOpen && (
                   <div className="ml-8 flex flex-col gap-1 py-1">
-                    {menu.map(({ name, link, childMenu }) => {
+                    {menu?.map(({ name, link, childMenu }) => {
                       return (
                         <div key={name}>
                           <Link

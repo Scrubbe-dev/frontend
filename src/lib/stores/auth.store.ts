@@ -162,7 +162,7 @@ const useAuthStore = create<AuthState & AuthActions>()(
         try {
           console.log(signupData);
           set({ isLoading: true, error: null });
-          const validatedData = businessProfileSignupSchema.parse(signupData);
+          const validatedData = developerProfileSignupSchema.parse(signupData);
           console.log(validatedData);
           //TODO: use the service provider endpoint
 

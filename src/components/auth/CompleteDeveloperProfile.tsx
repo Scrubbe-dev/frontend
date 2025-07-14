@@ -8,11 +8,8 @@ import Input from "../ui/input";
 import { useSession } from "next-auth/react";
 
 export const developerProfileSignupSchema = z.object({
-  businessAddress: z
-    .string()
-    .min(1, { message: "Business address is required" }),
-  companySize: z.string().min(1, { message: "Please select company size" }),
-  purpose: z.string().min(1, { message: "Please select a purpose" }),
+  githubUsername: z.string().optional(),
+  experience: z.string().min(1, { message: "Please select experience level" }),
 });
 
 export type DeveloperProfileSignupFormData = z.infer<
@@ -34,11 +31,6 @@ const CompleteDeveloperProfile = ({
     formState: { errors, isValid },
   } = useForm<DeveloperProfileSignupFormData>({
     resolver: zodResolver(developerProfileSignupSchema),
-    defaultValues: {
-      businessAddress: "",
-      companySize: "",
-      purpose: "",
-    },
     mode: "onChange",
   });
   const session = useSession();
@@ -48,64 +40,47 @@ const CompleteDeveloperProfile = ({
     <form onSubmit={handleSubmit(onSubmit)}>
       {/* Company Size and Purpose Row */}
       <Controller
-        name="businessAddress"
+        name="githubUsername"
         control={control}
         render={({ field }) => (
           <Input
-            label="Business Address"
-            placeholder="Enter Business Address"
+            label="GitHub Username (Optional)"
+            placeholder="Enter username"
+            error={errors.githubUsername?.message}
+            isLoading={isLoading}
             {...field}
-            error={errors.businessAddress?.message}
           />
         )}
       />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div className="mb-4">
         <Controller
-          name="companySize"
+          name="experience"
           control={control}
           render={({ field }) => (
             <Select
-              label="Company's size"
-              options={[
-                { value: "", label: "Select Size" },
-                { value: "1-10", label: "1-10 employees" },
-                { value: "11-50", label: "11-50 employees" },
-                { value: "51-200", label: "51-200 employees" },
-                { value: "201-500", label: "201-500 employees" },
-                { value: "500+", label: "500+ employees" },
-              ]}
-              error={errors.companySize?.message}
-              isLoading={isLoading}
+              label="Experience Level"
               {...field}
+              id="experience"
+              options={[
+                { label: "Beginner", value: "beginner" },
+                { label: "Intermediate", value: "intermediate" },
+                { label: "Advanced", value: "advanced" },
+                { label: "Expert", value: "expert" },
+              ]}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                isLoading
+                  ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
+                  : "border-gray-300"
+              }`}
+              disabled={isLoading}
             />
           )}
         />
-        <Controller
-          name="purpose"
-          control={control}
-          render={({ field }) => (
-            <Select
-              label="What do you need scrubbe for?"
-              options={[
-                { value: "", label: "Select Purpose" },
-                { value: "code-review", label: "Code Review" },
-                {
-                  value: "security-scanning",
-                  label: "Security Scanning",
-                },
-                {
-                  value: "quality-assurance",
-                  label: "Quality Assurance",
-                },
-                { value: "compliance", label: "Compliance" },
-                { value: "other", label: "Other" },
-              ]}
-              error={errors.purpose?.message}
-              isLoading={isLoading}
-              {...field}
-            />
-          )}
-        />
+        {errors.experience && (
+          <p className="text-red-500 text-xs mt-1">
+            {errors.experience.message}
+          </p>
+        )}
       </div>
       <CButton
         type="submit"

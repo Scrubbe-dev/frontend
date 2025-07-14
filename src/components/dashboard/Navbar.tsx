@@ -1,7 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { Button } from "../ui/button";
 
-const EzraNavbar = () => {
+const Navbar = () => {
   return (
     <div>
       <div className="h-[80px] w-full border-b border-blue-400/50  flex justify-between items-center px-[3%]">
@@ -28,4 +28,4 @@ const EzraNavbar = () => {
   );
 };
 
-export default EzraNavbar;
+export default Navbar;
