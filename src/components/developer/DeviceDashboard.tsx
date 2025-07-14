@@ -265,7 +265,7 @@ const DeviceDashboard = () => {
           <div className="relative w-1/2">
             <Input placeholder="Search Tickets" />
             <div className="absolute right-2 top-2/4 -translate-y-2/3 ">
-              <SearchIcon size={20} className="dark:text-white text-black" />
+              <SearchIcon size={20} className=" text-black dark:text-white" />
             </div>
           </div>
 
