@@ -6,7 +6,7 @@ interface ProgressBarProps {
 }
 
 const ProgressBar = ({ value, color }: ProgressBarProps) => (
-  <div className="w-full h-1.5 bg-gray-700 rounded">
+  <div className="w-full h-1.5 bg-gray-300 dark:bg-gray-700 rounded">
     <motion.div
       initial={{ width: 0 }}
       animate={{ width: `${value}%` }}

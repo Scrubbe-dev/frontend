@@ -2,6 +2,8 @@ import NextAuth from "next-auth";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Gitlab from "next-auth/providers/gitlab";
+import Cognito from "next-auth/providers/cognito";
+import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 
 interface Token {
   sub?: string;
@@ -40,13 +42,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
     Gitlab({
-      clientId: process.env.GITLAB_CLIENT_ID!,
-      clientSecret: process.env.GITLAB_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          scope: "read_user",
-        },
-      },
       async profile(profile) {
         console.log({ gitlabProfile: profile });
         return {
@@ -60,15 +55,35 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         };
       },
     }),
-    // Cognito({
-    //   clientId: process.env.COGNITO_CLIENT_ID!,
-    //   clientSecret: process.env.COGNITO_CLIENT_SECRET!,
-    //   issuer: process.env.COGNITO_ISSUER!,
-    // }),
-    // AzureAD({
-    //   clientId: process.env.AZURE_AD_CLIENT_ID!,
-    //   clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
-    // }),
+    Cognito({
+      async profile(profile) {
+        return {
+          id: profile.id.toString(),
+          name: profile.name || profile.username,
+          email: profile.email,
+          image: profile.avatar_url,
+          firstName: profile.name?.split(" ")[0] || profile.username,
+          lastName: profile.name?.split(" ").slice(1).join(" ") || "",
+          isVerified: true,
+        };
+      },
+    }),
+    MicrosoftEntraID({
+      clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
+      clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+      issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
+      async profile(profile) {
+        console.log({ profile });
+        return {
+          id: profile.aud,
+          name: profile.name || profile.username,
+          email: profile.email,
+          firstName: profile.name?.split(" ")[0] || profile.username,
+          lastName: profile.name?.split(" ").slice(1).join(" ") || "",
+          isVerified: true,
+        };
+      },
+    }),
   ],
   callbacks: {
     // authorized: async ({ auth }) => {
@@ -116,14 +131,17 @@ declare module "next-auth" {
   }
 
   interface Session {
-    user: {
-      id: string;
-      firstName?: string;
-      lastName?: string;
-      isVerified?: boolean;
-      email?: string;
-    };
+    user: UserSession;
     accessToken?: string;
     refreshToken?: string;
   }
+}
+
+export interface UserSession {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  isVerified?: boolean;
+  email?: string;
+  image?: string;
 }

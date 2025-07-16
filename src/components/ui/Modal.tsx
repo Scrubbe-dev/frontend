@@ -5,9 +5,10 @@ type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  className?: string;
 };
 
-const Modal = ({ isOpen, onClose, children }: ModalProps) => {
+const Modal = ({ isOpen, onClose, children, className }: ModalProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -22,9 +23,9 @@ const Modal = ({ isOpen, onClose, children }: ModalProps) => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="dark:bg-[#111827] bg-white rounded-lg p-2 sm:p-6 w-full  sm:max-w-2xl mx-2 max-h-[90vh] overflow-y-auto"
+            className={`${className} relative dark:bg-[#111827] bg-white rounded-lg p-2 sm:p-6 w-full sm:min-w-[42rem]  sm:max-w-3xl mx-2 max-h-[90vh] overflow-y-auto `}
           >
-            <div className="flex justify-end">
+            <div className=" absolute right-3 top-3">
               <div
                 onClick={onClose}
                 className="bg-neutral-100 dark:bg-[#111827] dark:text-white rounded-sm p-1 w-fit cursor-pointer"

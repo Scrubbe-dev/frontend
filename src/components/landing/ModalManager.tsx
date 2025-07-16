@@ -12,7 +12,6 @@ const LoadingSpinner = () => (
 
 const ModalManager: React.FC = () => {
   const { isOpen, modalData, closeModal } = useAppStore((state) => state);
-
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -58,9 +57,10 @@ const ModalManager: React.FC = () => {
       />
 
       <div
-        className={`fixed top-0 right-0 h-full w-[600px] bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 h-full min-w-[600px]  bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        }
+        `}
       >
         <div className="flex flex-col h-full">
           {/* Header */}

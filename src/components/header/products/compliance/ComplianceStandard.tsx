@@ -14,12 +14,12 @@ const ComplianceStandard = () => {
       <div className=" grid md:grid-cols-2  gap-8">
         <div className="bg-gray-50 p-6 space-y-3 rounded-lg border border-gray-200">
           <p className="text-gray-800 font-bold text-2xl">SOC 2</p>
-          <p className=" font-medium">
+          <p className="font-medium">
             Service Organization Control 2 (SOC 2) is an auditing procedure
             developed by the American Institute of CPAs (AICPA) that ensures
             your service providers securely manage your data to protect your
-            organization's interests and the privacy of its clients. Scrubbe
-            helps you prepare for SOC 2 Type I and Type II audits by
+            organization&apos;s interests and the privacy of its clients.
+            Scrubbe helps you prepare for SOC 2 Type I and Type II audits by
             implementing controls across the Trust Services Criteria
           </p>
           <ul className="list-disc list-inside font-light space-y-1">

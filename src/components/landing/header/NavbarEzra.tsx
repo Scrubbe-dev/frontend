@@ -107,7 +107,9 @@ const NavbarEzra = () => {
           </p>
         </div>
         <div className="hidden md:block">
-          <Cbutton onClick={() => router.push("/auth")}>Log In</Cbutton>
+          <Cbutton onClick={() => router.push("/auth/signin?to=ezra")}>
+            Log In
+          </Cbutton>
         </div>
         {/* Mobile menu dropdown */}
         {menuOpen && (
@@ -123,7 +125,10 @@ const NavbarEzra = () => {
               </Link>
             ))}
             <div className="w-full flex justify-center py-4">
-              <Cbutton onClick={() => router.push("/auth")} className="w-11/12">
+              <Cbutton
+                onClick={() => router.push("/auth/signin?to=ezra")}
+                className="w-11/12"
+              >
                 Log In
               </Cbutton>
             </div>
