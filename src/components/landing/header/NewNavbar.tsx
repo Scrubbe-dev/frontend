@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -375,7 +376,7 @@ const NewNavbar = () => {
                     className=" bg-[#111827] gap-2 px-6 py-2 text-white rounded-3xl font-medium flex items-center"
                   >
                     Explore Ezra Ai
-                    <img src="/ezrastar1.svg" />
+                    <img src="/ezrastar1.svg" alt="ezrastar1.svg" />
                     {/* <PiStarFourFill className=" text-blue-500" size={22} /> */}
                   </Link>
                 </div>
