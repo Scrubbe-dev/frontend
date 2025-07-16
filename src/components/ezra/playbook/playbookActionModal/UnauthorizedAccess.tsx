@@ -2,11 +2,24 @@ import CButton from "@/components/ui/Cbutton";
 import Select from "@/components/ui/select";
 import React, { useState } from "react";
 
-const UnauthorizedAccess = ({ closeModal }: { closeModal: () => void }) => {
-  const [selectedOption, setSelectedOption] = useState<string>("");
+const UnauthorizedAccess = ({
+  closeModal,
+  config,
+  initialConfig,
+}: {
+  closeModal: () => void;
+  config: (value: unknown) => void;
+  initialConfig: { [key: string]: string };
+}) => {
+  const [selectedOption, setSelectedOption] = useState<string>(
+    initialConfig?.type ?? ""
+  );
 
   const handleSave = () => {
-    console.log(selectedOption);
+    const data = {
+      type: selectedOption,
+    };
+    config(data);
   };
   return (
     <div className="flex flex-col gap-4">
@@ -19,6 +32,7 @@ const UnauthorizedAccess = ({ closeModal }: { closeModal: () => void }) => {
           { label: "SOAR", value: "soar" },
           { label: "Email Gateway", value: "email-gateway" },
         ]}
+        value={selectedOption}
         onChange={(value) => {
           setSelectedOption(value.target.value);
         }}

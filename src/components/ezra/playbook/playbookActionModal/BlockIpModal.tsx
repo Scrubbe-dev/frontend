@@ -2,11 +2,22 @@ import CButton from "@/components/ui/Cbutton";
 import Input from "@/components/ui/input";
 import React, { useState } from "react";
 
-const BlockIpModal = ({ closeModal }: { closeModal: () => void }) => {
-  const [ipAddress, setIpAddress] = useState("");
+const BlockIpModal = ({
+  closeModal,
+  initialConfig,
+  config,
+}: {
+  closeModal: () => void;
+  config: (value: unknown) => void;
+  initialConfig: Record<string, string>;
+}) => {
+  const [ipAddress, setIpAddress] = useState(initialConfig?.ipAddress ?? "");
 
   const handleSave = () => {
-    console.log(ipAddress);
+    const data = {
+      ipAddress,
+    };
+    config(data);
   };
   return (
     <div className="flex flex-col gap-4">

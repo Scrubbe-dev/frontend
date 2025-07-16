@@ -442,3 +442,99 @@ export const developerNavItem: NavItem[] = [
     ],
   },
 ];
+
+export const playbookTemplate = [
+  {
+    title: "Unauthorize playbook",
+    nodes: [
+      {
+        id: "block-1",
+        type: "metric",
+        label: "Unauthorized access",
+        configuration: {},
+        configured: false,
+        children: [
+          {
+            id: "block-2",
+            type: "trigger",
+            label: "Send Alert",
+            configuration: {},
+            configured: false,
+            children: [],
+          },
+          {
+            id: "block-3",
+            type: "action",
+            label: "Block IP",
+            configuration: {},
+            configured: false,
+            children: [],
+          },
+        ],
+      },
+    ],
+  },
+
+  {
+    title: "Failed Login",
+    nodes: [
+      {
+        id: "block-4",
+        type: "metric",
+        label: "Failed Login",
+        configuration: {},
+        configured: false,
+        children: [
+          {
+            id: "block-7",
+            type: "trigger",
+            label: "Send Alert",
+            configuration: {},
+            configured: false,
+            children: [],
+          },
+          {
+            id: "block-6",
+            type: "action",
+            label: "Log event",
+            configuration: {},
+            configured: false,
+            children: [],
+          },
+        ],
+      },
+    ],
+  },
+
+  {
+    title: "Phishing Response",
+    nodes: [
+      {
+        id: "block-8",
+        type: "metric",
+        label: "Phishing Email",
+        configuration: {},
+        configured: false,
+        children: [
+          {
+            id: "block-10",
+            type: "action",
+            label: "Log event",
+            configuration: {},
+            configured: false,
+            children: [
+              {
+                id: "block-9",
+                type: "trigger",
+                label: "Send Alert",
+                configuration: {},
+                configured: false,
+                children: [],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+];

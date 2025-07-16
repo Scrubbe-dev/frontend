@@ -1,20 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "@/components/ui/select";
 import CButton from "@/components/ui/Cbutton";
 import Input from "@/components/ui/input";
 
-const SeverityModal = ({ closeModal }: { closeModal: () => void }) => {
-  const [selectedOption, setSelectedOption] = useState<string>("");
-
-  const handleSave = () => {
-    console.log(selectedOption);
+const SeverityModal = ({
+  closeModal,
+  config,
+  initialConfig,
+}: {
+  closeModal: () => void;
+  config: (value: unknown) => void;
+  initialConfig: {
+    field: string;
+    operator: string;
+    value: string;
   };
+}) => {
+  const [configuration, setConfiguration] = useState({
+    field: "",
+    operator: "",
+    value: "",
+  });
+  const handleSave = () => {
+    config(configuration);
+  };
+
+  useEffect(() => {
+    if (initialConfig) {
+      setConfiguration(
+        initialConfig ?? {
+          field: "",
+          operator: "",
+          value: "",
+        }
+      );
+    }
+  }, [initialConfig]);
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <h2 className="text-2xl font-bold dark:text-white">
         Configure Severity = High
       </h2>
-      <Input label="Field" placeholder="Severity" />
+      <Input
+        label="Field"
+        placeholder="Severity"
+        onChange={(value) => {
+          setConfiguration((prev) => ({ ...prev, field: value.target.value }));
+        }}
+        value={configuration.field}
+      />
       <Select
         options={[
           { label: "more than >", value: "more than >" },
@@ -28,10 +62,22 @@ const SeverityModal = ({ closeModal }: { closeModal: () => void }) => {
           { label: "below", value: "below" },
         ]}
         onChange={(value) => {
-          setSelectedOption(value.target.value);
+          setConfiguration((prev) => ({
+            ...prev,
+            operator: value.target.value,
+          }));
         }}
+        value={configuration.operator}
+        label="Operator"
       />
-      <Input label="Value" placeholder="High" />
+      <Input
+        label="Value"
+        placeholder="High"
+        onChange={(value) => {
+          setConfiguration((prev) => ({ ...prev, value: value.target.value }));
+        }}
+        value={configuration.value}
+      />
       <div className="flex gap-2 justify-end">
         <CButton
           onClick={closeModal}

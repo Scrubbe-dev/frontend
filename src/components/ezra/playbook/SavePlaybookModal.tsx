@@ -1,12 +1,13 @@
 import CButton from "@/components/ui/Cbutton";
 import Input from "@/components/ui/input";
 import Modal from "@/components/ui/Modal";
-import React from "react";
+import React, { useState } from "react";
+import { toast } from "sonner";
 
 interface SavePlaybookModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: () => void;
+  onSave: (title: string) => void;
 }
 
 const SavePlaybookModal = ({
@@ -14,8 +15,13 @@ const SavePlaybookModal = ({
   onClose,
   onSave,
 }: SavePlaybookModalProps) => {
+  const [title, setTitle] = useState("");
   const handleSave = () => {
-    onSave();
+    if (!title) {
+      toast.error("Please enter playbook title");
+      return;
+    }
+    onSave(title);
     onClose();
   };
   return (
@@ -26,6 +32,8 @@ const SavePlaybookModal = ({
           type="text"
           label="Playbook Name"
           placeholder="Enter playbook name"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
         <div className="flex gap-2 justify-end">
           <CButton
