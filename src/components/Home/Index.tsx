@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Hero from "./Hero";
 import FraudAnalyst from "./FraudAnalyst";
 import MachineDetection from "./MachineDetection";
@@ -12,6 +12,7 @@ import EzraConversation from "./EzraConversation";
 const Index = () => {
   return (
     <>
+    <Suspense fallback={<div>Loading...</div>}>
       <Hero />
       <FraudAnalyst />
       <MachineDetection />
@@ -21,6 +22,7 @@ const Index = () => {
       <EzraConversation />
       <CTA />
       <Brands />
+      </Suspense>
     </>
   );
 };
