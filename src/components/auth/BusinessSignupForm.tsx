@@ -1,7 +1,7 @@
 "use client";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import Image from "next/image";
@@ -183,6 +183,7 @@ export default function BusinessSignupForm() {
 
   const SuccessPage = ({ firstName, lastName }: SuccessPageProps) => {
     return (
+      <Suspense fallback={<div>Loading...</div>}>
       <div className="w-full p-6 flex flex-col items-center justify-center min-h-96">
         <div className="mb-8">
           {/* Enhanced Success Icon with concentric circles */}
@@ -223,10 +224,12 @@ export default function BusinessSignupForm() {
           account.
         </p>
       </div>
+      </Suspense>
     );
   };
 
   return (
+    <Suspense fallback={<div>Loading...</div>}>
     <div className="w-full p-6">
       {session.status == "loading" && (
         <div className=" absolute inset-0 bg-black/20 z-50 flex justify-center pt-[20%]">
@@ -546,5 +549,6 @@ export default function BusinessSignupForm() {
         </>
       )}
     </div>
+    </Suspense>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import Image from "next/image";
@@ -147,6 +147,7 @@ export default function DeveloperSignupForm() {
   // Success Page Component
   const SuccessPage = ({ firstName, lastName }: SuccessPageProps) => {
     return (
+      <Suspense fallback={<div>Loading...</div>}>
       <div className="w-full p-6 flex flex-col items-center justify-center min-h-96">
         {session.status == "loading" && (
           <div className=" absolute inset-0 bg-black/20 z-50 flex justify-center pt-[20%]">
@@ -192,10 +193,12 @@ export default function DeveloperSignupForm() {
           account.
         </p>
       </div>
+      </Suspense>
     );
   };
 
   return (
+    <Suspense fallback={<div>Loading...</div>}>
     <div className="w-full p-6">
       {showSuccess && formData ? (
         <SuccessPage
@@ -496,5 +499,6 @@ export default function DeveloperSignupForm() {
         </>
       )}
     </div>
+    </Suspense>
   );
 }
