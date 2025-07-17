@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
@@ -77,6 +78,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${airbnbCereal.variable} ${bersley.variable}`}>
       <body className="antialiased min-h-screen w-full flex flex-col bg-[#1F2B71] font-airbnb">
+        <Suspense fallback={<div>Loading...</div>}>
         <AuthProvider>
           <NextJsTopLoader />
           <StoreProvider>
@@ -90,6 +92,7 @@ export default function RootLayout({
           </StoreProvider>
           <Toaster position="top-center" />
         </AuthProvider>
+        </Suspense>
       </body>
     </html>
   );
