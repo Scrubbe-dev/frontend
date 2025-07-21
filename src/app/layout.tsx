@@ -79,21 +79,23 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${airbnbCereal.variable} ${bersley.variable}`}>
       <body className="antialiased min-h-screen w-full flex flex-col bg-[#1F2B71] font-airbnb">
-        <ThemeProvider>
-          <AuthProvider>
-            <NextJsTopLoader />
-            <StoreProvider>
-              {/*  <AnnouncementBar /> disabled for now till official launch */}
-              {/* <NavbarWrapper /> */}
-              <main className="flex-grow h-full w-full">{children}</main>
-              {/* <FooterWrapper /> */}
-              <CookieConsentModal />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ThemeProvider>
+            <AuthProvider>
+              <NextJsTopLoader />
+              <StoreProvider>
+                {/*  <AnnouncementBar /> disabled for now till official launch */}
+                {/* <NavbarWrapper /> */}
+                <main className="flex-grow h-full w-full">{children}</main>
+                {/* <FooterWrapper /> */}
+                <CookieConsentModal />
 
-              <ModalManager />
-            </StoreProvider>
-            <Toaster position="top-center" />
-          </AuthProvider>
-        </ThemeProvider>
+                <ModalManager />
+              </StoreProvider>
+              <Toaster position="top-center" />
+            </AuthProvider>
+          </ThemeProvider>
+        </Suspense>
       </body>
     </html>
   );
