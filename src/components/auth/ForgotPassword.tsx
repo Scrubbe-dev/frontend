@@ -135,7 +135,7 @@ export default function ForgotPassword() {
               />
 
               <CButton type="submit" disabled={!email}>
-                Sign in
+                Send Code
               </CButton>
             </form>
           </div>
@@ -145,7 +145,7 @@ export default function ForgotPassword() {
         return (
           <div className="w-full  mx-auto">
             <div
-              className=" flex gap-2 items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer"
+              className=" flex gap-2 items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer dark:text-white"
               onClick={() => setStage(1)}
             >
               <ChevronLeft />

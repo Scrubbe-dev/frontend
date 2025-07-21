@@ -208,11 +208,11 @@ const EzraConversation = () => {
                     <p className="  text-zinc-400  ">
                       <TypeAnimation
                         sequence={[
-                          `Era summarize the incident for today`, // Types 'One'
+                          `Ezra summarize the incident for today`, // Types 'One'
                           2000, // Waits 1s
                           ``, // Types 'One'
                           4000, // Waits 1s
-                          `Era summarize the incident for today`, // Types 'One'
+                          `Ezra summarize the incident for today`, // Types 'One'
                           2000, // Waits 1s
                           () => {},
                         ]}
@@ -232,7 +232,7 @@ const EzraConversation = () => {
             </div>
           </motion.div>
           <motion.div className="mt-8" variants={itemVariants}>
-            <Cbutton>Start Investigation with Ezra</Cbutton>
+            <Cbutton>Start Investigating with Ezra</Cbutton>
           </motion.div>
         </motion.div>
       </div>

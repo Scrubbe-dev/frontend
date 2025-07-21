@@ -235,12 +235,12 @@ const SecurityStack = () => {
           })}
         </motion.div>
 
-        <div className="min-h-[1800px] relative md:hidden">
+        <div className="min-h-[1800px] relative lg:hidden">
           <div className="flex flex-col gap-4 items-center justify-center">
             {securityStack.map((stack, index) => (
               <div
                 key={index}
-                className={`sticky w-[300px] md:w-[362px] ${stack.bgColor} ${stack.color} min-h-[473px] rounded-xl shadow-sm transition-all duration-200 hover:shadow-2xl  cursor-pointer`}
+                className={`sticky w-full ${stack.bgColor} ${stack.color} min-h-[473px] rounded-xl shadow-sm transition-all duration-200 hover:shadow-2xl  cursor-pointer`}
               >
                 <div className="flex flex-col justify-between p-4 h-[473px] relative">
                   <img

@@ -87,7 +87,7 @@ While there's no universally fixed "acceptable" max height, sticking to 400–70
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground text-black;
   }
 }
 

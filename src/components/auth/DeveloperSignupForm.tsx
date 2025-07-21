@@ -17,6 +17,8 @@ import CompleteDeveloperProfile, {
 } from "./CompleteDeveloperProfile";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 // Define the form schema using zod
 export const developerSignupSchema = z
@@ -373,20 +375,28 @@ export default function DeveloperSignupForm() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
                   <button
                     type="button"
-                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    className="w-full flex gap-3 items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
+                    onClick={() => signIn("google")}
+                  >
+                    <div>
+                      <FcGoogle size={33} />
+                    </div>
+                    <span className="text-sm font-medium text-gray-700 dark:text-white">
+                      Goggle
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className="w-full gap-3 group flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md   transition-colors"
                     onClick={() =>
                       signIn("github", {
                         // callbackUrl: "/auth/account-setup",
                       })
                     }
                   >
-                    <Image
-                      src="/icon-auth-github.svg"
-                      alt="GitHub"
-                      width={38}
-                      height={38}
-                      className="mr-2"
-                    />
+                    <div>
+                      <FaGithub size={33} className=" dark:text-white" />
+                    </div>
                     <span className="text-sm font-medium text-gray-700 dark:text-white">
                       GitHub
                     </span>

@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Gitlab from "next-auth/providers/gitlab";
-import Cognito from "next-auth/providers/cognito";
+// import Cognito from "next-auth/providers/cognito";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 
 interface Token {
@@ -38,7 +38,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
     Google({
       async profile(profile) {
-        return { ...profile };
+        return {
+          id: profile.sub,
+          name: profile.name || profile.username,
+          email: profile.email,
+          image: profile?.avatar_url || "",
+          firstName: profile.name?.split(" ")[0] || profile.username,
+          lastName: profile.name?.split(" ")[1] || "",
+          isVerified: true,
+        };
       },
     }),
     Gitlab({
@@ -55,19 +63,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         };
       },
     }),
-    Cognito({
-      async profile(profile) {
-        return {
-          id: profile.id.toString(),
-          name: profile.name || profile.username,
-          email: profile.email,
-          image: profile.avatar_url,
-          firstName: profile.name?.split(" ")[0] || profile.username,
-          lastName: profile.name?.split(" ").slice(1).join(" ") || "",
-          isVerified: true,
-        };
-      },
-    }),
+    // Cognito({
+    //   async profile(profile) {
+    //     return {
+    //       id: profile.id.toString(),
+    //       name: profile.name || profile.username,
+    //       email: profile.email,
+    //       image: profile.avatar_url,
+    //       firstName: profile.name?.split(" ")[0] || profile.username,
+    //       lastName: profile.name?.split(" ").slice(1).join(" ") || "",
+    //       isVerified: true,
+    //     };
+    //   },
+    // }),
     MicrosoftEntraID({
       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,

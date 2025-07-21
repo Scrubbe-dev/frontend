@@ -4,7 +4,7 @@ import Sidebar from "./Sidabar";
 import Navbar from "./Navbar";
 const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="w-full h-screen dark:bg-[#111827] bg-white overflow-clip">
+    <div className="w-screen min-w-[1280px] h-screen dark:bg-[#111827] bg-white overflow-clip">
       <div className="flex w-full h-full">
         <Sidebar />
         <div className="w-full h-full">

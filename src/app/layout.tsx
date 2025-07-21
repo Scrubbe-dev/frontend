@@ -8,6 +8,7 @@ import CookieConsentModal from "@/components/landing/CookieConsentModal";
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
 import AuthProvider from "@/provider/AuthProvider";
 import ModalManager from "@/components/landing/ModalManager";
+import ThemeProvider from "@/components/ThemeProvider";
 
 const bersley = localFont({
   src: [
@@ -77,19 +78,21 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${airbnbCereal.variable} ${bersley.variable}`}>
       <body className="antialiased min-h-screen w-full flex flex-col bg-[#1F2B71] font-airbnb">
-        <AuthProvider>
-          <NextJsTopLoader />
-          <StoreProvider>
-            {/*  <AnnouncementBar /> disabled for now till official launch */}
-            {/* <NavbarWrapper /> */}
-            <main className="flex-grow h-full w-full">{children}</main>
-            {/* <FooterWrapper /> */}
-            <CookieConsentModal />
+        <ThemeProvider>
+          <AuthProvider>
+            <NextJsTopLoader />
+            <StoreProvider>
+              {/*  <AnnouncementBar /> disabled for now till official launch */}
+              {/* <NavbarWrapper /> */}
+              <main className="flex-grow h-full w-full">{children}</main>
+              {/* <FooterWrapper /> */}
+              <CookieConsentModal />
 
-            <ModalManager />
-          </StoreProvider>
-          <Toaster position="top-center" />
-        </AuthProvider>
+              <ModalManager />
+            </StoreProvider>
+            <Toaster position="top-center" />
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import Sidebar from "../dashboard/Sidabar";
 import Navbar from "../dashboard/Navbar";
+import Sidebar from "./Sidabar";
 
 const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
   return (

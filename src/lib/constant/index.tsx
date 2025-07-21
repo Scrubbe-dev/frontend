@@ -1,7 +1,21 @@
-import { Database, LayoutDashboard, Settings, ShieldCheck } from "lucide-react";
+import {
+  Code,
+  Database,
+  LayoutDashboard,
+  Lock,
+  LucideDatabaseBackup,
+  Settings,
+  ShieldCheck,
+  SquareCode,
+  SquareKanban,
+  UsersRound,
+} from "lucide-react";
 import { BsQuestionOctagon } from "react-icons/bs";
-import { FaCodepen } from "react-icons/fa6";
+import { FaCircleQuestion, FaCodepen } from "react-icons/fa6";
+import { FiGitMerge } from "react-icons/fi";
+import { HiOutlineCreditCard } from "react-icons/hi";
 import { TbRouteSquare } from "react-icons/tb";
+import { TiFlowChildren } from "react-icons/ti";
 
 export type NavItem = {
   name: string;
@@ -45,16 +59,6 @@ export const navItem: NavItem[] = [
       {
         name: "Data Source",
         link: "/dashboard/data-source",
-        childMenu: [
-          {
-            name: "Dashboard",
-            link: "dashboard",
-          },
-          {
-            name: "Telemetry + Detection",
-            link: "telemetry",
-          },
-        ],
       },
       {
         name: "Source Categories (Cloud, Apps)",
@@ -77,10 +81,10 @@ export const navItem: NavItem[] = [
         name: "Playbook Builder",
         link: "/dashboard/playbook-builder",
       },
-      // {
-      //   name: "Incident Ticket",
-      //   link: "/dashboard/incident-ticket",
-      // },
+      {
+        name: "Incident Ticket",
+        link: "/dashboard/incident-ticket",
+      },
       {
         name: "Actions & Triggers",
         link: "/dashboard/actions-triggers",
@@ -94,7 +98,7 @@ export const navItem: NavItem[] = [
   {
     name: "Fraud Detection",
     Icon: LayoutDashboard,
-    link: "/dashboard/anotomy-detection",
+    link: "/dashboard/anomaly-detection",
     isMenu: true,
     isActive: false,
     menu: [
@@ -104,7 +108,7 @@ export const navItem: NavItem[] = [
       },
       {
         name: "Anomaly Detection",
-        link: "/dashboard/anotomy-detection",
+        link: "/dashboard/anomaly-detection",
       },
     ],
   },
@@ -262,17 +266,7 @@ export const ezraNavItem: NavItem[] = [
     menu: [
       {
         name: "Data Source",
-        link: "/dashboard/data-source",
-        childMenu: [
-          {
-            name: "Dashboard",
-            link: "dashboard",
-          },
-          {
-            name: "Telemetry + Detection",
-            link: "telemetry",
-          },
-        ],
+        link: "/ezra/dashboard/data-source",
       },
       {
         name: "Source Categories (Cloud, Apps)",
@@ -312,7 +306,7 @@ export const ezraNavItem: NavItem[] = [
   {
     name: "Fraud Detection",
     Icon: LayoutDashboard,
-    link: "/ezra/dashboard/anotomy-detection",
+    link: "/ezra/dashboard/anomaly-detection",
     isMenu: true,
     isActive: false,
     menu: [
@@ -322,7 +316,7 @@ export const ezraNavItem: NavItem[] = [
       },
       {
         name: "Anomaly Detection",
-        link: "/ezra/dashboard/anotomy-detection",
+        link: "/ezra/dashboard/anomaly-detection",
       },
     ],
   },
@@ -432,14 +426,94 @@ export const developerNavItem: NavItem[] = [
     name: "Dashboard",
     Icon: LayoutDashboard,
     link: "/developer/dashboard",
-    isMenu: true,
+    isMenu: false,
     isActive: true,
-    menu: [
-      {
-        name: "Device Intelligence",
-        link: "/developer/dashboard",
-      },
-    ],
+  },
+  {
+    name: "Device Intelligence",
+    Icon: FiGitMerge,
+    link: "/developer/device-intelligence",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Analytics",
+    Icon: SquareKanban,
+    link: "/developer/analytics",
+    isMenu: false,
+    isActive: false,
+  },
+];
+
+export const developerNavItemDevelopment: NavItem[] = [
+  {
+    name: "API Playground",
+    Icon: SquareCode,
+    link: "/developer/api-playground",
+    isMenu: false,
+    isActive: true,
+  },
+  {
+    name: "Integration Tools",
+    Icon: FiGitMerge,
+    link: "/developer/integration-tools",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Webhooks",
+    Icon: TiFlowChildren,
+    link: "/developer/webhooks",
+    isMenu: false,
+    isActive: false,
+  },
+];
+
+export const developerNavItemSecurity: NavItem[] = [
+  {
+    name: "Security Center",
+    Icon: Lock,
+    link: "/developer/security-center",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "API Keys",
+    Icon: Code,
+    link: "/developer/api-keys",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Audit Logs",
+    Icon: LucideDatabaseBackup,
+    link: "/developer/audit-logs",
+    isMenu: false,
+    isActive: false,
+  },
+];
+
+export const developerNavItemAccount: NavItem[] = [
+  {
+    name: "Team Management",
+    Icon: UsersRound,
+    link: "/developer/team-management",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Billing & Usage",
+    Icon: HiOutlineCreditCard,
+    link: "/developer/billing-usage",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Support",
+    Icon: FaCircleQuestion,
+    link: "/developer/support",
+    isMenu: false,
+    isActive: false,
   },
 ];
 

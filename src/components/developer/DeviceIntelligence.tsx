@@ -183,7 +183,7 @@ const riskColors = (risk: string) => {
   );
 };
 
-const DeviceDashboard = () => {
+const DeviceIntelligence = () => {
   const [openStatusFilter, setOpenStatusFilter] = useState<boolean>(false);
   const statusFilterRef = useRef<HTMLDivElement>(null);
   const [viewConfiguration, setViewConfiguration] = useState(false);
@@ -239,20 +239,28 @@ const DeviceDashboard = () => {
 
       <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5 mt-7">
         <div className="dark:bg-dark bg-white rounded-xl gap-3 dark:shadow-md p-4 w-full h-[163px] flex flex-col items-center justify-center  border-t-4 border-blue-400/60 relative">
-          <p className=" text-4xl font-bold text-colorScBlue">1,247</p>
-          <p className="text-colorScBlue">Security Score</p>
+          <p className=" text-4xl font-bold text-colorScBlue dark:text-white">
+            1,247
+          </p>
+          <p className="text-colorScBlue dark:text-white">Security Score</p>
         </div>
         <div className="dark:bg-dark bg-white rounded-xl gap-3 dark:shadow-md p-4 w-full h-[163px] flex flex-col items-center justify-center  border-t-4 border-blue-400/60 relative">
-          <p className=" text-4xl font-bold text-colorScBlue">98.7%</p>
-          <p className="text-colorScBlue">Detection Accuracy</p>
+          <p className=" text-4xl font-bold text-colorScBlue dark:text-white">
+            98.7%
+          </p>
+          <p className="text-colorScBlue dark:text-white">Detection Accuracy</p>
         </div>
         <div className="dark:bg-dark bg-white rounded-xl gap-3 dark:shadow-md p-4 w-full h-[163px] flex flex-col items-center justify-center  border-t-4 border-blue-400/60 relative">
-          <p className=" text-4xl font-bold text-colorScBlue">25</p>
-          <p className="text-colorScBlue">Threats Blocked</p>
+          <p className=" text-4xl font-bold text-colorScBlue dark:text-white">
+            25
+          </p>
+          <p className="text-colorScBlue dark:text-white">Threats Blocked</p>
         </div>
         <div className="dark:bg-dark bg-white rounded-xl gap-3 dark:shadow-md p-4 w-full h-[163px] flex flex-col items-center justify-center  border-t-4 border-blue-400/60 relative">
-          <p className=" text-4xl font-bold text-colorScBlue">4.2ms</p>
-          <p className="text-colorScBlue">Avg Response Time</p>
+          <p className=" text-4xl font-bold text-colorScBlue dark:text-white">
+            4.2ms
+          </p>
+          <p className="text-colorScBlue dark:text-white">Avg Response Time</p>
         </div>
       </div>
 
@@ -326,4 +334,4 @@ const DeviceDashboard = () => {
   );
 };
 
-export default DeviceDashboard;
+export default DeviceIntelligence;

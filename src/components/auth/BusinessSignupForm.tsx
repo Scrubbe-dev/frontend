@@ -16,6 +16,8 @@ import useAuthStore from "@/lib/stores/auth.store";
 import CompleteBusinessProfile, {
   BusinessProfileSignupFormData,
 } from "./CompleteBusinessProfile";
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
 
 // Define the form schema using zod
 const businessSignupSchema = z
@@ -423,20 +425,28 @@ export default function BusinessSignupForm() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
                   <button
                     type="button"
-                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    className="w-full flex gap-3 items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
+                    onClick={() => signIn("google")}
+                  >
+                    <div>
+                      <FcGoogle size={33} />
+                    </div>
+                    <span className="text-sm font-medium text-gray-700 dark:text-white">
+                      Goggle
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className="w-full gap-3 group flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md   transition-colors"
                     onClick={() =>
                       signIn("github", {
                         // callbackUrl: "/auth/account-setup",
                       })
                     }
                   >
-                    <Image
-                      src="/icon-auth-github.svg"
-                      alt="GitHub"
-                      width={38}
-                      height={38}
-                      className="mr-2"
-                    />
+                    <div>
+                      <FaGithub size={33} className=" dark:text-white" />
+                    </div>
                     <span className="text-sm font-medium text-gray-700 dark:text-white">
                       GitHub
                     </span>
@@ -444,7 +454,7 @@ export default function BusinessSignupForm() {
 
                   <button
                     type="button"
-                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
                     onClick={() =>
                       signIn("gitlab", {
                         // callbackUrl: "/auth/account-setup",
@@ -465,7 +475,7 @@ export default function BusinessSignupForm() {
 
                   <button
                     type="button"
-                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
                   >
                     <Image
                       src="/icon-auth-aws.svg"
@@ -481,7 +491,7 @@ export default function BusinessSignupForm() {
 
                   <button
                     type="button"
-                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
                     onClick={() =>
                       signIn("microsoft-entra-id", {
                         // callbackUrl: "/auth/account-setup",
@@ -497,22 +507,6 @@ export default function BusinessSignupForm() {
                     />
                     <span className="text-sm font-medium text-gray-700 dark:text-white">
                       Azure
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                  >
-                    <Image
-                      src="/icon-auth-sso.svg"
-                      alt="SSO"
-                      width={38}
-                      height={38}
-                      className="mr-2"
-                    />
-                    <span className="text-sm font-medium text-gray-700 dark:text-white">
-                      SSO
                     </span>
                   </button>
                 </div>

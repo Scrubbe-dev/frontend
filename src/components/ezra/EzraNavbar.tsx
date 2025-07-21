@@ -1,7 +1,11 @@
 import { ChevronDown } from "lucide-react";
 import { Button } from "../ui/button";
+import { usePathname } from "next/navigation";
 
 const EzraNavbar = () => {
+  const pathname = usePathname();
+  const isIncidentTicket = pathname.split("/").includes("incident-ticket");
+
   return (
     <div>
       <div className="h-[80px] w-full border-b border-blue-400/50  flex justify-between items-center px-[3%]">
@@ -19,9 +23,11 @@ const EzraNavbar = () => {
             E.S
           </div>
           <ChevronDown className=" text-zinc-400" />
-          <Button variant="destructive" size="sm" className="px-2 ml-2">
-            <p className="  text-white">48 active threats</p>
-          </Button>
+          {isIncidentTicket && (
+            <Button variant="destructive" size="sm" className="px-2 ml-2">
+              <p className="  text-white">48 active threats</p>
+            </Button>
+          )}
         </div>
       </div>
     </div>
