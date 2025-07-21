@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -78,6 +78,7 @@ export default function SignInForm() {
   };
 
   return (
+    <Suspense fallback={<div>Loading...</div>}>
     <div className="w-full p-6">
       <h1 className=" text-xl md:text-2xl dark:text-white font-semibold mb-6">
         Sign in to Scrubbe
@@ -271,5 +272,6 @@ export default function SignInForm() {
         </div>
       </form>
     </div>
+    </Suspense>
   );
 }
