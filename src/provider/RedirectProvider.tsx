@@ -32,7 +32,10 @@ export const RedirectProvider = ({ children }: { children: ReactNode }) => {
     const refreshToken = getCookie(COOKIE_KEYS.REFRESH_TOKEN);
 
     if (!token && !refreshToken) {
-      return router.push("/auth/signin");
+      // const timeout = setTimeout(() => {
+      router.push("/auth/signin");
+      // }, 1000);
+      // return () => clearTimeout(timeout);
     }
     if (shouldRedirect) {
       // Redirect to the login page

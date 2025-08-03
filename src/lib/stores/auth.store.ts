@@ -88,6 +88,8 @@ const useAuthStore = create<AuthState & AuthActions>()(
             isLoading: false,
           });
 
+          setCookie(COOKIE_KEYS.TOKEN, data.tokens.accessToken);
+          setCookie(COOKIE_KEYS.REFRESH_TOKEN, data.tokens.refreshToken);
           return data.user;
         } catch (error) {
           set({
