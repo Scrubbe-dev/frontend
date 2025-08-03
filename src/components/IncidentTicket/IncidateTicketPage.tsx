@@ -22,8 +22,9 @@ import moment from "moment";
 
 export type Ticket = {
   id: string;
+  ticketId: string;
   reason: string;
-  username: string;
+  userName: string;
   priority: "high" | "medium" | "low";
   status: "open" | "closed" | "in-progress" | "on-hold";
   assignedTo: string;
@@ -106,7 +107,7 @@ export type Ticket = {
 
 const columns = [
   {
-    accessorKey: "id",
+    accessorKey: "ticketId",
     header: () => <span className="font-semibold">Incident ID</span>,
     cell: (info: CellContext<Ticket, unknown>) => info.getValue(),
   },
