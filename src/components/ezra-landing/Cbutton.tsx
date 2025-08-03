@@ -9,7 +9,7 @@ type Props = {
 const Cbutton = ({ children, className, onClick }: Props) => {
   return (
     <Button
-      className={`bg-gradient-to-t to-colorScBlue from-blue-800 ${className}`}
+      className={`bg-gradient-to-t to-colorScBlue from-blue-800 text-white ${className}`}
       onClick={onClick}
     >
       {children}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react";
 import { getFingerprintWithConsent } from "@/lib/fingerprint/utils/handler";
@@ -94,8 +95,18 @@ export const useFingerprintDisplay = () => {
       value: fingerprint?.data.usersDetails?.connection.isp || "Unavailable",
     },
     {
+      label: "Network Provider",
+      value:
+        (fingerprint?.data?.usersDetails as any)?.networkProvider ||
+        "Unavailable",
+    },
+    {
+      label: "User Fingerprint ID",
+      value: (fingerprint?.data?.usersDetails as any)?.userId || "Unavailable",
+    },
+    {
       label: "Device Trust Score",
-      value: fingerprint?.data.network.isProxy ? "0%" : "100%",
+      value: fingerprint?.data?.network.isProxy ? "0%" : "100%",
     },
   ];
 

@@ -28,7 +28,7 @@ const Modal = ({ isOpen, onClose, children, className }: ModalProps) => {
             <div className=" absolute right-3 top-3">
               <div
                 onClick={onClose}
-                className="bg-neutral-100 dark:bg-[#111827] dark:text-white rounded-sm p-1 w-fit cursor-pointer"
+                className="bg-neutral-100 dark:bg-[#111827] text-black dark:text-white rounded-sm p-1 w-fit cursor-pointer"
               >
                 <X />
               </div>

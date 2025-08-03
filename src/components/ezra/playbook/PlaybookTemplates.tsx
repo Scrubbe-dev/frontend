@@ -1,4 +1,4 @@
-import { playbookTemplate } from "@/lib/constant";
+import { playbookTemplate } from "@/lib/constant/index";
 import React from "react";
 
 type PlaybookTemplatesProps = {
@@ -12,7 +12,7 @@ const PlaybookTemplates: React.FC<PlaybookTemplatesProps> = ({
   <div className="flex flex-col gap-2">
     <p className="text-lg font-bold dark:text-white">Templates</p>
     <div className="flex gap-4 mb-6">
-      {playbookTemplate.map((tpl) => (
+      {playbookTemplate?.map((tpl) => (
         <div
           key={tpl.title}
           className="border rounded-lg p-4 w-64 dark:bg-subDark bg-gray-50 flex flex-col justify-between"

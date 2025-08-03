@@ -80,19 +80,19 @@ const NewNavbar = () => {
       dropdownOptions: [
         {
           label: "SIEM Platform",
-          href: "/home/products/siem",
+          href: "/products/siem",
           description:
             "Real-time threat detection, log analysis, and centralized monitoring",
         },
         {
           label: "SOAR Automation",
-          href: "/home/products/soar",
+          href: "/products/soar",
           description:
             "Automated workflows to respond to incidents faster and smarter",
         },
         {
           label: "Incident Management",
-          href: "/home/products/incident-management",
+          href: "/products/incident-management",
           description:
             "End-to-end visibility, manage security events from detection to resolution",
         },
@@ -104,19 +104,19 @@ const NewNavbar = () => {
         },
         {
           label: "Authentication SDK",
-          href: "#",
+          href: "/products/authentication-sdk",
           description:
             "Secure user and system authentication for integrated apps",
         },
         {
           label: "Compliance Tools",
-          href: "/home/products/compliance",
+          href: "/products/compliance",
           description:
             "Automate reporting and meet standards like SOC 2, ISO 27001",
         },
         {
           label: "Dashboard Preview",
-          href: "/home/products/dashboard-preview",
+          href: "/products/dashboard-preview",
           description:
             "Get a sneak peak of the Scrubbe control center in action",
         },
@@ -230,7 +230,7 @@ const NewNavbar = () => {
             {/* Logo */}
             <Link
               href="/"
-              className="relative  w-[141px] h-[40px] sm:w-[176px] sm:h-[50px] lg:w-[211px] lg:h-[60px] bg-white rounded-full "
+              className="relative  w-[130px] h-[40px] sm:w-[160px] sm:h-[50px] lg:w-[180px] lg:h-[60px] bg-white rounded-full "
             >
               <Image
                 src="/scrubbe-logo-01.png"
@@ -374,8 +374,8 @@ const NewNavbar = () => {
                     href={"/ezra"}
                     className=" bg-[#111827] gap-2 px-6 py-2 text-white rounded-3xl font-medium flex items-center"
                   >
-                    Explore Ezra Ai
-                    <img src="/ezrastar1.svg" />
+                    Ezra Ai
+                    <img src="/ezrastar1.svg" alt="ezrastar1.svg" />
                     {/* <PiStarFourFill className=" text-blue-500" size={22} /> */}
                   </Link>
                 </div>
@@ -477,7 +477,7 @@ const NewNavbar = () => {
                     href={"/ezra"}
                     className=" bg-[#111827] w-full gap-2 px-6 py-2 text-white rounded-3xl font-medium flex items-center justify-center"
                   >
-                    Explore Ezra Ai
+                    Ezra Ai
                     <img src="/ezrastar1.svg" />
                     {/* <PiStarFourFill className=" text-blue-500" size={22} /> */}
                   </Link>

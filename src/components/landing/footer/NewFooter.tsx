@@ -321,8 +321,14 @@ const NewFooter: React.FC = () => {
             </div>
             <div className="w-full">
               <div className={componentStyles.logoSection.socialContainer}>
-                <SocialLink icon={FaSquareXTwitter} href="#" />
-                <SocialLink icon={FaLinkedin} href="#" />
+                <SocialLink
+                  icon={FaSquareXTwitter}
+                  href="https://x.com/_Scrubbe"
+                />
+                <SocialLink
+                  icon={FaLinkedin}
+                  href="https://www.linkedin.com/company/scrubbe/"
+                />
                 <SocialLink icon={FaGithub} href="#" />
               </div>
             </div>

@@ -7,30 +7,28 @@ import SecurityIntelligenceError from "@/components/landing/security-intelligenc
 import { useFingerprintDisplay } from "@/lib/fingerprint/fingerprintdisplay";
 
 function SecurityIntelligence() {
-  const {
-    error,
-    loading,
-    formattedItems,
-  } = useFingerprintDisplay();
+  const { error, loading, formattedItems } = useFingerprintDisplay();
 
   const [deviceType, setDeviceType] = useState<string>("Desktop");
 
   useEffect(() => {
-    const determineDeviceType = () => {
-      const width = window.innerWidth;
-      if (width < 576) return "Mobile Phone";
-      if (width >= 576 && width < 992) return "Tablet";
-      return "Desktop";
-    };
+    if (typeof window !== "undefined") {
+      const determineDeviceType = () => {
+        const width = window.innerWidth;
+        if (width < 576) return "Mobile Phone";
+        if (width >= 576 && width < 992) return "Tablet";
+        return "Desktop";
+      };
 
-    setDeviceType(determineDeviceType());
-
-    const handleResize = () => {
       setDeviceType(determineDeviceType());
-    };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+      const handleResize = () => {
+        setDeviceType(determineDeviceType());
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
 
   if (loading) {

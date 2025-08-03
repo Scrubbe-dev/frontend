@@ -13,7 +13,7 @@ import OthersParameter from "./OthersParameter";
 import WhatsappParameter from "./WhatsappParameter";
 import Select from "../ui/select";
 import AuditLogs from "./AuditLogs";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const settingOptions = [
   {
@@ -74,7 +74,8 @@ const AlertSettings = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [parameter, setParameter] = useState("");
   const [role, setRole] = useState("");
-
+  const searchParams = useSearchParams();
+  const path = searchParams.get("to");
   const handleEnableSetting = (id: number) => {
     setSettings((prev) =>
       prev.map((setting, idx) =>
@@ -168,16 +169,48 @@ const AlertSettings = () => {
 
   const router = useRouter();
   const handleSaveSettings = () => {
-    console.log(settings);
-    router.push("/data-sources");
+    if (path && path === "ezra") {
+      router.push("/ezra/dashboard");
+    } else {
+      router.push(`/dashboard`);
+    }
+  };
+
+  const handleSkip = () => {
+    if (path && path === "ezra") {
+      router.push("/ezra/dashboard");
+    } else {
+      router.push(`/dashboard`);
+    }
   };
   return (
     <div className=" min-h-screen bg-neutral-50">
       <div className="flex flex-col h-full w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <h1 className="font-bold text-[22px] sm:text-[24px] lg:text-[28px] xl:text-[30px] leading-[130%] tracking-[1%] text-[#1F2937] py-6 ">
-          Scrubbe SOAR Alert Settings
-        </h1>
-
+        <div className=" flex justify-between items-center ">
+          <h1 className="font-bold text-[22px] sm:text-[24px] lg:text-[28px] xl:text-[30px] leading-[130%] tracking-[1%] text-[#1F2937] py-6 ">
+            Scrubbe SOAR Alert Settings
+          </h1>
+          <button
+            onClick={handleSkip}
+            type="button"
+            className="px-4 py-2 text-blue-600 border border-blue-200 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors text-[16px] font-medium flex items-center space-x-2"
+          >
+            <span>Skip</span>
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 8l4 4m0 0l-4 4m4-4H3"
+              />
+            </svg>
+          </button>
+        </div>
         {/* form */}
         <div className=" p-4 sm:p-6 lg:p-8 bg-white rounded-xl w-full h-full flex-col flex gap-y-2">
           <p className=" font-bold text-lg md:text-xl">Notification Channels</p>

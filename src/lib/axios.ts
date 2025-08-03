@@ -21,4 +21,20 @@ const api = axios.create({
   },
 });
 
+export const setupInterceptors = (
+  triggerRedirect: (status: number) => void
+) => {
+  api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      // Check for a 401 status code
+      if (error.response && error.response.status === 401) {
+        // Call the passed-in function
+        triggerRedirect(401);
+      }
+      return Promise.reject(error);
+    }
+  );
+};
+
 export default api; // Keep default export for backward compatibility
