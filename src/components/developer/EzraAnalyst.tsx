@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "../ui/Modal";
-import EzraChatWidget from "../ezra/EzraChatWidget";
 import CButton from "../ui/Cbutton";
+import { EzraChatWidget } from "../ezra/EzraChatWidget";
 
 const EzraAnalyst = () => {
   const [openEzra, setOpenEzra] = useState(false);
