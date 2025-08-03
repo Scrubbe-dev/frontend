@@ -151,13 +151,17 @@ export default function AnalyticsSidebar() {
     initializeCharts();
 
     // Add resize event listener to make charts responsive
-    window.addEventListener("resize", initializeCharts);
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", initializeCharts);
+    }
 
     // Cleanup function to destroy charts on unmount
     return () => {
       if (signupChartInstance) signupChartInstance.destroy();
       if (authChartInstance) authChartInstance.destroy();
-      window.removeEventListener("resize", initializeCharts);
+      if (typeof window !== "undefined") {
+        window.removeEventListener("resize", initializeCharts);
+      }
     };
   }, []);
 

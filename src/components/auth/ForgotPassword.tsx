@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import type React from "react";
 
 import Link from "next/link";
@@ -15,12 +15,6 @@ import * as z from "zod";
 export default function ForgotPassword() {
   const [stage, setStage] = useState<number>(1);
   const [email, setEmail] = useState<string>("");
-  const [verificationCode, setVerificationCode] = useState<string[]>(
-    Array(6).fill("")
-  );
-  const [resendTimer, setResendTimer] = useState<number>(51);
-  const [isResendDisabled, setIsResendDisabled] = useState<boolean>(true);
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const router = useRouter();
   // Add zod schema for password reset
   const passwordSchema = z
@@ -50,23 +44,23 @@ export default function ForgotPassword() {
   });
 
   // Handle timer for resend code
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
+  // useEffect(() => {
+  //   let interval: NodeJS.Timeout;
 
-    if (stage === 2 && resendTimer > 0) {
-      interval = setInterval(() => {
-        setResendTimer((prev) => prev - 1);
-      }, 1000);
-    }
+  //   if (stage === 2 && resendTimer > 0) {
+  //     interval = setInterval(() => {
+  //       setResendTimer((prev) => prev - 1);
+  //     }, 1000);
+  //   }
 
-    if (resendTimer === 0) {
-      setIsResendDisabled(false);
-    }
+  //   if (resendTimer === 0) {
+  //     setIsResendDisabled(false);
+  //   }
 
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [stage, resendTimer]);
+  //   return () => {
+  //     if (interval) clearInterval(interval);
+  //   };
+  // }, [stage, resendTimer]);
 
   // Handle email submission
   const handleEmailSubmit = (e: React.FormEvent) => {
@@ -79,11 +73,9 @@ export default function ForgotPassword() {
   // Handle verification code input
 
   // Handle verification code submission
-  const handleVerificationSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (verificationCode.every((code) => code !== "")) {
-      setStage(3);
-    }
+  const handleVerificationSubmit = (value: string) => {
+    console.log(value);
+    setStage(3);
   };
 
   // Handle password creation
@@ -93,17 +85,7 @@ export default function ForgotPassword() {
   };
 
   // Handle resend code
-  const handleResendCode = () => {
-    if (!isResendDisabled) return;
-
-    // Reset verification code
-    setVerificationCode(Array(6).fill(""));
-    // Reset timer
-    setResendTimer(51);
-    setIsResendDisabled(true);
-    // Focus first input
-    inputRefs.current[0]?.focus();
-  };
+  const handleResendCode = () => {};
 
   // Render different stages
   const renderStage = () => {
@@ -135,7 +117,7 @@ export default function ForgotPassword() {
               />
 
               <CButton type="submit" disabled={!email}>
-                Sign in
+                Send Code
               </CButton>
             </form>
           </div>
@@ -145,48 +127,17 @@ export default function ForgotPassword() {
         return (
           <div className="w-full  mx-auto">
             <div
-              className=" flex gap-2 items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer"
+              className=" flex gap-2 items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer dark:text-white"
               onClick={() => setStage(1)}
             >
               <ChevronLeft />
               <p>back</p>
             </div>
-            <h1 className="text-2xl font-semibold mb-2 dark:text-white">
-              Email Verification
-            </h1>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              We have sent a code to your email address to confirm it&rsquo;s
-              yours
-            </p>
-
-            <p className="text-blue-600 mb-6 font-bold">{email}</p>
-
-            <form onSubmit={handleVerificationSubmit}>
-              <div className="flex gap-2 mb-6">
-                <OtpInput
-                  value={verificationCode}
-                  onChange={setVerificationCode}
-                  disabled={false}
-                />
-              </div>
-
-              <CButton type="submit">Continue</CButton>
-
-              <div className="text-center mt-2">
-                <button
-                  type="button"
-                  onClick={handleResendCode}
-                  disabled={isResendDisabled}
-                  className={`text-sm ${
-                    isResendDisabled
-                      ? "text-gray-400"
-                      : "text-blue-600 hover:underline"
-                  }`}
-                >
-                  Resend code {isResendDisabled && `${resendTimer}s`}
-                </button>
-              </div>
-            </form>
+            <OtpInput
+              email={email}
+              handleResend={handleResendCode}
+              onSubmit={handleVerificationSubmit}
+            />
           </div>
         );
 

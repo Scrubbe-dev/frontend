@@ -1,15 +1,15 @@
 import { AxiosInstance } from "axios";
-import { getSession, signOut  } from "next-auth/react";
+import { getSession } from "next-auth/react";
 
 export const setupInterceptors = (instance: AxiosInstance) => {
   instance.interceptors.request.use(
     async (config) => {
       const session = await getSession();
-      
+
       if (session?.accessToken) {
         config.headers.Authorization = `Bearer ${session.accessToken}`;
       }
-      
+
       return config;
     },
     (error) => Promise.reject(error)
@@ -19,7 +19,7 @@ export const setupInterceptors = (instance: AxiosInstance) => {
     (response) => response,
     async (error) => {
       if (error.response?.status === 401) {
-        await signOut({ redirect: true, callbackUrl: "/login" });
+        // await signOut({});
       }
       return Promise.reject(error);
     }

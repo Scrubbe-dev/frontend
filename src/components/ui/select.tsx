@@ -32,21 +32,25 @@ const Select = ({
           {label}
         </label>
       )}
-      <select
-        className={`w-full dark:text-white h-[48px] bg-transparent text-sm px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+      <div
+        className={`w-full dark:text-white h-[48px] bg-transparent text-sm px-3 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
           isLoading
             ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
             : "border-gray-300"
         } ${error ? "border-red-500" : ""} ${className}`}
-        disabled={isLoading}
-        {...props}
       >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
+        <select
+          className="w-full bg-transparent h-full rounded-md outline-none"
+          disabled={isLoading}
+          {...props}
+        >
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </div>
       {error && (
         <p className="text-red-500 text-xs mt-1 flex gap-1 items-center">
           <Info size={14} />

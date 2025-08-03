@@ -8,20 +8,22 @@ import Fingerprint from "./Fingerprint";
 import CTA from "./CTA";
 import Brands from "./Brands";
 import EzraConversation from "./EzraConversation";
+import GetStartedWithScrubbe from "./GetStarted/GetStartedWithScrubbe";
 
 const Index = () => {
   return (
     <>
-    <Suspense fallback={<div>Loading...</div>}>
-      <Hero />
-      <FraudAnalyst />
-      <MachineDetection />
-      <SecurityStack />
-      <DetectionStack />
-      <Fingerprint />
-      <EzraConversation />
-      <CTA />
-      <Brands />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Hero />
+        <FraudAnalyst />
+        <MachineDetection />
+        <SecurityStack />
+        <DetectionStack />
+        <Fingerprint />
+        <GetStartedWithScrubbe />
+        <EzraConversation />
+        <CTA />
+        <Brands />
       </Suspense>
     </>
   );

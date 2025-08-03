@@ -1,40 +1,163 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "../ui/Modal";
 import CButton from "../ui/Cbutton";
 import Select from "../ui/select";
 import Input from "../ui/input";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import { z } from "zod";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { querykeys } from "@/lib/constant";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type CreateIncidentProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
+const formScheme = z.object({
+  template: z.string().nonempty({ message: "template is required" }),
+  reason: z.string().nonempty({ message: "reason is required" }),
+  priority: z.string().nonempty({ message: "priority is required" }),
+  assignedTo: z.string().nonempty({ message: "assignedTo is required" }),
+  username: z.string().nonempty({ message: "username is required" }),
+});
+
+type FormType = z.infer<typeof formScheme>;
+
 const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
+  const { post } = useFetch();
+  const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
+  const modal = searchParams.get("modal");
+  const description = searchParams.get("description");
+  const priority = searchParams.get("priority");
+  const router = useRouter();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<FormType>({
+    resolver: zodResolver(formScheme),
+  });
+
+  const removeQuery = () => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.delete("modal");
+    newSearchParams.delete("description");
+    newSearchParams.delete("priority");
+    newSearchParams.delete("title");
+
+    router.replace(`?${newSearchParams.toString()}`);
+  };
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: ["CREATE-INCIDENT"],
+    mutationFn: async ({ data }: { data: FormType }) => {
+      try {
+        const res = await post(endpoint.incident_ticket.create, data);
+        if (res.success) {
+          toast.success("Incident ticket created successfully");
+          queryClient.refetchQueries({ queryKey: [querykeys.INCIDENT_TICKET] });
+          removeQuery();
+          onClose();
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to create incident ticket");
+      }
+    },
+  });
+
+  const createIncidentTicket = async (value: FormType) => {
+    mutateAsync({ data: value });
+  };
+
+  useEffect(() => {
+    if (Boolean(modal) === true) {
+      setValue("priority", String(priority));
+      setValue("reason", String(description));
+    }
+  }, [modal, description, priority]);
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="p-4 space-y-5">
-        <h1 className="text-2xl font-bold dark:text-white">
+      <form
+        onSubmit={handleSubmit(createIncidentTicket)}
+        className="p-4 space-y-5"
+      >
+        <h1 className="text-2xl font-bold dark:text-white text-black">
           Create New Incident
         </h1>
-        <Select
-          label="Template"
-          options={[
-            { label: "None", value: "none" },
-            { label: "Phishing", value: "phishing" },
-            { label: "Malware", value: "malware" },
-          ]}
+        <Controller
+          name="template"
+          control={control}
+          render={({ field }) => (
+            <Select
+              {...field}
+              label="Template"
+              options={[
+                { label: "SELECT TEMPLATE", value: "" },
+                { label: "None", value: "NONE" },
+                { label: "Phishing", value: "PHISHING" },
+                { label: "Malware", value: "MALWARE" },
+              ]}
+              className=" text-black dark:text-white"
+              error={errors.template?.message}
+            />
+          )}
         />
-        <Input label="User name" placeholder="eg John Doe" />
-        <Input label="Reason" placeholder="Enter reason" />
-        <Select
-          label="Priority"
-          options={[
-            { label: "Low", value: "low" },
-            { label: "Medium", value: "medium" },
-            { label: "High", value: "high" },
-          ]}
+        <Controller
+          name="username"
+          control={control}
+          render={({ field }) => (
+            <Input
+              label="User name"
+              placeholder="eg John Doe"
+              {...field}
+              error={errors.template?.message}
+              className=" text-black dark:text-white"
+            />
+          )}
         />
-        <Select
+
+        <Controller
+          name="reason"
+          control={control}
+          render={({ field }) => (
+            <Input
+              label="Reason"
+              placeholder="Enter reason"
+              {...field}
+              error={errors.reason?.message}
+              className=" text-black dark:text-white"
+            />
+          )}
+        />
+
+        <Controller
+          name="priority"
+          control={control}
+          render={({ field }) => (
+            <Select
+              label="Priority"
+              options={[
+                { label: "SELECT PRIORITY", value: "" },
+                { label: "Low", value: "HIGH" },
+                { label: "Medium", value: "MEDIUM" },
+                { label: "High", value: "HIGH" },
+                { label: "Critical", value: "CRITICAL" },
+              ]}
+              {...field}
+              error={errors.priority?.message}
+              className=" text-black dark:text-white"
+            />
+          )}
+        />
+        {/* <Select
           label="Status"
           options={[
             { label: "Open", value: "open" },
@@ -42,25 +165,43 @@ const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
             { label: "In Progress", value: "in-progress" },
             { label: "Resolved", value: "resolved" },
           ]}
-        />
-        <Select
-          label="Assignee"
-          options={[
-            { label: "John Doe", value: "john-doe" },
-            { label: "Jane Doe", value: "jane-doe" },
-          ]}
+        /> */}
+
+        <Controller
+          name="assignedTo"
+          control={control}
+          render={({ field }) => (
+            <Select
+              {...field}
+              label="Assignee"
+              options={[
+                { label: "SELECT ASSIGNEE", value: "" },
+                {
+                  label: "Olamide Morakinyo",
+                  value: "olamidemoraks@gmail.com",
+                },
+                { label: "David Shiloh", value: "morakinyodavid00@gmail.com" },
+              ]}
+              error={errors.assignedTo?.message}
+              className=" text-black dark:text-white"
+            />
+          )}
         />
 
         <div className="flex gap-2 justify-end">
           <CButton
-            className="w-fit border border-gray-300 text-colorScBlue dark:border-gray-700 bg-transparent"
+            type="button"
+            className="w-fit border border-gray-300 hover:text-white text-colorScBlue dark:border-gray-700 bg-transparent"
             onClick={onClose}
+            isLoading={isPending}
           >
             Close
           </CButton>
-          <CButton className="w-fit">Create Incident</CButton>
+          <CButton type="submit" isLoading={isPending} className="w-fit">
+            Create Incident
+          </CButton>
         </div>
-      </div>
+      </form>
     </Modal>
   );
 };

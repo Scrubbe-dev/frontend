@@ -22,7 +22,7 @@ const Hero = () => {
   const [progress, setProgress] = useState(1); // 1 = 100%, 0 = 0%
   const progressInterval = useRef<NodeJS.Timeout | null>(null);
 
-  console.log(activeStep);
+  console.log(activeStep, progress);
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveStep((prev) => {
@@ -57,11 +57,11 @@ const Hero = () => {
   const step = steps[activeStep - 1];
 
   // SVG circle constants
-  const size = window.innerWidth > 768 ? 60 : 40;
-  const stroke = 4;
-  const radius = (size - stroke) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const dashOffset = circumference * (1 - progress);
+  // const size = window.innerWidth > 768 ? 60 : 40;
+  // const stroke = 4;
+  // const radius = (size - stroke) / 2;
+  // const circumference = 2 * Math.PI * radius;
+  // const dashOffset = circumference * (1 - progress);
 
   return (
     <section className=" bg-white px-4 md:px-6 lg:px-20 xl:px-20 py-10 ">
@@ -72,10 +72,11 @@ const Hero = () => {
         className=" max-w-[1440px] mx-auto h-full lg:h-[600px] bg-[#6A5ACD] rounded-[40px] flex lg:flex-row flex-col relative overflow-clip"
       >
         <div className="sm:p-10 p-4 lg:h-[80%] h-[749px] flex flex-col items-center lg:items-start md:justify-center gap-5 lg:gap-10 z-20">
-          <h1 className=" text-white xl:text-5xl  md:text-4xl text-2xl  font-bold lg:text-start text-center pt-3">
-            Scrubbe – Your On-Demand <br className=" md:block hidden" /> AI
-            Security Analyst for Real- <br className=" md:block hidden" />
-            Time Threat Detection
+          <h1 className=" text-white xl:text-[40px] md:text-[36px] text-[24px] leading-tight  font-bold lg:text-start text-center pt-4">
+            AI-Powered security architecture <br className=" md:block hidden" />{" "}
+            with behavioural analytics for <br className=" md:block hidden" />{" "}
+            fintechs and digital businesses- <br className=" md:block hidden" />
+            No SOC Team required
           </h1>
           <div className="flex   flex-col space-y-6 sm:space-y-8">
             {
@@ -85,7 +86,7 @@ const Hero = () => {
                   activeStep === step.number ? "scale-[1.02]" : ""
                 }`}
               >
-                <div className="relative flex-shrink-0 w-[40px] sm:w-[60px] h-[40px] sm:h-[60px] rounded-full bg-white flex items-center justify-center mr-4 sm:mr-5">
+                {/* <div className="relative flex-shrink-0 w-[40px] sm:w-[60px] h-[40px] sm:h-[60px] rounded-full bg-white flex items-center justify-center mr-4 sm:mr-5">
                   <span className="text-[20px] sm:text-[24px] font-bold">
                     {step.number}
                   </span>
@@ -117,7 +118,7 @@ const Hero = () => {
                       />
                     </svg>
                   )}
-                </div>
+                </div> */}
 
                 <div className="min-h-[100px]">
                   <p

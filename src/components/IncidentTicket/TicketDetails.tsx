@@ -9,6 +9,7 @@ import Collaboration from "./Collaboration";
 import History from "./History";
 import TreatIntel from "./TreatIntel";
 import { motion } from "framer-motion";
+import moment from "moment";
 // import { Ticket } from './IncidateTicketPage';
 
 const TABS = [
@@ -110,18 +111,22 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
                 <div className="text-gray-500 dark:text-gray-200">
                   Incident ID :
                 </div>
-                <div className=" text-right dark:text-white">INC25423</div>
+                <div className=" text-right dark:text-white">
+                  {ticket?.ticketId}
+                </div>
                 <div className="text-gray-500 dark:text-gray-200">
                   Username :
                 </div>
-                <div className=" text-right dark:text-white">David Wilson</div>
+                <div className=" text-right dark:text-white">
+                  {ticket?.userName}
+                </div>
                 <div className="text-gray-500 dark:text-gray-200">Reason:</div>
                 <div className="text-right dark:text-white">
-                  Multiple failed attempt
+                  {ticket?.reason}
                 </div>
                 <div className="text-gray-500 dark:text-gray-200">Created:</div>
                 <div className="text-right dark:text-white">
-                  2025-05-29 10:54:57
+                  {moment(ticket.createdAt).format("YYYY-MM-DD")}
                 </div>
                 <div className="text-gray-500 dark:text-gray-200">
                   Risk Score:

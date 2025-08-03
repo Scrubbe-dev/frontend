@@ -49,7 +49,12 @@ const ComplianceFeature = () => {
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 w-full mx-auto">
-        {incidentFeature.map((feature) => (
+        {incidentFeature.slice(0, 3).map((feature) => (
+          <FeatureCard key={feature.title} {...feature} />
+        ))}
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2  gap-4 lg:gap-6 w-full mx-auto">
+        {incidentFeature.slice(3, 5).map((feature) => (
           <FeatureCard key={feature.title} {...feature} />
         ))}
       </div>

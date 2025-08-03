@@ -1,10 +1,9 @@
 import { heroui } from "@heroui/react";
 import tailwindcssAnimate from "tailwindcss-animate";
-
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: "media",
+  darkMode: "class",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -24,6 +23,10 @@ const config: Config = {
         besley: ["var(--font-bersley)"],
       },
       colors: {
+        critical: "#dc2626", // red-600
+        high: "#ea580c", // orange-600
+        medium: "#fbbf24", // yellow-400
+        low: "#3b82f6",
         dark: "#111827",
         subDark: "#1F2937",
         darkEzra: "#110F0F",
@@ -69,7 +72,6 @@ const config: Config = {
           foreground: "hsl(var(--destructive-foreground))",
         },
         border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         chart: {
           "1": "hsl(var(--chart-1))",
@@ -154,6 +156,9 @@ const config: Config = {
       },
       animation: {
         "meteor-effect": "meteor 5s linear infinite",
+        "fade-in": "fadeIn 0.8s ease-out forwards",
+        "slide-up": "slideUp 0.6s ease-out forwards",
+        "pulse-dot": "pulseDot 1.4s infinite ease-in-out",
       },
       keyframes: {
         meteor: {
@@ -163,6 +168,18 @@ const config: Config = {
             transform: "rotate(215deg) translateX(-500px)",
             opacity: "0",
           },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        slideUp: {
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        pulseDot: {
+          "0%, 100%": { opacity: "0.2" },
+          "50%": { opacity: "1" },
         },
       },
     },
