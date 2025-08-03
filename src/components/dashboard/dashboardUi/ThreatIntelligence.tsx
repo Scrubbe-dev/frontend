@@ -42,7 +42,7 @@ const ThreatIntelligence = () => {
             Threat Intelligence
           </p>
         </div>
-        <div className="flex items-start gap-2 text-colorScBlue">
+        <div className="flex items-start gap-2 text-colorScBlue cursor-pointer">
           <p className=" text-sm font-medium">View Details</p>
           <ArrowRight size={17} />
         </div>

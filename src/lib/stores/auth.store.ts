@@ -7,12 +7,30 @@ import { developerSignupSchema } from "@/components/auth/DeveloperSignupForm";
 import { businessProfileSignupSchema } from "@/components/auth/CompleteBusinessProfile";
 import { UserSession } from "@/auth";
 import { developerProfileSignupSchema } from "@/components/auth/CompleteDeveloperProfile";
+import { AxiosError } from "axios";
+import { deleteCookie, setCookie } from "cookies-next";
+import { COOKIE_KEYS } from "../constant";
 
-type User = {
-  id: string;
+export type User = {
+  accountType: string;
+  apiKey: string;
+  apiKeyDuration: string;
+  createdAt: string;
   email: string;
-  name: string;
-  role: "developer" | "business";
+  firstName: string;
+  id: string;
+  isActive: boolean;
+  isVerified: boolean;
+  lastLogin?: string;
+  lastName: string;
+  oauthProvider_uuid: string;
+  oauthprovider: string;
+  passwordChangedAt?: string;
+  profileImage?: string;
+  registerdWithOauth: boolean;
+  role: string;
+  updatedAt: string;
+  username?: string;
 };
 
 type AuthState = {
@@ -24,7 +42,12 @@ type AuthState = {
 };
 
 type AuthActions = {
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User | null>;
+  oauthLogin: (
+    email: string,
+    provider_uuid: string,
+    oAuthProvider: string
+  ) => Promise<User | null>;
   developerSignup: (
     data: Zod.infer<typeof developerSignupSchema>
   ) => Promise<void>;
@@ -37,13 +60,15 @@ type AuthActions = {
   developerProfileSignup: (
     data: Zod.infer<typeof developerProfileSignupSchema> & Partial<UserSession>
   ) => Promise<void>;
+  verifyEmail: (code: string) => Promise<void>;
+  resendOTP: () => Promise<void>;
   logout: () => Promise<void>;
   clearError: () => void;
 };
 
 const useAuthStore = create<AuthState & AuthActions>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       token: null,
       refreshToken: null,
       user: null,
@@ -54,7 +79,7 @@ const useAuthStore = create<AuthState & AuthActions>()(
           set({ isLoading: true, error: null });
           const validatedData = loginSchema.parse({ email, password });
 
-          const { data } = await apiClient.post("/login", validatedData);
+          const { data } = await apiClient.post("/auth/login", validatedData);
 
           set({
             token: data.tokens.accessToken,
@@ -62,9 +87,50 @@ const useAuthStore = create<AuthState & AuthActions>()(
             user: data.user,
             isLoading: false,
           });
+
+          return data.user;
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : "Login failed",
+            error:
+              error instanceof AxiosError
+                ? error.response?.data?.message
+                : "Login failed",
+            isLoading: false,
+          });
+          throw error;
+        }
+      },
+      oauthLogin: async (email, provider_uuid, oAuthProvider) => {
+        try {
+          set({ isLoading: true, error: null });
+
+          const validatedData = {
+            email,
+            provider_uuid,
+            oAuthProvider,
+          };
+
+          const { data } = await apiClient.post(
+            "/auth/oauth/login",
+            validatedData
+          );
+
+          set({
+            token: data.tokens.accessToken,
+            refreshToken: data.tokens.refreshToken,
+            user: data.user,
+            isLoading: false,
+          });
+          setCookie(COOKIE_KEYS.TOKEN, data.tokens.accessToken);
+          setCookie(COOKIE_KEYS.REFRESH_TOKEN, data.tokens.refreshToken);
+
+          return data.user;
+        } catch (error) {
+          set({
+            error:
+              error instanceof AxiosError
+                ? error.response?.data?.message
+                : "Login failed",
             isLoading: false,
           });
           throw error;
@@ -76,25 +142,30 @@ const useAuthStore = create<AuthState & AuthActions>()(
           const validatedData = developerSignupSchema.parse(signupData);
           const firstName = validatedData.firstName;
           const lastName = validatedData.lastName;
-          const newBusinessData = {
+          const devData = {
             email: validatedData.email,
             password: validatedData.password,
             firstName,
             lastName,
-            username: validatedData.githubUsername,
-            experience: validatedData.experience,
+            githubUsername: validatedData.githubUsername,
+            experienceLevel: validatedData.experience,
           };
-          const { data } = await apiClient.post("/register", newBusinessData);
-          console.log(newBusinessData, data);
+          const { data } = await apiClient.post("/auth/dev/register", devData);
+          console.log(devData, data);
           set({
             token: data.tokens.accessToken,
             refreshToken: data.tokens.refreshToken,
             user: data.user,
             isLoading: false,
           });
+          setCookie(COOKIE_KEYS.TOKEN, data.tokens.accessToken);
+          setCookie(COOKIE_KEYS.REFRESH_TOKEN, data.tokens.refreshToken);
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : "Signup failed",
+            error:
+              error instanceof AxiosError
+                ? error.response?.data?.message
+                : "Signup failed",
             isLoading: false,
           });
           throw error;
@@ -118,41 +189,105 @@ const useAuthStore = create<AuthState & AuthActions>()(
             //  add other fields
           };
 
-          const { data } = await apiClient.post("/register", newBusinessData);
-          console.log(newBusinessData, data);
+          const { data } = await apiClient.post(
+            "/auth/business/register",
+            newBusinessData
+          );
           set({
             token: data.tokens.accessToken,
             refreshToken: data.tokens.refreshToken,
             user: data.user,
             isLoading: false,
           });
+          setCookie(COOKIE_KEYS.TOKEN, data.tokens.accessToken);
+          setCookie(COOKIE_KEYS.REFRESH_TOKEN, data.tokens.refreshToken);
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : "Signup failed",
+            error:
+              error instanceof AxiosError
+                ? error.response?.data?.message
+                : "Signup failed",
             isLoading: false,
           });
           throw error;
+        }
+      },
+      async verifyEmail(code) {
+        try {
+          const userId = get().user?.id;
+          if (!userId) return;
+          const value = {
+            code,
+            userId,
+          };
+          set({ isLoading: true, error: null });
+          await apiClient.post("/auth/verify_email", { ...value });
+          set({ isLoading: false });
+        } catch (error) {
+          set({
+            error:
+              error instanceof AxiosError
+                ? error.response?.data?.message
+                : "Signup failed",
+            isLoading: false,
+          });
+        }
+      },
+      async resendOTP() {
+        try {
+          const userId = get().user?.id;
+          if (!userId) return;
+          const value = {
+            userId,
+          };
+          set({ isLoading: true, error: null });
+          await apiClient.post("/auth/resend_otp", { ...value });
+          set({ isLoading: false });
+        } catch (error) {
+          set({
+            error:
+              error instanceof AxiosError
+                ? error.response?.data?.message
+                : "Signup failed",
+            isLoading: false,
+          });
         }
       },
       businessProfileSignup: async (signupData) => {
         try {
           console.log(signupData);
           set({ isLoading: true, error: null });
-          const validatedData = businessProfileSignupSchema.parse(signupData);
-          console.log(validatedData);
           //TODO: use the service provider endpoint
-
-          // const { data } = await apiClient.post("/register", newBusinessData);
-          // console.log(newBusinessData, data);
-          // set({
-          //   token: data.tokens.accessToken,
-          //   refreshToken: data.tokens.refreshToken,
-          //   user: data.user,
-          //   isLoading: false,
-          // });
+          const newBusinessData = {
+            firstName: signupData.firstName,
+            lastName: signupData.lastName,
+            id: signupData.id,
+            oAuthProvider: signupData.oAuthProvider,
+            email: signupData.email,
+            isVerified: signupData.isVerified,
+            image: signupData.image,
+            businessAddress: signupData.businessAddress,
+            companySize: signupData.companySize,
+            purpose: signupData.purpose,
+          };
+          const { data } = await apiClient.post(
+            "/auth/oauth/business/register",
+            newBusinessData
+          );
+          set({
+            token: data.tokens.accessToken,
+            refreshToken: data.tokens.refreshToken,
+            user: data.user,
+            isLoading: false,
+          });
+          setCookie(COOKIE_KEYS.TOKEN, data.tokens.accessToken);
+          setCookie(COOKIE_KEYS.REFRESH_TOKEN, data.tokens.refreshToken);
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : "Signup failed",
+            error:
+              error instanceof AxiosError
+                ? error.response?.data?.message
+                : "Signup failed",
             isLoading: false,
           });
           throw error;
@@ -162,21 +297,35 @@ const useAuthStore = create<AuthState & AuthActions>()(
         try {
           console.log(signupData);
           set({ isLoading: true, error: null });
-          const validatedData = developerProfileSignupSchema.parse(signupData);
-          console.log(validatedData);
-          //TODO: use the service provider endpoint
-
-          // const { data } = await apiClient.post("/register", newBusinessData);
-          // console.log(newBusinessData, data);
-          // set({
-          //   token: data.tokens.accessToken,
-          //   refreshToken: data.tokens.refreshToken,
-          //   user: data.user,
-          //   isLoading: false,
-          // });
+          const newDevData = {
+            firstName: signupData.firstName,
+            lastName: signupData.lastName,
+            id: signupData.id,
+            oAuthProvider: signupData.oAuthProvider,
+            email: signupData.email,
+            isVerified: signupData.isVerified,
+            image: signupData.image,
+            experienceLevel: signupData.experience,
+            githubUsername: signupData.githubUsername,
+          };
+          const { data } = await apiClient.post(
+            "/auth/oauth/dev/register",
+            newDevData
+          );
+          set({
+            token: data.tokens.accessToken,
+            refreshToken: data.tokens.refreshToken,
+            user: data.user,
+            isLoading: false,
+          });
+          setCookie(COOKIE_KEYS.TOKEN, data.tokens.accessToken);
+          setCookie(COOKIE_KEYS.REFRESH_TOKEN, data.tokens.refreshToken);
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : "Signup failed",
+            error:
+              error instanceof AxiosError
+                ? error.response?.data?.message
+                : "Signup failed",
             isLoading: false,
           });
           throw error;
@@ -185,7 +334,8 @@ const useAuthStore = create<AuthState & AuthActions>()(
       logout: async () => {
         try {
           set({ isLoading: true });
-          await apiClient.post("/logout");
+          deleteCookie(COOKIE_KEYS.TOKEN);
+          deleteCookie(COOKIE_KEYS.REFRESH_TOKEN);
           set({
             token: null,
             refreshToken: null,

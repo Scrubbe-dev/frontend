@@ -38,13 +38,13 @@ const IntegrationTools = () => {
   const [openSetupWizard, setOpenSetupWizard] = useState(false);
   const [openIntegration, setOpenIntegration] = useState(false);
   return (
-    <div className="p-6 bg-gray-50 dark:bg-dark min-h-screen">
+    <div className="p-6  min-h-screen">
       <h2 className="text-2xl font-semibold mb-6 dark:text-white">
         Integration Tools
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* SDK Downloads */}
-        <div className="bg-white dark:bg-[#181C2A] rounded-xl p-6 flex justify-between flex-col gap-4 shadow-sm">
+        <div className="bg-white dark:bg-dark rounded-xl p-6 flex justify-between flex-col gap-4 shadow-sm">
           <div>
             <h3 className="text-lg font-semibold mb-2 dark:text-white">
               SDK Downloads
@@ -74,7 +74,7 @@ const IntegrationTools = () => {
         </div>
 
         {/* Code Examples */}
-        <div className="bg-white dark:bg-[#181C2A] rounded-xl p-6 flex flex-col gap-4 shadow-sm">
+        <div className="bg-white dark:bg-dark rounded-xl p-6 flex flex-col gap-4 shadow-sm">
           <h3 className="text-lg font-semibold mb-2 dark:text-white">
             Code Examples
           </h3>
@@ -114,7 +114,7 @@ const IntegrationTools = () => {
         </div>
 
         {/* CI/CD Integration */}
-        <div className="bg-white dark:bg-[#181C2A] rounded-xl p-6 flex flex-col gap-4 shadow-sm">
+        <div className="bg-white dark:bg-dark rounded-xl p-6 flex flex-col gap-4 shadow-sm">
           <h3 className="text-lg font-semibold mb-2 dark:text-white">
             CI/CD Integration
           </h3>
@@ -145,7 +145,7 @@ const IntegrationTools = () => {
         </div>
 
         {/* Postman Collection */}
-        <div className="bg-white dark:bg-[#181C2A] rounded-xl p-6 flex flex-col gap-4 shadow-sm">
+        <div className="bg-white dark:bg-dark rounded-xl p-6 flex flex-col gap-4 shadow-sm">
           <h3 className="text-lg font-semibold mb-2 dark:text-white">
             Postman Collection
           </h3>
@@ -187,7 +187,7 @@ const IntegrationTools = () => {
         </div>
         <div className="grid md:grid-cols-2">
           {/* Third-Party Integration */}
-          <div className="bg-white dark:bg-[#181C2A] rounded-xl p-6 flex flex-col gap-4 shadow-sm col-span-1 md:col-span-2">
+          <div className="bg-white dark:bg-dark rounded-xl p-6 flex flex-col gap-4 shadow-sm col-span-1 md:col-span-2">
             <h3 className="text-lg font-semibold mb-2 dark:text-white">
               Third-Party Integration
             </h3>
@@ -215,7 +215,9 @@ const IntegrationTools = () => {
                 </div>
               ))}
             </div>
-            <CButton>Browse Integrations</CButton>
+            <CButton onClick={() => setOpenIntegration(true)}>
+              Browse Integrations
+            </CButton>
           </div>
         </div>
       </div>
@@ -385,6 +387,15 @@ console.log('Risk Score:', result.riskScore); })
                 Identity platform
               </div>
             </div>
+          </div>
+          <div className="flex justify-end gap-4 mt-4">
+            <CButton
+              className=" border w-fit border-colorScBlue bg-transparent text-colorScBlue hover:text-white  "
+              onClick={() => setOpenOtherTemplate(false)}
+            >
+              Cancel
+            </CButton>
+            <CButton className=" w-fit">Request Integration</CButton>
           </div>
         </div>
       </Modal>

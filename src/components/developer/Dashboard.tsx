@@ -10,7 +10,6 @@ import Modal from "../ui/Modal";
 import LineChart from "./LineChart";
 import Select from "../ui/select";
 import Input from "../ui/input";
-import DoughnutChart from "./DoughnutChart";
 
 interface IActivity {
   endpoint: string;

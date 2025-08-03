@@ -5,16 +5,6 @@ import Gitlab from "next-auth/providers/gitlab";
 // import Cognito from "next-auth/providers/cognito";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 
-interface Token {
-  sub?: string;
-  firstName?: string;
-  lastName?: string;
-  isVerified?: boolean;
-  accessToken?: string;
-  refreshToken?: string;
-  email?: string;
-}
-
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Github({
@@ -27,7 +17,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         console.log({ profile });
         return {
           id: profile.id.toString(),
-          name: profile.name || profile.login,
+          oAuthProvider: "GITHUB",
+          githubUsername: profile.login,
           email: profile.email || `${profile.login}`,
           image: profile.avatar_url,
           firstName: profile.name?.split(" ")[0] || profile.login,
@@ -38,14 +29,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
     Google({
       async profile(profile) {
+        console.log({ profile });
         return {
           id: profile.sub,
-          name: profile.name || profile.username,
+          oAuthProvider: "GOOGLE",
           email: profile.email,
           image: profile?.avatar_url || "",
           firstName: profile.name?.split(" ")[0] || profile.username,
           lastName: profile.name?.split(" ")[1] || "",
-          isVerified: true,
+          isVerified: profile,
         };
       },
     }),
@@ -54,7 +46,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         console.log({ gitlabProfile: profile });
         return {
           id: profile.id.toString(),
-          name: profile.name || profile.username,
+          oAuthProvider: "GITLAB",
           email: profile.email,
           image: profile.avatar_url,
           firstName: profile.name?.split(" ")[0] || profile.username,
@@ -83,8 +75,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async profile(profile) {
         console.log({ profile });
         return {
-          id: profile.aud,
-          name: profile.name || profile.username,
+          id: profile.oid,
+          oAuthProvider: "AZURE",
           email: profile.email,
           firstName: profile.name?.split(" ")[0] || profile.username,
           lastName: profile.name?.split(" ").slice(1).join(" ") || "",
@@ -98,20 +90,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     //   return !!auth;
     // },
     async jwt({ token, user }) {
+      // console.log({ token });
       if (user) {
-        console.log({ user });
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
         token.firstName = user.firstName;
         token.lastName = user.lastName;
         token.email = user.email;
         token.isVerified = user.isVerified;
+        token.oAuthProvider = user.oAuthProvider;
+        token.githubUsername = user.githubUsername;
       }
       return token;
     },
     async session({ session, token }) {
-      const typedToken = token as Token;
-      console.log({ token });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const typedToken = token as any;
       session.user.id = typedToken.sub || "";
       session.user.firstName = typedToken.firstName;
       session.user.lastName = typedToken.lastName;
@@ -119,6 +113,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.accessToken = typedToken.accessToken;
       session.refreshToken = typedToken.refreshToken;
       session.user.email = typedToken.email || "";
+      session.user.oAuthProvider = typedToken.oAuthProvider;
+      session.user.githubUsername = typedToken.githubUsername;
       return session;
     },
   },
@@ -136,6 +132,8 @@ declare module "next-auth" {
     accessToken?: string;
     refreshToken?: string;
     email?: string;
+    oAuthProvider: string;
+    githubUsername?: string;
   }
 
   interface Session {
@@ -152,4 +150,6 @@ export interface UserSession {
   isVerified?: boolean;
   email?: string;
   image?: string;
+  oAuthProvider: string;
+  githubUsername?: string;
 }

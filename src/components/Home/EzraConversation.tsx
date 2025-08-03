@@ -19,11 +19,57 @@ const itemVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.7 } },
 };
 
+const incidents = [
+  {
+    id: 1,
+    type: "Critical",
+    title: "Credential Stuffing Attempt Detected",
+    time: "09:13 UTC",
+    targetApp: "auth.scrubbaapp.io",
+    detectedBy: "ScrubbAuditor AI (Device fingerprint SDK + Behavior anomaly)",
+    summary:
+      "Multiple failed login attempts (57 in 4 mins) from the same device fingerprint across 8 user accounts, originating from Lagos (IP range 197.x.x.x). Passwords used matched known breach patterns.",
+    actionTaken: [
+      "IP temporarily blacklisted",
+      "Fingerprint tagged as suspicious",
+      "Alert sent to client SecOps",
+    ],
+  },
+  {
+    id: 2,
+    type: "Critical",
+    title: "Admin Token Misuse",
+    time: "11:42 UTC",
+    source: "Internal API usage from unknown origin",
+    summary:
+      "A production admin token was used from a previously unseen location (Bangladesh) with attempted access to the /revoke-access endpoint. No changes made. Access blocked.",
+    actionTaken: [
+      "Token revoked",
+      "Email alert sent to super-admin",
+      "Incident escalated for human review",
+    ],
+  },
+  // You can add more incidents here following the same structure
+];
+
 const EzraConversation = () => {
   return (
-    <section className="px-4 md:px-6 lg:px-20 xl:px-20 py-20 relative overflow-clip z-10 h-auto bg-[url('/brand_bg.png')] bg-center bg-no-repeat bg-cover">
-      <div className="bg-[url('/talk_bg.png')] bg-center bg-no-repeat bg-cover absolute inset-0 -z-10 " />
-      <div className=" max-w-[1440px] mx-auto gap-y-8 flex flex-col items-center ">
+    <section className=" relative overflow-clip z-10 h-auto bg-white">
+      {/* <div className="bg-[url('/talk_bg.png')] bg-center bg-no-repeat bg-cover absolute inset-0 -z-10 " /> */}
+      {/* background */}
+      <div className=" absolute w-full h-full flex">
+        {Array(20)
+          .fill(0)
+          .map((_, index) => (
+            <div key={index} className="flex h-full">
+              <div className="w-[120px] h-full bg-[#EFF6FF]" />
+              <div className="w-[120px] h-full bg-[#E5F0FE]" />
+              <div className="w-[120px] h-full bg-[#FFFFFF]" />
+            </div>
+          ))}
+      </div>
+      <div className=" absolute inset-0 -z-10 " />
+      <div className="px-4 md:px-6 lg:px-20 xl:px-20 py-20 max-w-[1440px] mx-auto gap-y-8 flex flex-col items-center ">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -32,7 +78,7 @@ const EzraConversation = () => {
           className="flex flex-col items-center w-full"
         >
           <motion.h2
-            className="text-2xl sm:text-3xl md:text-4xl font-bold  text-center mb-2 text-white"
+            className="text-2xl sm:text-3xl md:text-4xl font-bold  text-center mb-2 text-black"
             variants={itemVariants}
           >
             Talk to Ezra. Investigate Threats in Plain English
@@ -42,7 +88,7 @@ const EzraConversation = () => {
             variants={itemVariants}
           />
           <motion.p
-            className=" text-lg text-white font-medium text-center mt-3"
+            className=" text-lg text-black font-medium text-center mt-3"
             variants={itemVariants}
           >
             Security conversations supercharged with Ezra
@@ -69,7 +115,7 @@ const EzraConversation = () => {
                     className=" bg-zinc-600 w-fit p-2 rounded-md rounded-tl-none"
                   >
                     <p className=" text-[50%] sm:text-[100%] text-white">
-                      Era summarize the incident for today
+                      Ezra summarize the incident for today
                     </p>
                     <p className=" text-[30%] sm:text-[80%] text-white text-end">
                       {new Date(Date.now())
@@ -108,82 +154,82 @@ const EzraConversation = () => {
                             duration: 0.3,
                           }}
                         >
-                          <p>
-                            As of 2025-07-01T08:16:51.965Z, Scrubbe recorded 9
-                            incidents, with 2 critical, 3 high, and 4 moderate
-                            or low severity cases. The day reveals a pattern of
-                            automated credential attacks, device fingerprint
-                            reuse, and impossible travel anomalies, all
-                            signaling heightened fraud risk across user
-                            sessions.
-                          </p>
-                          <hr />
-                          <p>
-                            A widespread credential stuffing campaign was
-                            detected in the early hours, targeting 46 user
-                            accounts with over 350 failed login attempts.
-                            Despite originating from distributed IPs, Ezra
-                            identified a reused fingerprint ID in 93% of the
-                            events — signaling automation tools behind the
-                            activity. The attack attempted logins across 12
-                            different endpoints in under 10 minutes. A rule was
-                            triggered based on multi-account login failures from
-                            the same fingerprint, and Ezra recommends blocking
-                            fingerprint scrubbe_fp_39A12B and applying
-                            throttling at the login API.
-                          </p>
-                          <p>
-                            Simultaneously, the system flagged suspicious
-                            lateral movement by a device using fingerprint ID
-                            scrubbe_fp_C75FF9. This fingerprint logged into 7
-                            unrelated accounts, including 2 admin profiles,
-                            within a 15-minute window across different regions.
-                            The triggered rule suggested possible account
-                            hijacking or insider misuse, and the associated
-                            playbook initiated alerts, logs, and MFA challenges.
-                          </p>
-
-                          <p>
-                            Adding to the day’s anomalies, a high-risk
-                            “impossible travel” event was recorded for user
-                            kelvin.obasi@client.com. The account was accessed
-                            from Lagos, Nigeria and then Sydney, Australia, just
-                            16 minutes apart. Ezra confirmed a device
-                            fingerprint mismatch and IP inconsistency, flagging
-                            it as a likely case of session hijacking or VPN
-                            spoofing.
-                          </p>
-
-                          <p>Ezra also observed subtle behavioral drift:</p>
-                          <ul className=" list-disc list-inside">
-                            <li>
-                              Session token anomalies were up 62% over baseline
-                            </li>
-                            <li>
-                              Four new IP addresses associated with flagged
-                              regions attempted to access admin APIs
-                            </li>
-                            <li>
-                              Three dormant accounts attempted sensitive
-                              endpoint access after 90+ days
-                            </li>
-                            <li>
-                              One VIP user triggered new device alerts from a
-                              suspicious location
-                            </li>
-                          </ul>
-                          <br />
-                          <strong>Ezra’s Summary Recommendation:</strong>
-                          <div className=" border border-zinc-100 bg-zinc-50 rounded-md p-2">
-                            <p className=" border-l-2 border-zinc-500 pl-2">
-                              “There&apos;s an elevated risks tied to automated
-                              credential abuse, fingerprint spoofing, and
-                              session irregularities. Security teams should
-                              escalate fingerprint correlation, enable adaptive
-                              MFA for high-privilege users, and review the last
-                              24 hours of incident logs for patterns linked to
-                              TOR nodes and reused session tokens.”
+                          <div className="p-6 border-b border-gray-200">
+                            <h2 className=" font-semibold text-gray-800">
+                              Ezra Summary Output – July 24, 2025
+                            </h2>
+                            <p className=" text-gray-600 mt-1">
+                              Date: Thursday, July 24, 2025
                             </p>
+                            <p className=" text-gray-600">
+                              Total Incidents Detected: 6
+                            </p>
+                          </div>
+
+                          <div className="p-6 space-y-8">
+                            {incidents.map((incident) => (
+                              <div
+                                key={incident.id}
+                                className="border-b pb-8 last:border-b-0 last:pb-0"
+                              >
+                                <h3 className="font-semibold text-gray-800">
+                                  <span
+                                    className={`font-bold ${
+                                      incident.type === "Critical"
+                                        ? "text-red-600"
+                                        : "text-yellow-600"
+                                    }`}
+                                  >
+                                    [{incident.type}]
+                                  </span>{" "}
+                                  {incident.title}
+                                </h3>
+                                <ul className="list-disc list-inside text-gray-700  mt-2 space-y-1">
+                                  <li>
+                                    <span className="font-medium">Time:</span>{" "}
+                                    {incident.time}
+                                  </li>
+                                  {incident.targetApp && (
+                                    <li>
+                                      <span className="font-medium">
+                                        Target App:
+                                      </span>{" "}
+                                      {incident.targetApp}
+                                    </li>
+                                  )}
+                                  {incident.detectedBy && (
+                                    <li>
+                                      <span className="font-medium">
+                                        Detected By:
+                                      </span>{" "}
+                                      {incident.detectedBy}
+                                    </li>
+                                  )}
+                                  {incident.source && (
+                                    <li>
+                                      <span className="font-medium">
+                                        Source:
+                                      </span>{" "}
+                                      {incident.source}
+                                    </li>
+                                  )}
+                                  <li>
+                                    <span className="font-medium">
+                                      Summary:
+                                    </span>{" "}
+                                    {incident.summary}
+                                  </li>
+                                </ul>
+                                <h4 className="font-semibold text-gray-800 mt-4">
+                                  Action Taken:
+                                </h4>
+                                <ul className="list-disc list-inside text-gray-700  mt-1 space-y-1">
+                                  {incident.actionTaken.map((action, index) => (
+                                    <li key={index}>{action}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
                           </div>
                         </motion.div>
                       </div>

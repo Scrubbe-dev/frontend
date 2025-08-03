@@ -57,7 +57,7 @@ const CookieConsentModal: React.FC = () => {
   if (!showCookieModal) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 transform animate-slide-up">
+    <div className="fixed inset-x-0 bottom-0 z-50 transform ">
       {/* Simple Banner */}
       <div className="flex flex-col md:flex-row items-center justify-between p-6 bg-white bg-opacity-95 border-t shadow-lg">
         <div className="flex-1 mb-4 md:mb-0 md:mr-8">

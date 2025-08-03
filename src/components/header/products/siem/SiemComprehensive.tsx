@@ -136,17 +136,20 @@ const SiemComprehensive: React.FC = () => {
   // Check if mobile on mount and when resizes
   useEffect(() => {
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth < 768);
+      }
     };
 
     // Initial check
     checkIsMobile();
 
     // Add resize listener
-    window.addEventListener("resize", checkIsMobile);
-
-    // Clean up
-    return () => window.removeEventListener("resize", checkIsMobile);
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", checkIsMobile);
+      // Clean up
+      return () => window.removeEventListener("resize", checkIsMobile);
+    }
   }, []);
 
   // Reset current index when switching between mobile and desktop

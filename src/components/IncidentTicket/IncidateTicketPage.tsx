@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { SearchIcon } from "lucide-react";
 import CButton from "../ui/Cbutton";
@@ -13,6 +14,11 @@ import CreateIncident from "./CreateIncident";
 import MangePlaybook from "./MangePlaybook";
 import TicketDetails from "./TicketDetails";
 import IncidentAnalysis from "./IncidentAnalysis";
+import { useQuery } from "@tanstack/react-query";
+import { querykeys } from "@/lib/constant";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import moment from "moment";
 
 export type Ticket = {
   id: string;
@@ -25,78 +31,78 @@ export type Ticket = {
   createdAt: string;
 };
 
-const ticketData: Ticket[] = [
-  {
-    id: "INC52527",
-    reason: "User reported a bug",
-    username: "John Doe",
-    priority: "medium",
-    status: "closed",
-    assignedTo: "Admin 1",
-    score: 5,
-    createdAt: "2025-05-26 09:00:00",
-  },
-  {
-    id: "INC52527",
-    reason: "User reported a bug",
-    username: "John Doe",
-    priority: "high",
-    status: "open",
-    assignedTo: "Admin 1",
-    score: 5,
-    createdAt: "2025-05-26 09:00:00",
-  },
-  {
-    id: "INC52527",
-    reason: "User reported a bug",
-    username: "John Doe",
-    priority: "low",
-    status: "open",
-    assignedTo: "Admin 1",
-    score: 5,
-    createdAt: "2025-05-26 09:00:00",
-  },
-  {
-    id: "INC52527",
-    reason: "User reported a bug",
-    username: "John Doe",
-    priority: "high",
-    status: "in-progress",
-    assignedTo: "Admin 1",
-    score: 5,
-    createdAt: "2025-05-26 09:00:00",
-  },
-  {
-    id: "INC52527",
-    reason: "User reported a bug",
-    username: "John Doe",
-    priority: "high",
-    status: "on-hold",
-    assignedTo: "Admin 1",
-    score: 5,
-    createdAt: "2025-05-26 09:00:00",
-  },
-  {
-    id: "INC52527",
-    reason: "User reported a bug",
-    username: "John Doe",
-    priority: "high",
-    status: "open",
-    assignedTo: "Admin 1",
-    score: 5,
-    createdAt: "2025-05-26 09:00:00",
-  },
-  {
-    id: "INC52527",
-    reason: "User reported a bug",
-    username: "John Doe",
-    priority: "high",
-    status: "open",
-    assignedTo: "Admin 1",
-    score: 5,
-    createdAt: "2025-05-26 09:00:00",
-  },
-];
+// const ticketData: Ticket[] = [
+//   {
+//     id: "INC52527",
+//     reason: "User reported a bug",
+//     username: "John Doe",
+//     priority: "medium",
+//     status: "closed",
+//     assignedTo: "Admin 1",
+//     score: 5,
+//     createdAt: "2025-05-26 09:00:00",
+//   },
+//   {
+//     id: "INC52527",
+//     reason: "User reported a bug",
+//     username: "John Doe",
+//     priority: "high",
+//     status: "open",
+//     assignedTo: "Admin 1",
+//     score: 5,
+//     createdAt: "2025-05-26 09:00:00",
+//   },
+//   {
+//     id: "INC52527",
+//     reason: "User reported a bug",
+//     username: "John Doe",
+//     priority: "low",
+//     status: "open",
+//     assignedTo: "Admin 1",
+//     score: 5,
+//     createdAt: "2025-05-26 09:00:00",
+//   },
+//   {
+//     id: "INC52527",
+//     reason: "User reported a bug",
+//     username: "John Doe",
+//     priority: "high",
+//     status: "in-progress",
+//     assignedTo: "Admin 1",
+//     score: 5,
+//     createdAt: "2025-05-26 09:00:00",
+//   },
+//   {
+//     id: "INC52527",
+//     reason: "User reported a bug",
+//     username: "John Doe",
+//     priority: "high",
+//     status: "on-hold",
+//     assignedTo: "Admin 1",
+//     score: 5,
+//     createdAt: "2025-05-26 09:00:00",
+//   },
+//   {
+//     id: "INC52527",
+//     reason: "User reported a bug",
+//     username: "John Doe",
+//     priority: "high",
+//     status: "open",
+//     assignedTo: "Admin 1",
+//     score: 5,
+//     createdAt: "2025-05-26 09:00:00",
+//   },
+//   {
+//     id: "INC52527",
+//     reason: "User reported a bug",
+//     username: "John Doe",
+//     priority: "high",
+//     status: "open",
+//     assignedTo: "Admin 1",
+//     score: 5,
+//     createdAt: "2025-05-26 09:00:00",
+//   },
+// ];
 
 const columns = [
   {
@@ -106,7 +112,7 @@ const columns = [
   },
 
   {
-    accessorKey: "username",
+    accessorKey: "userName",
     header: () => <span className="font-semibold">Username</span>,
     cell: (info: CellContext<Ticket, unknown>) => info.getValue(),
   },
@@ -120,7 +126,7 @@ const columns = [
     header: () => <span className="font-semibold">Priority</span>,
     cell: (info: CellContext<Ticket, unknown>) => (
       <div className="flex items-center gap-2">
-        {priorityColors(info.getValue() as string)}
+        {priorityColors((info.getValue() as string) ?? "low")}
       </div>
     ),
   },
@@ -138,15 +144,16 @@ const columns = [
     header: () => <span className="font-semibold">Assigned To</span>,
     cell: (info: CellContext<Ticket, unknown>) => info.getValue(),
   },
-  {
-    accessorKey: "score",
-    header: () => <span className="font-semibold">Score</span>,
-    cell: (info: CellContext<Ticket, unknown>) => info.getValue(),
-  },
+  // {
+  //   accessorKey: "score",
+  //   header: () => <span className="font-semibold">Score</span>,
+  //   cell: (info: CellContext<Ticket, unknown>) => info.getValue(),
+  // },
   {
     accessorKey: "createdAt",
     header: () => <span className="font-semibold">Created At</span>,
-    cell: (info: CellContext<Ticket, unknown>) => info.getValue(),
+    cell: (info: CellContext<Ticket, unknown>) =>
+      moment(info.getValue() as string).format("YYYY-MM-DD"),
   },
 ];
 
@@ -202,6 +209,23 @@ const IncidentTicketPage = () => {
   // const [statusFilter, setStatusFilter] = useState<string>("");
   const [openStatusFilter, setOpenStatusFilter] = useState<boolean>(false);
   const statusFilterRef = useRef<HTMLDivElement>(null);
+  const { get } = useFetch();
+  const { data, isLoading } = useQuery({
+    queryKey: [querykeys.INCIDENT_TICKET],
+    queryFn: async () => {
+      try {
+        const res = await get(endpoint.incident_ticket.get);
+        console.log({ res });
+        if (res.success) {
+          return res.data;
+        }
+        return [];
+      } catch (error) {
+        console.log(error);
+        return [];
+      }
+    },
+  });
 
   useEffect(() => {
     if (!openStatusFilter) return;
@@ -316,11 +340,24 @@ const IncidentTicketPage = () => {
           </div>
         </div>
 
-        <Table
-          data={ticketData}
-          columns={columns}
-          onRowClick={handleRowClick}
-        />
+        {isLoading ? (
+          <div className=" w-full animate-pulse">
+            <div className="h-14 w-full bg-gray-100 dark:bg-gray-800"></div>
+            <div className="h-14 w-full bg-zinc-50 dark:bg-zinc-900"></div>
+            <div className="h-14 w-full bg-gray-100 dark:bg-gray-800"></div>
+            <div className="h-14 w-full bg-zinc-50 dark:bg-zinc-900"></div>
+            <div className="h-14 w-full bg-gray-100 dark:bg-gray-800"></div>
+            <div className="h-14 w-full bg-zinc-50 dark:bg-zinc-900"></div>
+            <div className="h-14 w-full bg-gray-100 dark:bg-gray-800"></div>
+            <div className="h-14 w-full bg-zinc-50 dark:bg-zinc-900"></div>
+          </div>
+        ) : (
+          <Table
+            data={data?.map((value: any) => ({ ...value, status: "open" }))}
+            columns={columns}
+            onRowClick={handleRowClick}
+          />
+        )}
         <div className="flex justify-end">
           <Pagination page={1} totalPages={10} onPageChange={() => {}} />
         </div>

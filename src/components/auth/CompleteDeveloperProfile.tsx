@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Select from "../ui/select";
 import CButton from "../ui/Cbutton";
 import Input from "../ui/input";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 export const developerProfileSignupSchema = z.object({
   githubUsername: z.string().optional(),
@@ -34,7 +34,6 @@ const CompleteDeveloperProfile = ({
     mode: "onChange",
   });
   const session = useSession();
-  console.log(session);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -46,6 +45,7 @@ const CompleteDeveloperProfile = ({
           <Input
             label="GitHub Username (Optional)"
             placeholder="Enter username"
+            defaultValue={session.data?.user.githubUsername}
             error={errors.githubUsername?.message}
             isLoading={isLoading}
             {...field}
@@ -82,13 +82,19 @@ const CompleteDeveloperProfile = ({
           </p>
         )}
       </div>
-      <CButton
-        type="submit"
-        disabled={isLoading || !isValid}
-        isLoading={isLoading}
-      >
-        {isLoading ? "Processing..." : "Create Account"}
-      </CButton>
+
+      <div className="flex items-center gap-4">
+        <CButton className="" onClick={signOut}>
+          Back
+        </CButton>
+        <CButton
+          type="submit"
+          disabled={isLoading || !isValid}
+          isLoading={isLoading}
+        >
+          {isLoading ? "Processing..." : "Create Account"}
+        </CButton>
+      </div>
     </form>
   );
 };

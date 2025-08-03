@@ -140,18 +140,20 @@ const SecurityFeatures: React.FC = () => {
 
   // Check if mobile on mount and when window resizes
   useEffect(() => {
-    const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    if (typeof window !== "undefined") {
+      const checkIsMobile = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
 
-    // Initial check
-    checkIsMobile();
+      // Initial check
+      checkIsMobile();
 
-    // Add resize listener
-    window.addEventListener("resize", checkIsMobile);
+      // Add resize listener
+      window.addEventListener("resize", checkIsMobile);
 
-    // Clean up
-    return () => window.removeEventListener("resize", checkIsMobile);
+      // Clean up
+      return () => window.removeEventListener("resize", checkIsMobile);
+    }
   }, []);
 
   // Reset current index when switching between mobile and desktop

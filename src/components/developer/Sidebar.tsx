@@ -14,8 +14,10 @@ import {
   developerNavItemAccount,
   developerNavItemDevelopment,
   developerNavItemSecurity,
-} from "@/lib/constant";
+} from "@/lib/constant/index";
 import { useState } from "react";
+import { FaSignOutAlt } from "react-icons/fa";
+import useLogout from "@/hooks/useLogout";
 
 type Props = {
   type?: "dashboard" | "ezra" | "developer";
@@ -44,6 +46,8 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
       return true;
     return false;
   };
+
+  const { handleLogout } = useLogout();
 
   return (
     <div
@@ -448,6 +452,17 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
               checked={theme === "dark"}
               onChange={() => setTheme(theme === "dark" ? "light" : "dark")}
             />
+          </div>
+
+          <div
+            onClick={() => handleLogout()}
+            className="flex items-center gap-2 justify-between py-3 px-3 cursor-pointer hover:text-white hover:bg-rose-500 transition-all duration-100 opacity-60 hover:opacity-100 rounded-sm "
+          >
+            <div className="flex items-center gap-2">
+              <FaSignOutAlt size={22} className=" dark:text-white" />
+
+              <p className={clsx("text-sm  dark:text-white gap-2")}>Logout</p>
+            </div>
           </div>
 
           {type == "ezra" && (

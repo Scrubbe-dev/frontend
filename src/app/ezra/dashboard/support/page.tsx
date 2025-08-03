@@ -118,7 +118,7 @@ const Page = () => {
             <textarea
               rows={4}
               placeholder="optional description of the rule"
-              className="w-full bg-transparent text-white border border-gray-300 rounded-md p-2 text-sm "
+              className="w-full bg-transparent dark:text-white border border-gray-300 rounded-md p-2 text-sm "
             />
           </div>
           {/* Attachments */}

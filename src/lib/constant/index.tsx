@@ -1,6 +1,5 @@
 import {
   Code,
-  Database,
   LayoutDashboard,
   Lock,
   LucideDatabaseBackup,
@@ -10,12 +9,13 @@ import {
   SquareKanban,
   UsersRound,
 } from "lucide-react";
-import { BsQuestionOctagon } from "react-icons/bs";
+import { BsBoxSeam, BsDatabase, BsQuestionOctagon } from "react-icons/bs";
 import { FaCircleQuestion, FaCodepen } from "react-icons/fa6";
 import { FiGitMerge } from "react-icons/fi";
 import { HiOutlineCreditCard } from "react-icons/hi";
-import { TbRouteSquare } from "react-icons/tb";
+import { TbCloudDataConnection, TbRouteSquare } from "react-icons/tb";
 import { TiFlowChildren } from "react-icons/ti";
+import { GoLock } from "react-icons/go";
 
 export type NavItem = {
   name: string;
@@ -97,8 +97,8 @@ export const navItem: NavItem[] = [
   },
   {
     name: "Fraud Detection",
-    Icon: LayoutDashboard,
-    link: "/dashboard/anomaly-detection",
+    Icon: ShieldCheck,
+    link: "/dashboard/fraud-overview",
     isMenu: true,
     isActive: false,
     menu: [
@@ -115,7 +115,7 @@ export const navItem: NavItem[] = [
 
   {
     name: "Data Management",
-    Icon: ShieldCheck,
+    Icon: TbCloudDataConnection,
     link: "/dashboard/control-log",
     isMenu: true,
     isActive: false,
@@ -132,7 +132,7 @@ export const navItem: NavItem[] = [
   },
   {
     name: "Security & Compliance",
-    Icon: Settings,
+    Icon: GoLock,
     link: "/dashboard/audit-logs",
     isMenu: true,
     isActive: false,
@@ -153,7 +153,7 @@ export const navItem: NavItem[] = [
   },
   {
     name: "Organization Settings",
-    Icon: Settings,
+    Icon: BsBoxSeam,
     link: "/dashboard/user-management",
     isMenu: true,
     isActive: false,
@@ -192,7 +192,7 @@ export const navItem: NavItem[] = [
   },
   {
     name: "Developer Portal",
-    Icon: Database,
+    Icon: BsDatabase,
     link: "/dashboard/api-keys",
     isMenu: true,
     isActive: false,
@@ -305,14 +305,14 @@ export const ezraNavItem: NavItem[] = [
   },
   {
     name: "Fraud Detection",
-    Icon: LayoutDashboard,
-    link: "/ezra/dashboard/anomaly-detection",
+    Icon: ShieldCheck,
+    link: "/dashboard/fraud-overview",
     isMenu: true,
     isActive: false,
     menu: [
       {
         name: "Fraud Overview",
-        link: "/ezra/dashboard/fraud-overview",
+        link: "/dashboard/fraud-overview",
       },
       {
         name: "Anomaly Detection",
@@ -327,7 +327,7 @@ export const ezraNavItem: NavItem[] = [
   // },
   {
     name: "Data Management",
-    Icon: ShieldCheck,
+    Icon: TbCloudDataConnection,
     link: "/ezra/dashboard/control-log",
     isMenu: true,
     isActive: false,
@@ -344,7 +344,7 @@ export const ezraNavItem: NavItem[] = [
   },
   {
     name: "Security & Compliance",
-    Icon: Settings,
+    Icon: GoLock,
     link: "/ezra/dashboard/audit-logs",
     isMenu: true,
     isActive: false,
@@ -365,7 +365,7 @@ export const ezraNavItem: NavItem[] = [
   },
   {
     name: "Organization Settings",
-    Icon: Settings,
+    Icon: BsBoxSeam,
     link: "/ezra/dashboard/user-management",
     isMenu: true,
     isActive: false,

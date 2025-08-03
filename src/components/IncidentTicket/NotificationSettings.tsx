@@ -3,6 +3,7 @@ import Modal from "../ui/Modal";
 import { IoWarning } from "react-icons/io5";
 import Select from "../ui/select";
 import CButton from "../ui/Cbutton";
+import CreateIncident from "./CreateIncident";
 
 const NotificationList = [
   {
@@ -47,8 +48,6 @@ const NotificationSettings = ({
   }>({});
   const statusFilterRef = useRef<HTMLDivElement>(null);
 
-  console.log(isCreateIncident);
-
   const handleSelectAction = (action: string, id: string) => {
     if (action === "notify-manager") {
       setIsNotifyIncident(true);
@@ -59,7 +58,8 @@ const NotificationSettings = ({
     if (action === "create-incident") {
       setIsCreateIncident(true);
     }
-    console.log(id);
+    setDropdownOpenId(null);
+    console.log({ action, id });
   };
 
   useEffect(() => {
@@ -111,7 +111,7 @@ const NotificationSettings = ({
               </div>
 
               {/* change this to a menu */}
-              <div className="relative" ref={statusFilterRef}>
+              <div className="relative">
                 <button
                   onClick={() =>
                     setDropdownOpenId((prev) =>
@@ -142,7 +142,10 @@ const NotificationSettings = ({
                   </svg>
                 </button>
                 {dropdownOpenId === item.id && (
-                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
+                  <div
+                    ref={statusFilterRef}
+                    className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg"
+                  >
                     {[
                       { label: "Create an incident", value: "create-incident" },
                       { label: "Download as log", value: "download-as-log" },
@@ -157,7 +160,6 @@ const NotificationSettings = ({
                             ...prev,
                             [item.id]: option.label,
                           }));
-                          setDropdownOpenId("");
                         }}
                         className="w-full px-4 py-2 text-left hover:bg-gray-50 focus:outline-none focus:bg-gray-50 text-gray-900 first:rounded-t-md last:rounded-b-md"
                         type="button"
@@ -178,6 +180,11 @@ const NotificationSettings = ({
           </CButton>
         </div>
       </div>
+
+      <CreateIncident
+        isOpen={isCreateIncident}
+        onClose={() => setIsCreateIncident(false)}
+      />
 
       <Modal
         isOpen={isNotifyIncident}

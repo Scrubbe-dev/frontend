@@ -4,10 +4,10 @@ import StatCard from "@/components/ezra/StatCard";
 import AlertCard from "@/components/ezra/AlertCard";
 import ProgressBar from "@/components/ezra/ProgressBar";
 import { Button } from "@/components/ui/button";
-import EzraChatWidget from "@/components/ezra/EzraChatWidget";
 import Cbutton from "@/components/ezra-landing/Cbutton";
 import { Check } from "lucide-react";
 import { motion } from "framer-motion";
+import { EzraChatWidget } from "@/components/ezra/EzraChatWidget";
 const Dashboard = () => {
   return (
     <div className=" p-4 space-y-7">

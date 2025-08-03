@@ -10,35 +10,50 @@ import ActiveProject from "./ActiveProject";
 import { ChevronLeft } from "lucide-react";
 import { useFingerprintDisplay } from "@/lib/fingerprint/fingerprintdisplay";
 import Switch from "@/components/ui/Switch";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import { toast } from "sonner";
 
 // Zod schema for form validation
 const apiConfigSchema = z.object({
-  projectName: z.string().min(1, "Project name is required"),
-  environment: z.string().min(1, "Environment is required"),
-  domains: z.string().optional(),
+  name: z.string().min(1, "Project name is required"),
+  enviroment: z.string().min(1, "Environment is required"),
+  domain: z.string().optional(),
   description: z.string().optional(),
 });
 
-type AzureConfigForm = z.infer<typeof apiConfigSchema>;
+type FingerPrintConfigForm = z.infer<typeof apiConfigSchema>;
 
 const Configure: React.FC = () => {
   const [showFingerprint, setShowFingerprint] = useState(false);
   const [viewAsJson, setViewAsJson] = useState(false);
   const { formattedItems, fingerprint } = useFingerprintDisplay();
+  const [isLoading, setIsLoading] = useState(false);
+  const { post } = useFetch();
   console.log(formattedItems);
   const {
     handleSubmit,
     control,
-    formState: { errors, isSubmitting },
-  } = useForm<AzureConfigForm>({
+    formState: { errors, isValid },
+  } = useForm<FingerPrintConfigForm>({
     resolver: zodResolver(apiConfigSchema),
+    mode: "onChange",
   });
 
-  const onSubmit = async (data: AzureConfigForm) => {
+  const onSubmit = async (data: FingerPrintConfigForm) => {
     try {
-      console.log("Form data:", data);
-      // Handle save logic here
-      // await saveAzureConfiguration(data);
+      setIsLoading(true);
+      const res = await post(
+        endpoint.data_source.fingerprint_configuration,
+        data
+      );
+      setIsLoading(false);
+      if (res.success) {
+        toast.success("New Fingerprint configured");
+        return;
+      }
+      console.log(res.data);
+      toast.error(res.data);
     } catch (error) {
       console.error("Error saving configuration:", error);
     }
@@ -51,8 +66,8 @@ const Configure: React.FC = () => {
   return (
     <>
       {!showFingerprint && (
-        <div className="flex w-[1200px]">
-          <div className="w-full h-full bg-white p-6 flex-[.4]">
+        <div className="flex md:w-[1200px] w-full">
+          <div className="w-full h-full bg-white p-6 md:flex-[.4]">
             <h1 className="text-xl font-semibold text-gray-900 mb-6">
               Fingerprint Configuration
             </h1>
@@ -64,21 +79,21 @@ const Configure: React.FC = () => {
               {/* Client ID and Client Secret Row */}
               <div className="flex flex-col flex-1 gap-2">
                 <Controller
-                  name="projectName"
+                  name="name"
                   control={control}
                   render={({ field }) => (
                     <Input
                       label="Project Name"
                       placeholder="Customer Portal"
                       {...field}
-                      error={errors.projectName?.message}
+                      error={errors.name?.message}
                       className="!text-black"
                       labelClassName="!text-black"
                     />
                   )}
                 />
                 <Controller
-                  name="environment"
+                  name="enviroment"
                   control={control}
                   render={({ field }) => (
                     <Select
@@ -89,7 +104,7 @@ const Configure: React.FC = () => {
                         { value: "staging", label: "Staging" },
                       ]}
                       {...field}
-                      error={errors.environment?.message}
+                      error={errors.enviroment?.message}
                       className="!text-black"
                       labelClassName="!text-black"
                     />
@@ -97,14 +112,14 @@ const Configure: React.FC = () => {
                 />
 
                 <Controller
-                  name="domains"
+                  name="domain"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      label="Domains (optional)"
+                      label="Domain (optional)"
                       placeholder="app.customer.com"
                       {...field}
-                      error={errors.domains?.message}
+                      error={errors.domain?.message}
                       className="!text-black"
                       labelClassName="!text-black"
                     />
@@ -112,10 +127,17 @@ const Configure: React.FC = () => {
                 />
                 <div className="space-y-2">
                   <p className=" font-medium text-sm ">Description(optional)</p>
-                  <textarea
-                    rows={4}
-                    placeholder="Device Fingerprint Location Tracker"
-                    className="w-full bg-transparent text-white border border-gray-300 rounded-md p-2 text-sm "
+                  <Controller
+                    name="description"
+                    control={control}
+                    render={({ field }) => (
+                      <textarea
+                        {...field}
+                        rows={4}
+                        placeholder="Device Fingerprint Location Tracker"
+                        className="w-full bg-transparent text-white border border-gray-300 rounded-md p-2 text-sm "
+                      />
+                    )}
                   />
                 </div>
 
@@ -126,20 +148,20 @@ const Configure: React.FC = () => {
               <div className="mb-10 space-y-3">
                 <button
                   type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full py-2 px-4 rounded-md text-white font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                    isSubmitting
+                  disabled={!isValid || isLoading}
+                  className={`w-full py-2 px-4 disabled:opacity-50 rounded-md text-white font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                    isLoading
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700"
                   }`}
                 >
-                  {isSubmitting ? "Saving..." : "Save"}
+                  {isLoading ? "Saving..." : "Save"}
                 </button>
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                   className={`w-full py-2 px-4 border border-blue-600 text-blue-600 rounded-md bg-transparent  font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                    isSubmitting ? " cursor-not-allowed" : ""
+                    isLoading ? " cursor-not-allowed" : ""
                   }`}
                 >
                   Generate API keys
@@ -147,7 +169,7 @@ const Configure: React.FC = () => {
               </div>
             </form>
           </div>
-          <div className="flex-[.6]">
+          <div className="flex-[.6] md:block hidden">
             <div className="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200">
               <h2 className="text-xl font-medium text-gray-700 mb-2">
                 SDK Integration{" "}

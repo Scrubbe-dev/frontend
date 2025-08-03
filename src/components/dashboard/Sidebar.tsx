@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Moon, PanelRight } from "lucide-react";
+import { Loader2, Moon, PanelRight } from "lucide-react";
 import Link from "next/link";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
@@ -13,8 +13,11 @@ import {
   ezraNavItem,
   navItem,
   NavItem,
-} from "@/lib/constant";
+} from "@/lib/constant/index";
 import { useState } from "react";
+import { FaSignOutAlt } from "react-icons/fa";
+import useLogout from "@/hooks/useLogout";
+import useAuthStore from "@/lib/stores/auth.store";
 
 type Props = {
   type?: "dashboard" | "ezra" | "developer";
@@ -24,6 +27,8 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
   const [collapse, setCollapse] = useState(false);
   const theme = useThemeStore((state) => state.theme);
   const setTheme = useThemeStore((state) => state.setTheme);
+  const { handleLogout } = useLogout();
+  const { isLoading } = useAuthStore();
 
   const sideBarItem: NavItem[] =
     type == "dashboard"
@@ -56,7 +61,7 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
       className={clsx(
         "   border-r border-blue-400/50 flex flex-col justify-between",
         collapse
-          ? " absolute bg-white dark:bg-dark w-fit h-[80px] flex justify-center items-center p-4 pt-6"
+          ? " bg-white dark:bg-dark w-fit flex justify-center items-center p-4 pt-6"
           : "relative h-full min-w-[300px] p-4"
       )}
     >
@@ -98,7 +103,7 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
 
         {!collapse && (
           <div className="flex flex-col gap-1 items-center mt-[15%] flex-1 w-full">
-            {sideBarItem.map((item) => {
+            {sideBarItem?.map((item) => {
               const parentActive = isParentActive(item);
               const parentOpen = isParentOpen(item);
               const { Icon, link, name, menu } = item;
@@ -201,6 +206,17 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
               checked={theme === "dark"}
               onChange={() => setTheme(theme === "dark" ? "light" : "dark")}
             />
+          </div>
+          <div
+            onClick={() => handleLogout()}
+            className="flex items-center gap-2 justify-between py-3 px-3 cursor-pointer hover:text-white hover:bg-rose-500 transition-all duration-100 opacity-60 hover:opacity-100 rounded-sm "
+          >
+            <div className="flex items-center gap-2">
+              <FaSignOutAlt size={22} className=" dark:text-white" />
+
+              <p className={clsx("text-sm  dark:text-white gap-2")}>Logout</p>
+            </div>
+            {isLoading && <Loader2 className=" animate-spin" />}
           </div>
 
           {type == "ezra" && (

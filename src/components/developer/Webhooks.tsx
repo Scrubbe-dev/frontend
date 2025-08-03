@@ -208,11 +208,11 @@ const Webhooks = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-dark min-h-screen">
+    <div className="p-6 min-h-screen">
       <h2 className="text-2xl font-semibold mb-6 dark:text-white">Webhooks</h2>
       <div className="grid md:grid-cols-2 gap-6 mb-8">
         {/* Webhook Endpoints */}
-        <div className="bg-white dark:bg-subDark rounded-xl p-6 shadow-sm">
+        <div className="bg-white dark:bg-dark rounded-xl p-6 shadow-sm">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold dark:text-white">
               Webhook Endpoints
@@ -228,7 +228,7 @@ const Webhooks = () => {
             {webhookEndpoints.map((wh) => (
               <div
                 key={wh.name}
-                className="bg-gray-50 dark:bg-dark rounded-lg p-4 border border-gray-100 dark:border-gray-700"
+                className="bg-gray-50 dark:bg-subDark rounded-lg p-4 border flex flex-col gap-3 border-gray-100 dark:border-gray-700"
               >
                 <div className="flex justify-between items-center mb-1">
                   <div className="font-semibold text-base dark:text-white">
@@ -252,28 +252,31 @@ const Webhooks = () => {
                   ))}
                 </div>
                 <div className="flex gap-2">
-                  <button className="border border-blue-600 text-blue-600 px-3 py-1 rounded-lg text-sm font-medium hover:bg-blue-50 dark:hover:bg-blue-900 transition">
-                    Test
-                  </button>
-                  <button
+                  <CButton
+                    className="border w-fit border-colorScBlue bg-transparent text-colorScBlue hover:text-white"
                     onClick={() => setOpenEditConfig(true)}
-                    className="border border-blue-600 text-blue-600 px-3 py-1 rounded-lg text-sm font-medium hover:bg-blue-50 dark:hover:bg-blue-900 transition"
+                  >
+                    Test
+                  </CButton>
+                  <CButton
+                    className="border w-fit border-colorScBlue bg-transparent text-colorScBlue hover:text-white"
+                    onClick={() => setOpenEditConfig(true)}
                   >
                     Edit
-                  </button>
-                  <button
+                  </CButton>
+                  <CButton
+                    className="border w-fit border-colorScBlue bg-transparent text-colorScBlue hover:text-white"
                     onClick={() => setOpenLogs(true)}
-                    className="border border-blue-600 text-blue-600 px-3 py-1 rounded-lg text-sm font-medium hover:bg-blue-50 dark:hover:bg-blue-900 transition"
                   >
                     View logs
-                  </button>
+                  </CButton>
                 </div>
               </div>
             ))}
           </div>
         </div>
         {/* Webhook Testing */}
-        <div className="bg-white dark:bg-subDark rounded-xl p-6 shadow-sm">
+        <div className="bg-white dark:bg-dark rounded-xl p-6 shadow-sm">
           <h3 className="text-lg font-semibold mb-4 dark:text-white">
             Webhook Testing
           </h3>
@@ -318,7 +321,7 @@ const Webhooks = () => {
         </div>
       </div>
       {/* Webhook Delivery Logs */}
-      <div className="bg-white dark:bg-subDark rounded-xl p-6 mt-8 shadow-sm">
+      <div className="bg-white dark:bg-dark rounded-xl p-6 mt-8 shadow-sm">
         <h3 className="text-lg font-semibold mb-4 dark:text-white">
           Webhook Delivery Logs
         </h3>
@@ -464,9 +467,26 @@ const Webhooks = () => {
               Request Details:
             </div>
             <div className="bg-gray-100 dark:bg-[#23263a] rounded-lg p-4 text-gray-700 dark:text-gray-200 text-sm whitespace-pre-line">
-              Timestamp: 2025-07-21T11:59:10.965Z Method: POST Endpoint:
-              /v1/fingerprint Response Code: 200 Response Time: 145ms User
-              Agent: Mozilla/5.0... IP Address: 192.168.1.100
+              <p>
+                <span className="font-semibold">Timestamp:</span>{" "}
+                2025-07-21T11:59:10.965Z
+              </p>
+              <p>
+                <span className="font-semibold">Method:</span> POST
+              </p>
+              <p>
+                <span className="font-semibold">Endpoint:</span> /v1/fingerprint
+              </p>
+              <p>
+                <span className="font-semibold">Response Code:</span> 200
+              </p>
+              <p>
+                <span className="font-semibold">Response Time:</span> 145ms
+              </p>
+              <p>
+                <span className="font-semibold">User</span>
+                Agent: Mozilla/5.0... IP Address: 192.168.1.100
+              </p>
             </div>
           </div>
           <div className="mb-6">
@@ -474,7 +494,10 @@ const Webhooks = () => {
               Response Body:
             </div>
             <pre className="bg-black text-white rounded-lg p-4 text-sm overflow-x-auto">
-              {`{ "visitorId": "fp_abc123def456", "confidence": 0.97, "riskScore": 0.12, "timestamp": "2025-07-21T11:59:10.965Z" }`}
+              {`{ "visitorId": "fp_abc123def456",
+"confidence": 0.97, 
+"riskScore": 0.12, 
+"timestamp": "2025-07-21T11:59:10.965Z" }`}
             </pre>
           </div>
           <div className="flex justify-end gap-4 mt-8">

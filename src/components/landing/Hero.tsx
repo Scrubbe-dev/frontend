@@ -144,14 +144,16 @@ function CornerAnimation({ width, height }: { width: number; height: number }) {
       renderer.setSize(width, height);
     };
 
-    window.addEventListener("resize", handleResize);
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", handleResize);
 
-    return () => {
-      if (currentContainer.contains(renderer.domElement)) {
-        currentContainer.removeChild(renderer.domElement);
-      }
-      window.removeEventListener("resize", handleResize);
-    };
+      return () => {
+        if (currentContainer.contains(renderer.domElement)) {
+          currentContainer.removeChild(renderer.domElement);
+        }
+        window.removeEventListener("resize", handleResize);
+      };
+    }
   }, [width, height]);
 
   return <div ref={containerRef} className="w-full h-full" />;
@@ -183,23 +185,29 @@ export default function Hero() {
   // Effect to safely access window object after component mount
   useEffect(() => {
     // Set initial dimensions
-    setWindowDimensions({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
-
-    // Handle resize events
-    const handleResize = () => {
+    if (typeof window !== "undefined") {
       setWindowDimensions({
         width: window.innerWidth,
         height: window.innerHeight,
       });
+    }
+
+    // Handle resize events
+    const handleResize = () => {
+      if (typeof window !== "undefined") {
+        setWindowDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      }
     };
 
-    window.addEventListener("resize", handleResize);
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", handleResize);
 
-    // Cleanup
-    return () => window.removeEventListener("resize", handleResize);
+      // Cleanup
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
 
   // Adjusted positions with slight upward shift for each corner
