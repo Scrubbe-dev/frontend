@@ -68,7 +68,7 @@ const parseIncidentString = (incidentString: string): ParsedIncident | null => {
     incidentString: string
   ): ParsedIncident | null => {
     const fullIncidentMatch = incidentString.match(
-      /\*\*Title:\*\*\s*(.*?)\s*\*\*Priority:\*\*\s*(.*?)\s*\*\*Description:\*\*\s*(.*?)(?=\*\*Title:|\s*---|$)/s
+      /\*\*Title:\*\*\s*(.*?)\s*\*\*Priority:\*\*\s*(.*?)\s*\*\*Description:\*\*\s*(.*?)(?=\*\*Title:|\s*---|$)/
     );
     if (fullIncidentMatch) {
       const parsedResult = {
