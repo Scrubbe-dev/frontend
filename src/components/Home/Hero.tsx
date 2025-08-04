@@ -19,10 +19,8 @@ const steps = [
 ];
 const Hero = () => {
   const [activeStep, setActiveStep] = useState(1);
-  const [progress, setProgress] = useState(1); // 1 = 100%, 0 = 0%
   const progressInterval = useRef<NodeJS.Timeout | null>(null);
 
-  console.log(activeStep, progress);
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveStep((prev) => {
@@ -38,13 +36,11 @@ const Hero = () => {
 
   // Progress countdown effect
   useEffect(() => {
-    setProgress(1); // Reset progress to full
     if (progressInterval.current) clearInterval(progressInterval.current);
     const start = Date.now();
     progressInterval.current = setInterval(() => {
       const elapsed = Date.now() - start;
       const newProgress = Math.max(0, 1 - elapsed / 10000);
-      setProgress(newProgress);
       if (newProgress === 0) {
         if (progressInterval.current) clearInterval(progressInterval.current);
       }

@@ -101,6 +101,7 @@ export default function SignInForm() {
       toast.success(`Successfully signed in!`, {
         description: `${data.email}, you are being redirected...`,
         duration: 10000,
+        id: "redirect",
       });
 
       // Show success toast after delay
@@ -109,9 +110,9 @@ export default function SignInForm() {
         router.push(`/ezra/dashboard`);
       } else {
         if (userDetails?.accountType === "BUSINESS") {
-          router.push(`/dashboard`);
+          router.push(`/dashboard`); 
         } else {
-          router.push("/ezra/dashboard");
+          router.push("/developer/dashboard");
         }
       }
 
