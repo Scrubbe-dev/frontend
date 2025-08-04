@@ -21,6 +21,7 @@ type CreateIncidentProps = {
 const formScheme = z.object({
   template: z.string().nonempty({ message: "template is required" }),
   reason: z.string().nonempty({ message: "reason is required" }),
+  shortDescription: z.string().nonempty({ message: "short description is required" }),
   priority: z.string().nonempty({ message: "priority is required" }),
   assignedTo: z.string().nonempty({ message: "assignedTo is required" }),
   username: z.string().nonempty({ message: "username is required" }),
@@ -96,15 +97,9 @@ const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
           name="template"
           control={control}
           render={({ field }) => (
-            <Select
+            <Input
               {...field}
-              label="Template"
-              options={[
-                { label: "SELECT TEMPLATE", value: "" },
-                { label: "None", value: "NONE" },
-                { label: "Phishing", value: "PHISHING" },
-                { label: "Malware", value: "MALWARE" },
-              ]}
+              label="Incident Type"
               className=" text-black dark:text-white"
               error={errors.template?.message}
             />
@@ -115,8 +110,8 @@ const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
           control={control}
           render={({ field }) => (
             <Input
-              label="User name"
-              placeholder="eg John Doe"
+              label="Affected User"
+              placeholder=""
               {...field}
               error={errors.template?.message}
               className=" text-black dark:text-white"
@@ -125,11 +120,11 @@ const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
         />
 
         <Controller
-          name="reason"
+          name="shortDescription"
           control={control}
           render={({ field }) => (
             <Input
-              label="Reason"
+              label="Short Description"
               placeholder="Enter reason"
               {...field}
               error={errors.reason?.message}
@@ -137,7 +132,33 @@ const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
             />
           )}
         />
-
+        <Controller
+          name="reason"
+          control={control}
+          render={({ field }) => (
+            <Input
+              label="Descriptions"
+              placeholder="Enter reason"
+              {...field}
+              error={errors.reason?.message}
+              className=" text-black dark:text-white"
+            />
+          )}
+        />
+         <Controller
+          name="reason"
+          control={control}
+          render={({ field }) => (
+         <div className="space-y-2">
+            <p className="dark:text-white font-medium text-sm ">Description</p>
+            <textarea
+              rows={4}
+              {...field}
+              placeholder="optional description of the rule"
+              className="w-full bg-transparent dark:text-white border border-gray-300 rounded-md p-2 text-sm "
+            />
+          </div> )}
+          />
         <Controller
           name="priority"
           control={control}
