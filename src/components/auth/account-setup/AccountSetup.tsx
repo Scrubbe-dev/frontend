@@ -190,7 +190,7 @@ const AccountSetup = () => {
   };
 
   const handleSaveMember = () => {
-    if (!memberForm.name.trim() || !memberForm.email.trim()) {
+    if (!memberForm.email.trim()) {
       toast.error("please fill all details");
       return;
     }
@@ -221,6 +221,7 @@ const AccountSetup = () => {
     }
     if (isSuccess) {
       if (path && path === "ezra") {
+        toast.success("Account setup successful");
         router.push(`/alert-settings?to=${path}`);
       } else {
         router.push(`/alert-settings`);
@@ -538,6 +539,7 @@ const AccountSetup = () => {
                   }}
                   error={errors.adminEmail}
                   isLoading={isSubmitting}
+                  // readOnly
                 />
               </div>
 
@@ -689,22 +691,9 @@ const AccountSetup = () => {
                 </button>
               </div>
 
-              <div className="space-y-6">
+              <div className="">
                 {/* Name and Email Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input
-                    label="Name"
-                    placeholder="Enter Name"
-                    value={memberForm.name}
-                    className="dark:!text-black"
-                    labelClassName="dark:!text-black"
-                    onChange={(e) =>
-                      setMemberForm((prev) => ({
-                        ...prev,
-                        name: e.target.value,
-                      }))
-                    }
-                  />
+                <div className="grid grid-cols-1 gap-6">
                   <Input
                     label="Email"
                     placeholder="Enter Email"
@@ -760,17 +749,22 @@ const AccountSetup = () => {
                       >
                         <input
                           type="checkbox"
-                          id="modal-viewDashboard"
+                          id={permission.value}
                           checked={memberForm.permissions.includes(
                             permission.value
                           )}
                           onChange={() =>
                             setMemberForm((prev) => {
-                              if (
-                                memberForm.permissions.includes(
-                                  permission.value
-                                )
-                              ) {
+                              if (prev.permissions.includes(permission.value)) {
+                                const filterPermission =
+                                  prev.permissions.filter(
+                                    (item) => item !== permission.value
+                                  );
+                                return {
+                                  ...prev,
+                                  permissions: filterPermission,
+                                };
+                              } else {
                                 return {
                                   ...prev,
                                   permissions: [
@@ -778,22 +772,13 @@ const AccountSetup = () => {
                                     permission.value,
                                   ],
                                 };
-                              } else {
-                                const filterPermission =
-                                  memberForm.permissions.filter(
-                                    (item) => item !== permission.value
-                                  );
-                                return {
-                                  ...prev,
-                                  permissions: filterPermission,
-                                };
                               }
                             })
                           }
                           className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                         />
                         <label
-                          htmlFor="modal-viewDashboard"
+                          htmlFor={permission.value}
                           className="text-sm text-gray-700"
                         >
                           {permission.label}
@@ -1115,9 +1100,7 @@ const AccountSetup = () => {
                 <h3 className="text-lg font-medium text-gray-900">
                   Default Incident Priority
                 </h3>
-                <p className="text-sm text-gray-600">
-                  You can select more than one
-                </p>
+
                 <div className="flex flex-wrap gap-4">
                   {["HIGH", "MEDIUM", "LOW"].map((priority) => (
                     <div key={priority} className="flex items-center space-x-2">

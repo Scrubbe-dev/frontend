@@ -29,6 +29,7 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
   const setTheme = useThemeStore((state) => state.setTheme);
   const { handleLogout } = useLogout();
   const { isLoading } = useAuthStore();
+  const [openDropdown, setOpenDropdown] = useState("");
 
   const sideBarItem: NavItem[] =
     type == "dashboard"
@@ -42,6 +43,7 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
     if (pathname === item.link) return true;
     if (item.menu && item.menu.some((child) => pathname === child?.link))
       return true;
+    if (openDropdown === item.name) return true;
     return false;
   };
 
@@ -78,13 +80,15 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
                   EZRA
                 </p>
               ) : (
-                <Image
-                  src="/scrubbe-logo-01.png"
-                  alt="scrubbe-logo-01.png"
-                  height={200}
-                  width={200}
-                  className="object-contain"
-                />
+                <div className=" h-14 flex items-center">
+                  <Image
+                    src="/scrubbe-logo-01.png"
+                    alt="scrubbe-logo-01.png"
+                    height={200}
+                    width={200}
+                    className="object-contain"
+                  />
+                </div>
               )}
             </>
           )}
@@ -125,8 +129,11 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
                     </Link>
                     {menu && menu.length > 0 && (
                       <span
+                        onClick={() =>
+                          setOpenDropdown((prev) => (prev !== name ? name : ""))
+                        }
                         className={clsx(
-                          "ml-auto transition-transform",
+                          "ml-auto transition-transform p-1",
                           parentOpen ? "rotate-90" : "rotate-0"
                         )}
                       >

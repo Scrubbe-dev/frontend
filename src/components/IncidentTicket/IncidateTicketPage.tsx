@@ -7,7 +7,7 @@ import { CellContext } from "@tanstack/react-table";
 import { Table } from "../ui/table";
 import clsx from "clsx";
 import AdvanceFilter from "./AdvanceFilter";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, ReactNode } from "react";
 import Pagination from "../alert-setting/Pagination";
 import NotificationSettings from "./NotificationSettings";
 import CreateIncident from "./CreateIncident";
@@ -19,17 +19,24 @@ import { querykeys } from "@/lib/constant";
 import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import moment from "moment";
+import EmptyState from "@/components/ui/EmptyState";
+import TableLoader from "../ui/LoaderUI/TableLoader";
 
 export type Ticket = {
   id: string;
   ticketId: string;
   reason: string;
   userName: string;
-  priority: "high" | "medium" | "low";
-  status: "open" | "closed" | "in-progress" | "on-hold";
-  assignedTo: string;
+  priority: "HIGH" | "MEDIUM" | "LOW";
+  status: "OPEN" | "CLOSED" | "in-progress" | "on-hold";
+  assignedToEmail: string;
   score: number;
   createdAt: string;
+  recommendedActions: string[];
+  riskScore: number;
+  businessId: string;
+  slaStatus: string;
+  template: string;
 };
 
 // const ticketData: Ticket[] = [
@@ -120,7 +127,11 @@ const columns = [
   {
     accessorKey: "reason",
     header: () => <span className="font-semibold">Reason</span>,
-    cell: (info: CellContext<Ticket, unknown>) => info.getValue(),
+    cell: (info: CellContext<Ticket, unknown>) => (
+      <div className=" truncate text-nowrap max-w-lg">
+        {info.getValue() as string}
+      </div>
+    ),
   },
   {
     accessorKey: "priority",
@@ -141,15 +152,15 @@ const columns = [
     ),
   },
   {
-    accessorKey: "assignedTo",
+    accessorKey: "assignedToEmail",
     header: () => <span className="font-semibold">Assigned To</span>,
     cell: (info: CellContext<Ticket, unknown>) => info.getValue(),
   },
-  // {
-  //   accessorKey: "score",
-  //   header: () => <span className="font-semibold">Score</span>,
-  //   cell: (info: CellContext<Ticket, unknown>) => info.getValue(),
-  // },
+  {
+    accessorKey: "riskScore",
+    header: () => <span className="font-semibold">Risk Score</span>,
+    cell: (info: CellContext<Ticket, unknown>) => info.getValue(),
+  },
   {
     accessorKey: "createdAt",
     header: () => <span className="font-semibold">Created At</span>,
@@ -164,9 +175,9 @@ const statusColors = (status: string) => {
       <div
         className={clsx(
           "px-3 py-1 rounded-md capitalize",
-          status === "open"
+          status === "OPEN"
             ? "bg-red-100 text-red-500"
-            : status === "closed"
+            : status === "CLOSED"
             ? "bg-green-100 text-green-500"
             : status === "in-progress"
             ? "bg-indigo-100 text-indigo-500"
@@ -185,9 +196,9 @@ const priorityColors = (priority: string) => {
       <div
         className={clsx(
           "px-3 py-1 rounded-md capitalize",
-          priority === "high"
+          priority === "HIGH"
             ? "bg-red-100 text-red-500"
-            : priority === "medium"
+            : priority === "MEDIUM"
             ? "bg-yellow-100 text-yellow-500"
             : "bg-gray-100 text-gray-500"
         )}
@@ -249,6 +260,40 @@ const IncidentTicketPage = () => {
     setSelectedTicket(ticket);
     setIsTicketDetailsOpen(true);
   };
+
+  let content: ReactNode;
+  if (isLoading) {
+    content = <TableLoader />;
+  }
+  if (!isLoading && (!data || data?.length < 1)) {
+    content = (
+      <EmptyState
+        title="You have no incident ticket yet"
+        action={
+          <CButton
+            onClick={() => setIsCreateIncidentOpen(true)}
+            className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue"
+          >
+            New Incident
+          </CButton>
+        }
+      />
+    );
+  }
+  if (data?.length > 0) {
+    content = (
+      <div>
+        <Table
+          data={data?.map((value: any) => ({ ...value, status: "open" }))}
+          columns={columns}
+          onRowClick={handleRowClick}
+        />
+        <div className="flex justify-end mt-10">
+          <Pagination page={1} totalPages={10} onPageChange={() => {}} />
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="p-4">
       <div className="flex justify-between items-center">
@@ -341,27 +386,7 @@ const IncidentTicketPage = () => {
           </div>
         </div>
 
-        {isLoading ? (
-          <div className=" w-full animate-pulse">
-            <div className="h-14 w-full bg-gray-100 dark:bg-gray-800"></div>
-            <div className="h-14 w-full bg-zinc-50 dark:bg-zinc-900"></div>
-            <div className="h-14 w-full bg-gray-100 dark:bg-gray-800"></div>
-            <div className="h-14 w-full bg-zinc-50 dark:bg-zinc-900"></div>
-            <div className="h-14 w-full bg-gray-100 dark:bg-gray-800"></div>
-            <div className="h-14 w-full bg-zinc-50 dark:bg-zinc-900"></div>
-            <div className="h-14 w-full bg-gray-100 dark:bg-gray-800"></div>
-            <div className="h-14 w-full bg-zinc-50 dark:bg-zinc-900"></div>
-          </div>
-        ) : (
-          <Table
-            data={data?.map((value: any) => ({ ...value, status: "open" }))}
-            columns={columns}
-            onRowClick={handleRowClick}
-          />
-        )}
-        <div className="flex justify-end">
-          <Pagination page={1} totalPages={10} onPageChange={() => {}} />
-        </div>
+        {content}
         <AdvanceFilter
           isOpen={isAdvanceFilterOpen}
           onClose={() => setIsAdvanceFilterOpen(false)}

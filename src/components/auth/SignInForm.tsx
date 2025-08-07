@@ -34,10 +34,13 @@ export default function SignInForm() {
   const searchParams = useSearchParams();
   const path = searchParams.get("to");
   const [isAuth, setIsAuth] = useState(false);
+  const inviteEmail = searchParams.get("email");
+
   // Keep the form handling structure closer to the original
   // even though we're simplifying functionality
   const {
     control,
+    setValue,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<LoginFormData>({
@@ -110,7 +113,7 @@ export default function SignInForm() {
         router.push(`/ezra/dashboard`);
       } else {
         if (userDetails?.accountType === "BUSINESS") {
-          router.push(`/dashboard`); 
+          router.push(`/dashboard`);
         } else {
           router.push("/developer/dashboard");
         }
@@ -134,6 +137,12 @@ export default function SignInForm() {
       setIsAuth(true);
     }
   }, [session]);
+
+  useEffect(() => {
+    if (inviteEmail) {
+      setValue("email", inviteEmail);
+    }
+  }, [inviteEmail, setValue]);
 
   return (
     <Suspense fallback={<div>Loading...</div>}>

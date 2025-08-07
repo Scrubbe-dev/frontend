@@ -170,7 +170,7 @@ const NewFooter: React.FC = () => {
     links: [
       // { text: "Authentication SDK Pricing", href: "#" },
       // { text: "SIEM and SOAR monitoring Pricing", href: "#" },
-      { text: "Contact Us", href: "#" },
+      { text: "Modular Pricing", href: "#" },
       { text: "Talk to sales", href: "#" },
       { text: "Contact Us", href: "#" },
     ],
@@ -187,7 +187,7 @@ const NewFooter: React.FC = () => {
       { text: "Security and Trust", href: "#" },
       { text: "Blog (Technical and Industrial Post)", href: "#" },
       { text: "Careers", href: "#" },
-      { text: "About Us", href: "#" },
+      { text: "About Us", href: "/about" },
     ],
   };
 

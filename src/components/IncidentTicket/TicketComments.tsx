@@ -1,58 +1,159 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import { borderColors, querykeys } from "@/lib/constant";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { ReactNode, useEffect, useState } from "react";
+import { Ticket } from "./IncidateTicketPage";
+import moment from "moment";
+import EmptyState from "../ui/EmptyState";
+import useAuthStore from "@/lib/stores/auth.store";
+import { MdVerified } from "react-icons/md";
 
-const mockComments = [
-  {
-    id: 1,
-    message:
-      "I came across the threat details . David really wanted to hack into the account",
-    author: "Analyst 1",
-    time: "2025-05-29 12:39:25",
-  },
-  {
-    id: 2,
-    message: "Hmms, that’s kind of suspicious",
-    author: "Manager 1",
-    time: "2025-05-29 12:39:25",
-  },
-  {
-    id: 3,
-    message: "Let’s see what we can do about it",
-    author: "Analyst 1",
-    time: "2025-05-29 12:39:25",
-  },
-];
+type Comments = {
+  id: string;
+  content: string;
+  createdAt: string;
+  firstname: string;
+  lastname: string;
+  isBusinessOwner: boolean;
+};
 
-const borderColors = [
-  "border-l-4 border-green-400",
-  "border-l-4 border-fuchsia-400",
-  "border-l-4 border-orange-400",
-];
-
-const TicketComments = () => {
+type Props = {
+  ticket: Ticket;
+};
+const TicketComments = ({ ticket }: Props) => {
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState<any>(mockComments);
-  // You can later connect this to your backend or state
+  const { post, get } = useFetch();
+  const queryClient = useQueryClient();
+  const { user } = useAuthStore();
 
-  return (
-    <div className="dark:bg-gray-900 bg-gray-50 rounded-2xl p-6">
+  const {
+    data: comments,
+    isLoading,
+    refetch,
+  } = useQuery<Comments[]>({
+    queryKey: [querykeys.COMMENTS],
+    queryFn: async () => {
+      const res = await get(
+        `${endpoint.incident_ticket.get_comment}/${ticket.id}`
+      );
+      if (res.success) {
+        return res.data;
+      }
+      return [];
+    },
+    refetchOnWindowFocus: false,
+    // refetchInterval: 10000,
+    refetchIntervalInBackground: true,
+    enabled: !!ticket.id,
+  });
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async (content: string) => {
+      const res = await post(
+        `${endpoint.incident_ticket.send_comment}/${ticket.id}`,
+        {
+          content,
+        }
+      );
+      return res.data;
+    },
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: [querykeys.COMMENTS] });
+      const previousComments = queryClient.getQueryData<Comments[]>([
+        querykeys.COMMENTS,
+      ]);
+      if (previousComments) {
+        queryClient.setQueryData<Comments[]>(
+          [querykeys.COMMENTS],
+          (oldData) => [
+            ...(oldData ?? []),
+            {
+              content: comment,
+              createdAt: new Date(Date.now()).toISOString(),
+              firstname: user?.firstName ?? "",
+              lastname: user?.lastName ?? "",
+              id: String((oldData?.length ?? 0) + 1),
+              isBusinessOwner: false,
+            },
+          ]
+        );
+      }
+      const previous = {
+        previousComments,
+        prevComment: comment,
+      };
+      return { previous };
+    },
+    onError: (err, __, context) => {
+      queryClient.setQueryData(["posts"], context?.previous.previousComments);
+      setComment(context?.previous.prevComment ?? "");
+      console.log("error", err);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [querykeys.COMMENTS] });
+      setComment("");
+    },
+  });
+
+  const handleSubmitComment = () => {
+    mutateAsync(comment);
+  };
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  let content: ReactNode;
+  if (isLoading) {
+    content = (
+      <div className="space-y-4 mb-8 max-h-[500px] overflow-y-auto ">
+        <div className=" h-14 rounded-md bg-gray-100 animate-pulse-dot [animation-delay:-0.53s]" />
+        <div className=" h-14 rounded-md bg-gray-100 animate-pulse-dot [animation-delay:-0.32s]" />
+        <div className=" h-14 rounded-md bg-gray-100 animate-pulse-dot [animation-delay:-0.16s]" />
+        <div className=" h-14 rounded-md bg-gray-100 animate-pulse-dot" />
+      </div>
+    );
+  }
+  if (!isLoading && comments && comments?.length < 1) {
+    content = (
+      <EmptyState
+        title="No Comment yet!"
+        description="Be the first to drop a comment for other team members"
+      />
+    );
+  }
+  if (!isLoading && comments && comments?.length > 0) {
+    content = (
       <div className="space-y-4 mb-8 max-h-[500px] overflow-y-auto">
-        {comments.map((c: any) => (
+        {comments?.map((c: Comments) => (
           <div
             key={c.id}
             className={`dark:bg-gray-800 bg-white ${
-              c.border || borderColors[c.id % borderColors.length]
+              borderColors[c.firstname[0].toLowerCase()]
             } rounded-xl px-6 py-4 shadow-sm`}
           >
             <div className="font-semibold dark:text-white text-gray-800 mb-1">
-              {c.message}
+              {c.content}
             </div>
-            <div className="text-gray-500 text-sm">
-              By {c.author} at {c.time}
+            <div className="text-gray-500 text-sm justify-between flex ">
+              <span className="flex items-center gap-1">
+                By {c.firstname} {c.lastname}{" "}
+                {c.isBusinessOwner && (
+                  <MdVerified className=" text-purple-500" />
+                )}
+              </span>{" "}
+              <span>{moment(c.createdAt).fromNow()}</span>
             </div>
           </div>
         ))}
       </div>
+    );
+  }
+  return (
+    <div className="dark:bg-gray-900 bg-gray-50 rounded-2xl p-6">
+      {content}
       <div className="mb-4">
         <div className="font-semibold dark:text-white text-gray-800 mb-2">
           Add comment
@@ -63,33 +164,21 @@ const TicketComments = () => {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />
-      </div>
-      <div className="flex justify-end gap-4 mt-6">
-        <button
-          className="px-8 py-2 rounded-lg border border-blue-600 text-blue-600 dark:text-white dark:bg-transparent bg-white font-medium dark:hover:bg-blue-800 hover:bg-blue-50 transition-colors"
-          type="button"
-        >
-          Close
-        </button>
-        <button
-          className="px-8 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
-          type="button"
-          onClick={() => {
-            setComments([
-              ...comments,
-              {
-                id: comments.length + 1,
-                message: comment,
-                author: "You",
-                time: new Date().toISOString(),
-                border: "border-l-4 border-blue-600",
-              },
-            ]);
-            setComment("");
-          }}
-        >
-          Add Comment
-        </button>
+        <div className="flex justify-end gap-4 mt-6">
+          <button
+            className="px-8 py-2 rounded-lg border border-blue-600 text-blue-600 dark:text-white dark:bg-transparent bg-white font-medium dark:hover:bg-blue-800 hover:bg-blue-50 transition-colors"
+            type="button"
+          >
+            Close
+          </button>
+          <button
+            className="px-8 py-2 disabled:opacity-50 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
+            disabled={isPending}
+            onClick={handleSubmitComment}
+          >
+            Add Comment
+          </button>
+        </div>
       </div>
     </div>
   );

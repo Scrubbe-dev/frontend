@@ -40,7 +40,7 @@ export interface EnterpriseSetup {
   defaultDashboard: "SIEM" | "SOAR" | "Custom";
   preferredIntegrations: string[]; // ['Jira', 'Freshdesk', 'Service Now']
   notificationChannels: string[]; // ['Slack', 'Microsoft Teams', 'Email', 'SMS']
-  defaultIncidentPriority: string[]; // ['High', 'Medium', 'Low']
+  defaultIncidentPriority: string; // ['High', 'Medium', 'Low']
 }
 
 export type enterpriseSetupSliceType = {
@@ -111,7 +111,7 @@ const initialEnterpriseSetup: EnterpriseSetup = {
   defaultDashboard: "SIEM",
   preferredIntegrations: ["Jira"],
   notificationChannels: ["Slack"],
-  defaultIncidentPriority: ["HIGH"],
+  defaultIncidentPriority: "HIGH",
 };
 
 export const createEnterpriseSetupSlice: StateCreator<
@@ -280,9 +280,7 @@ export const createEnterpriseSetupSlice: StateCreator<
   toggleIncidentPriority: (priority) => {
     set((state) => {
       const currentPriorities = state.enterpriseSetup.defaultIncidentPriority;
-      const newPriorities = currentPriorities.includes(priority)
-        ? currentPriorities.filter((item) => item !== priority)
-        : [...currentPriorities, priority];
+      const newPriorities = currentPriorities == priority ? "" : priority;
 
       return {
         enterpriseSetup: {
@@ -425,8 +423,6 @@ export const createEnterpriseSetupSlice: StateCreator<
         adminEmail: enterpriseSetup.adminEmail,
         adminJobTitle: enterpriseSetup.adminJobTitle,
         inviteMembers: enterpriseSetup.teamMembers.map((value) => ({
-          firstName: value.name.split(" ")?.[0] ?? "",
-          lastName: value.name.split(" ")?.[1] ?? "",
           inviteEmail: value.email,
           role: value.role,
           accessPermissions: value.permissions,
@@ -441,9 +437,8 @@ export const createEnterpriseSetupSlice: StateCreator<
           notificationChannels: enterpriseSetup.notificationChannels.map(
             (value) => notificationChannel[value]
           ),
-          defaultPriority: enterpriseSetup.defaultIncidentPriority.map(
-            (value) => value.toUpperCase()
-          ),
+          defaultPriority:
+            enterpriseSetup.defaultIncidentPriority.toUpperCase(),
         },
       };
 

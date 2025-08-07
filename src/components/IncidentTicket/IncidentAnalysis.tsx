@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -11,6 +11,11 @@ import {
   Legend,
 } from "chart.js";
 import Modal from "../ui/Modal";
+import { useQuery } from "@tanstack/react-query";
+import { querykeys } from "@/lib/constant";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import { Loader } from "lucide-react";
 
 ChartJS.register(
   CategoryScale,
@@ -23,11 +28,11 @@ ChartJS.register(
 
 // Dummy data, replace with real data via props or context in the future
 const ticketStatusData = {
-  labels: ["Open", "On-hold", "In-Progress", "Close"],
+  labels: ["OPEN", "ON_HOLD", "IN_PROGRESS", "CLOSED"],
   datasets: [
     {
       label: "Number of Tickets",
-      data: [292, 175, 102, 305],
+      data: [0, 0, 0, 0],
       backgroundColor: "#14D8C8",
       borderRadius: 6,
       maxBarThickness: 60,
@@ -114,6 +119,27 @@ const tabs = [{ label: "Metrics" }, { label: "Trends" }];
 
 const IncidentAnalysis = ({ isOpen = true, onClose = () => {} }) => {
   const [activeTab, setActiveTab] = useState(0);
+  const [analytics, setAnalytics] = useState(ticketStatusData);
+  const { get } = useFetch();
+
+  const { data, isLoading } = useQuery({
+    queryKey: [querykeys.ANALYTICS],
+    queryFn: async () => {
+      const res = await get(endpoint.incident_ticket.analytics);
+      if (res.success) return res.data.metrics;
+    },
+    initialData: [],
+  });
+
+  useEffect(() => {
+    const chartData = data?.map(
+      (value: { count: number; status: number }) => value.count
+    );
+    setAnalytics((prev) => ({
+      ...prev,
+      datasets: [{ ...prev.datasets[0], data: chartData }],
+    }));
+  }, [data]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -140,13 +166,20 @@ const IncidentAnalysis = ({ isOpen = true, onClose = () => {} }) => {
         {/* Chart Area */}
         {activeTab === 0 && (
           <div className="w-full h-[340px] flex items-center justify-center">
-            <div className="w-full h-full">
-              <Bar
-                data={ticketStatusData}
-                options={chartOptions}
-                className="bg-transparent"
-              />
-            </div>
+            {isLoading ? (
+              <div className="flex justify-center items-center">
+                <Loader />
+                <p>Retrieving analytics</p>
+              </div>
+            ) : (
+              <div className="w-full h-full">
+                <Bar
+                  data={analytics}
+                  options={chartOptions}
+                  className="bg-transparent"
+                />
+              </div>
+            )}
           </div>
         )}
         {activeTab === 1 && (

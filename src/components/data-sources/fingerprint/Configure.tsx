@@ -17,7 +17,7 @@ import { toast } from "sonner";
 // Zod schema for form validation
 const apiConfigSchema = z.object({
   name: z.string().min(1, "Project name is required"),
-  enviroment: z.string().min(1, "Environment is required"),
+  environment: z.string().min(1, "Environment is required"),
   domain: z.string().optional(),
   description: z.string().optional(),
 });
@@ -93,18 +93,19 @@ const Configure: React.FC = () => {
                   )}
                 />
                 <Controller
-                  name="enviroment"
+                  name="environment"
                   control={control}
                   render={({ field }) => (
                     <Select
                       label="Environment"
                       options={[
+                        { label: "SELECT PROJECT ENVIRONMENT", value: "" },
                         { value: "development", label: "Development" },
                         { value: "production", label: "Production" },
                         { value: "staging", label: "Staging" },
                       ]}
                       {...field}
-                      error={errors.enviroment?.message}
+                      error={errors.environment?.message}
                       className="!text-black"
                       labelClassName="!text-black"
                     />
@@ -135,7 +136,7 @@ const Configure: React.FC = () => {
                         {...field}
                         rows={4}
                         placeholder="Device Fingerprint Location Tracker"
-                        className="w-full bg-transparent text-white border border-gray-300 rounded-md p-2 text-sm "
+                        className="w-full bg-transparent  border border-gray-300 rounded-md p-2 text-sm "
                       />
                     )}
                   />
