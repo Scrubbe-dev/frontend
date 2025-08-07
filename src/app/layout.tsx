@@ -4,7 +4,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { StoreProvider } from "@/store/StoreProvider";
-import CookieConsentModal from "@/components/landing/CookieConsentModal";
 //import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
 import AuthProvider from "@/provider/AuthProvider";
@@ -103,7 +102,6 @@ export default function RootLayout({
                   {/* <NavbarWrapper /> */}
                   <main className="flex-grow h-full w-full">{children}</main>
                   {/* <FooterWrapper /> */}
-                  <CookieConsentModal />
 
                   <ModalManager />
                 </StoreProvider>

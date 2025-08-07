@@ -8,4 +8,38 @@ export const COOKIE_KEYS = {
 
 export const querykeys = {
   INCIDENT_TICKET: "INCIDENT_TICKET",
+  API_KEYS: "API_KEYS",
+  GET_MEMBERS: "GET_MEMBERS",
+  COMMENTS: "COMMENTS",
+  MESSAGES: "MESSAGES",
+  ANALYTICS: "ANALYTICS",
+};
+
+export const borderColors: { [key: string]: string } = {
+  a: "border-l-4 border-green-400",
+  b: "border-l-4 border-fuchsia-400",
+  c: "border-l-4 border-orange-400",
+  d: "border-l-4 border-red-400",
+  e: "border-l-4 border-pink-400",
+  f: "border-l-4 border-purple-400",
+  g: "border-l-4 border-blue-400",
+  h: "border-l-4 border-cyan-400",
+  i: "border-l-4 border-teal-400",
+  j: "border-l-4 border-emerald-400",
+  k: "border-l-4 border-lime-400",
+  l: "border-l-4 border-yellow-400",
+  m: "border-l-4 border-amber-400",
+  n: "border-l-4 border-gray-400",
+  o: "border-l-4 border-zinc-400",
+  p: "border-l-4 border-stone-400",
+  q: "border-l-4 border-slate-400",
+  r: "border-l-4 border-red-500",
+  s: "border-l-4 border-pink-500",
+  t: "border-l-4 border-purple-500",
+  u: "border-l-4 border-blue-500",
+  v: "border-l-4 border-cyan-500",
+  w: "border-l-4 border-teal-500",
+  x: "border-l-4 border-emerald-500",
+  y: "border-l-4 border-lime-500",
+  z: "border-l-4 border-yellow-500",
 };

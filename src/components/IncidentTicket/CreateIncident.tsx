@@ -3,7 +3,7 @@ import Modal from "../ui/Modal";
 import CButton from "../ui/Cbutton";
 import Select from "../ui/select";
 import Input from "../ui/input";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import { z } from "zod";
@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { querykeys } from "@/lib/constant";
 import { useRouter, useSearchParams } from "next/navigation";
+import TextArea from "../ui/text-area";
 
 type CreateIncidentProps = {
   isOpen: boolean;
@@ -21,7 +22,7 @@ type CreateIncidentProps = {
 const formScheme = z.object({
   template: z.string().nonempty({ message: "template is required" }),
   reason: z.string().nonempty({ message: "reason is required" }),
-  shortDescription: z.string().nonempty({ message: "short description is required" }),
+
   priority: z.string().nonempty({ message: "priority is required" }),
   assignedTo: z.string().nonempty({ message: "assignedTo is required" }),
   username: z.string().nonempty({ message: "username is required" }),
@@ -30,7 +31,7 @@ const formScheme = z.object({
 type FormType = z.infer<typeof formScheme>;
 
 const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
-  const { post } = useFetch();
+  const { post, get } = useFetch();
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const modal = searchParams.get("modal");
@@ -74,6 +75,28 @@ const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
     },
   });
 
+  const { data: members } = useQuery<
+    { firstname: string; lastname: string; email: string }[]
+  >({
+    queryKey: [querykeys.GET_MEMBERS],
+    queryFn: async () => {
+      try {
+        const res = await get(endpoint.incident_ticket.get_members);
+        console.log({ memeber: res });
+        if (res.success) {
+          return res.data;
+        }
+        return [];
+      } catch (error) {
+        console.log(error);
+        return [];
+      }
+    },
+    enabled: isOpen == true ? true : false,
+  });
+
+  console.log({ members });
+
   const createIncidentTicket = async (value: FormType) => {
     mutateAsync({ data: value });
   };
@@ -97,11 +120,17 @@ const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
           name="template"
           control={control}
           render={({ field }) => (
-            <Input
-              {...field}
+            <Select
               label="Incident Type"
-              className=" text-black dark:text-white"
+              options={[
+                { label: "SELECT INCIDENT TYPE", value: "" },
+                { label: "None", value: "NONE" },
+                { label: "Malware", value: "MALWARE" },
+                { label: "Phishing", value: "PHISHING" },
+              ]}
+              {...field}
               error={errors.template?.message}
+              className=" text-black dark:text-white"
             />
           )}
         />
@@ -113,52 +142,26 @@ const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
               label="Affected User"
               placeholder=""
               {...field}
-              error={errors.template?.message}
+              error={errors.username?.message}
               className=" text-black dark:text-white"
             />
           )}
         />
 
         <Controller
-          name="shortDescription"
-          control={control}
-          render={({ field }) => (
-            <Input
-              label="Short Description"
-              placeholder="Enter reason"
-              {...field}
-              error={errors.reason?.message}
-              className=" text-black dark:text-white"
-            />
-          )}
-        />
-        <Controller
           name="reason"
           control={control}
           render={({ field }) => (
-            <Input
-              label="Descriptions"
-              placeholder="Enter reason"
-              {...field}
-              error={errors.reason?.message}
-              className=" text-black dark:text-white"
-            />
-          )}
-        />
-         <Controller
-          name="reason"
-          control={control}
-          render={({ field }) => (
-         <div className="space-y-2">
-            <p className="dark:text-white font-medium text-sm ">Description</p>
-            <textarea
+            <TextArea
+              label="Description"
               rows={4}
               {...field}
               placeholder="optional description of the rule"
               className="w-full bg-transparent dark:text-white border border-gray-300 rounded-md p-2 text-sm "
+              error={errors.reason?.message}
             />
-          </div> )}
-          />
+          )}
+        />
         <Controller
           name="priority"
           control={control}
@@ -167,7 +170,7 @@ const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
               label="Priority"
               options={[
                 { label: "SELECT PRIORITY", value: "" },
-                { label: "Low", value: "HIGH" },
+                { label: "Low", value: "LOW" },
                 { label: "Medium", value: "MEDIUM" },
                 { label: "High", value: "HIGH" },
                 { label: "Critical", value: "CRITICAL" },
@@ -188,6 +191,14 @@ const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
           ]}
         /> */}
 
+        {/* [
+                { label: "SELECT ASSIGNEE", value: "" },
+                {
+                  label: "Olamide Morakinyo",
+                  value: "olamidemoraks@gmail.com",
+                },
+                { label: "David Shiloh", value: "morakinyodavid00@gmail.com" },
+              ] */}
         <Controller
           name="assignedTo"
           control={control}
@@ -195,14 +206,12 @@ const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
             <Select
               {...field}
               label="Assignee"
-              options={[
-                { label: "SELECT ASSIGNEE", value: "" },
-                {
-                  label: "Olamide Morakinyo",
-                  value: "olamidemoraks@gmail.com",
-                },
-                { label: "David Shiloh", value: "morakinyodavid00@gmail.com" },
-              ]}
+              options={[{ label: "SELECT ASSIGNEE", value: "" }].concat(
+                members?.map((member) => ({
+                  label: member.email,
+                  value: member.email,
+                })) ?? []
+              )}
               error={errors.assignedTo?.message}
               className=" text-black dark:text-white"
             />

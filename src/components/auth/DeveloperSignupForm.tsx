@@ -70,6 +70,10 @@ export default function DeveloperSignupForm() {
   const [profileComplete, setProfileComplete] = useState(false);
   const searchParams = useSearchParams();
   const path = searchParams.get("to");
+  const inviteEmail = searchParams.get("email");
+  const invite = searchParams.get("invite");
+  const isInvite = Boolean(invite);
+
   const router = useRouter();
   const [isOTP, setIsOTP] = useState(false);
   // const [password, setPassword] = useState("");
@@ -159,6 +163,12 @@ export default function DeveloperSignupForm() {
       return () => clearTimeout(timeout);
     }
   }, [showSuccess, router, path]);
+
+  useEffect(() => {
+    if (invite && inviteEmail) {
+      setValue("email", inviteEmail);
+    }
+  }, [invite, inviteEmail, setValue]);
   // Success Page Component
   const SuccessPage = ({ firstName, lastName }: SuccessPageProps) => {
     return (
@@ -445,94 +455,96 @@ export default function DeveloperSignupForm() {
                     </div>
 
                     {/* OAuth Buttons */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
-                      <button
-                        type="button"
-                        className="w-full flex gap-3 items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
-                        onClick={() => signIn("google")}
-                      >
-                        <div>
-                          <FcGoogle size={33} />
-                        </div>
-                        <span className="text-sm font-medium text-gray-700 dark:text-white">
-                          Goggle
-                        </span>
-                      </button>
-                      <button
-                        type="button"
-                        className="w-full gap-3 group flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md   transition-colors"
-                        onClick={() =>
-                          signIn("github", {
-                            // callbackUrl: "/auth/account-setup",
-                          })
-                        }
-                      >
-                        <div>
-                          <FaGithub size={33} className=" dark:text-white" />
-                        </div>
-                        <span className="text-sm font-medium text-gray-700 dark:text-white">
-                          GitHub
-                        </span>
-                      </button>
+                    {isInvite ? null : (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
+                        <button
+                          type="button"
+                          className="w-full flex gap-3 items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
+                          onClick={() => signIn("google")}
+                        >
+                          <div>
+                            <FcGoogle size={33} />
+                          </div>
+                          <span className="text-sm font-medium text-gray-700 dark:text-white">
+                            Goggle
+                          </span>
+                        </button>
+                        <button
+                          type="button"
+                          className="w-full gap-3 group flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md   transition-colors"
+                          onClick={() =>
+                            signIn("github", {
+                              // callbackUrl: "/auth/account-setup",
+                            })
+                          }
+                        >
+                          <div>
+                            <FaGithub size={33} className=" dark:text-white" />
+                          </div>
+                          <span className="text-sm font-medium text-gray-700 dark:text-white">
+                            GitHub
+                          </span>
+                        </button>
 
-                      <button
-                        type="button"
-                        className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md transition-colors"
-                        onClick={() =>
-                          signIn("gitlab", {
-                            // callbackUrl: "/auth/account-setup",
-                          })
-                        }
-                      >
-                        <Image
-                          src="/icon-auth-gitlab.svg"
-                          alt="GitLab"
-                          width={38}
-                          height={38}
-                          className="mr-2"
-                        />
-                        <span className="text-sm font-medium text-gray-700 dark:text-white">
-                          GitLab
-                        </span>
-                      </button>
+                        <button
+                          type="button"
+                          className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md transition-colors"
+                          onClick={() =>
+                            signIn("gitlab", {
+                              // callbackUrl: "/auth/account-setup",
+                            })
+                          }
+                        >
+                          <Image
+                            src="/icon-auth-gitlab.svg"
+                            alt="GitLab"
+                            width={38}
+                            height={38}
+                            className="mr-2"
+                          />
+                          <span className="text-sm font-medium text-gray-700 dark:text-white">
+                            GitLab
+                          </span>
+                        </button>
 
-                      <button
-                        type="button"
-                        className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md transition-colors"
-                      >
-                        <Image
-                          src="/icon-auth-aws.svg"
-                          alt="AWS"
-                          width={38}
-                          height={38}
-                          className="mr-2"
-                        />
-                        <span className="text-sm font-medium text-gray-700 dark:text-white">
-                          AWS
-                        </span>
-                      </button>
+                        <button
+                          type="button"
+                          className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md transition-colors"
+                        >
+                          <Image
+                            src="/icon-auth-aws.svg"
+                            alt="AWS"
+                            width={38}
+                            height={38}
+                            className="mr-2"
+                          />
+                          <span className="text-sm font-medium text-gray-700 dark:text-white">
+                            AWS
+                          </span>
+                        </button>
 
-                      <button
-                        type="button"
-                        className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md transition-colors"
-                        onClick={() =>
-                          signIn("microsoft-entra-id", {
-                            // callbackUrl: "/auth/account-setup",
-                          })
-                        }
-                      >
-                        <Image
-                          src="/icon-auth-azure.svg"
-                          alt="Azure"
-                          width={38}
-                          height={38}
-                          className="mr-2"
-                        />
-                        <span className="text-sm font-medium text-gray-700 dark:text-white">
-                          Azure
-                        </span>
-                      </button>
-                    </div>
+                        <button
+                          type="button"
+                          className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md transition-colors"
+                          onClick={() =>
+                            signIn("microsoft-entra-id", {
+                              // callbackUrl: "/auth/account-setup",
+                            })
+                          }
+                        >
+                          <Image
+                            src="/icon-auth-azure.svg"
+                            alt="Azure"
+                            width={38}
+                            height={38}
+                            className="mr-2"
+                          />
+                          <span className="text-sm font-medium text-gray-700 dark:text-white">
+                            Azure
+                          </span>
+                        </button>
+                      </div>
+                    )}
 
                     {/* Demo Page Link */}
                     <div className="text-center">

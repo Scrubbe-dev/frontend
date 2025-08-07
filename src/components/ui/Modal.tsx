@@ -16,7 +16,7 @@ const Modal = ({ isOpen, onClose, children, className }: ModalProps) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+          className="fixed inset-0 -top-10 bg-black bg-opacity-60 flex items-center justify-center z-50"
         >
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
