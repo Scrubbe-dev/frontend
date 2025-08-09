@@ -45,8 +45,6 @@ const AboutHero = () => {
     getCurrentTimeForTimeZone(timeZones[4].zone)
   );
 
-  console.log(london, lagos, capetown);
-
   useEffect(() => {
     const interval = setInterval(() => {
       setLondon(getCurrentTimeForTimeZone(timeZones[0].zone));
@@ -85,11 +83,11 @@ const AboutHero = () => {
             Learn More
           </button>
         </div>{" "}
-        <div className="bg-[#F7F8FD] min-h-[300px] w-full rounded-lg mt-20 p-10 space-y-5 ">
+        <div className="bg-[#F7F8FD] min-h-[300px] w-full rounded-lg mt-20 p-5 md:p-10 space-y-5 ">
           <p className=" text-lg font-bold text-center">
             Monitoring threats across timezones
           </p>
-          <div className="grid grid-cols-5 place-items-center">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 place-items-center">
             <div className="flex flex-col items-center gap-3">
               <Clock value={london} />
               <div>
