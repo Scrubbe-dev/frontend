@@ -454,7 +454,7 @@ export function EzraChatWidget() {
           <MdOutlineSecurity className="text-blue-200 text-xl mr-3" />
 
           <h1 className="text-xl font-bold text-white">
-            Ezra, your on-demand AI security analyst{" "}
+            Ezra, your on-demand AI security agent{" "}
           </h1>
         </div>
 

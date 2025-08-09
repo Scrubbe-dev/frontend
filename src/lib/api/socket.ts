@@ -6,7 +6,7 @@ let socket: Socket;
 
 export const initSocket = () => {
   const token = getCookie(COOKIE_KEYS.TOKEN);
-  socket = io(process.env.NEXT_PUBLIC_API_BASE_URL, {
+  socket = io(process.env.NEXT_PUBLIC_SOCKET_BASE_URL, {
     // you could replace with our base url
     auth: {
       token, // set the user token
