@@ -11,7 +11,6 @@ export const initSocket = () => {
     auth: {
       token, // set the user token
     },
-    path: "/api/v1/incident-ticket/conversation",
   });
 
   return socket;

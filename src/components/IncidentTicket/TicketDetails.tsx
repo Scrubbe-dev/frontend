@@ -19,6 +19,8 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import TextArea from "../ui/text-area";
 import { toast } from "sonner";
+import PostMortem from "./PostMortem";
+import Integrations from "./Integrations";
 // import { Ticket } from './IncidateTicketPage';
 
 const TABS = [
@@ -81,6 +83,8 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
   const [isExcuteLockAccount, setIsExcuteLockAccount] = useState(false);
   const [isMergeTicket, setIsMergeTicket] = useState(false);
   const [isEscalateTicket, setIsEscalateTicket] = useState(false);
+  const [openPostMortem, setOpenPostMortem] = useState(false);
+  const [openIntegration, setOpenIntegration] = useState(false);
   const { get, put } = useFetch();
   const queryClient = useQueryClient();
 
@@ -409,9 +413,6 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
 
               {/* Action Buttons */}
               <div className="grid grid-cols-3 gap-3 mb-3">
-                <button className="bg-blue-600 text-white border border-blue-500 rounded-lg py-2 font-medium hover:bg-blue-700">
-                  Joggle JSON view
-                </button>
                 <button
                   className="bg-blue-600 text-white border border-blue-500 rounded-lg py-2 font-medium hover:bg-blue-700"
                   onClick={() => setIsMergeTicket(true)}
@@ -423,6 +424,13 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
                   className="bg-blue-600 text-white border border-blue-500 rounded-lg py-2 font-medium hover:bg-blue-700"
                 >
                   Escalate
+                </button>
+                <button
+                  disabled={!isValid || isPending}
+                  onClick={handleSubmit(handleUpdateTicket)}
+                  className="bg-blue-600 disabled:opacity-50 text-white rounded-lg py-2 font-medium hover:bg-blue-700"
+                >
+                  Update Ticket
                 </button>
               </div>
               <div className="grid grid-cols-3 gap-3 mb-3">
@@ -438,12 +446,19 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <button
-                  disabled={!isValid || isPending}
-                  onClick={handleSubmit(handleUpdateTicket)}
-                  className="bg-blue-600 disabled:opacity-50 text-white rounded-lg py-2 font-medium hover:bg-blue-700"
+                  onClick={() => setOpenPostMortem(true)}
+                  className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700"
                 >
-                  Update Ticket
+                  Post Mortem
                 </button>
+
+                <button
+                  onClick={() => setOpenIntegration(true)}
+                  className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700"
+                >
+                  Integration
+                </button>
+
                 <button
                   onClick={onClose}
                   className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700"
@@ -512,6 +527,14 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
             </CButton>
           </div>
         </div>
+      </Modal>
+
+      <Modal isOpen={openPostMortem} onClose={() => setOpenPostMortem(false)}>
+        <PostMortem ticket={ticket} />
+      </Modal>
+
+      <Modal isOpen={openIntegration} onClose={() => setOpenIntegration(false)}>
+        <Integrations />
       </Modal>
 
       <Modal isOpen={isMergeTicket} onClose={() => setIsMergeTicket(false)}>

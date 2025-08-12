@@ -1,7 +1,7 @@
 // context/RedirectContext.tsx
 "use client";
 import { COOKIE_KEYS } from "@/lib/constant";
-import { getCookie } from "cookies-next";
+import { getCookie, deleteCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
@@ -21,7 +21,8 @@ export const RedirectProvider = ({ children }: { children: ReactNode }) => {
   const triggerRedirect = (status: number) => {
     if (status === 401) {
       // Clear any authentication tokens from storage
-      localStorage.removeItem("authToken");
+      deleteCookie(COOKIE_KEYS.TOKEN);
+      deleteCookie(COOKIE_KEYS.REFRESH_TOKEN);
       // Set the state to trigger the redirect
       setShouldRedirect(true);
     }
@@ -30,7 +31,6 @@ export const RedirectProvider = ({ children }: { children: ReactNode }) => {
   React.useEffect(() => {
     const token = getCookie(COOKIE_KEYS.TOKEN);
     const refreshToken = getCookie(COOKIE_KEYS.REFRESH_TOKEN);
-
     if (!token && !refreshToken) {
       // const timeout = setTimeout(() => {
       router.push("/auth/signin");

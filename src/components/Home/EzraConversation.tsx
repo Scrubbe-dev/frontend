@@ -250,7 +250,7 @@ const EzraConversation = () => {
                   // transition={{ duration: 0.7, delay: 2.8 }}
                 >
                   <div className=" flex-1 bg-zinc-800 flex gap-3 items-center border border-zinc-600 rounded-lg h-10 px-2">
-                    <img src="ezrastar.svg" />
+                    <img src="ezrastar.svg" alt="" />
                     <p className="  text-zinc-400  ">
                       <TypeAnimation
                         sequence={[
