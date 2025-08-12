@@ -4,6 +4,7 @@ export const COOKIE_KEYS = {
   REFRESH_TOKEN: "REFRESH_TOKEN",
   ONBOARDING: "ONBOARDING",
   PUSH_NOTIFY: "PUSH_NOTIFY",
+  EXPIRED: "EXPIRED",
 };
 
 export const querykeys = {

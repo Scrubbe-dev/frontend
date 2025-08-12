@@ -16,6 +16,7 @@ import { querykeys } from "@/lib/constant";
 import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import { Loader } from "lucide-react";
+import SLADashboard from "./SLADashboard";
 
 ChartJS.register(
   CategoryScale,
@@ -115,7 +116,7 @@ const chartOptions = {
   },
 } as any;
 
-const tabs = [{ label: "Metrics" }, { label: "Trends" }];
+const tabs = [{ label: "Metrics" }, { label: "Trends" }, { label: "SLA" }];
 
 const IncidentAnalysis = ({ isOpen = true, onClose = () => {} }) => {
   const [activeTab, setActiveTab] = useState(0);
@@ -155,7 +156,7 @@ const IncidentAnalysis = ({ isOpen = true, onClose = () => {} }) => {
               className={`pb-2 font-medium transition-colors duration-200 focus:outline-none ${
                 activeTab === idx
                   ? "text-primary-500 border-b-2 border-primary"
-                  : "text-gray-400 border-b-2 border-transparent hover:text-[#14D8C8]"
+                  : "text-gray-400 border-b-2 border-transparent hover:text-primary-500"
               }`}
               onClick={() => setActiveTab(idx)}
             >
@@ -189,15 +190,13 @@ const IncidentAnalysis = ({ isOpen = true, onClose = () => {} }) => {
             </div>
           </div>
         )}
+
+        {activeTab === 2 && (
+          <div className=" max-w-5xl min-h-[340px]">
+            <SLADashboard />
+          </div>
+        )}
         {/* Close Button */}
-        <div className="flex justify-end mt-6">
-          <button
-            onClick={onClose}
-            className="px-6 py-2 rounded-lg bg-[#2563eb] text-white font-semibold hover:bg-[#1d4ed8] transition-colors text-lg"
-          >
-            Close
-          </button>
-        </div>
       </div>
     </Modal>
   );

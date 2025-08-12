@@ -11,7 +11,7 @@ const ProgressBar = ({ value, color }: ProgressBarProps) => (
     <motion.div
       initial={{ width: 0 }}
       animate={{ width: `${value}%` }}
-      transition={{ duration: 1, delay: 0.5, ease: "circIn", type: "spring" }}
+      transition={{ duration: 1, delay: 0.5, ease: "circIn", type: "tween" }}
       className={`h-1.5 rounded ${color}`}
     />
   </div>

@@ -21,7 +21,7 @@ import { endpoint } from "@/lib/api/endpoint";
 import moment from "moment";
 import EmptyState from "@/components/ui/EmptyState";
 import TableLoader from "../ui/LoaderUI/TableLoader";
-
+import useNotificationProvider from "@/hooks/useNotificationProvider";
 export type Ticket = {
   id: string;
   ticketId: string;
@@ -218,8 +218,9 @@ const IncidentTicketPage = () => {
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [isIncidentAnalysisOpen, setIsIncidentAnalysisOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
-  // const [statusFilter, setStatusFilter] = useState<string>("");
   const [openStatusFilter, setOpenStatusFilter] = useState<boolean>(false);
+  const { notification } = useNotificationProvider();
+
   const statusFilterRef = useRef<HTMLDivElement>(null);
   const { get } = useFetch();
   const { data, isLoading } = useQuery({
@@ -310,9 +311,11 @@ const IncidentTicketPage = () => {
             className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue"
           >
             Notifications{" "}
-            <span className=" bg-red-500 text-white h-5 w-5 text-sm rounded-full flex justify-center items-center">
-              1
-            </span>
+            {notification.length > 0 && (
+              <span className=" bg-red-500 text-white h-5 w-5 text-sm rounded-full flex justify-center items-center">
+                {notification.length}
+              </span>
+            )}
           </CButton>
           <CButton
             onClick={() => setIsCreateIncidentOpen(true)}
