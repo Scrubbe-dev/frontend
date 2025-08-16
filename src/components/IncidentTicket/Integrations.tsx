@@ -1,5 +1,5 @@
 // Integrations.tsx
-import React from "react";
+import React, { useState } from "react";
 import { FiX } from "react-icons/fi"; // Assumes react-icons
 
 // You would replace this with actual SVG or image imports
@@ -19,6 +19,13 @@ import {
 import { SiCalendly } from "react-icons/si";
 import { PiMicrosoftTeamsLogo } from "react-icons/pi";
 import { VscAzure } from "react-icons/vsc";
+import Modal from "../ui/Modal";
+import WhatsappIntegration from "./Integration/WhatsappIntegration";
+import SMSIntegration from "./Integration/SMSIntegration";
+import SlackIntegration from "./Integration/SlackIntegration";
+import GoogleMeetIntegration from "./Integration/GoogleMeetIntegration";
+import GithubIntegration from "./Integration/GithubIntegration";
+import GitlabIntegration from "./Integration/GitlabIntegration";
 
 // Array of all available integrations
 const integrations = [
@@ -127,6 +134,70 @@ const integrations = [
 ];
 
 const Integrations: React.FC = () => {
+  const [selectedIntegration, setSelectedIntegration] = useState<
+    string | undefined
+  >();
+
+  switch (selectedIntegration) {
+    case "WhatsApp":
+      return (
+        <Modal
+          isOpen={selectedIntegration === "WhatsApp"}
+          onClose={() => setSelectedIntegration(undefined)}
+        >
+          <WhatsappIntegration />
+        </Modal>
+      );
+
+    case "SMS":
+      return (
+        <Modal
+          isOpen={selectedIntegration === "SMS"}
+          onClose={() => setSelectedIntegration(undefined)}
+        >
+          <SMSIntegration />
+        </Modal>
+      );
+    case "Slack":
+      return (
+        <Modal
+          isOpen={selectedIntegration === "Slack"}
+          onClose={() => setSelectedIntegration(undefined)}
+        >
+          <SlackIntegration />
+        </Modal>
+      );
+    case "Google Meet":
+      return (
+        <Modal
+          isOpen={selectedIntegration === "Google Meet"}
+          onClose={() => setSelectedIntegration(undefined)}
+        >
+          <GoogleMeetIntegration />
+        </Modal>
+      );
+    case "GitHub":
+      return (
+        <Modal
+          isOpen={selectedIntegration === "GitHub"}
+          onClose={() => setSelectedIntegration(undefined)}
+        >
+          <GithubIntegration />
+        </Modal>
+      );
+    case "GitLab":
+      return (
+        <Modal
+          isOpen={selectedIntegration === "GitLab"}
+          onClose={() => setSelectedIntegration(undefined)}
+        >
+          <GitlabIntegration />
+        </Modal>
+      );
+    default:
+      break;
+  }
+
   return (
     <div className="p-8  min-h-screen">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white ">
@@ -162,7 +233,10 @@ const Integrations: React.FC = () => {
 
             {/* Action Buttons and Status */}
             <div className="ml-4 flex-shrink-0 flex flex-col items-end space-y-2">
-              <button className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50 focus:outline-none">
+              <button
+                onClick={() => setSelectedIntegration(integration.name)}
+                className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50 focus:outline-none"
+              >
                 Connect
               </button>
               <div className="flex items-center text-xs text-gray-500">
