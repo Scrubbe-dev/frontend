@@ -19,4 +19,16 @@ export const endpoint = {
     create: "/apikey/createapikey",
     get: "apikey/apikeys",
   },
+  integration: {
+    whatsapp: "/integrations/whatsapp/connect",
+    sms: "/integrations/sms/connect",
+    slack: "/integrations/slack/connect",
+    slack_callback: "/integrations/slack/oauth/callback",
+    googlemeet: "/integrations/google/meet/connect",
+    googlemeet_callback: "/integrations/google/meet/oauth/callback",
+    github: "/integrations/github/connect",
+    github_callback: "/integrations/github/callback",
+    gitlab: "/integrations/gitlab/connect",
+    gitlab_callback: "/integrations/gitlab/callback",
+  },
 };

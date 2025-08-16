@@ -20,7 +20,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import TextArea from "../ui/text-area";
 import { toast } from "sonner";
 import PostMortem from "./PostMortem";
-import Integrations from "./Integrations";
 // import { Ticket } from './IncidateTicketPage';
 
 const TABS = [
@@ -84,7 +83,6 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
   const [isMergeTicket, setIsMergeTicket] = useState(false);
   const [isEscalateTicket, setIsEscalateTicket] = useState(false);
   const [openPostMortem, setOpenPostMortem] = useState(false);
-  const [openIntegration, setOpenIntegration] = useState(false);
   const { get, put } = useFetch();
   const queryClient = useQueryClient();
 
@@ -453,13 +451,6 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
                 </button>
 
                 <button
-                  onClick={() => setOpenIntegration(true)}
-                  className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700"
-                >
-                  Integration
-                </button>
-
-                <button
                   onClick={onClose}
                   className="bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700"
                 >
@@ -531,10 +522,6 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
 
       <Modal isOpen={openPostMortem} onClose={() => setOpenPostMortem(false)}>
         <PostMortem ticket={ticket} />
-      </Modal>
-
-      <Modal isOpen={openIntegration} onClose={() => setOpenIntegration(false)}>
-        <Integrations />
       </Modal>
 
       <Modal isOpen={isMergeTicket} onClose={() => setIsMergeTicket(false)}>
