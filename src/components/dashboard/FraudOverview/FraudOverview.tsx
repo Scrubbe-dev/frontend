@@ -60,7 +60,7 @@ const FraudOverview = () => {
           icon={<Search className=" opacity-60 dark:text-white" />}
         />
       </div>
-      <div className="grid grid-cols-3 gap-5 w-full">
+      <div className="grid grid-cols-3 gap-5 w-full text-sm">
         <div className=" col-span-2 h-[350px] bg-white dark:bg-dark p-4 rounded-lg border">
           <div className="flex justify-between pb-4">
             <p className="dark:text-white font-medium ">
@@ -108,7 +108,7 @@ const FraudOverview = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-5 w-full mt-5">
+      <div className="grid grid-cols-2 gap-5 w-full mt-5 text-sm">
         <div className=" h-[350px] bg-white dark:bg-dark p-4 rounded-lg border">
           <div className="flex justify-between pb-4">
             <p className="dark:text-white font-medium ">
@@ -155,7 +155,7 @@ const FraudOverview = () => {
           <IPAddressMultipleAccountChart />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-5 w-full mt-5">
+      <div className="grid grid-cols-2 gap-5 w-full mt-5 text-sm">
         <div className=" h-[350px] bg-white dark:bg-dark p-4 rounded-lg border">
           <div className="flex justify-between pb-4">
             <p className="dark:text-white font-medium ">
@@ -202,7 +202,7 @@ const FraudOverview = () => {
           <SpeedVsLoginpointsChart />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-5 w-full mt-5">
+      <div className="grid grid-cols-2 gap-5 w-full mt-5 text-sm">
         <div className=" h-[350px] bg-white dark:bg-dark p-4 rounded-lg border">
           <div className="flex justify-between pb-4">
             <p className="dark:text-white font-medium ">
@@ -248,7 +248,7 @@ const FraudOverview = () => {
           <UserIdUniqueFingerprintsChart />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-5 w-full mt-5">
+      <div className="grid grid-cols-2 gap-5 w-full mt-5 text-sm">
         <div className=" h-[350px] bg-white dark:bg-dark p-4 rounded-lg border">
           <div className="flex justify-between pb-4">
             <p className="dark:text-white font-medium ">
@@ -294,7 +294,7 @@ const FraudOverview = () => {
           <IpAddressesVsAccountsChart />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-5 w-full mt-5">
+      <div className="grid grid-cols-2 gap-5 w-full mt-5 text-sm">
         <div className=" h-[350px] bg-white dark:bg-dark p-4 rounded-lg border">
           <div className="flex justify-between pb-4">
             <p className="dark:text-white font-medium ">
@@ -338,7 +338,7 @@ const FraudOverview = () => {
           <SessionIdVsDurationChart />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-5 w-full mt-5">
+      <div className="grid grid-cols-2 gap-5 w-full mt-5 text-sm">
         <div className=" h-[350px] bg-white dark:bg-dark p-4 rounded-lg border">
           <div className="flex justify-between pb-4">
             <p className="dark:text-white font-medium ">
@@ -384,7 +384,7 @@ const FraudOverview = () => {
           <ApiEndpointsAccessFrequencyChart />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-5 w-full mt-5">
+      <div className="grid grid-cols-2 gap-5 w-full mt-5 text-sm">
         <div className=" h-[350px] bg-white dark:bg-dark p-4 rounded-lg border">
           <div className="flex justify-between pb-4">
             <p className="dark:text-white font-medium ">
@@ -428,7 +428,7 @@ const FraudOverview = () => {
           <ApiEndpointsUserRoleChart />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-5 w-full mt-5">
+      <div className="grid grid-cols-2 gap-5 w-full mt-5 text-sm">
         <div className=" h-[350px] bg-white dark:bg-dark p-4 rounded-lg border">
           <div className="flex justify-between pb-4">
             <p className="dark:text-white font-medium ">
@@ -474,7 +474,7 @@ const FraudOverview = () => {
           <IpAddressDetectionFlagsChart />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-5 w-full mt-5">
+      <div className="grid grid-cols-2 gap-5 w-full mt-5 text-sm">
         <div className=" h-[350px] bg-white dark:bg-dark p-4 rounded-lg border">
           <div className="flex justify-between pb-4">
             <p className="dark:text-white font-medium ">

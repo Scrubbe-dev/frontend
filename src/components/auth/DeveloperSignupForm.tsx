@@ -466,7 +466,7 @@ export default function DeveloperSignupForm() {
                             <FcGoogle size={33} />
                           </div>
                           <span className="text-sm font-medium text-gray-700 dark:text-white">
-                            Goggle
+                            Google
                           </span>
                         </button>
                         <button

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from "react";
 import { BsInfoCircleFill } from "react-icons/bs";
 import { FaBook, FaTools } from "react-icons/fa";
@@ -12,9 +13,14 @@ import TextArea from "../ui/text-area";
 import Input from "../ui/input";
 import useAuthStore from "@/lib/stores/auth.store";
 import CButton from "../ui/Cbutton";
-import { ArrowLeft, ArrowRight, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Printer } from "lucide-react";
 import { Ticket } from "./IncidateTicketPage";
-import { FiX } from "react-icons/fi";
+import { FiCheck, FiX } from "react-icons/fi";
+import { useQuery } from "@tanstack/react-query";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import { usePostMortermForm } from "@/lib/stores/post-morterm";
+import { toast } from "sonner";
 
 const resolutionSteps = [
   {
@@ -55,8 +61,9 @@ const resolutionSteps = [
 ];
 type PostMortemProps = {
   ticket: Ticket;
+  onClose: () => void;
 };
-const PostMortem = ({ ticket }: PostMortemProps) => {
+const PostMortem = ({ ticket, onClose }: PostMortemProps) => {
   const [steps, setSteps] = useState("basic");
 
   let content: ReactNode;
@@ -78,29 +85,33 @@ const PostMortem = ({ ticket }: PostMortemProps) => {
       content = <Followup setSteps={setSteps} ticket={ticket} />;
       break;
     case "stakeholder":
-      content = <Stakeholder />;
+      content = <Stakeholder setSteps={setSteps} ticket={ticket} />;
       break;
     case "review":
-      content = <Review />;
+      content = <Review ticket={ticket} onClose={onClose} />;
       break;
     default:
       break;
   }
+
+  console.log({ steps });
   return (
-    <div className="flex min-h-[600px]">
-      <div className="min-w-[200px] border-r dark:border-neutral-600 border-neutral-200">
+    <div className="flex h-[700px] overflow-hidden">
+      <div className="min-w-[200px] border-r dark:border-neutral-600 border-neutral-200 relative">
         <p className=" text-lg font-semibold dark:text-white ">
           Resolution Steps
         </p>
 
-        <div className="w-full mt-5">
+        <div className="w-full mt-5 pr-3">
           {resolutionSteps.map(({ Icon, name, value }) => (
             <div
-              onClick={() => setSteps(value)}
               key={value}
+              onClick={() => setSteps(value)}
               className={` cursor-pointer ${
-                value == steps ? " dark:bg-white/20" : ""
-              } dark:text-white flex flex-row gap-3 items-center p-3 w-full`}
+                value === steps
+                  ? " dark:bg-white/10 bg-neutral-100 text-black dark:text-white "
+                  : "dark:text-white/70 text-neutral-500"
+              }  flex flex-row gap-3 items-center p-3 w-full rounded-md`}
             >
               <Icon size={18} />
               <p className=" text-sm">{name}</p>
@@ -108,7 +119,7 @@ const PostMortem = ({ ticket }: PostMortemProps) => {
           ))}
         </div>
       </div>
-      <div className="p-3 w-full">{content}</div>
+      <div className="p-3 w-full overscroll-y-scroll h-[700px]">{content}</div>
     </div>
   );
 };
@@ -133,7 +144,7 @@ const BasicDetails = ({ setSteps, ticket }: Props) => {
   const { user } = useAuthStore();
   const {
     control,
-    setValue,
+    reset,
     formState: { errors },
   } = useForm<FormType>({
     resolver: zodResolver(formScheme),
@@ -141,20 +152,24 @@ const BasicDetails = ({ setSteps, ticket }: Props) => {
 
   useEffect(() => {
     if (user && ticket) {
-      setValue("reporter", `${user.firstName} ${user.lastName}`);
-      setValue("priority", ticket.priority);
-      setValue("incidentId", ticket.ticketId);
-      setValue("reason", ticket.reason);
+      console.log("id", ticket.ticketId);
+      reset({
+        impactedSystem: "",
+        incidentId: ticket?.ticketId,
+        priority: ticket.priority,
+        reporter: `${user.firstName} ${user.lastName}`,
+        reason: ticket.reason,
+      });
     }
-  }, [setValue, user, ticket]);
+  }, [reset, user, ticket]);
 
   return (
     <div className=" w-full">
-      <h1 className="text-2xl font-bold dark:text-white text-black">
+      <h1 className="text-2xl font-bold dark:text-white text-black mb-3 ">
         Basic Details
       </h1>
       <Controller
-        name="template"
+        name="incidentId"
         control={control}
         render={({ field }) => (
           <Input
@@ -175,8 +190,9 @@ const BasicDetails = ({ setSteps, ticket }: Props) => {
             label="Description"
             rows={4}
             {...field}
-            className="w-full bg-transparent !text-black border border-gray-300 rounded-md p-2 text-sm "
+            className="w-full bg-transparent  border border-gray-300 rounded-md p-2 text-sm "
             error={errors.reason?.message}
+            readOnly
           />
         )}
       />
@@ -252,77 +268,194 @@ const BasicDetails = ({ setSteps, ticket }: Props) => {
     </div>
   );
 };
-const Analysis = ({ setSteps }: Props) => {
+const Analysis = ({ setSteps, ticket }: Props) => {
   const [selectedWhy, setSelectedWhy] = useState<number | null>();
-  const [gaps, setGaps] = useState(["Alert Missing", "Monitoring Gap"]);
+  // const [gaps, setGaps] = useState(["Alert Missing", "Monitoring Gap"]);
+  // const [gap, setGap] = useState("");
+  const { get } = useFetch();
+  const { updateForm } = usePostMortermForm();
+  const rootCauseAnalysisSchema = z.object({
+    causeCategory: z
+      .string({
+        required_error: "Please select a cause category.",
+      })
+      .min(1, "Please select a cause category."), // Ensure a value is selected
+    rootCause: z.string().min(1, "Root cause is required."),
+    fiveWhys: z.object({
+      why1: z.string().min(1, "Why 1 is required."),
+      why2: z.string().min(1, "Why 2 is required."),
+      why3: z.string().min(1, "Why 3 is required."),
+      why4: z.string().min(1, "Why 4 is required."),
+      why5: z.string().min(1, "Why 5 is required."),
+    }),
+  });
 
-  const handleRemoveGap = (index: number) => {
-    setGaps((prev: string[]) => {
-      const value = prev.filter((_, idx) => index !== idx);
-      return value;
-    });
+  type IFormType = z.infer<typeof rootCauseAnalysisSchema>;
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(rootCauseAnalysisSchema),
+  });
+
+  // const handleRemoveGap = (index: number) => {
+  //   setGaps((prev: string[]) => {
+  //     const value = prev.filter((_, idx) => index !== idx);
+  //     return value;
+  //   });
+  // };
+  const { data, isLoading, isRefetching } = useQuery({
+    queryKey: ["five-why"],
+    queryFn: async () => {
+      const res = await get(
+        endpoint.incident_ticket.postmorterm.five_why + "/" + ticket.id
+      );
+      console.log({ res });
+      if (res.success) {
+        return res.data;
+      }
+      return [];
+    },
+    refetchOnWindowFocus: false,
+  });
+
+  const onSubmit = (data: IFormType) => {
+    // Handle form submission logic here
+    updateForm({ value: { rootCauseAnalysis: data } });
+    setSteps("resolution");
   };
+
+  console.log({ errors });
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold dark:text-white text-black">
-        Root Cause Analysis
-      </h1>
-      <Select
-        options={[
-          { value: "", label: "Select Category" },
-          { value: "SOFTWARE_BUG", label: "Software Bug" },
-          { value: "NETWORK_ISSUE", label: "Network Issue" },
-          { value: "HUMAN_ERROR", label: "Human Error" },
-          { value: "DATA_BREACH", label: "Data Breach" },
-        ]}
-        label="Cause Category"
-      />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className=" overflow-y-auto h-[600px]">
+        <h1 className="text-2xl font-bold dark:text-white text-black">
+          Root Cause Analysis
+        </h1>
+        <br />
+        <Controller
+          name="causeCategory"
+          control={control}
+          render={({ field }) => (
+            <Select
+              label="Cause Category"
+              options={[
+                { value: "", label: "Select Category" },
+                { value: "SOFTWARE_BUG", label: "Software Bug" },
+                { value: "NETWORK_ISSUE", label: "Network Issue" },
+                { value: "HUMAN_ERROR", label: "Human Error" },
+                { value: "DATA_BREACH", label: "Data Breach" },
+              ]}
+              {...field} // Pass all field props (value, onChange, etc.)
+              error={errors.causeCategory?.message}
+            />
+          )}
+        />
 
-      <TextArea label="Root Cause" />
-      <div className=" space-y-2">
-        <p className=" dark:text-white">5 Whys</p>
-        <div className=" space-y-2 ">
-          {Array(5)
-            .fill(0)
-            .map((_, index) => (
-              <div key={index} className="">
-                <div
-                  onClick={() => setSelectedWhy(index)}
-                  className=" dark:text-white cursor-pointer font-medium p-3 rounded-md bg-neutral-50 dark:bg-subDark border dark:border-none border-neutral-200"
-                >
-                  Why {index + 1}:{" "}
-                </div>
-                {selectedWhy == index && (
-                  <div className="p-3  border dark:border-zinc-600 rounded-b-lg">
-                    <TextArea />
-                  </div>
-                )}
-              </div>
-            ))}
-        </div>
-      </div>
+        {/* 2. Root Cause Text Area */}
+        <Controller
+          name="rootCause"
+          control={control}
+          render={({ field }) => (
+            <TextArea
+              label="Root Cause"
+              {...field}
+              error={errors.rootCause?.message}
+            />
+          )}
+        />
 
-      <div className=" space-y-2 mt-3">
-        <p className=" dark:text-white">Detection Gap</p>
-        <div className="flex gap-2">
-          {gaps.map((gap, index) => (
-            <div
-              className=" rounded-full px-4 py-2 text-green-600 bg-green-100 dark:bg-green-500/10 text-xs flex items-center gap-2"
-              key={gap}
-            >
-              {gap}
-              <div
-                className=" cursor-pointer"
-                onClick={() => handleRemoveGap(index)}
-              >
-                <X size={16} />
-              </div>
+        {/* 3. Five Whys */}
+        <div className="space-y-2">
+          <p className="dark:text-white text-sm font-medium">5 Whys</p>
+
+          {isLoading || isRefetching ? (
+            <div className="space-y-4 mb-8 max-h-[500px] overflow-y-auto ">
+              <div className=" h-12 rounded-md bg-gray-100 animate-pulse-dot [animation-delay:-0.53s]" />
+              <div className=" h-12 rounded-md bg-gray-100 animate-pulse-dot [animation-delay:-0.32s]" />
+              <div className=" h-12 rounded-md bg-gray-100 animate-pulse-dot [animation-delay:-0.16s]" />
+              <div className=" h-12 rounded-md bg-gray-100 animate-pulse-dot" />
+              <div className=" h-12 rounded-md bg-gray-100 animate-pulse-dot" />
             </div>
-          ))}
+          ) : (
+            <div className="space-y-2">
+              {["why1", "why2", "why3", "why4", "why5"].map((why, index) => (
+                <div key={index}>
+                  {
+                    <>
+                      <div
+                        onClick={() => setSelectedWhy(index)}
+                        className="dark:text-white text-base cursor-pointer font-medium p-3 rounded-md bg-neutral-50 dark:bg-subDark border dark:border-none border-neutral-200"
+                      >
+                        Why {index + 1}:{data?.[why]}
+                      </div>
+                      {selectedWhy === index && (
+                        <div className="p-3 border dark:border-zinc-600 rounded-b-lg">
+                          <Controller
+                            name={`fiveWhys.${why}` as any}
+                            control={control}
+                            render={({ field }) => <TextArea {...field} />}
+                          />
+                        </div>
+                      )}
+                    </>
+                  }
+                </div>
+              ))}
+            </div>
+          )}
         </div>
+        {errors.fiveWhys && (
+          <p className="mt-2 text-red-500 text-sm">
+            All 5 &quot;Why&quot; fields are required.
+          </p>
+        )}
+
+        {/* <div className=" mt-2">
+        <label
+          className="block text-sm font-medium mb-1.5 dark:text-white"
+          htmlFor="stakeholders"
+        >
+          Detection Gap
+        </label>
+        <div className=" p-2 border border-gray-300 rounded-md">
+          <input
+            value={gap}
+            onChange={(e) => setGap(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key == "Enter") {
+                if (gap) {
+                  setGaps((prev) => [...prev, gap]);
+                  setGap("");
+                }
+              }
+            }}
+            className="w-full text-sm dark:bg-zinc-500 border-zinc-200 border rounded-md p-2 mb-2 dark:text-white"
+          />
+          <div className="flex flex-wrap items-center gap-2">
+            {gaps.map((s, index) => (
+              <span
+                key={index}
+                className="flex items-center space-x-1 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full"
+              >
+                <span>{s}</span>
+                <button
+                  onClick={() => handleRemoveGap(index)}
+                  className="text-blue-800 hover:text-blue-600 focus:outline-none"
+                >
+                  <FiX size={12} />
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div> */}
       </div>
 
-      <div className="flex gap-2 justify-end">
+      <div className="flex gap-2 justify-end my-4">
         <CButton
           type="button"
           className="w-fit border border-gray-300 hover:text-white text-colorScBlue dark:border-gray-700 bg-transparent"
@@ -330,27 +463,81 @@ const Analysis = ({ setSteps }: Props) => {
         >
           <ArrowLeft /> Previous
         </CButton>
-        <CButton
-          type="button"
-          className="w-fit"
-          onClick={() => setSteps("resolution")}
-        >
+        <CButton type="submit" className="w-fit">
           Next <ArrowRight />
         </CButton>
       </div>
-    </div>
+    </form>
   );
 };
 
 const Resolution = ({ setSteps }: Props) => {
+  const { updateForm } = usePostMortermForm();
+
+  const resolutionDetailsSchema = z.object({
+    temporaryFix: z.string().min(1, "Temporary fix is required."),
+    permanentFix: z.string().min(1, "Permanent fix is required."),
+  });
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(resolutionDetailsSchema),
+    defaultValues: {
+      temporaryFix: "",
+      permanentFix: "",
+    },
+  });
+
+  type IFormType = z.infer<typeof resolutionDetailsSchema>;
+
+  const onSubmit = (data: IFormType) => {
+    updateForm({
+      value: {
+        resolutionDetails: {
+          ...data,
+        },
+      },
+    });
+    setSteps("draft");
+  };
+
   return (
     <div className=" space-y-3">
       <h1 className="text-2xl font-bold dark:text-white text-black">
         Resolution Details
       </h1>
 
-      <TextArea label="Temporary Fix" />
-      <TextArea label="Permanent Fix" />
+      <div>
+        {/* Controller for Temporary Fix */}
+        <Controller
+          name="temporaryFix"
+          control={control}
+          render={({ field }) => (
+            <TextArea
+              label="Temporary Fix"
+              {...field}
+              error={errors.temporaryFix?.message}
+            />
+          )}
+        />
+      </div>
+      <div>
+        {/* Controller for Permanent Fix */}
+        <Controller
+          name="permanentFix"
+          control={control}
+          render={({ field }) => (
+            <TextArea
+              label="Permanent Fix"
+              {...field}
+              error={errors.permanentFix?.message}
+            />
+          )}
+        />
+      </div>
 
       <div className="flex gap-2 justify-end">
         <CButton
@@ -363,7 +550,7 @@ const Resolution = ({ setSteps }: Props) => {
         <CButton
           type="button"
           className="w-fit"
-          onClick={() => setSteps("draft")}
+          onClick={handleSubmit(onSubmit)}
         >
           Next <ArrowRight />
         </CButton>
@@ -374,12 +561,66 @@ const Resolution = ({ setSteps }: Props) => {
 
 const Draft = ({ setSteps }: Props) => {
   const [tabs, setTabs] = useState<"internal" | "customer">("internal");
+  const [tags, setTags] = useState(["Payment api", "500 Error"]);
+  const [tag, setTag] = useState("");
+  const { updateForm } = usePostMortermForm();
+
+  const handleRemoveTag = (index: number) => {
+    setTags((prev: string[]) => {
+      const value = prev.filter((_, idx) => index !== idx);
+      return value;
+    });
+  };
+
+  const knowledgeDraftSchema = z.object({
+    title: z.string().min(1, { message: "Title is required." }),
+    summary: z.string().min(1, { message: "Summary is required." }),
+    identificationSteps: z
+      .string()
+      .min(1, { message: "Identification steps are required." }),
+    resolutionSteps: z
+      .string()
+      .min(1, { message: "Resolution steps are required." }),
+    preventiveMeasures: z
+      .string()
+      .min(1, { message: "Preventive measures are required." }),
+  });
+  type IForm = z.infer<typeof knowledgeDraftSchema>;
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm({
+    resolver: zodResolver(knowledgeDraftSchema),
+  });
+
+  const onSubmit = (data: IForm) => {
+    if (tags.length === 0) {
+      setError("root", { message: "At least one tag is required." });
+      return;
+    }
+
+    const formData = { ...data, tags };
+
+    updateForm({
+      value: {
+        knowledgeDraft: {
+          internalKb: formData,
+        },
+      },
+    });
+    setSteps("follow-up");
+    // You can now submit this formData to your API
+  };
+
   return (
     <div>
       <h1 className="text-2xl font-bold dark:text-white text-black">
         Knowledge Base Draft
       </h1>
-      <div className="flex gap-3 border-b border-gray-300 dark:border-gray-600 mt-3">
+      <div className="flex gap-3 border-b border-gray-300 dark:border-gray-600 mt-3 text-base">
         <div
           className={`px-3 py-2 cursor-pointer ${
             tabs == "internal"
@@ -402,15 +643,115 @@ const Draft = ({ setSteps }: Props) => {
         </div>
       </div>
 
-      <div className="mt-3">
+      <div className="mt-3 overflow-y-auto h-[550px] pb-10">
         {tabs === "internal" && (
           <div>
-            <Input label="Title" />
-            <TextArea label="Summary" />
-            <TextArea label="Identification Steps" />
-            <TextArea label="Resolution Steps" />
-            <TextArea label="Preventive Measures" />
-            <TextArea label="Preventive Measures" />
+            <Controller
+              name="title"
+              control={control}
+              render={({ field }) => (
+                <Input label="Title" {...field} error={errors.title?.message} />
+              )}
+            />
+
+            {/* Summary */}
+            <Controller
+              name="summary"
+              control={control}
+              render={({ field }) => (
+                <TextArea
+                  label="Summary"
+                  {...field}
+                  error={errors.summary?.message}
+                />
+              )}
+            />
+
+            {/* Identification Steps */}
+            <Controller
+              name="identificationSteps"
+              control={control}
+              render={({ field }) => (
+                <TextArea
+                  label="Identification Steps"
+                  {...field}
+                  error={errors.identificationSteps?.message}
+                />
+              )}
+            />
+
+            {/* Resolution Steps */}
+            <Controller
+              name="resolutionSteps"
+              control={control}
+              render={({ field }) => (
+                <TextArea
+                  label="Resolution Steps"
+                  {...field}
+                  error={errors.resolutionSteps?.message}
+                />
+              )}
+            />
+
+            {/* Preventive Measures */}
+            <Controller
+              name="preventiveMeasures"
+              control={control}
+              render={({ field }) => (
+                <TextArea
+                  label="Preventive Measures"
+                  {...field}
+                  error={errors.preventiveMeasures?.message}
+                />
+              )}
+            />
+
+            <div className=" mt-2">
+              <label
+                className="block text-sm font-medium mb-1.5 dark:text-white"
+                htmlFor="stakeholders"
+              >
+                Tags
+              </label>
+              <div className=" p-2 border border-gray-300 rounded-md">
+                <input
+                  value={tag}
+                  onChange={(e) => setTag(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key == "Enter") {
+                      if (tag) {
+                        setTags((prev) => [...prev, tag]);
+                        setTag("");
+                      }
+                    }
+                  }}
+                  className="w-full text-sm bg-transparent border-zinc-200 border rounded-md p-2 mb-2 dark:text-white "
+                />
+                <div className="flex flex-wrap items-center gap-2">
+                  {tags.map((s, index) => (
+                    <span
+                      key={index}
+                      className="flex items-center space-x-1 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full"
+                    >
+                      <span>{s}</span>
+                      <button
+                        onClick={() => handleRemoveTag(index)}
+                        className="text-blue-800 hover:text-blue-600 focus:outline-none"
+                      >
+                        <FiX size={12} />
+                      </button>
+                    </span>
+                  ))}
+                  {/* Input for adding more stakeholders would go here */}
+                </div>
+              </div>
+
+              {errors.root && (
+                <p className="text-red-500 mt-2 text-sm">
+                  At least one tag is required.
+                </p>
+              )}
+            </div>
           </div>
         )}
         {tabs === "customer" && (
@@ -432,7 +773,7 @@ const Draft = ({ setSteps }: Props) => {
         <CButton
           type="button"
           className="w-fit"
-          onClick={() => setSteps("follow-up")}
+          onClick={handleSubmit(onSubmit)}
         >
           Next <ArrowRight />
         </CButton>
@@ -441,8 +782,176 @@ const Draft = ({ setSteps }: Props) => {
   );
 };
 const Followup = ({ setSteps }: Props) => {
+  const followUpActionsSchema = z.object({
+    task: z.string().min(1, { message: "Task is required." }),
+    owner: z.string().min(1, { message: "Owner is required." }),
+    dueDate: z.string().min(1, { message: "Due date is required." }),
+    status: z.string().min(1, { message: "Status is required." }),
+    ticketingSystems: z.array(z.string()).min(1, {
+      message: "At least one ticketing system must be selected.",
+    }),
+  });
+  const { updateForm } = usePostMortermForm();
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(followUpActionsSchema),
+    defaultValues: {
+      task: "",
+      owner: "",
+      dueDate: "",
+      status: "",
+      ticketingSystems: [],
+    },
+  });
+
+  const Checkbox = ({ label, ...props }: any) => (
+    <label>
+      <input type="checkbox" {...props} />{" "}
+      <span className="dark:text-white text-sm">{label}</span>
+    </label>
+  );
+
+  const onSubmit = (value: z.infer<typeof followUpActionsSchema>) => {
+    updateForm({
+      value: {
+        followUpActions: value,
+      },
+    });
+    setSteps("stakeholder");
+  };
+
   return (
     <div>
+      <h2 className="text-xl font-bold mb-4 dark:text-white">
+        Follow-Up Actions
+      </h2>
+      <div className="grid grid-cols-4 gap-4 items-center border-b pb-2 mb-2">
+        <div className="font-semibold text-sm dark:text-white">Task *</div>
+        <div className="font-semibold text-sm dark:text-white">Owner *</div>
+        <div className="font-semibold text-sm dark:text-white">Due Date *</div>
+        <div className="font-semibold text-sm dark:text-white">Status</div>
+      </div>
+
+      <div className="grid grid-cols-4 gap-4 items-center">
+        <Controller
+          name="task"
+          control={control}
+          render={({ field }) => <Input {...field} placeholder="Patch API" />}
+        />
+        <Controller
+          name="owner"
+          control={control}
+          render={({ field }) => <Input {...field} placeholder="Jane Smith" />}
+        />
+        <Controller
+          name="dueDate"
+          control={control}
+          render={({ field }) => <Input type="date" {...field} />}
+        />
+        <Controller
+          name="status"
+          control={control}
+          render={({ field }) => (
+            <Select
+              {...field}
+              options={[
+                { value: "", label: "Select Status" },
+                { value: "NOT_STARTED", label: "Not Started" },
+                { value: "IN_PROGRESS", label: "In Progress" },
+                { value: "COMPLETED", label: "Completed" },
+              ]}
+            />
+          )}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-2">
+        <div>
+          {errors.task && (
+            <p className="text-red-500 text-sm">{errors.task.message}</p>
+          )}
+        </div>
+        <div>
+          {errors.owner && (
+            <p className="text-red-500 text-sm">{errors.owner.message}</p>
+          )}
+        </div>
+        <div>
+          {errors.dueDate && (
+            <p className="text-red-500 text-sm">{errors.dueDate.message}</p>
+          )}
+        </div>
+        <div>
+          {errors.status && (
+            <p className="text-red-500 text-sm">{errors.status.message}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-6 ">
+        <div className="font-semibold mb-2 dark:text-white">
+          Ticketing Systems
+        </div>
+        <Controller
+          name="ticketingSystems"
+          control={control}
+          render={({ field }) => (
+            <div className="flex flex-col gap-2">
+              <Checkbox
+                label="Create Jira Tickets"
+                value="JIRA"
+                checked={field.value.includes("JIRA")}
+                onChange={(e: any) => {
+                  if (e.target.checked) {
+                    field.onChange([...field.value, e.target.value]);
+                  } else {
+                    field.onChange(
+                      field.value.filter((val) => val !== e.target.value)
+                    );
+                  }
+                }}
+              />
+              <Checkbox
+                label="Create ServiceNow Tickets"
+                value="SERVICE_NOW"
+                checked={field.value.includes("SERVICE_NOW")}
+                onChange={(e: any) => {
+                  if (e.target.checked) {
+                    field.onChange([...field.value, e.target.value]);
+                  } else {
+                    field.onChange(
+                      field.value.filter((val) => val !== e.target.value)
+                    );
+                  }
+                }}
+              />
+              <Checkbox
+                label="Create Freshdesk Tickets"
+                value="FRESH_DESK"
+                checked={field.value.includes("FRESH_DESK")}
+                onChange={(e: any) => {
+                  if (e.target.checked) {
+                    field.onChange([...field.value, e.target.value]);
+                  } else {
+                    field.onChange(
+                      field.value.filter((val) => val !== e.target.value)
+                    );
+                  }
+                }}
+              />
+            </div>
+          )}
+        />
+        {errors.ticketingSystems && (
+          <p className="text-red-500 text-sm mt-2">
+            {errors.ticketingSystems.message}
+          </p>
+        )}
+      </div>
       <div className="flex gap-2 justify-end">
         <CButton
           type="button"
@@ -454,7 +963,7 @@ const Followup = ({ setSteps }: Props) => {
         <CButton
           type="button"
           className="w-fit"
-          onClick={() => setSteps("stakeholder")}
+          onClick={handleSubmit(onSubmit)}
         >
           Next <ArrowRight />
         </CButton>
@@ -462,20 +971,47 @@ const Followup = ({ setSteps }: Props) => {
     </div>
   );
 };
-const Stakeholder = () => {
+const Stakeholder = ({ ticket, setSteps }: Props) => {
   const [channel, setChannel] = useState("Slack");
   const [stakeholders, setStakeholders] = useState(["Customers", "Regulators"]);
-  const [messageContent, setMessageContent] = useState(
-    "Payment gateway issue resolved as of August 8, 2025. All services are fully operational."
-  );
-  const [messagePreview, setMessagePreview] = useState("");
+  const [stakeholder, setStakeholder] = useState("");
+  const [messageContent, setMessageContent] = useState("");
+  const { get } = useFetch();
+  const [isLoading, setIsLoading] = useState(false);
+  const { updateForm } = usePostMortermForm();
+
+  const getMessage = async () => {
+    setIsLoading(true);
+    const res = await get(
+      endpoint.incident_ticket.postmorterm.stakeholder + "/" + ticket.id
+    );
+    setIsLoading(false);
+    console.log({ res });
+    if (res.success) {
+      setMessageContent(res.data.message);
+    }
+  };
 
   useEffect(() => {
-    setMessagePreview(`Slack Message:\n${messageContent}`);
-  }, [messageContent]);
+    getMessage();
+  }, []);
 
   const removeStakeholder = (stakeholderToRemove: string) => {
     setStakeholders(stakeholders.filter((s) => s !== stakeholderToRemove));
+  };
+
+  const onSubmit = () => {
+    const data = {
+      communicationChannel: channel ?? "slack",
+      targetStakeholders: stakeholders ?? ["customer"],
+      messageContent: messageContent,
+    };
+    updateForm({
+      value: {
+        stakeHolder: data,
+      },
+    });
+    setSteps("review");
   };
 
   return (
@@ -489,16 +1025,10 @@ const Stakeholder = () => {
         <div className="mb-6 space-y-6 mt-3">
           {/* Communication Channel */}
           <div>
-            <label
-              className="block text-sm font-medium mb-1.5"
-              htmlFor="channel"
-            >
-              Communication Channel <span className="text-red-500">*</span>
-            </label>
             <div className="relative">
               <Select
+                label=" Communication Channel"
                 id="channel"
-                label="Communication Channel"
                 value={channel}
                 onChange={(e) => setChannel(e.target.value)}
                 options={[
@@ -507,16 +1037,20 @@ const Stakeholder = () => {
                     label: "Select Channel",
                   },
                   {
-                    value: "Slack",
+                    value: "SLACK",
                     label: "Slack",
                   },
                   {
-                    value: "Email",
+                    value: "EMAIL",
                     label: "Email",
                   },
                   {
-                    value: "SMS",
-                    label: "SMS",
+                    value: "PUBLIC_ANNOUNCEMENT",
+                    label: "Public Announcement",
+                  },
+                  {
+                    value: "CUSTOMER_PORTAL",
+                    label: "Customer Portal",
                   },
                 ]}
               />
@@ -531,22 +1065,33 @@ const Stakeholder = () => {
             >
               Target Stakeholders
             </label>
-            <div className="flex flex-wrap items-center gap-2 p-2 border border-gray-300 rounded-md">
-              {stakeholders.map((s, index) => (
-                <span
-                  key={index}
-                  className="flex items-center space-x-1 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full"
-                >
-                  <span>{s}</span>
-                  <button
-                    onClick={() => removeStakeholder(s)}
-                    className="text-blue-800 hover:text-blue-600 focus:outline-none"
+            <div className=" p-2 border border-gray-300 rounded-md">
+              <input
+                onChange={(e) => setStakeholder(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key == "Enter") {
+                    setStakeholders((prev) => [...prev, stakeholder]);
+                  }
+                }}
+                className="w-full bg-transparent border-zinc-200 border rounded-md p-2 mb-2 dark:text-white"
+              />
+              <div className="flex flex-wrap items-center gap-2">
+                {stakeholders.map((s, index) => (
+                  <span
+                    key={index}
+                    className="flex items-center space-x-1 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full"
                   >
-                    <FiX size={12} />
-                  </button>
-                </span>
-              ))}
-              {/* Input for adding more stakeholders would go here */}
+                    <span>{s}</span>
+                    <button
+                      onClick={() => removeStakeholder(s)}
+                      className="text-blue-800 hover:text-blue-600 focus:outline-none"
+                    >
+                      <FiX size={12} />
+                    </button>
+                  </span>
+                ))}
+                {/* Input for adding more stakeholders would go here */}
+              </div>
             </div>
           </div>
 
@@ -565,25 +1110,111 @@ const Stakeholder = () => {
         <div className="mb-6 p-4 bg-gray-50 rounded-md border border-gray-200">
           <h2 className="text-sm font-semibold mb-2">Communication Preview</h2>
           <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono">
-            {messagePreview}
+            {`Slack Message:\n ${messageContent}`}
           </pre>
         </div>
 
         {/* Action Buttons */}
         <div className="flex items-center space-x-4 mb-8">
-          <CButton className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-            <span>Generate Stakeholder Message with AI</span>
+          <CButton
+            onClick={getMessage}
+            isLoading={isLoading}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            <span>
+              {isLoading ? "Generating" : "Re-generate"} Stakeholder Message
+              with AI
+            </span>
           </CButton>
           <CButton className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-800 font-medium rounded-md hover:bg-gray-200 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
             <span>Send RCA to Stakeholders</span>
           </CButton>
         </div>
 
+        <div className="flex gap-2 justify-end">
+          <CButton
+            type="button"
+            className="w-fit border border-gray-300 hover:text-white text-colorScBlue dark:border-gray-700 bg-transparent"
+            onClick={() => setSteps("draft")}
+          >
+            <ArrowLeft /> Previous
+          </CButton>
+          <CButton type="button" className="w-fit" onClick={onSubmit}>
+            Next <ArrowRight />
+          </CButton>
+        </div>
         {/* Communication History */}
       </div>
     </div>
   );
 };
-const Review = () => {
-  return <div></div>;
+
+const Review = ({
+  ticket,
+  onClose,
+}: {
+  ticket: Ticket;
+  onClose: () => void;
+}) => {
+  const { formValue } = usePostMortermForm();
+  const { post } = useFetch();
+  const [isLoading, setIsLoading] = useState(false);
+  const handleSubmit = async () => {
+    console.log(JSON.stringify(formValue, null, 2));
+    setIsLoading(true);
+    const res = await post(
+      endpoint.incident_ticket.postmorterm.resolve + "/" + ticket.id,
+      formValue
+    );
+    setIsLoading(false);
+    console.log({ res });
+    if (res.success) {
+      toast.success("Incident Resolved Successful");
+      onClose();
+    } else {
+      toast.success("Incident Couldn't Resolve, Try again!");
+    }
+  };
+
+  return (
+    <div className="">
+      <h1 className="text-2xl font-bold mb-6 dark:text-white">
+        Review & Submit
+      </h1>
+
+      {/* Checklist Section */}
+      <div className="space-y-4 text-sm">
+        <div className="flex items-center space-x-2 text-green-700 font-medium">
+          <FiCheck size={20} className="stroke-current" />
+          <span>RCA Complete</span>
+        </div>
+        <div className="flex items-center space-x-2 text-green-700 font-medium">
+          <FiCheck size={20} className="stroke-current" />
+          <span>KB Draft Ready</span>
+        </div>
+        <div className="flex items-center space-x-2 text-green-700 font-medium">
+          <FiCheck size={20} className="stroke-current" />
+          <span>Follow-Up Tasks Assigned</span>
+        </div>
+        <div className="flex items-center space-x-2 text-red-700 font-medium">
+          <FiX size={20} className="stroke-current" />
+          <span>Stakeholder Communications Sent</span>
+        </div>
+      </div>
+
+      {/* Buttons Section */}
+      <div className="mt-8 flex justify-end space-x-4">
+        <CButton className="flex w-fit items-center gap-2 text-sm px-6 py-3 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition-colors">
+          <Printer size={16} /> Export to PDF
+        </CButton>
+        <CButton
+          isLoading={isLoading}
+          onClick={handleSubmit}
+          className="!px-6 !py-3 bg-gray-400 text-sm w-fit text-white font-semibold rounded-md hover:bg-gray-500 transition-colors"
+        >
+          Close Incident & Save RCA
+        </CButton>
+      </div>
+    </div>
+  );
 };

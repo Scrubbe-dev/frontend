@@ -130,17 +130,17 @@ const CentralLog = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-4 flex-1 justify-end">
-            <div className="flex gap-2 items-center border border-gray-200 dark:border-gray-700 rounded-md px-4 p-3 text-black/70 hover:text-black dark:text-white/70 hover:dark:text-white cursor-pointer">
-              <IoFilter />
+          <div className="flex items-center gap-2 flex-1 justify-end">
+            <CButton className="w-fit !bg-transparent flex gap-2 text-sm items-center border border-gray-200 dark:border-gray-700 rounded-md px-3 p-2 text-black/70 hover:text-black dark:text-white/70 hover:dark:text-white cursor-pointer">
+              <IoFilter size={16} />
               <p>Last 24 hours</p>
               <ChevronDown />
-            </div>
-            <div className="flex gap-2 items-center border border-gray-200 dark:border-gray-700 rounded-md px-4 p-3 text-black/70 hover:text-black dark:text-white/70 hover:dark:text-white cursor-pointer">
-              <IoFilter />
+            </CButton>
+            <CButton className="w-fit !bg-transparent flex gap-2 text-sm items-center border border-gray-200 dark:border-gray-700 rounded-md px-2 p-2 text-black/70 hover:text-black dark:text-white/70 hover:dark:text-white cursor-pointer">
+              <IoFilter size={16} />
               <p>All Severity</p>
               <ChevronDown />
-            </div>
+            </CButton>
 
             <CButton className=" w-fit">Export</CButton>
             <CButton className=" w-fit">Ezra</CButton>

@@ -40,79 +40,6 @@ export type Ticket = {
   template: string;
 };
 
-// const ticketData: Ticket[] = [
-//   {
-//     id: "INC52527",
-//     reason: "User reported a bug",
-//     username: "John Doe",
-//     priority: "medium",
-//     status: "closed",
-//     assignedTo: "Admin 1",
-//     score: 5,
-//     createdAt: "2025-05-26 09:00:00",
-//   },
-//   {
-//     id: "INC52527",
-//     reason: "User reported a bug",
-//     username: "John Doe",
-//     priority: "high",
-//     status: "open",
-//     assignedTo: "Admin 1",
-//     score: 5,
-//     createdAt: "2025-05-26 09:00:00",
-//   },
-//   {
-//     id: "INC52527",
-//     reason: "User reported a bug",
-//     username: "John Doe",
-//     priority: "low",
-//     status: "open",
-//     assignedTo: "Admin 1",
-//     score: 5,
-//     createdAt: "2025-05-26 09:00:00",
-//   },
-//   {
-//     id: "INC52527",
-//     reason: "User reported a bug",
-//     username: "John Doe",
-//     priority: "high",
-//     status: "in-progress",
-//     assignedTo: "Admin 1",
-//     score: 5,
-//     createdAt: "2025-05-26 09:00:00",
-//   },
-//   {
-//     id: "INC52527",
-//     reason: "User reported a bug",
-//     username: "John Doe",
-//     priority: "high",
-//     status: "on-hold",
-//     assignedTo: "Admin 1",
-//     score: 5,
-//     createdAt: "2025-05-26 09:00:00",
-//   },
-//   {
-//     id: "INC52527",
-//     reason: "User reported a bug",
-//     username: "John Doe",
-//     priority: "high",
-//     status: "open",
-//     assignedTo: "Admin 1",
-//     score: 5,
-//     createdAt: "2025-05-26 09:00:00",
-//   },
-//   {
-//     id: "INC52527",
-//     reason: "User reported a bug",
-//     username: "John Doe",
-//     priority: "high",
-//     status: "open",
-//     assignedTo: "Admin 1",
-//     score: 5,
-//     createdAt: "2025-05-26 09:00:00",
-//   },
-// ];
-
 const columns = [
   {
     accessorKey: "ticketId",
@@ -241,6 +168,7 @@ const IncidentTicketPage = () => {
         return [];
       }
     },
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
@@ -353,7 +281,7 @@ const IncidentTicketPage = () => {
           <div className="relative w-1/2">
             <Input placeholder="Search Tickets" />
             <div className="absolute right-2 top-2/4 -translate-y-2/3 pb-2">
-              <SearchIcon size={20} className="dark:text-white text-black" />
+              <SearchIcon size={18} className="dark:text-white text-black" />
             </div>
           </div>
 

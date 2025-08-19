@@ -559,12 +559,12 @@ const PlaybookBuilder = () => {
             <p className="text-lg font-bold dark:text-white">
               Build a Playbook
             </p>
-            <p className="text-gray-500 dark:text-gray-400">
+            <p className="text-gray-500 dark:text-gray-400 text-base">
               Drag and drop actions to create a security playbook. Use
               conditions for branching workflow
             </p>
           </div>
-          <div className="flex gap-4 border-b dark:border-gray-700 border-gray-100">
+          <div className="flex gap-4 border-b dark:border-gray-700 border-gray-100 text-base">
             <div
               className={` px-4 py-2 border-b-2 dark:border-colorScBlue text-colorScBlue`}
             >
@@ -697,7 +697,7 @@ const PlaybookBuilder = () => {
               fitView
             />
           </div>
-          <div className="flex gap-2 mt-4 dark:text-white">
+          <div className="flex gap-2 mt-4 dark:text-white text-base">
             <button onClick={handleClear} className="border px-3 py-1 rounded">
               Clear
             </button>

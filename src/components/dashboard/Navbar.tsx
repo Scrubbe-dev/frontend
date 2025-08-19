@@ -29,14 +29,14 @@ const Navbar = () => {
   }, [menu]);
   return (
     <div>
-      <div className="h-[80px] w-full border-b border-blue-400/50  flex justify-between items-center px-[3%]">
-        <div className=" w-[50%] dark:bg-zinc-800 bg-zinc-100 flex gap-3 items-center border border-zinc-200 dark:border-zinc-600 rounded-lg h-[48px] px-2">
+      <div className="h-[70px] w-full border-b border-neutral-200 dark:border-blue-400/50  flex justify-between items-center px-[3%]">
+        <div className=" w-[50%] dark:bg-zinc-800 bg-zinc-100 flex gap-3 items-center border border-zinc-200 dark:border-zinc-600 rounded-lg h-[38px] px-2">
           <input
             type="text"
             placeholder="Search..."
             className="bg-transparent outline-none dark:text-white w-full"
           />
-          <Search />
+          <Search className="dark:text-white" size={18} />
         </div>
 
         <div className="flex items-center gap-3">
@@ -44,10 +44,10 @@ const Navbar = () => {
             onClick={() => setMenu((prev) => !prev)}
             className="flex items-center gap-1 relative"
           >
-            <div className=" cursor-pointer size-9 rounded-full bg-zinc-700 flex justify-center items-center text-[80%] text-white">
+            <div className=" cursor-pointer size-7 rounded-full bg-zinc-700 flex justify-center items-center text-sm text-white">
               {user?.firstName?.[0]}.{user?.lastName?.[0]}
             </div>
-            <ChevronDown className=" text-zinc-400" />
+            <ChevronDown className=" text-zinc-400" size={16} />
 
             {menu && (
               <div
@@ -74,10 +74,14 @@ const Navbar = () => {
           <div className="animated-gradient p-[2px] rounded-3xl">
             <Link
               href={"/ezra/dashboard"}
-              className=" bg-[#111827] gap-2 px-6 py-2 text-white rounded-3xl font-medium flex items-center"
+              className=" bg-[#111827] gap-2 px-6 py-2 text-white rounded-3xl font-medium text-sm flex items-center"
             >
               Ezra Ai
-              <img src="/ezrastar1.svg" alt="ezrastar1.svg" />
+              <img
+                src="/ezrastar1.svg"
+                alt="ezrastar1.svg"
+                className=" size-4"
+              />
               {/* <PiStarFourFill className=" text-blue-500" size={22} /> */}
             </Link>
           </div>

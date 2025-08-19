@@ -1,4 +1,5 @@
 import React from "react";
+import { PiGreaterThanBold, PiLessThanBold } from "react-icons/pi";
 
 interface PaginationProps {
   page: number;
@@ -43,13 +44,13 @@ const Pagination: React.FC<PaginationProps> = ({
         disabled={page === 1}
         aria-label="Previous page"
       >
-        &lt;
+        <PiLessThanBold size={16} />
       </button>
       {pageNumbers.map((p, i) =>
         typeof p === "number" ? (
           <button
             key={i}
-            className={`w-8 h-8 flex items-center justify-center rounded-full ${
+            className={`w-8 h-8 flex items-center justify-center rounded-full text-sm ${
               p === page
                 ? "bg-blue-100 text-blue-700"
                 : "hover:bg-zinc-100 text-zinc-700"
@@ -62,7 +63,7 @@ const Pagination: React.FC<PaginationProps> = ({
         ) : (
           <span
             key={i}
-            className="w-8 h-8 flex items-center justify-center text-zinc-400"
+            className="w-8 h-8 flex items-center justify-center text-zinc-400 "
           >
             {p}
           </span>
@@ -74,7 +75,7 @@ const Pagination: React.FC<PaginationProps> = ({
         disabled={page === totalPages}
         aria-label="Next page"
       >
-        &gt;
+        <PiGreaterThanBold size={16} />
       </button>
     </div>
   );

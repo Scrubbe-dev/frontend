@@ -12,6 +12,21 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontSize: {
+        xs: "0.625rem" /* was 0.75rem (12px) -> now 10px */,
+        sm: "0.75rem" /* was 0.875rem (14px) -> now 12px */,
+        base: "0.875rem" /* was 1rem (16px) -> now 14px */,
+        lg: "1rem" /* was 1.125rem (18px) -> now 16px */,
+        xl: "1.0625rem" /* was 1.25rem (20px) -> now 18px */,
+        "2xl": "1.375rem" /* was 1.5rem (24px) -> now 22px */,
+        "3xl": "1.625rem" /* was 1.875rem (30px) -> now 26px */,
+        "4xl": "2.0625rem" /* was 2.25rem (36px) -> now 34px */,
+        "5xl": "2.875rem" /* was 3rem (48px) -> now 46px */,
+        "6xl": "3.875rem" /* was 4rem (64px) -> now 62px */,
+        "7xl": "4.875rem" /* was 5rem (80px) -> now 78px */,
+        "8xl": "5.875rem" /* was 6rem (96px) -> now 94px */,
+        "9xl": "7.875rem" /* was 8rem (128px) -> now 126px */,
+      },
       fontFamily: {
         Montserrat: ["Montserrat", "sans-serif"],
         Raleway: ["Raleway", "sans-serif"],

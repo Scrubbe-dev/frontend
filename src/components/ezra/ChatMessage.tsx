@@ -29,7 +29,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
         isAI ? "justify-start" : "justify-end"
       } mb-4 animate-fade-in ${className}`}
     >
-      <div className={` p-4 rounded-lg shadow-md ${bubbleClasses}`}>
+      <div className={` p-4 rounded-lg text-base shadow-md ${bubbleClasses}`}>
         {children}
         {timestamp && (
           <div

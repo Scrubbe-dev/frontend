@@ -448,17 +448,14 @@ export default function BusinessSignupForm() {
                           label="What do you need scrubbe for?"
                           options={[
                             { value: "", label: "Select Purpose" },
-                            { value: "code-review", label: "Code Review" },
                             {
-                              value: "security-scanning",
-                              label: "Security Scanning",
+                              value: "Incident Management System (IMS)",
+                              label: "Incident Management System (IMS)",
                             },
                             {
-                              value: "quality-assurance",
-                              label: "Quality Assurance",
+                              value: "Fraud Management + Incident Management",
+                              label: "Fraud Management + Incident Management",
                             },
-                            { value: "compliance", label: "Compliance" },
-                            { value: "other", label: "Other" },
                           ]}
                           error={errors.purpose?.message}
                           isLoading={isLoading}
@@ -524,7 +521,7 @@ export default function BusinessSignupForm() {
                         <FcGoogle size={33} />
                       </div>
                       <span className="text-sm font-medium text-gray-700 dark:text-white">
-                        Goggle
+                        Google
                       </span>
                     </button>
                     <button

@@ -55,7 +55,7 @@ const TextArea = ({
         )}
       </div>
       {error && (
-        <p className="text-red-500 text-xs mt-1 flex gap-1 items-center pt-1">
+        <p className="text-red-500 text-xs mt-1 flex gap-1 items-center">
           {" "}
           <Info size={14} />
           {error}
