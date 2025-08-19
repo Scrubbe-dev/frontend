@@ -93,7 +93,7 @@ const LoginByLocationDetails = () => {
             placeholder="Search for a user by ID, Email or Fingerprint"
             className=" max-w-2xl w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500
                          bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600
-                         text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                         text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 text-sm"
           />
         </div>
         {/* Main Chart Section */}
@@ -105,9 +105,9 @@ const LoginByLocationDetails = () => {
             <div className="flex space-x-2">
               <div
                 onClick={() => setOpenTimeFilter(true)}
-                className="px-3 py-1 relative flex gap-1 cursor-pointer items-center rounded-md border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200"
+                className="px-3 py-1 relative flex gap-1 cursor-pointer items-center rounded-md border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm"
               >
-                <Clock size={17} /> Filter by time <ChevronDown size={17} />
+                <Clock size={15} /> Filter by time <ChevronDown size={17} />
                 {openTimeFilter && (
                   <div
                     ref={menuRef}
@@ -140,7 +140,7 @@ const LoginByLocationDetails = () => {
                   </div>
                 )}
               </div>
-              <div className="px-3 py-1 rounded-md border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200">
+              <div className="px-3 py-1 rounded-md border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm">
                 <select className="w-full bg-transparent h-full outline-none">
                   <option>Refresh</option>
                   {refreshOptions.map((opt) => (
@@ -153,7 +153,7 @@ const LoginByLocationDetails = () => {
 
               <div
                 onClick={() => setOpenExportOption((prev) => !prev)}
-                className="px-3 py-1 relative flex items-center cursor-pointer rounded-md border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200"
+                className="px-3 py-1 relative flex items-center cursor-pointer rounded-md border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm"
               >
                 Export <ChevronDown size={17} />
                 {openExportOption && (
@@ -238,15 +238,15 @@ const LoginByLocationDetails = () => {
               </button>
             </div>
           </div>
-          <p className="text-gray-700 dark:text-gray-300 mb-2">
+          <p className="text-gray-700 dark:text-gray-300 mb-2 text-sm">
             Visualizes user geolocation patterns over time.
           </p>
-          <p className="text-gray-700 dark:text-gray-300 mb-2">
+          <p className="text-gray-700 dark:text-gray-300 mb-2 text-sm">
             <span className="font-semibold">Use Cases:</span>Compare current
             login with historic login trail and flag unexpected country switches
             or anomalies.
           </p>
-          <p className="text-gray-700 dark:text-gray-300">
+          <p className="text-gray-700 dark:text-gray-300 text-sm">
             <span className="font-semibold">Benefits:</span> Detects phishing
             and mule account activity and supports financial fraud
             investigations

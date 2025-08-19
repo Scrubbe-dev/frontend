@@ -114,6 +114,7 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
       }
     },
     enabled: isOpen == true ? true : false,
+    refetchOnWindowFocus: false,
   });
 
   const { mutateAsync, isPending } = useMutation({
@@ -178,7 +179,7 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
         >
           {tab === 0 && (
             <div>
-              <div className="grid grid-cols-2 gap-x-8 gap-y-2 mb-4">
+              <div className="grid grid-cols-2 gap-x-8 gap-y-2 mb-4 text-base">
                 <div className="text-gray-500 dark:text-gray-200">
                   Incident ID :
                 </div>
@@ -228,7 +229,7 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
                   </a>
                 </div>
               </div>
-              <div className="mb-4">
+              <div className="mb-4 text-base">
                 <div className="font-semibold dark:text-white mb-2">
                   Recommended Playbooks :
                 </div>
@@ -254,7 +255,7 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
                   </div>
                 ))}
               </div>
-              <div className="mb-4">
+              <div className="mb-4 text-base">
                 <div className="font-semibold dark:text-white mb-2">
                   Playbook Status
                 </div>
@@ -521,7 +522,7 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
       </Modal>
 
       <Modal isOpen={openPostMortem} onClose={() => setOpenPostMortem(false)}>
-        <PostMortem ticket={ticket} />
+        <PostMortem ticket={ticket} onClose={() => setOpenPostMortem(false)} />
       </Modal>
 
       <Modal isOpen={isMergeTicket} onClose={() => setIsMergeTicket(false)}>

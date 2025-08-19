@@ -7,7 +7,7 @@ import MeanTimeResolution from "./MeanTimeResolution";
 
 const SecuritySummary = () => {
   return (
-    <div className="p-4 dark:bg-dark bg-white rounded-lg space-y-5">
+    <div className="p-4 dark:bg-dark bg-white rounded-lg space-y-5 shadow-sm">
       <div className="flex justify-between items-center">
         <div className="flex gap-2 items-center text-colorScBlue">
           <Atom />

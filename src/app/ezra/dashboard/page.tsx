@@ -22,7 +22,7 @@ const Dashboard = () => {
           value={20}
           subtitle={
             <>
-              <span className="inline-flex items-center gap-1 text-green-400">
+              <span className="inline-flex items-center gap-1 text-green-500 dark:text-green-400">
                 <svg
                   width="16"
                   height="16"

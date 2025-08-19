@@ -14,6 +14,13 @@ export const endpoint = {
     get_comment: "/incident-ticket/comment",
     get_messages: "/incident-ticket/message",
     analytics: "/incident-ticket/analytics",
+    postmorterm: {
+      five_why: "/incident-ticket/resolve/ai/five-whys",
+      suggestion: "/incident-ticket/resolve/ai/suggestion",
+      stakeholder: "/incident-ticket/resolve/ai/stakeholder",
+      customer_kb: "/incident-ticket/resolve/ai/customer-kb",
+      resolve: "/incident-ticket/resolve",
+    },
   },
   api_key: {
     create: "/apikey/createapikey",

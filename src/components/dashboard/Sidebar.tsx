@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Loader2, Moon, PanelRight } from "lucide-react";
+import { Loader2, PanelRight } from "lucide-react";
 import Link from "next/link";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
@@ -15,9 +15,10 @@ import {
   NavItem,
 } from "@/lib/constant/index";
 import { useState } from "react";
-import { FaSignOutAlt } from "react-icons/fa";
 import useLogout from "@/hooks/useLogout";
 import useAuthStore from "@/lib/stores/auth.store";
+import { MdDarkMode } from "react-icons/md";
+import { HiOutlineLogout } from "react-icons/hi";
 
 type Props = {
   type?: "dashboard" | "ezra" | "developer";
@@ -61,31 +62,27 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
   return (
     <div
       className={clsx(
-        "   border-r border-blue-400/50 flex flex-col justify-between",
+        "   border-r border-neutral-200 dark:border-blue-400/50 flex flex-col justify-between overflow-auto",
         collapse
           ? " bg-white dark:bg-dark w-fit flex justify-center items-center p-4 pt-6"
-          : "relative h-full min-w-[300px] p-4"
+          : "relative h-full min-w-[250px] p-4"
       )}
     >
       <div className="relative">
-        {/* <Link
-          href="/dashboard"
-          className="relative w-[141px] h-[40px] sm:w-[176px] sm:h-[50px] lg:w-[211px] lg:h-[60px] "
-        > */}
         <div className="flex items-center justify-between">
           {!collapse && (
             <>
               {type == "ezra" ? (
-                <p className=" text-colorScBlue text-4xl font-bold  font-besley">
+                <p className=" text-colorScBlue text-3xl font-bold  font-besley">
                   EZRA
                 </p>
               ) : (
-                <div className=" h-14 flex items-center">
+                <div className=" h-10 flex items-center">
                   <Image
                     src="/scrubbe-logo-01.png"
                     alt="scrubbe-logo-01.png"
-                    height={200}
-                    width={200}
+                    height={160}
+                    width={160}
                     className="object-contain"
                   />
                 </div>
@@ -100,7 +97,7 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
             )}
             onClick={() => setCollapse((prev) => !prev)}
           >
-            <PanelRight className="" />
+            <PanelRight className="" size={17} />
           </div>
         </div>
         {/* </Link> */}
@@ -121,7 +118,7 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
                         : "bg-transparent opacity-60 hover:opacity-100 dark:text-white"
                     )}
                   >
-                    <Icon size={20} />
+                    <Icon size={18} />
                     <Link href={link} className="flex-1">
                       <p className="text-sm transition-all delay-200 duration-100">
                         {name}
@@ -152,8 +149,8 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
                               className={clsx(
                                 "flex items-center gap-2 rounded px-2 py-2 text-sm transition-all duration-200",
                                 isChildActive(link)
-                                  ? "bg-colorScBlue text-white font-semibold "
-                                  : "hover:bg-blue-50 dark:hover:bg-blue-800 dark:text-white opacity-80 hover:opacity-100"
+                                  ? "text-colorScBlue dark:text-white bg-primary-100 font-semibold "
+                                  : "hover:bg-blue-50 dark:hover:bg-primary-100 dark:text-white opacity-80 hover:opacity-100"
                               )}
                             >
                               {name}
@@ -197,10 +194,10 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
       </div>
 
       {!collapse && (
-        <div className="flex flex-col ">
+        <div className="flex flex-col mt-10 gap-2">
           <div className="flex items-center gap-2 justify-between py-3 px-3">
             <div className="flex items-center gap-2">
-              <Moon size={26} className={clsx(" fill-colorScBlue")} />
+              <MdDarkMode size={15} className=" dark:text-neutral-100" />
               <p
                 className={clsx(
                   "text-sm transition-all delay-200 duration-100 opacity-60 hover:opacity-100 dark:text-white gap-2"
@@ -216,10 +213,10 @@ const Sidebar = ({ type = "dashboard" }: Props) => {
           </div>
           <div
             onClick={() => handleLogout()}
-            className="flex items-center gap-2 justify-between py-3 px-3 cursor-pointer hover:text-white hover:bg-rose-500 transition-all duration-100 opacity-60 hover:opacity-100 rounded-sm "
+            className="flex items-center gap-2 justify-between py-2 px-3 cursor-pointer  hover:text-rose-500 hover:bg-rose-100 transition-all duration-100 opacity-60 hover:opacity-100 rounded-sm "
           >
             <div className="flex items-center gap-2">
-              <FaSignOutAlt size={22} className=" dark:text-white" />
+              <HiOutlineLogout size={20} className=" dark:text-white" />
 
               <p className={clsx("text-sm  dark:text-white gap-2")}>Logout</p>
             </div>

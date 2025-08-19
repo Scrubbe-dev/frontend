@@ -7,7 +7,7 @@ const TopAlertCategory = () => {
     <div className=" p-4 space-y-2 border rounded-lg dark:border-zinc-600 border-zinc-200">
       <p className="dark:text-white font-medium">Total alert categories</p>
 
-      <div className=" rounded-md p-2 dark:bg-subDark bg-gray-100 space-y-1">
+      <div className=" rounded-md p-2 dark:bg-subDark bg-gray-50 space-y-1">
         <div className="flex justify-between items-center">
           <p className="text-sm dark:text-white font-medium">
             Brute Force Attempts
@@ -16,7 +16,7 @@ const TopAlertCategory = () => {
         </div>
         <ProgressBar value={38} color="dark:bg-rose-500 bg-rose-600" />
       </div>
-      <div className=" rounded-md p-2 dark:bg-subDark bg-gray-100 space-y-1">
+      <div className=" rounded-md p-2 dark:bg-subDark bg-gray-50 space-y-1">
         <div className="flex justify-between items-center">
           <p className="text-sm dark:text-white font-medium">
             Malware Detection
@@ -25,7 +25,7 @@ const TopAlertCategory = () => {
         </div>
         <ProgressBar value={25} color="dark:bg-rose-500 bg-rose-600" />
       </div>
-      <div className=" rounded-md p-2 dark:bg-subDark bg-gray-100 space-y-1">
+      <div className=" rounded-md p-2 dark:bg-subDark bg-gray-50 space-y-1">
         <div className="flex justify-between items-center">
           <p className="text-sm dark:text-white font-medium">
             Data Exfiltration
