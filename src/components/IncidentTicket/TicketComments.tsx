@@ -134,7 +134,7 @@ const TicketComments = ({ ticket }: Props) => {
               borderColors[c.firstname[0].toLowerCase()]
             } rounded-xl px-6 py-4 shadow-sm`}
           >
-            <div className="font-semibold dark:text-white text-gray-800 mb-1">
+            <div className="font-semibold text-base dark:text-white text-gray-800 mb-1">
               {c.content}
             </div>
             <div className="text-gray-500 text-sm justify-between flex ">
@@ -155,7 +155,7 @@ const TicketComments = ({ ticket }: Props) => {
     <div className="dark:bg-gray-900 bg-gray-50 rounded-2xl p-6">
       {content}
       <div className="mb-4">
-        <div className="font-semibold dark:text-white text-gray-800 mb-2">
+        <div className="font-semibold text-base dark:text-white text-gray-800 mb-2">
           Add comment
         </div>
         <textarea
@@ -166,13 +166,13 @@ const TicketComments = ({ ticket }: Props) => {
         />
         <div className="flex justify-end gap-4 mt-6">
           <button
-            className="px-8 py-2 rounded-lg border border-blue-600 text-blue-600 dark:text-white dark:bg-transparent bg-white font-medium dark:hover:bg-blue-800 hover:bg-blue-50 transition-colors"
+            className="px-8 py-2 rounded-lg border border-green text-green dark:text-white dark:bg-transparent bg-white font-medium dark:hover:bg-blue-800 hover:bg-blue-50 transition-colors"
             type="button"
           >
             Close
           </button>
           <button
-            className="px-8 py-2 disabled:opacity-50 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
+            className="px-8 py-2 disabled:opacity-50 rounded-lg bg-green text-white font-medium hover:bg-green transition-colors"
             disabled={isPending}
             onClick={handleSubmitComment}
           >

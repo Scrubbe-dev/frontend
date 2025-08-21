@@ -204,7 +204,7 @@ const IncidentTicketPage = () => {
         action={
           <CButton
             onClick={() => setIsCreateIncidentOpen(true)}
-            className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue"
+            className="w-fit border-green hover:bg-green hover:text-white border bg-transparent text-green"
           >
             New Incident
           </CButton>
@@ -236,10 +236,10 @@ const IncidentTicketPage = () => {
 
       <div className="mt-5 dark:bg-dark bg-white p-6  space-y-5 h-full rounded-xl">
         <div className="flex gap-2">
-          <CButton className="w-fit">Incident Tickets</CButton>
+          <CButton className="w-fit bg-green">Incident Tickets</CButton>
           <CButton
             onClick={() => setIsNotificationSettingsOpen(true)}
-            className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue"
+            className="w-fit border-green hover:bg-green hover:text-white border bg-transparent text-green"
           >
             Notifications{" "}
             {/* {notification.length > 0 && (
@@ -250,28 +250,28 @@ const IncidentTicketPage = () => {
           </CButton>
           <CButton
             onClick={() => setIsCreateIncidentOpen(true)}
-            className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue"
+            className="w-fit border-green hover:bg-green hover:text-white border bg-transparent text-green"
           >
             New Incident
           </CButton>
           <CButton
             onClick={() => setOpenIntegration(true)}
-            className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue"
+            className="w-fit border-green hover:bg-green hover:text-white border bg-transparent text-green"
           >
             Integration
           </CButton>{" "}
           <CButton
             onClick={() => setIsIncidentAnalysisOpen(true)}
-            className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue"
+            className="w-fit border-green hover:bg-green hover:text-white border bg-transparent text-green"
           >
             Analytics
           </CButton>
-          <CButton className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue">
+          <CButton className="w-fit border-green hover:bg-green hover:text-white border bg-transparent text-green">
             Reports
           </CButton>
           <CButton
             onClick={() => setIsManagePlaybookOpen(true)}
-            className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue"
+            className="w-fit border-green hover:bg-green hover:text-white border bg-transparent text-green"
           >
             Manage Playbooks
           </CButton>
@@ -289,7 +289,7 @@ const IncidentTicketPage = () => {
             <div className="relative" ref={statusFilterRef}>
               <CButton
                 onClick={() => setOpenStatusFilter(!openStatusFilter)}
-                className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue"
+                className="w-fit border-green hover:bg-green hover:text-white border bg-transparent text-green"
               >
                 Filter by Status
               </CButton>
@@ -319,7 +319,7 @@ const IncidentTicketPage = () => {
             </div>
             <CButton
               onClick={() => setIsAdvanceFilterOpen(true)}
-              className="w-fit border-colorScBlue hover:text-white border bg-transparent text-colorScBlue"
+              className="w-fit border-green hover:bg-green hover:text-white border bg-transparent text-green"
             >
               More Filter
             </CButton>

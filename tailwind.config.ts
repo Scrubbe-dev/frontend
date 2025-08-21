@@ -38,6 +38,7 @@ const config: Config = {
         besley: ["var(--font-bersley)"],
       },
       colors: {
+        green: "#0d9488",
         critical: "#dc2626", // red-600
         high: "#ea580c", // orange-600
         medium: "#fbbf24", // yellow-400

@@ -42,15 +42,21 @@ type PostMortermForm = {
 
 type State = {
   formValue: PostMortermForm | null;
+  sentStakeholderCommunications: boolean;
 };
 
 type Action = {
   updateForm: ({ value }: { value: Partial<PostMortermForm> }) => void;
+  updateSentStakeholderCommunications: (value: boolean) => void;
 };
 
 export const usePostMortermForm = create<State & Action>((set) => ({
   formValue: null,
+  sentStakeholderCommunications: false,
   updateForm: ({ value }) => {
     set((prev) => ({ formValue: { ...prev.formValue, ...value } }));
+  },
+  updateSentStakeholderCommunications(value) {
+    set({ sentStakeholderCommunications: value });
   },
 }));

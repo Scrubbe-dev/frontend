@@ -98,41 +98,48 @@ const Collaboration = ({ ticket }: Props) => {
     setInput("");
   };
 
-  if (isLoading) {
-    return <div>Loading messages...</div>;
-  }
-
   return (
     <div className="flex flex-col h-[calc(100vh-300px)]">
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-2 space-y-4 dark:bg-transparent bg-white">
-        {messages.map((msg) => {
-          const isMe = msg.sender.email === user?.email;
-          return (
-            <div
-              key={msg.id}
-              className={`flex ${isMe ? "justify-end" : "justify-start"}`}
-            >
+      {isLoading ? (
+        <div className="space-y-4 mb-8 max-h-[500px] overflow-y-auto ">
+          <div className=" h-14 rounded-md bg-gray-100 animate-pulse-dot [animation-delay:-0.53s]" />
+          <div className=" h-14 rounded-md bg-gray-100 animate-pulse-dot [animation-delay:-0.32s]" />
+          <div className=" h-14 rounded-md bg-gray-100 animate-pulse-dot [animation-delay:-0.16s]" />
+          <div className=" h-14 rounded-md bg-gray-100 animate-pulse-dot" />
+        </div>
+      ) : (
+        <div className="flex-1 overflow-y-auto px-4 py-2 space-y-4 dark:bg-transparent bg-white">
+          {messages.map((msg) => {
+            const isMe = msg.sender.email === user?.email;
+            return (
               <div
-                className={`max-w-[60%] rounded-xl px-4 py-2 mb-2 ${
-                  isMe ? "bg-yellow-50" : "bg-blue-50"
-                }`}
+                key={msg.id}
+                className={`flex ${isMe ? "justify-end" : "justify-start"}`}
               >
-                {!isMe && (
-                  <div className="font-medium text-sm text-blue-600 mb-1">
-                    {msg.sender.email}
+                <div
+                  className={`max-w-[60%] rounded-xl px-4 py-2 mb-2 ${
+                    isMe ? "bg-yellow-50" : "bg-blue-50"
+                  }`}
+                >
+                  {!isMe && (
+                    <div className="font-medium text-sm text-blue-600 mb-1">
+                      {msg.sender.email}
+                    </div>
+                  )}
+                  <div className="text-gray-800 text-sm mb-2">
+                    {msg.content}
                   </div>
-                )}
-                <div className="text-gray-800 text-sm mb-2">{msg.content}</div>
-                <div className="text-gray-400 text-xs text-right">
-                  {moment(msg.createdAt).fromNow()}
+                  <div className="text-gray-400 text-xs text-right">
+                    {moment(msg.createdAt).fromNow()}
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-        <div ref={messagesEndRef} />
-      </div>
+            );
+          })}
+          <div ref={messagesEndRef} />
+        </div>
+      )}
       {/* Input Bar */}
       <div className="border-t dark:bg-gray-800 bg-white px-4 py-3 flex items-center gap-2">
         <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500">

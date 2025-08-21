@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from "react";
 import { BsInfoCircleFill } from "react-icons/bs";
-import { FaBook, FaTools } from "react-icons/fa";
+import { FaBook, FaPaperPlane, FaTools } from "react-icons/fa";
 import { PiListChecksBold } from "react-icons/pi";
 import { GrAnnounce } from "react-icons/gr";
 import { IoCheckmarkCircle, IoSearch } from "react-icons/io5";
@@ -13,7 +13,7 @@ import TextArea from "../ui/text-area";
 import Input from "../ui/input";
 import useAuthStore from "@/lib/stores/auth.store";
 import CButton from "../ui/Cbutton";
-import { ArrowLeft, ArrowRight, Printer } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader } from "lucide-react";
 import { Ticket } from "./IncidateTicketPage";
 import { FiCheck, FiX } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
@@ -21,6 +21,7 @@ import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import { usePostMortermForm } from "@/lib/stores/post-morterm";
 import { toast } from "sonner";
+import { FaRegFilePdf } from "react-icons/fa6";
 
 const resolutionSteps = [
   {
@@ -97,20 +98,16 @@ const PostMortem = ({ ticket, onClose }: PostMortemProps) => {
   console.log({ steps });
   return (
     <div className="flex h-[700px] overflow-hidden">
-      <div className="min-w-[200px] border-r dark:border-neutral-600 border-neutral-200 relative">
-        <p className=" text-lg font-semibold dark:text-white ">
-          Resolution Steps
-        </p>
+      <div className="min-w-[250px] border-r dark:border-neutral-600 border-neutral-200 relative bg-[#1a2a44] p-4">
+        <p className=" text-lg font-semibold text-white ">Resolution Steps</p>
 
-        <div className="w-full mt-5 pr-3">
+        <div className="w-full mt-5 pr-3 ">
           {resolutionSteps.map(({ Icon, name, value }) => (
             <div
               key={value}
               onClick={() => setSteps(value)}
               className={` cursor-pointer ${
-                value === steps
-                  ? " dark:bg-white/10 bg-neutral-100 text-black dark:text-white "
-                  : "dark:text-white/70 text-neutral-500"
+                value === steps ? "bg-white/10 text-white " : "text-neutral-200"
               }  flex flex-row gap-3 items-center p-3 w-full rounded-md`}
             >
               <Icon size={18} />
@@ -119,7 +116,7 @@ const PostMortem = ({ ticket, onClose }: PostMortemProps) => {
           ))}
         </div>
       </div>
-      <div className="p-3 w-full overscroll-y-scroll h-[700px]">{content}</div>
+      <div className="p-4 w-full overscroll-y-scroll h-[700px]">{content}</div>
     </div>
   );
 };
@@ -246,20 +243,20 @@ const BasicDetails = ({ setSteps, ticket }: Props) => {
       <div className="flex gap-2 justify-end">
         {/* <CButton
             type="button"
-            className="w-fit border border-gray-300 hover:text-white text-colorScBlue dark:border-gray-700 bg-transparent"
+            className="w-fit bg-green "
           >
             Close
           </CButton> */}
         <CButton
           type="button"
-          className="w-fit"
+          className="w-fit bg-green"
           onClick={() => setSteps("analysis")}
         >
           Next <ArrowRight />
         </CButton>
         {/* <CButton
           type="submit"
-          className="w-fit"
+          className="w-fit bg-green"
           onClick={handleSubmit(handleNext)}
         >
           Next <ArrowRight />
@@ -439,12 +436,12 @@ const Analysis = ({ setSteps, ticket }: Props) => {
             {gaps.map((s, index) => (
               <span
                 key={index}
-                className="flex items-center space-x-1 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full"
+                className="flex items-center space-x-1 bg-green/10 text-green text-xs font-semibold px-2 py-1 rounded-full"
               >
                 <span>{s}</span>
                 <button
                   onClick={() => handleRemoveGap(index)}
-                  className="text-blue-800 hover:text-blue-600 focus:outline-none"
+                  className="text-green hover:text-blue-600 focus:outline-none"
                 >
                   <FiX size={12} />
                 </button>
@@ -458,12 +455,12 @@ const Analysis = ({ setSteps, ticket }: Props) => {
       <div className="flex gap-2 justify-end my-4">
         <CButton
           type="button"
-          className="w-fit border border-gray-300 hover:text-white text-colorScBlue dark:border-gray-700 bg-transparent"
+          className="w-fit bg-green "
           onClick={() => setSteps("basic")}
         >
           <ArrowLeft /> Previous
         </CButton>
-        <CButton type="submit" className="w-fit">
+        <CButton type="submit" className="w-fit bg-green">
           Next <ArrowRight />
         </CButton>
       </div>
@@ -542,14 +539,14 @@ const Resolution = ({ setSteps }: Props) => {
       <div className="flex gap-2 justify-end">
         <CButton
           type="button"
-          className="w-fit border border-gray-300 hover:text-white text-colorScBlue dark:border-gray-700 bg-transparent"
+          className="w-fit bg-green "
           onClick={() => setSteps("analysis")}
         >
           <ArrowLeft /> Previous
         </CButton>
         <CButton
           type="button"
-          className="w-fit"
+          className="w-fit bg-green"
           onClick={handleSubmit(onSubmit)}
         >
           Next <ArrowRight />
@@ -559,11 +556,14 @@ const Resolution = ({ setSteps }: Props) => {
   );
 };
 
-const Draft = ({ setSteps }: Props) => {
+const Draft = ({ setSteps, ticket }: Props) => {
   const [tabs, setTabs] = useState<"internal" | "customer">("internal");
   const [tags, setTags] = useState(["Payment api", "500 Error"]);
   const [tag, setTag] = useState("");
   const { updateForm } = usePostMortermForm();
+  const [title, setTitle] = useState("");
+  const [summary, setSummary] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleRemoveTag = (index: number) => {
     setTags((prev: string[]) => {
@@ -615,6 +615,29 @@ const Draft = ({ setSteps }: Props) => {
     // You can now submit this formData to your API
   };
 
+  const { post } = useFetch();
+  const handlePublishCustomerKB = async () => {
+    if (!title || !summary) {
+      toast.error("title and summary are required");
+      return;
+    }
+
+    const data = {
+      title,
+      summary,
+    };
+    setLoading(true);
+    const res = await post(
+      endpoint.incident_ticket.postmorterm.customer_kb + "/" + ticket.id,
+      data
+    );
+    setLoading(false);
+    if (res.success) {
+      toast.success("Customer Facing-KB Published");
+    } else {
+      toast.error("Failed to publish.");
+    }
+  };
   return (
     <div>
       <h1 className="text-2xl font-bold dark:text-white text-black">
@@ -622,9 +645,9 @@ const Draft = ({ setSteps }: Props) => {
       </h1>
       <div className="flex gap-3 border-b border-gray-300 dark:border-gray-600 mt-3 text-base">
         <div
-          className={`px-3 py-2 cursor-pointer ${
+          className={`px-3 py-2 cursor-pointer text-base ${
             tabs == "internal"
-              ? "border-b-2 border-colorScBlue text-colorScBlue"
+              ? "border-b-2 border-green text-green"
               : " dark:text-white"
           }`}
           onClick={() => setTabs("internal")}
@@ -632,9 +655,9 @@ const Draft = ({ setSteps }: Props) => {
           Internal KB
         </div>
         <div
-          className={`px-3 py-2 cursor-pointer ${
+          className={`px-3 py-2 cursor-pointer text-base ${
             tabs == "customer"
-              ? "border-b-2 border-colorScBlue text-colorScBlue"
+              ? "border-b-2 border-green text-green"
               : " dark:text-white"
           }`}
           onClick={() => setTabs("customer")}
@@ -731,12 +754,12 @@ const Draft = ({ setSteps }: Props) => {
                   {tags.map((s, index) => (
                     <span
                       key={index}
-                      className="flex items-center space-x-1 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full"
+                      className="flex items-center space-x-1 bg-green/10 text-green text-xs font-semibold px-2 py-1 rounded-full"
                     >
                       <span>{s}</span>
                       <button
                         onClick={() => handleRemoveTag(index)}
-                        className="text-blue-800 hover:text-blue-600 focus:outline-none"
+                        className="text-green hover:text-blue-600 focus:outline-none"
                       >
                         <FiX size={12} />
                       </button>
@@ -756,8 +779,27 @@ const Draft = ({ setSteps }: Props) => {
         )}
         {tabs === "customer" && (
           <div>
-            <Input label="Title" />
-            <TextArea label="Summary" />
+            <Input
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
+              label="Title"
+            />
+            <TextArea
+              onChange={(e) => setSummary(e.target.value)}
+              value={summary}
+              label="Summary"
+            />
+            <CButton
+              onClick={handlePublishCustomerKB}
+              className=" w-fit bg-green "
+            >
+              {loading ? (
+                <Loader className=" animate-spin" size={20} />
+              ) : (
+                <FaPaperPlane size={20} />
+              )}
+              Public Customer-Facing KB
+            </CButton>
           </div>
         )}
       </div>
@@ -765,14 +807,14 @@ const Draft = ({ setSteps }: Props) => {
       <div className="flex gap-2 justify-end">
         <CButton
           type="button"
-          className="w-fit border border-gray-300 hover:text-white text-colorScBlue dark:border-gray-700 bg-transparent"
+          className="w-fit bg-green "
           onClick={() => setSteps("resolution")}
         >
           <ArrowLeft /> Previous
         </CButton>
         <CButton
           type="button"
-          className="w-fit"
+          className="w-fit bg-green"
           onClick={handleSubmit(onSubmit)}
         >
           Next <ArrowRight />
@@ -955,14 +997,14 @@ const Followup = ({ setSteps }: Props) => {
       <div className="flex gap-2 justify-end">
         <CButton
           type="button"
-          className="w-fit border border-gray-300 hover:text-white text-colorScBlue dark:border-gray-700 bg-transparent"
+          className="w-fit bg-green "
           onClick={() => setSteps("draft")}
         >
           <ArrowLeft /> Previous
         </CButton>
         <CButton
           type="button"
-          className="w-fit"
+          className="w-fit bg-green"
           onClick={handleSubmit(onSubmit)}
         >
           Next <ArrowRight />
@@ -1079,12 +1121,12 @@ const Stakeholder = ({ ticket, setSteps }: Props) => {
                 {stakeholders.map((s, index) => (
                   <span
                     key={index}
-                    className="flex items-center space-x-1 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full"
+                    className="flex items-center space-x-1 bg-green/10 text-green text-xs font-semibold px-2 py-1 rounded-full"
                   >
                     <span>{s}</span>
                     <button
                       onClick={() => removeStakeholder(s)}
-                      className="text-blue-800 hover:text-blue-600 focus:outline-none"
+                      className="text-green hover:text-blue-600 focus:outline-none"
                     >
                       <FiX size={12} />
                     </button>
@@ -1110,7 +1152,7 @@ const Stakeholder = ({ ticket, setSteps }: Props) => {
         <div className="mb-6 p-4 bg-gray-50 rounded-md border border-gray-200">
           <h2 className="text-sm font-semibold mb-2">Communication Preview</h2>
           <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono">
-            {`Slack Message:\n ${messageContent}`}
+            {`Slack Message:\n${messageContent}`}
           </pre>
         </div>
 
@@ -1119,7 +1161,7 @@ const Stakeholder = ({ ticket, setSteps }: Props) => {
           <CButton
             onClick={getMessage}
             isLoading={isLoading}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="flex items-center space-x-2 px-4 py-2 bg-green text-white font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             <span>
               {isLoading ? "Generating" : "Re-generate"} Stakeholder Message
@@ -1134,12 +1176,12 @@ const Stakeholder = ({ ticket, setSteps }: Props) => {
         <div className="flex gap-2 justify-end">
           <CButton
             type="button"
-            className="w-fit border border-gray-300 hover:text-white text-colorScBlue dark:border-gray-700 bg-transparent"
+            className="w-fit bg-green "
             onClick={() => setSteps("draft")}
           >
             <ArrowLeft /> Previous
           </CButton>
-          <CButton type="button" className="w-fit" onClick={onSubmit}>
+          <CButton type="button" className="w-fit bg-green" onClick={onSubmit}>
             Next <ArrowRight />
           </CButton>
         </div>
@@ -1204,8 +1246,8 @@ const Review = ({
 
       {/* Buttons Section */}
       <div className="mt-8 flex justify-end space-x-4">
-        <CButton className="flex w-fit items-center gap-2 text-sm px-6 py-3 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition-colors">
-          <Printer size={16} /> Export to PDF
+        <CButton className="flex w-fit items-center gap-2 text-sm px-6 py-3 bg-green  font-semibold rounded-md hover:bg-green text-white transition-colors">
+          <FaRegFilePdf size={16} /> Export to PDF
         </CButton>
         <CButton
           isLoading={isLoading}
