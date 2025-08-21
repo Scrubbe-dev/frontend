@@ -26,6 +26,7 @@ import SlackIntegration from "./Integration/SlackIntegration";
 import GoogleMeetIntegration from "./Integration/GoogleMeetIntegration";
 import GithubIntegration from "./Integration/GithubIntegration";
 import GitlabIntegration from "./Integration/GitlabIntegration";
+import { RiCustomerServiceFill } from "react-icons/ri";
 
 // Array of all available integrations
 const integrations = [
@@ -34,12 +35,14 @@ const integrations = [
     icon: FaSlack,
     description:
       "Communication Platform - Real-time coordination and stakeholder updates",
+    development: false,
   },
   {
     name: "Microsoft Teams",
     icon: PiMicrosoftTeamsLogo,
     description:
       "Communication Platform - Real-time coordination and stakeholder updates",
+    development: true,
   },
   {
     name: "Google Meet",
@@ -52,86 +55,115 @@ const integrations = [
     icon: FaGoogle,
     description:
       "Video Conferencing - War rooms, briefings, and post-incident reviews",
+    development: true,
   },
   {
     name: "Google Chat",
     icon: FaGoogle,
     description:
       "Communication Platform - Real-time coordination and stakeholder updates",
+    development: true,
   },
   {
     name: "Zoom",
     icon: FaVideo,
     description:
       "Video Conferencing - War rooms, briefings, and post-incident reviews",
+    development: true,
   },
   {
     name: "SMS",
     icon: FaSnowflake, // A placeholder icon
     description:
       "Notification Channel - Critical alerts and stakeholder communications",
+    development: false,
   },
   {
     name: "ServiceNow",
     description: "Ticketing System - Incident tracking and follow-up tasks",
+    development: true,
   },
   {
     name: "WhatsApp",
     icon: FaWhatsapp,
     description:
       "Communication Platform - Real-time coordination and stakeholder updates",
+    development: false,
   },
   {
     name: "Jira",
     icon: FaJira,
     description: "Ticketing System - Incident tracking and follow-up tasks",
+    development: true,
   },
   {
+    icon: RiCustomerServiceFill,
     name: "Freshdesk",
     description: "Ticketing System - Incident tracking and follow-up tasks",
+    development: true,
   },
   {
     name: "PagerDuty",
     icon: FaPagelines, // A placeholder icon
     description: "Monitoring Tool - Alert correlation and on-call management",
+    development: true,
   },
   {
     name: "Email Services",
     icon: FaFoursquare, // A placeholder icon
     description:
       "Notification Channel - Critical alerts and stakeholder communications",
+    development: false,
   },
   {
     name: "Calendly",
     icon: SiCalendly,
     description:
       "Video Conferencing - War rooms, briefings, and post-incident reviews",
+    development: true,
   },
   {
     name: "GitHub",
     icon: FaGithub,
     description:
       "Development Platform - Code-related incident tracking and rollbacks",
+    development: false,
   },
   {
     name: "GitLab",
     icon: FaGitlab,
     description:
       "Development Platform - Code-related incident tracking and rollbacks",
+    development: false,
   },
   {
     name: "Amazon Web Services",
     icon: FaAws,
     description:
       "Cloud Infrastructure - Infrastructure monitoring and resource management",
+    development: true,
   },
   {
     name: "Microsoft Azure",
     icon: VscAzure,
     description:
       "Cloud Infrastructure - Infrastructure monitoring and resource management",
+    development: true,
   },
 ];
+
+const sortedIntegrations = integrations.sort((a, b) => {
+  // If 'a' is in development and 'b' is not, 'a' comes first (-1)
+  if (a.development && !b.development) {
+    return 1;
+  }
+  // If 'b' is in development and 'a' is not, 'b' comes first (1)
+  if (!a.development && b.development) {
+    return -1;
+  }
+  // Otherwise, maintain the original order (0)
+  return 0;
+});
 
 const Integrations: React.FC = () => {
   const [selectedIntegration, setSelectedIntegration] = useState<
@@ -207,7 +239,7 @@ const Integrations: React.FC = () => {
         Connect and manage your enterprise tools and services
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
-        {integrations.map((integration, index) => (
+        {sortedIntegrations.map((integration, index) => (
           <div
             key={index}
             className="bg rounded-lg shadow-sm border border-gray-200 dark:border-gray-500 p-6 flex flex-col gap-4"
@@ -215,8 +247,18 @@ const Integrations: React.FC = () => {
             {/* Integration Icon */}
             <div className="flex ">
               <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 mr-4">
-                {integration.icon && (
+                {integration.icon ? (
                   <integration.icon size={28} className="text-gray-700" />
+                ) : (
+                  <>
+                    {integration.name === "ServiceNow" && (
+                      <img
+                        src="/servicenowlogo.png"
+                        alt=""
+                        className="size-[28px]"
+                      />
+                    )}
+                  </>
                 )}
               </div>
 
@@ -233,15 +275,24 @@ const Integrations: React.FC = () => {
 
             {/* Action Buttons and Status */}
             <div className="ml-4 flex-shrink-0 flex flex-col items-end space-y-2">
-              <button
-                onClick={() => setSelectedIntegration(integration.name)}
-                className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50 focus:outline-none"
-              >
-                Connect
-              </button>
+              {integration.development ? null : (
+                <button
+                  onClick={() => setSelectedIntegration(integration.name)}
+                  className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50 focus:outline-none"
+                >
+                  Connect
+                </button>
+              )}
               <div className="flex items-center text-xs text-gray-500">
-                <FiX size={12} className="text-red-500 mr-1" />
-                <span>Not connected</span>
+                {integration.development ? (
+                  <span>Coming soon</span>
+                ) : (
+                  <>
+                    <FiX size={12} className="text-red-500 mr-1" />
+
+                    <span>Not connected</span>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -18,7 +18,7 @@ export const endpoint = {
       five_why: "/incident-ticket/resolve/ai/five-whys",
       suggestion: "/incident-ticket/resolve/ai/suggestion",
       stakeholder: "/incident-ticket/resolve/ai/stakeholder",
-      customer_kb: "/incident-ticket/resolve/ai/customer-kb",
+      customer_kb: "/incident-ticket/resolve/customer-kb",
       resolve: "/incident-ticket/resolve",
     },
   },
