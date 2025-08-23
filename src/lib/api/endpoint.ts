@@ -9,17 +9,21 @@ export const endpoint = {
   incident_ticket: {
     create: "/incident-ticket",
     get: "/incident-ticket",
+    getTicket: "/tickets",
     get_members: "/business/get_members",
     send_comment: "/incident-ticket/comment",
     get_comment: "/incident-ticket/comment",
     get_messages: "/incident-ticket/message",
     analytics: "/incident-ticket/analytics",
+    history: "/tickets/history",
+    integrations: "/integrations",
     postmorterm: {
       five_why: "/incident-ticket/resolve/ai/five-whys",
       suggestion: "/incident-ticket/resolve/ai/suggestion",
       stakeholder: "/incident-ticket/resolve/ai/stakeholder",
       customer_kb: "/incident-ticket/resolve/customer-kb",
       resolve: "/incident-ticket/resolve",
+      generatePDF: "/generate-pdf",
     },
   },
   api_key: {

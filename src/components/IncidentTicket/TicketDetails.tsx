@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import Modal from "../ui/Modal";
 import { Ticket } from "./IncidateTicketPage";
@@ -20,6 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import TextArea from "../ui/text-area";
 import { toast } from "sonner";
 import PostMortem from "./PostMortem";
+import useTicketDetails from "@/hooks/useTicketDetails";
 // import { Ticket } from './IncidateTicketPage';
 
 const TABS = [
@@ -70,15 +72,15 @@ const formScheme = z.object({
 
 type FormType = z.infer<typeof formScheme>;
 
-type TicketDetailsProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  ticket: Ticket;
-};
+// type TicketDetailsProps = {
+//   isOpen: boolean;
+//   onClose: () => void;
+//   ticket: Ticket;
+// };
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 
-const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
+const TicketDetails = () => {
   const [tab, setTab] = useState(0);
   const [compliance, setCompliance] = useState("None");
   const [isExcuteLockAccount, setIsExcuteLockAccount] = useState(false);
@@ -87,7 +89,8 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
   const [openPostMortem, setOpenPostMortem] = useState(false);
   const { get, put } = useFetch();
   const queryClient = useQueryClient();
-
+  const { data, isLoading } = useTicketDetails();
+  const ticket = data as Ticket;
   const {
     control,
     handleSubmit,
@@ -115,7 +118,6 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
         return [];
       }
     },
-    enabled: isOpen == true ? true : false,
     refetchOnWindowFocus: false,
   });
 
@@ -144,15 +146,19 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
       setValue("username", ticket.userName);
       setValue("assignedTo", ticket.assignedToEmail);
     }
-  }, [isOpen, ticket]);
+  }, [ticket]);
 
   const handleUpdateTicket = (data: FormType) => {
     mutateAsync({ data });
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="p-6 max-w-2xl w-full">
+    <div className="">
+      <div className="p-6 max-w-2xl mx-auto w-full">
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-2xl font-bold dark:text-white">Ticket Details</h1>
         </div>
@@ -200,7 +206,7 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
                 </div>
                 <div className="text-gray-500 dark:text-gray-200">Created:</div>
                 <div className="text-right dark:text-white">
-                  {moment(ticket.createdAt).format("YYYY-MM-DD")}
+                  {moment(ticket?.createdAt).format("YYYY-MM-DD")}
                 </div>
                 <div className="text-gray-500 dark:text-gray-200">
                   Risk Score:
@@ -455,12 +461,12 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
                   Post Mortem
                 </button>
 
-                <button
+                {/* <button
                   onClick={onClose}
                   className="bg-green text-white rounded-lg py-2 font-medium hover:bg-green"
                 >
                   Close
-                </button>
+                </button> */}
               </div>
             </div>
           )}
@@ -603,7 +609,7 @@ const TicketDetails = ({ isOpen, onClose, ticket }: TicketDetailsProps) => {
           </div>
         </div>
       </Modal>
-    </Modal>
+    </div>
   );
 };
 

@@ -1018,7 +1018,7 @@ const Stakeholder = ({ ticket, setSteps }: Props) => {
   const [stakeholders, setStakeholders] = useState(["Customers", "Regulators"]);
   const [stakeholder, setStakeholder] = useState("");
   const [messageContent, setMessageContent] = useState("");
-  const { get } = useFetch();
+  const { get, post } = useFetch();
   const [isLoading, setIsLoading] = useState(false);
   const { updateForm } = usePostMortermForm();
 
@@ -1054,6 +1054,41 @@ const Stakeholder = ({ ticket, setSteps }: Props) => {
       },
     });
     setSteps("review");
+  };
+
+  const downloadRCA = async () => {
+    try {
+      const data = {
+        id: ticket.id,
+        description: messageContent,
+      };
+      setIsLoading(true);
+      const res = await post(
+        endpoint.incident_ticket.postmorterm.generatePDF,
+        data,
+        { responseType: "blob" }
+      );
+      setIsLoading(false);
+
+      console.log(res);
+      if (res.success) {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `document-${ticket.id}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        return;
+      }
+      toast.error("Download failed", {
+        description: "Try again to download RCA",
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Download failed", {
+        description: "Try again to download RCA",
+      });
+    }
   };
 
   return (
@@ -1161,6 +1196,7 @@ const Stakeholder = ({ ticket, setSteps }: Props) => {
           <CButton
             onClick={getMessage}
             isLoading={isLoading}
+            disabled={isLoading}
             className="flex items-center space-x-2 px-4 py-2 bg-green text-white font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             <span>
@@ -1168,7 +1204,12 @@ const Stakeholder = ({ ticket, setSteps }: Props) => {
               with AI
             </span>
           </CButton>
-          <CButton className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-800 font-medium rounded-md hover:bg-gray-200 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+          <CButton
+            onClick={downloadRCA}
+            isLoading={isLoading}
+            disabled={isLoading}
+            className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-800 font-medium rounded-md hover:bg-gray-200 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+          >
             <span>Send RCA to Stakeholders</span>
           </CButton>
         </div>
