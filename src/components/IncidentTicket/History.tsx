@@ -1,41 +1,90 @@
-const mockHistory = [
-  {
-    id: 1,
-    by: "System",
-    time: "2025-05-30 12:44:07",
-  },
-  {
-    id: 2,
-    by: "System",
-    time: "2025-05-30 12:44:07",
-  },
-  {
-    id: 3,
-    by: "System",
-    time: "2025-05-30 12:44:07",
-  },
-  {
-    id: 4,
-    by: "System",
-    time: "2025-05-30 12:44:07",
-  },
-  {
-    id: 5,
-    by: "System",
-    time: "2025-05-30 12:44:07",
-  },
-];
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import { querykeys } from "@/lib/constant";
+import { useQuery } from "@tanstack/react-query";
+import clsx from "clsx";
+import moment from "moment";
+import { useParams } from "next/navigation";
+
+type IHistory = {
+  action: string;
+  actor: string;
+  newValue: string;
+  oldValue: string;
+  timestamp: string;
+  comment: string;
+};
 
 const History = () => {
+  const { id } = useParams();
+  const { get } = useFetch();
+  const { data, isLoading } = useQuery({
+    queryKey: [querykeys.HISTORY],
+    queryFn: async () => {
+      const res = await get(
+        (endpoint.incident_ticket.history + "/" + id) as string
+      );
+      console.log({ res });
+      if (res.success) {
+        return res.data.data;
+      }
+
+      return null;
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4 mb-8 max-h-[500px] overflow-y-auto ">
+        <div className=" h-8 rounded-md bg-gray-100 animate-pulse-dot [animation-delay:-0.53s]" />
+        <div className=" h-8 rounded-md bg-gray-100 animate-pulse-dot [animation-delay:-0.32s]" />
+        <div className=" h-8 rounded-md bg-gray-100 animate-pulse-dot [animation-delay:-0.16s]" />
+        <div className=" h-8 rounded-md bg-gray-100 animate-pulse-dot" />
+      </div>
+    );
+  }
+
+  const statusColors = (status: string) => {
+    return (
+      <span
+        className={clsx(
+          "px-3 py-1 rounded-md capitalize text-sm",
+          status === "OPEN"
+            ? "bg-red-100 text-red-500"
+            : status === "CLOSED"
+            ? "bg-green-100 text-green-500"
+            : status === "IN_PROGRESS"
+            ? "bg-indigo-100 text-indigo-500"
+            : "bg-yellow-100 text-yellow-500"
+        )}
+      >
+        {status}
+      </span>
+    );
+  };
+
   return (
     <div className="flex flex-col max-h-[calc(100vh-200px)] overflow-y-auto">
       <div className="flex-1 overflow-y-auto px-4 py-2 space-y-4 dark:bg-transparent bg-white">
-        <div className="space-y-2">
-          {mockHistory.map((item) => (
-            <div key={item.id} className="dark:text-white">
-              <b>Created by: </b>
+        <div className="gap-2 flex flex-col-reverse">
+          {(data?.history as IHistory[])?.map((item, id) => (
+            <div
+              key={id}
+              className="dark:text-white py-2 px-2 border rounded-sm text-base"
+            >
+              <b className=" capitalize">
+                {item?.action.split("_").join(" ")}:{" "}
+              </b>
               <span className="opacity-60">
-                By {item.by} at {item.time}
+                By <b>{item.actor}</b>{" "}
+                {item?.action === "status_changed" ? (
+                  <span>
+                    {" "}
+                    from {statusColors(item?.oldValue)} to{" "}
+                    {statusColors(item?.newValue)}
+                  </span>
+                ) : null}{" "}
+                {moment(item?.timestamp).fromNow()}
               </span>
             </div>
           ))}

@@ -12,7 +12,6 @@ import Pagination from "../alert-setting/Pagination";
 import NotificationSettings from "./NotificationSettings";
 import CreateIncident from "./CreateIncident";
 import MangePlaybook from "./MangePlaybook";
-import TicketDetails from "./TicketDetails";
 import IncidentAnalysis from "./IncidentAnalysis";
 import { useQuery } from "@tanstack/react-query";
 import { querykeys } from "@/lib/constant";
@@ -23,6 +22,7 @@ import EmptyState from "@/components/ui/EmptyState";
 import TableLoader from "../ui/LoaderUI/TableLoader";
 import Integrations from "./Integrations";
 import Modal from "../ui/Modal";
+import { usePathname, useRouter } from "next/navigation";
 export type Ticket = {
   id: string;
   ticketId: string;
@@ -99,7 +99,7 @@ const columns = [
 
 const statusColors = (status: string) => {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center text-sm gap-2">
       <div
         className={clsx(
           "px-3 py-1 rounded-md capitalize",
@@ -107,7 +107,7 @@ const statusColors = (status: string) => {
             ? "bg-red-100 text-red-500"
             : status === "CLOSED"
             ? "bg-green-100 text-green-500"
-            : status === "in-progress"
+            : status === "IN_PROGRESS"
             ? "bg-indigo-100 text-indigo-500"
             : "bg-yellow-100 text-yellow-500"
         )}
@@ -120,7 +120,7 @@ const statusColors = (status: string) => {
 
 const priorityColors = (priority: string) => {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 text-sm">
       <div
         className={clsx(
           "px-3 py-1 rounded-md capitalize",
@@ -143,12 +143,11 @@ const IncidentTicketPage = () => {
     useState(false);
   const [isCreateIncidentOpen, setIsCreateIncidentOpen] = useState(false);
   const [isManagePlaybookOpen, setIsManagePlaybookOpen] = useState(false);
-  const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [isIncidentAnalysisOpen, setIsIncidentAnalysisOpen] = useState(false);
-  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [openStatusFilter, setOpenStatusFilter] = useState<boolean>(false);
   const [openIntegration, setOpenIntegration] = useState(false);
-
+  const pathname = usePathname();
+  const router = useRouter();
   // const { notification } = useNotificationProvider();
 
   const statusFilterRef = useRef<HTMLDivElement>(null);
@@ -189,8 +188,7 @@ const IncidentTicketPage = () => {
 
   const handleRowClick = (ticket: Ticket) => {
     console.log(ticket);
-    setSelectedTicket(ticket);
-    setIsTicketDetailsOpen(true);
+    router.push(`${pathname}/${ticket.id}`);
   };
 
   let content: ReactNode;
@@ -344,13 +342,7 @@ const IncidentTicketPage = () => {
           isOpen={isManagePlaybookOpen}
           onClose={() => setIsManagePlaybookOpen(false)}
         />
-        {selectedTicket && (
-          <TicketDetails
-            isOpen={isTicketDetailsOpen}
-            onClose={() => setIsTicketDetailsOpen(false)}
-            ticket={selectedTicket}
-          />
-        )}
+
         <IncidentAnalysis
           isOpen={isIncidentAnalysisOpen}
           onClose={() => setIsIncidentAnalysisOpen(false)}

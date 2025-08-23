@@ -1,7 +1,6 @@
 // Integrations.tsx
 import React, { useState } from "react";
 import { FiX } from "react-icons/fi"; // Assumes react-icons
-
 // You would replace this with actual SVG or image imports
 import {
   FaSlack,
@@ -27,6 +26,10 @@ import GoogleMeetIntegration from "./Integration/GoogleMeetIntegration";
 import GithubIntegration from "./Integration/GithubIntegration";
 import GitlabIntegration from "./Integration/GitlabIntegration";
 import { RiCustomerServiceFill } from "react-icons/ri";
+import { querykeys } from "@/lib/constant";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import { useQuery } from "@tanstack/react-query";
 
 // Array of all available integrations
 const integrations = [
@@ -169,7 +172,18 @@ const Integrations: React.FC = () => {
   const [selectedIntegration, setSelectedIntegration] = useState<
     string | undefined
   >();
-
+  const { get } = useFetch();
+  const {} = useQuery({
+    queryKey: [querykeys.INTEGRATIONS],
+    queryFn: async () => {
+      const res = await get(endpoint.incident_ticket.integrations);
+      console.log(res);
+      if (res.success) {
+        return res.data.data;
+      }
+      return [];
+    },
+  });
   switch (selectedIntegration) {
     case "WhatsApp":
       return (
