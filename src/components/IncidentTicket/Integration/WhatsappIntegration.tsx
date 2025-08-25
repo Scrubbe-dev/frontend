@@ -1,7 +1,7 @@
 // RecipientForm.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +12,9 @@ import Switch from "@/components/ui/Switch";
 import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import CButton from "@/components/ui/Cbutton";
+import { querykeys } from "@/lib/constant";
+import { useQuery } from "@tanstack/react-query";
+import useAuthStore from "@/lib/stores/auth.store";
 
 // ---
 // 1. Zod Schema for Validation
@@ -50,7 +53,36 @@ const WhatsappIntegration: React.FC = () => {
     mode: "onChange",
   });
 
-  const { post } = useFetch();
+  const { post, get } = useFetch();
+
+  const { user } = useAuthStore();
+  const { data } = useQuery({
+    queryKey: [querykeys.INTEGRATIONS],
+    queryFn: async () => {
+      const res = await get(
+        endpoint.incident_ticket.integrations + "/" + user?.id
+      );
+      console.log(res);
+      if (res.success) {
+        return res.data.data;
+      }
+      return [];
+    },
+    enabled: !!user?.id,
+  });
+
+  const whatsAppConfig = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return data.find((value: any) => value.provider === "WHATSAPP");
+  }, [data]);
+
+  useEffect(() => {
+    if (whatsAppConfig?.metadata?.recipents.length > 0) {
+      setValue("recipients", [...whatsAppConfig?.metadata?.recipents], {
+        shouldValidate: true,
+      });
+    }
+  }, [setValue, whatsAppConfig]);
 
   // ---
   // 2. Helper Functions for Recipient Tags

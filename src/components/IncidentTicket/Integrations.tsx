@@ -1,6 +1,6 @@
 // Integrations.tsx
 import React, { useState } from "react";
-import { FiX } from "react-icons/fi"; // Assumes react-icons
+import { FiCheck, FiX } from "react-icons/fi"; // Assumes react-icons
 // You would replace this with actual SVG or image imports
 import {
   FaSlack,
@@ -30,6 +30,9 @@ import { querykeys } from "@/lib/constant";
 import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import { useQuery } from "@tanstack/react-query";
+import useAuthStore from "@/lib/stores/auth.store";
+import GitlabConfiguration from "./Configuration/GitlabConfiguration";
+import GithubConfiguration from "./Configuration/GithubConfiguration";
 
 // Array of all available integrations
 const integrations = [
@@ -172,17 +175,24 @@ const Integrations: React.FC = () => {
   const [selectedIntegration, setSelectedIntegration] = useState<
     string | undefined
   >();
+  const [selectConfiguration, setSelectConfiguration] = useState<
+    string | undefined
+  >();
   const { get } = useFetch();
-  const {} = useQuery({
+  const { user } = useAuthStore();
+  const { data } = useQuery({
     queryKey: [querykeys.INTEGRATIONS],
     queryFn: async () => {
-      const res = await get(endpoint.incident_ticket.integrations);
+      const res = await get(
+        endpoint.incident_ticket.integrations + "/" + user?.id
+      );
       console.log(res);
       if (res.success) {
         return res.data.data;
       }
       return [];
     },
+    enabled: !!user?.id,
   });
   switch (selectedIntegration) {
     case "WhatsApp":
@@ -244,8 +254,38 @@ const Integrations: React.FC = () => {
       break;
   }
 
+  switch (selectConfiguration) {
+    case "GitHub":
+      return (
+        <Modal
+          isOpen={selectConfiguration === "GitHub"}
+          onClose={() => setSelectConfiguration(undefined)}
+        >
+          <GithubConfiguration />
+        </Modal>
+      );
+    case "GitLab":
+      return (
+        <Modal
+          isOpen={selectConfiguration === "GitLab"}
+          onClose={() => setSelectConfiguration(undefined)}
+        >
+          <GitlabConfiguration />
+        </Modal>
+      );
+    default:
+      break;
+  }
+
+  const connectIntegration = data?.map(
+    (integration: { name: string; provider: string; userId: string }) => ({
+      ...integration,
+      provider: (integration.provider as string).toLowerCase(),
+    })
+  );
+
   return (
-    <div className="p-8  min-h-screen">
+    <div className="min-h-screen !min-w-[600px]">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white ">
         Available Integrations
       </h1>
@@ -253,64 +293,100 @@ const Integrations: React.FC = () => {
         Connect and manage your enterprise tools and services
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
-        {sortedIntegrations.map((integration, index) => (
-          <div
-            key={index}
-            className="bg rounded-lg shadow-sm border border-gray-200 dark:border-gray-500 p-6 flex flex-col gap-4"
-          >
-            {/* Integration Icon */}
-            <div className="flex ">
-              <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 mr-4">
-                {integration.icon ? (
-                  <integration.icon size={28} className="text-gray-700" />
-                ) : (
-                  <>
-                    {integration.name === "ServiceNow" && (
-                      <img
-                        src="/servicenowlogo.png"
-                        alt=""
-                        className="size-[28px]"
-                      />
-                    )}
-                  </>
-                )}
+        {sortedIntegrations.map((integration, index) => {
+          const isConnected = (
+            connectIntegration as {
+              name: string;
+              provider: string;
+              userId: string;
+            }[]
+          )?.find((value) => value.provider === integration.name.toLowerCase());
+          return (
+            <div
+              key={index}
+              className="bg rounded-lg shadow-sm border border-gray-200 dark:border-gray-500 p-6 flex flex-col gap-4"
+            >
+              {/* Integration Icon */}
+              <div className="flex ">
+                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 mr-4">
+                  {integration.icon ? (
+                    <integration.icon size={28} className="text-gray-700" />
+                  ) : (
+                    <>
+                      {integration.name === "ServiceNow" && (
+                        <img
+                          src="/servicenowlogo.png"
+                          alt=""
+                          className="size-[28px]"
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+
+                {/* Integration Details */}
+                <div className="flex-1">
+                  <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+                    {integration.name}
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    {integration.description}
+                  </p>
+                </div>
               </div>
 
-              {/* Integration Details */}
-              <div className="flex-1">
-                <h2 className="text-base font-semibold text-gray-900 dark:text-white">
-                  {integration.name}
-                </h2>
-                <p className="text-sm text-gray-500">
-                  {integration.description}
-                </p>
+              {/* Action Buttons and Status */}
+              <div className="ml-4 flex-shrink-0 flex flex-col items-end space-y-2">
+                {integration.development ? null : (
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setSelectedIntegration(integration.name)}
+                      className="px-4 py-2 text-sm font-medium text-green border border-green rounded-md hover:bg-blue-50 focus:outline-none"
+                    >
+                      {isConnected ? "Connected" : "Connect"}
+                    </button>
+                    {isConnected &&
+                      (integration.name === "GitHub" ||
+                        integration.name === "GitLab") && (
+                        <button
+                          onClick={() =>
+                            setSelectConfiguration(integration.name)
+                          }
+                          className="px-4 py-2 text-sm font-medium text-green border border-green rounded-md hover:bg-blue-50 focus:outline-none"
+                        >
+                          Configure
+                        </button>
+                      )}
+                  </div>
+                )}
+                <div className="flex items-center text-xs text-gray-500">
+                  {integration.development ? (
+                    <span>Coming soon</span>
+                  ) : (
+                    <>
+                      {isConnected ? (
+                        <>
+                          <FiCheck
+                            size={12}
+                            className="text-emerald-500 mr-1"
+                          />
+
+                          <span>Connected</span>
+                        </>
+                      ) : (
+                        <>
+                          <FiX size={12} className="text-red-500 mr-1" />
+
+                          <span>Not connected</span>
+                        </>
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
             </div>
-
-            {/* Action Buttons and Status */}
-            <div className="ml-4 flex-shrink-0 flex flex-col items-end space-y-2">
-              {integration.development ? null : (
-                <button
-                  onClick={() => setSelectedIntegration(integration.name)}
-                  className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50 focus:outline-none"
-                >
-                  Connect
-                </button>
-              )}
-              <div className="flex items-center text-xs text-gray-500">
-                {integration.development ? (
-                  <span>Coming soon</span>
-                ) : (
-                  <>
-                    <FiX size={12} className="text-red-500 mr-1" />
-
-                    <span>Not connected</span>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

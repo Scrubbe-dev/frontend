@@ -17,6 +17,8 @@ export const endpoint = {
     analytics: "/incident-ticket/analytics",
     history: "/tickets/history",
     integrations: "/integrations",
+    gitlab_projects: "/integrations/gitlab/projects",
+    github_repos: "/integrations/github/repos",
     postmorterm: {
       five_why: "/incident-ticket/resolve/ai/five-whys",
       suggestion: "/incident-ticket/resolve/ai/suggestion",

@@ -155,7 +155,7 @@ const CreateIncident = ({ isOpen, onClose }: CreateIncidentProps) => {
               label="Description"
               rows={4}
               {...field}
-              placeholder="optional description of the rule"
+              placeholder=""
               className="w-full bg-transparent dark:!text-white !text-black border border-gray-300 rounded-md p-2 text-sm "
               error={errors.reason?.message}
             />
