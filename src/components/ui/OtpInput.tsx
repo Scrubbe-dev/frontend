@@ -9,6 +9,7 @@ interface OtpInputProps {
   email: string;
   disabled?: boolean;
   className?: string;
+  isLoading?: boolean;
 }
 
 const OtpInput = ({
@@ -18,6 +19,7 @@ const OtpInput = ({
   className = "",
   email,
   handleResend,
+  isLoading,
 }: OtpInputProps) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [resendTimer, setResendTimer] = useState<number>(51);
@@ -138,7 +140,12 @@ const OtpInput = ({
             />
           ))}
         </div>
-        <CButton type="submit" className="mt-6">
+        <CButton
+          isLoading={isLoading}
+          disabled={isLoading}
+          type="submit"
+          className="mt-6"
+        >
           Continue
         </CButton>
         <div className="text-center mt-2">

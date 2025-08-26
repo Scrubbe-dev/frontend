@@ -22,6 +22,8 @@ import TextArea from "../ui/text-area";
 import { toast } from "sonner";
 import PostMortem from "./PostMortem";
 import useTicketDetails from "@/hooks/useTicketDetails";
+import { useRouter } from "next/navigation";
+import { ChevronLeft } from "lucide-react";
 // import { Ticket } from './IncidateTicketPage';
 
 const TABS = [
@@ -91,6 +93,7 @@ const TicketDetails = () => {
   const queryClient = useQueryClient();
   const { data, isLoading } = useTicketDetails();
   const ticket = data as Ticket;
+  const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -153,13 +156,54 @@ const TicketDetails = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="p-6 max-w-2xl mx-auto w-full flex flex-col gap-5 animate-pulse">
+        <div className="h-6 w-[60%] rounded-md bg-gray-200" />
+        <div className="grid grid-cols-5 gap-4">
+          <div className="h-6 w-full rounded-md bg-gray-200" />
+          <div className="h-6 w-full rounded-md bg-gray-200" />
+          <div className="h-6 w-full rounded-md bg-gray-200" />
+          <div className="h-6 w-full rounded-md bg-gray-200" />
+          <div className="h-6 w-full rounded-md bg-gray-200" />
+        </div>
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-between gap-4">
+            <div className="h-6 w-[40%] rounded-md bg-gray-200" />
+            <div className="h-6 w-[40%] rounded-md bg-gray-200" />
+          </div>
+          <div className="flex justify-between gap-4">
+            <div className="h-6 w-[40%] rounded-md bg-gray-200" />
+            <div className="h-6 w-[40%] rounded-md bg-gray-200" />
+          </div>
+          <div className="flex justify-between gap-4">
+            <div className="h-6 w-[40%] rounded-md bg-gray-200" />
+            <div className="h-6 w-[40%] rounded-md bg-gray-200" />
+          </div>
+          <div className="flex justify-between gap-4">
+            <div className="h-6 w-[40%] rounded-md bg-gray-200" />
+            <div className="h-6 w-[40%] rounded-md bg-gray-200" />
+          </div>
+          <div className="flex justify-between gap-4">
+            <div className="h-6 w-[40%] rounded-md bg-gray-200" />
+            <div className="h-6 w-[40%] rounded-md bg-gray-200" />
+          </div>
+          <div className="flex justify-between gap-4">
+            <div className="h-6 w-[40%] rounded-md bg-gray-200" />
+            <div className="h-6 w-[40%] rounded-md bg-gray-200" />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="">
       <div className="p-6 max-w-2xl mx-auto w-full">
-        <div className="flex items-center justify-between mb-2">
+        <div
+          className="flex items-center gap-2 mb-2 cursor-pointer"
+          onClick={() => router.back()}
+        >
+          <ChevronLeft />{" "}
           <h1 className="text-2xl font-bold dark:text-white">Ticket Details</h1>
         </div>
         {/* Tabs */}

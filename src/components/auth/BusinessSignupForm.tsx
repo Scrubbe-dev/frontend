@@ -21,6 +21,8 @@ import { FaGithub } from "react-icons/fa";
 import OtpInput from "../ui/OtpInput";
 import { PasswordInput } from "../ui/password-input";
 import { AxiosError } from "axios";
+import { getCookie } from "cookies-next";
+import { COOKIE_KEYS } from "@/lib/constant";
 
 // Define the form schema using zod
 const businessSignupSchema = z
@@ -100,6 +102,7 @@ export default function BusinessSignupForm() {
     resendOTP,
     error,
   } = useAuthStore();
+  const [refreshing, setRefreshing] = useState(false);
   const searchParams = useSearchParams();
   const path = searchParams.get("to");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
@@ -129,8 +132,6 @@ export default function BusinessSignupForm() {
     try {
       // Set loading state
       // Log form values
-      console.log(data, " business registration");
-
       // Simulate a 5-second delay
       await businessSignup(data);
 
@@ -158,7 +159,6 @@ export default function BusinessSignupForm() {
       };
       await businessProfileSignup(details);
 
-      setIsOTP(true);
       // Store form data and show success page
       setFormData({ ...data, ...session.data?.user });
       setShowSuccess(true);
@@ -223,10 +223,18 @@ export default function BusinessSignupForm() {
   useEffect(() => {
     if (showSuccess) {
       const timeout = setTimeout(() => {
+        if (formData?.purpose === "IMS") {
+          const token = getCookie(COOKIE_KEYS.TOKEN);
+          if (typeof window !== "undefined") {
+            return (window.location.href =
+              (process.env.NEXT_PUBLIC_INCIDENT_URL ??
+                "https://incidents.scrubbe.com") + `?token=${token}`);
+          }
+        }
         if (path) {
-          router.push(`/auth/account-setup?to=${path}`);
+          return router.push(`/auth/account-setup?to=${path}`);
         } else {
-          router.push(`/auth/account-setup`);
+          return router.push(`/auth/account-setup`);
         }
       }, 3000);
 
@@ -287,7 +295,9 @@ export default function BusinessSignupForm() {
         toast.error("Incorrect OTP code");
         return;
       }
+      setRefreshing(true);
       await verifyEmail(code);
+      setRefreshing(false);
       toast.success("Email verified successfully");
       setShowSuccess(true);
     } catch (_) {
@@ -312,6 +322,7 @@ export default function BusinessSignupForm() {
           email={formData?.businessEmail ?? ""}
           handleResend={handleResendOTP}
           onSubmit={handleVerifyOTP}
+          isLoading={refreshing}
         />
       </div>
     );
@@ -321,7 +332,7 @@ export default function BusinessSignupForm() {
     <Suspense fallback={<div>Loading...</div>}>
       <div className="w-full p-6">
         {session.status == "loading" && (
-          <div className=" absolute inset-0 bg-black/20 z-50 flex justify-center pt-[20%]">
+          <div className=" absolute inset-0 bg-black/20 z-[1000] flex justify-center pt-[20%] ">
             <Loader2 className=" animate-spin text-primary-500" size={30} />
           </div>
         )}
@@ -449,11 +460,11 @@ export default function BusinessSignupForm() {
                           options={[
                             { value: "", label: "Select Purpose" },
                             {
-                              value: "Incident Management System (IMS)",
+                              value: "IMS",
                               label: "Incident Management System (IMS)",
                             },
                             {
-                              value: "Fraud Management + Incident Management",
+                              value: "FRAUD_MANAGEMENT_IMS",
                               label: "Fraud Management + Incident Management",
                             },
                           ]}

@@ -31,6 +31,7 @@ export type User = {
   role: string;
   updatedAt: string;
   username?: string;
+  purpose?: string;
 };
 
 type AuthState = {
@@ -257,7 +258,6 @@ const useAuthStore = create<AuthState & AuthActions>()(
       },
       businessProfileSignup: async (signupData) => {
         try {
-          console.log(signupData);
           set({ isLoading: true, error: null });
           //TODO: use the service provider endpoint
           const newBusinessData = {
@@ -284,6 +284,7 @@ const useAuthStore = create<AuthState & AuthActions>()(
           });
           setCookie(COOKIE_KEYS.TOKEN, data.tokens.accessToken);
           setCookie(COOKIE_KEYS.REFRESH_TOKEN, data.tokens.refreshToken);
+          return data?.user;
         } catch (error) {
           set({
             error:

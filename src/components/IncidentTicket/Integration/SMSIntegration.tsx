@@ -1,9 +1,9 @@
 // RecipientForm.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { z } from "zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, get } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FiX } from "react-icons/fi";
 import { toast } from "sonner";
@@ -12,6 +12,9 @@ import Switch from "@/components/ui/Switch";
 import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import CButton from "@/components/ui/Cbutton";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { querykeys } from "@/lib/constant";
+import useAuthStore from "@/lib/stores/auth.store";
 
 // ---
 // 1. Zod Schema for Validation
@@ -35,6 +38,7 @@ type FormType = z.infer<typeof formSchema>;
 const SMSIntegration: React.FC = () => {
   const [newRecipient, setNewRecipient] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
   const {
     handleSubmit,
     control,
@@ -51,7 +55,34 @@ const SMSIntegration: React.FC = () => {
   });
 
   const { post } = useFetch();
+  const { user } = useAuthStore();
+  const { data } = useQuery({
+    queryKey: [querykeys.INTEGRATIONS],
+    queryFn: async () => {
+      const res = await get(
+        endpoint.incident_ticket.integrations + "/" + user?.id
+      );
+      console.log(res);
+      if (res.success) {
+        return res.data.data;
+      }
+      return [];
+    },
+    enabled: !!user?.id,
+  });
 
+  const whatsAppConfig = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return data.find((value: any) => value.provider === "WHATSAPP");
+  }, [data]);
+
+  useEffect(() => {
+    if (whatsAppConfig?.metadata?.recipents.length > 0) {
+      setValue("recipients", [...whatsAppConfig?.metadata?.recipents], {
+        shouldValidate: true,
+      });
+    }
+  }, [setValue, whatsAppConfig]);
   // ---
   // 2. Helper Functions for Recipient Tags
   // ---
@@ -89,6 +120,7 @@ const SMSIntegration: React.FC = () => {
     const res = await post(endpoint.integration.sms, values);
     setIsLoading(false);
     if (res.success) {
+      queryClient.refetchQueries({ queryKey: [querykeys.INTEGRATIONS] });
       return toast.success("SMS integration successful!");
     }
     return toast.error("Integration failed");
