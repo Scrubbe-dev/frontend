@@ -15,6 +15,8 @@ import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Loader2 } from "lucide-react";
 import { AxiosError } from "axios";
+import { getCookie } from "cookies-next";
+import { COOKIE_KEYS } from "@/lib/constant";
 
 // Define the form schema using zod
 const loginSchema = z.object({
@@ -61,13 +63,20 @@ export default function SignInForm() {
       });
 
       // Show success toast after delay
-      if (path === "ezra") {
+      if (path === "ezra" && userDetails?.purpose !== "IMS") {
         router.push(`/ezra/dashboard`);
       } else {
+        const token = getCookie(COOKIE_KEYS.TOKEN);
         if (userDetails?.accountType === "BUSINESS") {
-          router.push(`/dashboard`);
+          if (userDetails?.purpose === "IMS") {
+            window.location.href =
+              (process.env.NEXT_PUBLIC_INCIDENT_URL ??
+                "https://incidents.scrubbe.com") + `?token=${token}`;
+          } else {
+            router.push(`/dashboard`);
+          }
         } else {
-          router.push("/ezra/dashboard");
+          router.push("/developer/dashboard");
         }
       }
 
@@ -147,7 +156,7 @@ export default function SignInForm() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       {session.status == "loading" && (
-        <div className=" absolute inset-0 bg-black/20 z-50 flex justify-center pt-[20%]">
+        <div className=" absolute inset-0 bg-black/20 z-50 flex justify-center pt-[20%] h-screen">
           <Loader2 className=" animate-spin text-primary-500" size={30} />
         </div>
       )}

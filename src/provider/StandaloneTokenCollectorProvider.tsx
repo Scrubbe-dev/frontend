@@ -14,7 +14,7 @@ const StandaloneTokenCollectorProvider = ({
 
     if (token) {
       try {
-        setCookie("token", COOKIE_KEYS.TOKEN);
+        setCookie(COOKIE_KEYS.TOKEN, token);
         // Clear the token from the URL for security
         window.history.replaceState(
           {},

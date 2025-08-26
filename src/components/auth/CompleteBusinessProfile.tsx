@@ -86,17 +86,14 @@ const CompleteBusinessProfile = ({
               label="What do you need scrubbe for?"
               options={[
                 { value: "", label: "Select Purpose" },
-                { value: "code-review", label: "Code Review" },
                 {
-                  value: "security-scanning",
-                  label: "Security Scanning",
+                  value: "IMS",
+                  label: "Incident Management System (IMS)",
                 },
                 {
-                  value: "quality-assurance",
-                  label: "Quality Assurance",
+                  value: "FRAUD_MANAGEMENT_IMS",
+                  label: "Fraud Management + Incident Management",
                 },
-                { value: "compliance", label: "Compliance" },
-                { value: "other", label: "Other" },
               ]}
               error={errors.purpose?.message}
               isLoading={isLoading}
