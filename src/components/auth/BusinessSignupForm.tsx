@@ -308,7 +308,9 @@ export default function BusinessSignupForm() {
 
   const handleResendOTP = async () => {
     try {
+      setRefreshing(true);
       await resendOTP();
+      setRefreshing(false);
       toast.success("OTP sent successfully");
     } catch (_) {
       console.log(_);

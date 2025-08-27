@@ -32,14 +32,14 @@ export const RedirectProviderIMS = ({ children }: { children: ReactNode }) => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = getCookie(COOKIE_KEYS.TOKEN);
     const newToken = urlParams.get("token");
-
-    if (!token || !newToken) {
+    console.log({ token, newToken });
+    if (!token && !newToken) {
       // const timeout = setTimeout(() => {
-      router.push("/auth/signin");
       if (typeof window !== "undefined") {
         window.location.href =
           (process.env.NEXT_PUBLIC_SCRUBBE ?? "https://scrubbe.com") +
           "/auth/signin";
+        console.log("redirect away");
       }
       return;
       // }, 1000);

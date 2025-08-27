@@ -3,6 +3,7 @@ import { RedirectProviderIMS } from "@/provider/RedirectProviderIMS";
 import StandaloneTokenCollectorProvider from "@/provider/StandaloneTokenCollectorProvider";
 import { redirect } from "next/navigation";
 import React, { ReactNode } from "react";
+import { Toaster } from "sonner";
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 const IncidentDashboard = ({ children }: { children: ReactNode }) => {
@@ -16,6 +17,7 @@ const IncidentDashboard = ({ children }: { children: ReactNode }) => {
         <div className="dark:bg-[#111827] bg-white min-h-screen">
           <Navbar />
           {children}
+          <Toaster position="top-center" />
         </div>
       </RedirectProviderIMS>
     </StandaloneTokenCollectorProvider>
