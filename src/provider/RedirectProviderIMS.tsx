@@ -29,8 +29,11 @@ export const RedirectProviderIMS = ({ children }: { children: ReactNode }) => {
   };
 
   React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
     const token = getCookie(COOKIE_KEYS.TOKEN);
-    if (!token) {
+    const newToken = urlParams.get("token");
+
+    if (!token || !newToken) {
       // const timeout = setTimeout(() => {
       router.push("/auth/signin");
       if (typeof window !== "undefined") {
