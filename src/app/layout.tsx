@@ -4,7 +4,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { StoreProvider } from "@/store/StoreProvider";
-//import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
 import AuthProvider from "@/provider/AuthProvider";
 import ModalManager from "@/components/landing/ModalManager";
