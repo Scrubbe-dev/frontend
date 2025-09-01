@@ -2,6 +2,7 @@
 
 import { Info } from "lucide-react";
 import React from "react";
+import { RiInformationLine } from "react-icons/ri";
 
 interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -11,6 +12,7 @@ interface TextareaProps
   type?: string;
   icon?: React.ReactNode;
   labelClassName?: string;
+  info?: string;
 }
 
 const TextArea = ({
@@ -21,6 +23,7 @@ const TextArea = ({
   icon,
   className = "",
   labelClassName = "",
+  info,
   ...props
 }: TextareaProps) => {
   const isPasswordType = type === "password";
@@ -30,11 +33,20 @@ const TextArea = ({
       {label && (
         <label
           htmlFor={props.id}
-          className={`block dark:text-white mb-2 text-sm font-medium ${
+          className={`flex gap-2 items-center dark:text-white mb-2 text-sm font-medium ${
             isLoading ? "text-gray-500" : "text-gray-700"
           } ${labelClassName}`}
         >
-          {label}
+          {icon && <div className="">{icon}</div>}
+          {label}{" "}
+          {info && (
+            <div className="group relative">
+              <RiInformationLine className=" text-IMSLightGreen cursor-pointer" />
+              <div className="group-hover:block hidden absolute -top-[60px] -left-[90px] text-center  w-[200px] rounded-lg p-3 bg-black bg-opacity-80 text-white z-50 ">
+                {info}
+              </div>
+            </div>
+          )}
         </label>
       )}
       <div className="relative">

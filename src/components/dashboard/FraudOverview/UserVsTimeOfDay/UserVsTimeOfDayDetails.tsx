@@ -258,6 +258,7 @@ const UserVsTimeOfDayDetails = () => {
         <EzraChatWidget />
       </Modal>
       <CreateIncident
+        isModal={true}
         isOpen={openCreateIncident}
         onClose={() => setOpenCreateIncident(false)}
       />

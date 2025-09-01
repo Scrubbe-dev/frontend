@@ -1,8 +1,7 @@
-import IncidentTicketPage from "@/components/IncidentTicket/IncidateTicketPage";
 import React from "react";
 
 const page = () => {
-  return <IncidentTicketPage />;
+  return <div>Dashboard</div>;
 };
 
 export default page;

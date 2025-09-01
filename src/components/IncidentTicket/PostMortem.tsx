@@ -14,7 +14,6 @@ import Input from "../ui/input";
 import useAuthStore from "@/lib/stores/auth.store";
 import CButton from "../ui/Cbutton";
 import { ArrowLeft, ArrowRight, Loader } from "lucide-react";
-import { Ticket } from "./IncidateTicketPage";
 import { FiCheck, FiX } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
 import { useFetch } from "@/hooks/useFetch";
@@ -22,6 +21,7 @@ import { endpoint } from "@/lib/api/endpoint";
 import { usePostMortermForm } from "@/lib/stores/post-morterm";
 import { toast } from "sonner";
 import { FaRegFilePdf } from "react-icons/fa6";
+import { Ticket } from "../IMS/IncidateTicketPage";
 
 const resolutionSteps = [
   {
@@ -151,7 +151,7 @@ const BasicDetails = ({ setSteps, ticket }: Props) => {
     if (user && ticket) {
       console.log("id", ticket.ticketId);
       reset({
-        impactedSystem: "",
+        impactedSystem: ticket.affectedSystem,
         incidentId: ticket?.ticketId,
         priority: ticket.priority,
         reporter: `${user.firstName} ${user.lastName}`,
@@ -327,7 +327,7 @@ const Analysis = ({ setSteps, ticket }: Props) => {
   console.log({ errors });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <div>
       <div className=" overflow-y-auto h-[600px]">
         <h1 className="text-2xl font-bold dark:text-white text-black">
           Root Cause Analysis
@@ -460,11 +460,14 @@ const Analysis = ({ setSteps, ticket }: Props) => {
         >
           <ArrowLeft /> Previous
         </CButton>
-        <CButton type="submit" className="w-fit bg-green">
+        <CButton
+          onClick={() => handleSubmit(onSubmit)}
+          className="w-fit bg-green"
+        >
           Next <ArrowRight />
         </CButton>
       </div>
-    </form>
+    </div>
   );
 };
 

@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import moment from "moment";
 import { useParams } from "next/navigation";
+import EmptyState from "../ui/EmptyState";
 
 type IHistory = {
   action: string;
@@ -41,6 +42,15 @@ const History = () => {
         <div className=" h-8 rounded-md bg-gray-100 animate-pulse-dot [animation-delay:-0.16s]" />
         <div className=" h-8 rounded-md bg-gray-100 animate-pulse-dot" />
       </div>
+    );
+  }
+
+  if (!data || data?.history.length < 1) {
+    return (
+      <EmptyState
+        title="No History yet!"
+        description="This incident does not have an history yet!"
+      />
     );
   }
 

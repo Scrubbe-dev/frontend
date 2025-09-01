@@ -8,12 +8,12 @@ const useTicketDetails = () => {
   const { get } = useFetch();
   const { id } = useParams();
   return useQuery({
-    queryKey: [querykeys.INCIDENT_DETAIL],
+    queryKey: [querykeys.INCIDENT_DETAIL, id],
     queryFn: async () => {
       const res = await get(endpoint.incident_ticket.getTicket + "/" + id);
       console.log({ res });
       if (res.success) {
-        return res.data.data;
+        return res.data.data[0];
       }
       return null;
     },

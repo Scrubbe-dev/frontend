@@ -1,4 +1,3 @@
-import Navbar from "@/components/dashboard/Navbar";
 import { RedirectProviderIMS } from "@/provider/RedirectProviderIMS";
 import StandaloneTokenCollectorProvider from "@/provider/StandaloneTokenCollectorProvider";
 import { redirect } from "next/navigation";
@@ -14,11 +13,8 @@ const IncidentDashboard = ({ children }: { children: ReactNode }) => {
   return (
     <StandaloneTokenCollectorProvider>
       <RedirectProviderIMS>
-        <div className="dark:bg-[#111827] bg-white min-h-screen">
-          <Navbar />
-          {children}
-          <Toaster position="top-center" />
-        </div>
+        {children}
+        <Toaster position="top-center" />
       </RedirectProviderIMS>
     </StandaloneTokenCollectorProvider>
   );

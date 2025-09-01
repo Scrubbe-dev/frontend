@@ -3,7 +3,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FiSend, FiPlus } from "react-icons/fi";
 import { initSocket } from "@/lib/api/socket";
-import { Ticket } from "./IncidateTicketPage";
 import moment from "moment";
 import useAuthStore from "@/lib/stores/auth.store";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -11,6 +10,7 @@ import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import { querykeys } from "@/lib/constant";
 import { Socket } from "socket.io-client";
+import { Ticket } from "../IMS/IncidateTicketPage";
 
 type Message = {
   id: string;
@@ -36,14 +36,14 @@ const Collaboration = ({ ticket }: Props) => {
 
   // 1. Fetch initial messages using TanStack Query
   const { data: messages = [], isLoading } = useQuery<Message[]>({
-    queryKey: [querykeys.MESSAGES, ticket.id],
+    queryKey: [querykeys.MESSAGES, ticket?.id],
     queryFn: async () => {
       const res = await get(
         endpoint.incident_ticket.get_messages + "/" + ticket.id
       );
       return res.data;
     },
-    enabled: !!ticket.id, // Ensure the query only runs when a ticket is available
+    enabled: !!ticket?.id, // Ensure the query only runs when a ticket is available
   });
 
   // 2. Use a single useEffect for socket management
@@ -55,14 +55,14 @@ const Collaboration = ({ ticket }: Props) => {
 
     socket.on("connect", () => {
       console.log("Connected to socket server");
-      socket.emit("joinConversation", { incidentTicketId: ticket.id });
+      socket.emit("joinConversation", { incidentTicketId: ticket?.id });
     });
 
     // Use a single "newMessage" listener
     socket.on("newMessage", (message: Message) => {
       // Update the TanStack Query cache directly with the new message
       queryClient.setQueryData<Message[]>(
-        [querykeys.MESSAGES, ticket.id],
+        [querykeys.MESSAGES, ticket?.id],
         (oldData) => {
           if (!oldData) return [message];
           // Ensure no duplicate messages are added
@@ -79,7 +79,7 @@ const Collaboration = ({ ticket }: Props) => {
     return () => {
       socket.disconnect();
     };
-  }, [ticket.id, queryClient]); // Add get and queryClient as dependencies for correct closure
+  }, [ticket?.id, queryClient]); // Add get and queryClient as dependencies for correct closure
 
   // 3. Scroll to the bottom whenever messages change
   useEffect(() => {
@@ -91,7 +91,7 @@ const Collaboration = ({ ticket }: Props) => {
     console.log("Send the message");
     // Send message via socket
     socketRef.current.emit("sendMessage", {
-      incidentTicketId: ticket.id,
+      incidentTicketId: ticket?.id,
       content: input,
     });
 

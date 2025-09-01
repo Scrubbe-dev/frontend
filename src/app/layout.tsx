@@ -27,6 +27,11 @@ const bersley = localFont({
   variable: "--font-bersley",
   display: "swap",
 });
+const bigshotOne = localFont({
+  src: "./fonts/BigshotOne-Regular.ttf",
+  variable: "--font-bigshotOne",
+  display: "swap",
+});
 
 const airbnbCereal = localFont({
   src: [
@@ -77,7 +82,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${airbnbCereal.variable} ${bersley.variable}`}>
+    <html
+      lang="en"
+      className={`${airbnbCereal.variable} ${bersley.variable} ${bigshotOne.variable}`}
+    >
       <body className="antialiased min-h-screen w-full flex flex-col bg-[#1F2B71] font-airbnb">
         <Suspense
           fallback={

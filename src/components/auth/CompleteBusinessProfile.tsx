@@ -104,7 +104,7 @@ const CompleteBusinessProfile = ({
       </div>
       <div className="flex items-center gap-4">
         <CButton
-          className="border border-colorScBlue bg-transparent text-colorScBlue"
+          className="border border-colorScBlue bg-transparent hover:text-white text-colorScBlue"
           onClick={signOut}
         >
           Back
