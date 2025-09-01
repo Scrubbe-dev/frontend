@@ -1,5 +1,6 @@
 import { apiClient } from "@/lib/api/client";
 import { endpoint } from "@/lib/api/endpoint";
+import { toast } from "sonner";
 import type { StateCreator } from "zustand";
 
 export interface TeamMember {
@@ -457,6 +458,7 @@ export const createEnterpriseSetupSlice: StateCreator<
       set({ isSuccess: true });
     } catch (error) {
       console.error("Error submitting enterprise setup:", error);
+      toast.error("Failed to submit enterprise setup");
       set({
         errors: {
           submit:

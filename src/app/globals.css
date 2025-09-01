@@ -110,6 +110,21 @@ While there's no universally fixed "acceptable" max height, sticking to 400–70
         line-height: 1.6;
     } */
 
+  .status-clip {
+    clip-path: polygon(
+      0% 0%,
+      90% 0%,
+      90% 30%,
+      94% 40%,
+      100% 50%,
+      94% 60%,
+      90% 70%,
+      90% 100%,
+      0% 100%,
+      0% 0%
+    );
+  }
+
   .hero {
     background: linear-gradient(135deg, #1e293b, #1e40af);
     color: white;

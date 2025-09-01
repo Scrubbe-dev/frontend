@@ -38,7 +38,6 @@ const AccountSetup = () => {
     clearError,
     setAdminContact,
     setDashboardPreferences,
-    toggleIntegration,
     toggleNotificationChannel,
     toggleIncidentPriority,
     submitEnterpriseSetup,
@@ -1014,38 +1013,6 @@ const AccountSetup = () => {
               </div>
 
               {/* Preferred Integration */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium text-gray-900">
-                  Preferred Integration
-                </h3>
-                <p className="text-sm text-gray-600">
-                  You can select more than one
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  {["Jira", "Freshdesk", "Service Now"].map((integration) => (
-                    <div
-                      key={integration}
-                      className="flex items-center space-x-2"
-                    >
-                      <input
-                        type="checkbox"
-                        id={integration.toLowerCase().replace(" ", "")}
-                        checked={enterpriseSetup.preferredIntegrations.includes(
-                          integration
-                        )}
-                        onChange={() => toggleIntegration(integration)}
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                      />
-                      <label
-                        htmlFor={integration.toLowerCase().replace(" ", "")}
-                        className="text-sm text-gray-700"
-                      >
-                        {integration}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
               {/* Notification Channels */}
               <div className="space-y-4">
@@ -1059,12 +1026,6 @@ const AccountSetup = () => {
                         You can select more than one
                       </p>
                     </div>
-                    <button
-                      type="button"
-                      className="self-start px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-50 text-blue-600 rounded-md border border-blue-200 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors text-xs sm:text-sm font-medium whitespace-nowrap"
-                    >
-                      Go to notification settings
-                    </button>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-4">

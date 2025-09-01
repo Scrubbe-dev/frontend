@@ -3,19 +3,28 @@ import {
   LayoutDashboard,
   Lock,
   LucideDatabaseBackup,
+  LucideLayoutDashboard,
+  Search,
   Settings,
   ShieldCheck,
   SquareCode,
   SquareKanban,
   UsersRound,
 } from "lucide-react";
+import { LuRefreshCw } from "react-icons/lu";
 import { BsBoxSeam, BsDatabase, BsQuestionOctagon } from "react-icons/bs";
-import { FaCircleQuestion, FaCodepen } from "react-icons/fa6";
+import { FaBook, FaCircleQuestion, FaClock, FaCodepen } from "react-icons/fa6";
 import { FiGitMerge } from "react-icons/fi";
 import { HiOutlineCreditCard } from "react-icons/hi";
 import { TbCloudDataConnection, TbRouteSquare } from "react-icons/tb";
 import { TiFlowChildren } from "react-icons/ti";
 import { GoLock } from "react-icons/go";
+import { IoIosNotifications, IoMdCall } from "react-icons/io";
+import { CgArrowBottomRightR } from "react-icons/cg";
+import { MdAnalytics, MdGroup, MdLock } from "react-icons/md";
+import { BiSolidBookBookmark } from "react-icons/bi";
+import { RiOrganizationChart } from "react-icons/ri";
+import { FaBox, FaLink } from "react-icons/fa";
 
 export type NavItem = {
   name: string;
@@ -610,5 +619,128 @@ export const playbookTemplate = [
         ],
       },
     ],
+  },
+];
+
+export const IMSSidebar: NavItem[] = [
+  {
+    name: "Dashboard",
+    Icon: LucideLayoutDashboard,
+    link: "/incident",
+    isMenu: false,
+    isActive: true,
+  },
+  {
+    name: "Incident",
+    Icon: FaCircleQuestion,
+    link: "/incident/tickets",
+    isMenu: false,
+    isActive: true,
+  },
+
+  {
+    name: "SLA Management",
+    Icon: FaClock,
+    link: "/incident/sla",
+    isMenu: false,
+    isActive: true,
+  },
+  {
+    name: "Changes and Problems",
+    Icon: LuRefreshCw,
+    link: "/incident/changes-problems",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Runbooks",
+    Icon: FaBook,
+    link: "/incident/runbooks",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "On-Call",
+    Icon: IoMdCall,
+    link: "/incident/on-call",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Ingestion",
+    Icon: CgArrowBottomRightR,
+    link: "/incident/ingestion",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Timeline",
+    Icon: FaClock,
+    link: "/incident/timeline",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Analytics",
+    Icon: MdAnalytics,
+    link: "/incident/anlytics",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Postmortems",
+    Icon: BiSolidBookBookmark,
+    link: "/incident/postmortems",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Workflows",
+    Icon: RiOrganizationChart,
+    link: "/incident/workflows",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Audit",
+    Icon: Search,
+    link: "/incident/audit",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Multi-Tenancy",
+    Icon: MdGroup,
+    link: "/incident/multi-tenancy",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Sandbox",
+    Icon: FaBox,
+    link: "/incident/sandbox",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Notification",
+    Icon: IoIosNotifications,
+    link: "/incident/notification",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Permissions",
+    Icon: MdLock,
+    link: "/incident/permissions",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Relationships",
+    Icon: FaLink,
+    link: "/incident/relationships",
+    isMenu: false,
+    isActive: false,
   },
 ];

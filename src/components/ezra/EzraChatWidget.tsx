@@ -634,6 +634,7 @@ export function EzraChatWidget() {
       </div>
       <a href="" target="_blank"></a>
       <CreateIncident
+        isModal={true}
         isOpen={openCreateIncident}
         onClose={() => {
           removeQuery();

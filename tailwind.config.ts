@@ -36,9 +36,15 @@ const config: Config = {
         trebuchetMs: ["Trebuchet MS"],
         airbnb: ["var(--font-airbnb-cereal)"],
         besley: ["var(--font-bersley)"],
+        bigshotOne: ["var(--font-bigshotOne)"],
       },
       colors: {
-        green: "#0d9488",
+        IMSGreen: "#072929",
+        IMSLightGreen: "#28A745",
+        IMSDarkGreen: "#1F553E",
+        green: {
+          default: "#0d9488",
+        },
         critical: "#dc2626", // red-600
         high: "#ea580c", // orange-600
         medium: "#fbbf24", // yellow-400

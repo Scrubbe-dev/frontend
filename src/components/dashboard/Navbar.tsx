@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import useAuthStore from "@/lib/stores/auth.store";
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 const Navbar = () => {
@@ -32,27 +31,14 @@ const Navbar = () => {
   return (
     <div>
       <div className="h-[70px] w-full border-b border-neutral-200 dark:border-blue-400/50  flex justify-between items-center px-[3%]">
-        {IS_STANDALONE ? (
-          <div className=" h-10 flex items-center">
-            <Image
-              src="/scrubbe-logo-01.png"
-              alt="scrubbe-logo-01.png"
-              height={160}
-              width={160}
-              className="object-contain"
-            />
-          </div>
-        ) : null}
-        {IS_STANDALONE ? null : (
-          <div className=" w-[50%] dark:bg-zinc-800 bg-zinc-100 flex gap-3 items-center border border-zinc-200 dark:border-zinc-600 rounded-lg h-[38px] px-2">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="bg-transparent outline-none dark:text-white w-full"
-            />
-            <Search className="dark:text-white" size={18} />
-          </div>
-        )}
+        <div className=" w-[50%] dark:bg-zinc-800 bg-zinc-100 flex gap-3 items-center border border-zinc-200 dark:border-zinc-600 rounded-lg h-[38px] px-2">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="bg-transparent outline-none dark:text-white w-full"
+          />
+          <Search className="dark:text-white" size={18} />
+        </div>
 
         <div className="flex items-center gap-3">
           <div

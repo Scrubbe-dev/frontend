@@ -1,4 +1,4 @@
-import TicketDetails from "@/components/IncidentTicket/TicketDetails";
+import TicketDetails from "@/components/IMS/TicketDetails";
 import React from "react";
 
 const Page = () => {

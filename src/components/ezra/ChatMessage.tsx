@@ -54,6 +54,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
       {isAI && (
         <CreateIncident
+          isModal={true}
           isOpen={openCreateIncident}
           onClose={() => setOpenCreateIncident(false)}
         />

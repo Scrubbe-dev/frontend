@@ -1,9 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import Modal from "../ui/Modal";
-import { Ticket } from "./IncidateTicketPage";
 import Select from "../ui/select";
-import Input from "../ui/input";
 import CButton from "../ui/Cbutton";
 import TicketComments from "./TicketComments";
 import Collaboration from "./Collaboration";
@@ -11,19 +10,12 @@ import History from "./History";
 import TreatIntel from "./TreatIntel";
 import { motion } from "framer-motion";
 import moment from "moment";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { querykeys } from "@/lib/constant";
-import { endpoint } from "@/lib/api/endpoint";
-import { useFetch } from "@/hooks/useFetch";
-import { z } from "zod";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import TextArea from "../ui/text-area";
-import { toast } from "sonner";
 import PostMortem from "./PostMortem";
 import useTicketDetails from "@/hooks/useTicketDetails";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
+import { Ticket } from "../IMS/IncidateTicketPage";
+import EditIncidentTicket from "../IMS/EditIncidentTicket";
 // import { Ticket } from './IncidateTicketPage';
 
 const TABS = [
@@ -33,46 +25,6 @@ const TABS = [
   "History",
   "Threat intel",
 ];
-
-const selectOptions = {
-  mitre: [
-    { value: "None", label: "None" },
-    { value: "T1078-Valid Account", label: "T1078-Valid Account" },
-    { value: "TI566-Phishing", label: "TI566-Phishing" },
-  ],
-  compliance: [
-    { value: "None", label: "None" },
-    { value: "GDPR", label: "GDPR" },
-    { value: "HIPAA", label: "HIPAA" },
-  ],
-  status: [
-    { value: "", label: "SELECT STATUS" },
-    { value: "open", label: "Open" },
-    { value: "In Progress", label: "In Progress" },
-    { value: "On Hold", label: "On Hold" },
-    { value: "Closed", label: "Closed" },
-  ],
-  customAction: [
-    { value: "None", label: "None" },
-    { value: "Trust", label: "Trust" },
-    { value: "Block", label: "Block" },
-    { value: "Investigate", label: "Investigate" },
-    { value: "Flag", label: "Flag" },
-    { value: "Add to Watchlist", label: "Add to Watchlist" },
-  ],
-};
-
-const formScheme = z.object({
-  template: z.string().nonempty({ message: "template is required" }),
-  reason: z.string().nonempty({ message: "reason is required" }),
-  // shortDescription: z.string().optional(),
-  priority: z.string().nonempty({ message: "priority is required" }),
-  assignedTo: z.string().nonempty({ message: "assignedTo is required" }),
-  username: z.string().nonempty({ message: "username is required" }),
-  status: z.string(),
-});
-
-type FormType = z.infer<typeof formScheme>;
 
 // type TicketDetailsProps = {
 //   isOpen: boolean;
@@ -84,76 +36,13 @@ const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 
 const TicketDetails = () => {
   const [tab, setTab] = useState(0);
-  const [compliance, setCompliance] = useState("None");
   const [isExcuteLockAccount, setIsExcuteLockAccount] = useState(false);
   const [isMergeTicket, setIsMergeTicket] = useState(false);
   const [isEscalateTicket, setIsEscalateTicket] = useState(false);
   const [openPostMortem, setOpenPostMortem] = useState(false);
-  const { get, put } = useFetch();
-  const queryClient = useQueryClient();
   const { data, isLoading } = useTicketDetails();
   const ticket = data as Ticket;
   const router = useRouter();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors, isValid },
-    setValue,
-  } = useForm<FormType>({
-    resolver: zodResolver(formScheme),
-    mode: "onChange",
-  });
-
-  const { data: members } = useQuery<
-    { firstname: string; lastname: string; email: string }[]
-  >({
-    queryKey: [querykeys.GET_MEMBERS],
-    queryFn: async () => {
-      try {
-        const res = await get(endpoint.incident_ticket.get_members);
-        console.log({ memeber: res });
-        if (res.success) {
-          return res.data;
-        }
-        return [];
-      } catch (error) {
-        console.log(error);
-        return [];
-      }
-    },
-    refetchOnWindowFocus: false,
-  });
-
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: async ({ data }: { data: FormType }) => {
-      try {
-        const res = await put(endpoint.incident_ticket.create, {
-          ...data,
-          incidentId: ticket?.id,
-        });
-        if (res.success) {
-          toast.success("Incident ticket updated successfully");
-          queryClient.refetchQueries({ queryKey: [querykeys.INCIDENT_TICKET] });
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error("Failed to update incident ticket");
-      }
-    },
-  });
-
-  useEffect(() => {
-    if (ticket) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      Object.entries(ticket).map(([key, value]) => setValue(key as any, value));
-      setValue("username", ticket.userName);
-      setValue("assignedTo", ticket.assignedToEmail);
-    }
-  }, [ticket]);
-
-  const handleUpdateTicket = (data: FormType) => {
-    mutateAsync({ data });
-  };
 
   if (isLoading) {
     return (
@@ -198,7 +87,7 @@ const TicketDetails = () => {
 
   return (
     <div className="">
-      <div className="p-6 max-w-2xl mx-auto w-full">
+      <div className="p-6 mx-auto w-full">
         <div
           className="flex items-center gap-2 mb-2 cursor-pointer"
           onClick={() => router.back()}
@@ -326,146 +215,12 @@ const TicketDetails = () => {
                   </span>
                 </div>
               </div>
-              <hr className="my-6" />
-              <>
-                <div className="grid grid-cols-2 gap-6 mt-6">
-                  <Controller
-                    name="template"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        label="Incident Type"
-                        options={[
-                          { label: "SELECT INCIDENT TYPE", value: "" },
-                          { label: "None", value: "NONE" },
-                          { label: "Malware", value: "MALWARE" },
-                          { label: "Phishing", value: "PHISHING" },
-                        ]}
-                        {...field}
-                        error={errors.template?.message}
-                        className=" text-black dark:text-white"
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="username"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        label="Affected User"
-                        placeholder=""
-                        {...field}
-                        error={errors.username?.message}
-                        className=" text-black dark:text-white"
-                        readOnly
-                      />
-                    )}
-                  />
-
-                  <Controller
-                    name="priority"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        label="Priority"
-                        options={[
-                          { label: "SELECT PRIORITY", value: "" },
-                          { label: "Low", value: "LOW" },
-                          { label: "Medium", value: "MEDIUM" },
-                          { label: "High", value: "HIGH" },
-                          { label: "Critical", value: "CRITICAL" },
-                        ]}
-                        {...field}
-                        error={errors.priority?.message}
-                        className=" text-black dark:text-white"
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="status"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        label="Status"
-                        options={selectOptions.status}
-                        {...field}
-                        error={errors.status?.message}
-                        className=" text-black dark:text-white"
-                      />
-                    )}
-                  />
-
-                  <Controller
-                    name="assignedTo"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        label="Assignee"
-                        options={[
-                          { label: "SELECT ASSIGNEE", value: "" },
-                        ].concat(
-                          members?.map((member) => ({
-                            label: member.email,
-                            value: member.email,
-                          })) ?? []
-                        )}
-                        error={errors.assignedTo?.message}
-                        className=" text-black dark:text-white"
-                      />
-                    )}
-                  />
-
-                  <div>
-                    <Select
-                      value={compliance}
-                      label="Compliance"
-                      options={selectOptions.compliance}
-                      onChange={(e) => setCompliance(e.target.value)}
-                    />
-                  </div>
-
-                  {/* <div>
-                  <Select
-                    label="Custom Action"
-                    options={selectOptions.customAction}
-                    value={customAction}
-                    onChange={(e) => setCustomAction(e.target.value)}
-                  />
-                </div> */}
-                </div>
-                {/* <Controller
-                  name="shortDescription"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      label="Short Description"
-                      placeholder="Enter reason"
-                      {...field}
-                      error={errors.reason?.message}
-                      className=" text-black dark:text-white"
-                    />
-                  )}
-                /> */}
-
-                <Controller
-                  name="reason"
-                  control={control}
-                  render={({ field }) => (
-                    <TextArea
-                      label="Description"
-                      rows={4}
-                      {...field}
-                      placeholder="optional description of the rule"
-                      className="w-full bg-transparent dark:text-white border border-gray-300 rounded-md p-2 text-sm "
-                      error={errors.reason?.message}
-                    />
-                  )}
-                />
-              </>
+              <div className="my-6">
+                <EditIncidentTicket />
+              </div>
 
               {/* Action Buttons */}
-              <div className="grid grid-cols-3 gap-3 mb-3 text-base">
+              {/* <div className="grid grid-cols-3 gap-3 mb-3 text-base">
                 <button
                   className="bg-green text-white border rounded-lg py-2 font-medium hover:bg-green"
                   onClick={() => setIsMergeTicket(true)}
@@ -478,13 +233,7 @@ const TicketDetails = () => {
                 >
                   Escalate
                 </button>
-                <button
-                  disabled={!isValid || isPending}
-                  onClick={handleSubmit(handleUpdateTicket)}
-                  className="bg-green disabled:opacity-50 text-white rounded-lg py-2 font-medium hover:bg-green"
-                >
-                  Update Ticket
-                </button>
+               
               </div>
               <div className="grid grid-cols-3 gap-3 mb-3 text-base">
                 <button className="bg-green text-white rounded-lg py-2 font-medium hover:bg-green">
@@ -505,13 +254,8 @@ const TicketDetails = () => {
                   Post Mortem
                 </button>
 
-                {/* <button
-                  onClick={onClose}
-                  className="bg-green text-white rounded-lg py-2 font-medium hover:bg-green"
-                >
-                  Close
-                </button> */}
-              </div>
+              
+              </div> */}
             </div>
           )}
 

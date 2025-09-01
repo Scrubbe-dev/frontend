@@ -4,11 +4,11 @@ import { endpoint } from "@/lib/api/endpoint";
 import { borderColors, querykeys } from "@/lib/constant";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { ReactNode, useEffect, useState } from "react";
-import { Ticket } from "./IncidateTicketPage";
 import moment from "moment";
 import EmptyState from "../ui/EmptyState";
 import useAuthStore from "@/lib/stores/auth.store";
 import { MdVerified } from "react-icons/md";
+import { Ticket } from "../IMS/IncidateTicketPage";
 
 type Comments = {
   id: string;
@@ -36,7 +36,7 @@ const TicketComments = ({ ticket }: Props) => {
     queryKey: [querykeys.COMMENTS],
     queryFn: async () => {
       const res = await get(
-        `${endpoint.incident_ticket.get_comment}/${ticket.id}`
+        `${endpoint.incident_ticket.get_comment}/${ticket?.id}`
       );
       if (res.success) {
         return res.data;
@@ -46,7 +46,7 @@ const TicketComments = ({ ticket }: Props) => {
     refetchOnWindowFocus: false,
     // refetchInterval: 10000,
     refetchIntervalInBackground: true,
-    enabled: !!ticket.id,
+    enabled: !!ticket?.id,
   });
 
   const { mutateAsync, isPending } = useMutation({

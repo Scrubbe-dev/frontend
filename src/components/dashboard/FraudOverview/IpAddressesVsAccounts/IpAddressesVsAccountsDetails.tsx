@@ -258,6 +258,7 @@ const IpAddressesVsAccountsChart = () => {
         <EzraChatWidget />
       </Modal>
       <CreateIncident
+        isModal={true}
         isOpen={openCreateIncident}
         onClose={() => setOpenCreateIncident(false)}
       />

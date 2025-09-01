@@ -182,6 +182,7 @@ const NotificationSettings = ({
       </div>
 
       <CreateIncident
+        isModal={true}
         isOpen={isCreateIncident}
         onClose={() => setIsCreateIncident(false)}
       />

@@ -23,22 +23,8 @@ import TableLoader from "../ui/LoaderUI/TableLoader";
 import Integrations from "./Integrations";
 import Modal from "../ui/Modal";
 import { usePathname, useRouter } from "next/navigation";
-export type Ticket = {
-  id: string;
-  ticketId: string;
-  reason: string;
-  userName: string;
-  priority: "HIGH" | "MEDIUM" | "LOW";
-  status: "OPEN" | "CLOSED" | "in-progress" | "on-hold";
-  assignedToEmail: string;
-  score: number;
-  createdAt: string;
-  recommendedActions: string[];
-  riskScore: number;
-  businessId: string;
-  slaStatus: string;
-  template: string;
-};
+import { Ticket } from "../IMS/IncidateTicketPage";
+import { formatTime } from "@/lib/utils";
 
 const columns = [
   {
@@ -48,25 +34,11 @@ const columns = [
   },
 
   {
-    accessorKey: "userName",
-    header: () => <span className="font-semibold">Username</span>,
-    cell: (info: CellContext<Ticket, unknown>) => info.getValue(),
-  },
-  {
     accessorKey: "reason",
-    header: () => <span className="font-semibold">Reason</span>,
+    header: () => <span className="font-semibold">Short Description</span>,
     cell: (info: CellContext<Ticket, unknown>) => (
-      <div className=" truncate text-nowrap max-w-lg">
+      <div className=" truncate text-nowrap max-w-[20rem]">
         {info.getValue() as string}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "priority",
-    header: () => <span className="font-semibold">Priority</span>,
-    cell: (info: CellContext<Ticket, unknown>) => (
-      <div className="flex items-center gap-2">
-        {priorityColors((info.getValue() as string) ?? "low")}
       </div>
     ),
   },
@@ -80,36 +52,60 @@ const columns = [
     ),
   },
   {
-    accessorKey: "assignedToEmail",
-    header: () => <span className="font-semibold">Assigned To</span>,
-    cell: (info: CellContext<Ticket, unknown>) => info.getValue(),
-  },
-  {
-    accessorKey: "riskScore",
-    header: () => <span className="font-semibold">Risk Score</span>,
-    cell: (info: CellContext<Ticket, unknown>) => info.getValue(),
+    accessorKey: "priority",
+    header: () => <span className="font-semibold">Priority</span>,
+    cell: (info: CellContext<Ticket, unknown>) => (
+      <div className="flex items-center gap-2">
+        {priorityColors((info.getValue() as string) ?? "low")}
+      </div>
+    ),
   },
   {
     accessorKey: "createdAt",
-    header: () => <span className="font-semibold">Created At</span>,
+    header: () => <span className="font-semibold">Date Opened</span>,
     cell: (info: CellContext<Ticket, unknown>) =>
-      moment(info.getValue() as string).format("YYYY-MM-DD"),
+      moment(info.getValue() as string).format("YYYY-MM-DD HH:MM:SS"),
+  },
+  {
+    accessorKey: "MTTR",
+    header: () => <span className="font-semibold">Time taken to raise</span>,
+    cell: (info: CellContext<Ticket, unknown>) => (
+      <div className="flex items-center gap-2">
+        {formatTime(Number(info.getValue()))}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "Action",
+    header: () => <span className="font-semibold">Action</span>,
+    cell: () => (
+      <div className=" p-2 rounded-md gap-2 bg-gray-200 text-center">
+        View Details
+      </div>
+    ),
   },
 ];
 
 const statusColors = (status: string) => {
+  console.log(status);
   return (
     <div className="flex items-center text-sm gap-2">
       <div
         className={clsx(
-          "px-3 py-1 rounded-md capitalize",
+          "px-3 py-1 rounded-md capitalize text-xs",
           status === "OPEN"
             ? "bg-red-100 text-red-500"
             : status === "CLOSED"
             ? "bg-green-100 text-green-500"
-            : status === "IN_PROGRESS"
-            ? "bg-indigo-100 text-indigo-500"
-            : "bg-yellow-100 text-yellow-500"
+            : status === "ACKNOWLEDGED"
+            ? "bg-cyan-100 text-cyan-500"
+            : status === "INVESTIGATION"
+            ? "bg-amber-100 text-amber-500"
+            : status === "MITIGATED"
+            ? "bg-orange-100 text-orange-500"
+            : status === "RESOLVED"
+            ? "bg-emerald-100 text-emerald-500"
+            : "bg-gray-100 text-gray-500"
         )}
       >
         {status}
@@ -120,14 +116,18 @@ const statusColors = (status: string) => {
 
 const priorityColors = (priority: string) => {
   return (
-    <div className="flex items-center gap-2 text-sm">
+    <div className="flex items-center gap-2 ">
       <div
         className={clsx(
-          "px-3 py-1 rounded-md capitalize",
-          priority === "HIGH"
+          "px-3 py-1 text-xs rounded-md capitalize",
+          priority === "CRITICAL"
             ? "bg-red-100 text-red-500"
+            : priority === "HIGH"
+            ? "text-orange-500 bg-orange-100"
             : priority === "MEDIUM"
             ? "bg-yellow-100 text-yellow-500"
+            : priority === "LOW"
+            ? "bg-blue-100 text-blue-500"
             : "bg-gray-100 text-gray-500"
         )}
       >
@@ -213,11 +213,7 @@ const IncidentTicketPage = () => {
   if (data?.length > 0) {
     content = (
       <div>
-        <Table
-          data={data?.map((value: any) => ({ ...value, status: "open" }))}
-          columns={columns}
-          onRowClick={handleRowClick}
-        />
+        <Table data={data} columns={columns} onRowClick={handleRowClick} />
         <div className="flex justify-end mt-10">
           <Pagination page={1} totalPages={10} onPageChange={() => {}} />
         </div>
@@ -337,6 +333,7 @@ const IncidentTicketPage = () => {
         <CreateIncident
           isOpen={isCreateIncidentOpen}
           onClose={() => setIsCreateIncidentOpen(false)}
+          isModal={true}
         />
         <MangePlaybook
           isOpen={isManagePlaybookOpen}
