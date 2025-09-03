@@ -71,7 +71,7 @@ export default function SignInForm() {
           if (userDetails?.purpose === "IMS") {
             window.location.href =
               (process.env.NEXT_PUBLIC_INCIDENT_URL ??
-                "https://incidents.scrubbe.com") + `?token=${token}`;
+                "https://incidents.scrubbe.com") + `/incident?token=${token}`;
           } else {
             router.push(`/dashboard`);
           }

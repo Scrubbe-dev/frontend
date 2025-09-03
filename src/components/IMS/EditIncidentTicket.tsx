@@ -139,7 +139,7 @@ const EditIncidentTicket = () => {
           incidentId: ticket?.id,
         };
         if (data.status === "CLOSED" || data.status === "RESOLVED") {
-          newData.status = data.status;
+          newData.status = ticket.status;
         }
         const res = await put(endpoint.incident_ticket.create, newData);
         if (res.success) {
@@ -455,7 +455,7 @@ const EditIncidentTicket = () => {
                   icon={<FaExclamation />}
                   options={[
                     { label: "Select Priority", value: "" },
-                    { label: "P4-Informational", value: "INFORMATIONAL" },
+                    { label: "P5-Informational", value: "INFORMATIONAL" },
                     { label: "P4-Low", value: "LOW" },
                     { label: "P3-Medium", value: "MEDIUM" },
                     { label: "P2-High", value: "HIGH" },
@@ -512,7 +512,7 @@ const EditIncidentTicket = () => {
         />
 
         <div className="space-y-4">
-          <label className="flex gap-2 items-center text-sm font-medium text-gray-700 ">
+          <label className="flex gap-2 items-center text-sm font-medium text-gray-700 dark:text-white ">
             <HiOutlinePaperClip /> Attachment
             <div className="group relative">
               <RiInformationLine className=" text-IMSLightGreen cursor-pointer" />
@@ -530,7 +530,7 @@ const EditIncidentTicket = () => {
               <span className=" flex items-center justify-center h-full bg-emerald-100 text-emerald-600 px-2">
                 Choose File
               </span>
-              <span className=" px-2 flex items-center h-full">
+              <span className=" px-2 flex items-center h-full dark:text-white">
                 No file chosen yet
               </span>
             </div>

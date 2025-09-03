@@ -103,7 +103,7 @@ const Footer = () => {
               </Link>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row items-center mt-5 sm:gap-0 gap-4">
+          {/* <div className="flex flex-col sm:flex-row items-center mt-5 sm:gap-0 gap-4">
             <input
               type="text"
               name=""
@@ -114,7 +114,7 @@ const Footer = () => {
             <div className="h-[42px] text-nowrap max-sm:rounded-lg sm:rounded-r-lg bg-IMSLightGreen text-white flex items-center px-3 md:px-6 font-semibold cursor-pointer">
               Schedule a Demo
             </div>
-          </div>
+          </div> */}
         </motion.div>
       </motion.div>
 

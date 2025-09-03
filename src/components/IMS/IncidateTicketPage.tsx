@@ -7,7 +7,6 @@ import { CellContext } from "@tanstack/react-table";
 import { Table } from "../ui/table";
 import clsx from "clsx";
 import React, { useState, useRef, useEffect, ReactNode } from "react";
-import Pagination from "../alert-setting/Pagination";
 import { useQuery } from "@tanstack/react-query";
 import { querykeys } from "@/lib/constant";
 import { useFetch } from "@/hooks/useFetch";
@@ -95,7 +94,7 @@ const columns = [
     accessorKey: "Action",
     header: () => <span className="font-semibold">Action</span>,
     cell: () => (
-      <div className=" p-2 rounded-md gap-2 bg-gray-200 text-center">
+      <div className=" p-2 rounded-md gap-2 bg-gray-200 text-center dark:text-black">
         View Details
       </div>
     ),
@@ -112,7 +111,7 @@ const statusColors = (status: string) => {
           status === "OPEN"
             ? "bg-red-100 text-red-500"
             : status === "CLOSED"
-            ? "bg-green-100 text-green-500"
+            ? "bg-gray-100 text-gray-500"
             : status === "ACKNOWLEDGED"
             ? "bg-cyan-100 text-cyan-500"
             : status === "INVESTIGATION"
@@ -233,7 +232,7 @@ const IncidentTicketPage = () => {
             <div className="relative" ref={statusFilterRef}>
               <CButton
                 onClick={() => setOpenStatusFilter(!openStatusFilter)}
-                className="w-fit border-green hover:bg-green hover:text-white border bg-transparent text-green"
+                className="w-fit border-green hover:bg-green hover:text-white dark:text-white border bg-transparent text-green"
               >
                 Filter by Status
               </CButton>
@@ -261,14 +260,14 @@ const IncidentTicketPage = () => {
                 </div>
               )}
             </div>
-            <CButton className="w-fit border-green hover:bg-green hover:text-white border bg-transparent text-green">
+            <CButton className="w-fit border-green hover:bg-green hover:text-white dark:text-white border bg-transparent text-green">
               More Filter
             </CButton>
           </div>
         </div>
         <Table data={data} columns={columns} onRowClick={handleRowClick} />
         <div className="flex justify-end mt-10">
-          <Pagination page={1} totalPages={10} onPageChange={() => {}} />
+          {/* <Pagination page={1} totalPages={10} onPageChange={() => {}} /> */}
         </div>
       </div>
     );

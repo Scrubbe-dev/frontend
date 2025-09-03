@@ -228,7 +228,8 @@ export default function BusinessSignupForm() {
           if (typeof window !== "undefined") {
             return (window.location.href =
               (process.env.NEXT_PUBLIC_INCIDENT_URL ??
-                "https://incidents.scrubbe.com") + `?token=${token}`);
+                "https://incidents.scrubbe.com") +
+              `/get-started?token=${token}`);
           }
         }
         if (path) {
