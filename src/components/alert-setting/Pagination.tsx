@@ -39,7 +39,7 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className={`flex items-center gap-2 ${className ?? ""}`}>
       <button
-        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-zinc-100 disabled:opacity-50"
+        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-zinc-100 dark:text-white disabled:opacity-50"
         onClick={() => onPageChange(page - 1)}
         disabled={page === 1}
         aria-label="Previous page"
@@ -53,7 +53,7 @@ const Pagination: React.FC<PaginationProps> = ({
             className={`w-8 h-8 flex items-center justify-center rounded-full text-sm ${
               p === page
                 ? "bg-blue-100 text-blue-700"
-                : "hover:bg-zinc-100 text-zinc-700"
+                : "hover:bg-zinc-100 text-zinc-700 dark:text-white"
             } font-medium`}
             onClick={() => onPageChange(p)}
             aria-current={p === page ? "page" : undefined}
@@ -63,14 +63,14 @@ const Pagination: React.FC<PaginationProps> = ({
         ) : (
           <span
             key={i}
-            className="w-8 h-8 flex items-center justify-center text-zinc-400 "
+            className="w-8 h-8 flex items-center justify-center text-zinc-400 dark:text-white "
           >
             {p}
           </span>
         )
       )}
       <button
-        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-zinc-100 disabled:opacity-50"
+        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-zinc-100 disabled:opacity-50 dark:text-white"
         onClick={() => onPageChange(page + 1)}
         disabled={page === totalPages}
         aria-label="Next page"

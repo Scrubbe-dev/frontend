@@ -1296,9 +1296,9 @@ const Review = ({
         <CButton
           isLoading={isLoading}
           onClick={handleSubmit}
-          className="!px-6 !py-3 bg-gray-400 text-sm w-fit text-white font-semibold rounded-md hover:bg-gray-500 transition-colors"
+          className="!px-6 !py-3 bg-IMSLightGreen text-sm w-fit text-white font-semibold rounded-md hover:bg-gray-500 transition-colors"
         >
-          Close Incident & Save RCA
+          Save RCA & Close
         </CButton>
       </div>
     </div>

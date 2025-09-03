@@ -2,6 +2,7 @@ export const endpoint = {
   auth: {
     account_setup: "/business/setup",
     decode_invite_token: "/business/decode_invite",
+    ims_setup: "/ims/setup",
   },
   data_source: {
     fingerprint_configuration: "/fingerprint/configuration",

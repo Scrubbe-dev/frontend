@@ -166,8 +166,6 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
     enabled: isOpen == true ? true : false,
   });
 
-  console.log({ members });
-
   const createIncidentTicket = async (value: FormType) => {
     mutateAsync({ data: value });
   };
@@ -499,7 +497,7 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
                   icon={<FaExclamation />}
                   options={[
                     { label: "Select Priority", value: "" },
-                    { label: "P4-Informational", value: "INFORMATIONAL" },
+                    { label: "P5-Informational", value: "INFORMATIONAL" },
                     { label: "P4-Low", value: "LOW" },
                     { label: "P3-Medium", value: "MEDIUM" },
                     { label: "P2-High", value: "HIGH" },

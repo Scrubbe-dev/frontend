@@ -180,7 +180,7 @@ const AccountSetup = () => {
   const handleEditMember = (member: TeamMember) => {
     setEditingMember(member);
     setMemberForm({
-      name: member.name,
+      name: member.name ?? "",
       email: member.email,
       role: member.role,
       permissions: member.permissions,

@@ -5,9 +5,10 @@ import type { StateCreator } from "zustand";
 
 export interface TeamMember {
   id: string;
-  name: string;
+  name?: string;
   email: string;
   role: string;
+  level?: string;
   permissions: string[];
 }
 

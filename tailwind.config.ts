@@ -42,9 +42,7 @@ const config: Config = {
         IMSGreen: "#072929",
         IMSLightGreen: "#28A745",
         IMSDarkGreen: "#1F553E",
-        green: {
-          default: "#0d9488",
-        },
+        green: "#28A745",
         critical: "#dc2626", // red-600
         high: "#ea580c", // orange-600
         medium: "#fbbf24", // yellow-400

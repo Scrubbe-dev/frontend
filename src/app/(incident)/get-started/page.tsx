@@ -2,6 +2,8 @@
 import CButton from "@/components/ui/Cbutton";
 import Input from "@/components/ui/input";
 import Select from "@/components/ui/select";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
 import { TeamMember } from "@/store/slices/enterpriseSetupSlice";
 import { useAppStore } from "@/store/StoreProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,19 +14,35 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const companySizeOptions = [
-  "1-10 employees",
-  "11-50 employees",
-  "51-200 employees",
-  "201-500 employees",
-  "501-1000 employees",
-  "1000+ employees",
+const purpose = [
+  "IT Ops",
+  "Devops",
+  "SRE",
+  "Support",
+  "Cybersecurity/Security Operations Center",
+  "Compliance & Risk Team",
+  "Customer Success/ Client Services",
+  "Business continuity / Crisis Management Team",
+  "Cybersecurity/Security Operations Center",
+  "Product/ Engineering Team",
+  "Financial Services (Banking , Fintech , Insurance)",
+  "Government/Public Sector IT",
 ];
 
 const companyInfoSchema = z.object({
   companyName: z.string().min(1, "Company name is required"),
-  companySize: z.string().min(1, "Company size is required"),
+  companyPurpose: z.string().min(1, "Company size is required"),
 });
+
+type formType = z.infer<typeof companyInfoSchema>;
+
+export interface IMember {
+  id: string;
+  level: string;
+  email: string;
+  role: string;
+  permissions: string[];
+}
 
 const Page = () => {
   const router = useRouter();
@@ -36,25 +54,29 @@ const Page = () => {
     useAppStore((state) => state);
 
   const {
+    handleSubmit,
     formState: { errors: formErrors },
     control,
+    watch,
   } = useForm({
     resolver: zodResolver(companyInfoSchema),
   });
+  const [loading, setLoading] = useState(false);
+  const { post } = useFetch();
 
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [memberForm, setMemberForm] = useState({
-    name: "",
     email: "",
     role: "",
+    level: "",
     permissions: [] as string[],
   });
 
   const resetMemberForm = () => {
     setMemberForm({
-      name: "",
       email: "",
       role: "",
+      level: "",
       permissions: [],
     });
   };
@@ -62,7 +84,7 @@ const Page = () => {
   const handleEditMember = (member: TeamMember) => {
     setEditingMember(member);
     setMemberForm({
-      name: member.name,
+      level: member.level ?? "",
       email: member.email,
       role: member.role,
       permissions: member.permissions,
@@ -89,6 +111,24 @@ const Page = () => {
     removeTeamMember(id);
   };
 
+  const onSubmit = async (value: formType) => {
+    const data = {
+      ...value,
+      inviteMembers: enterpriseSetup.teamMembers,
+    };
+
+    setLoading(true);
+    const res = await post(endpoint.auth.ims_setup, data);
+    setLoading(false);
+    console.log(res);
+    if (res.success) {
+      toast.success("Welcome to scrubbe IMS");
+      router.replace("/incident");
+    } else {
+      toast.error("Failed to submit enterprise setup");
+    }
+    console.log(data);
+  };
   return (
     <section className="w-full bg-[#F9FAFB] min-h-screen p-4">
       <div className="flex justify-end  w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
@@ -115,7 +155,7 @@ const Page = () => {
       </div>
 
       <form
-        // onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit)}
         className="h-full max-w-[1440px] w-full mx-auto flex flex-col px-4 sm:px-6 lg:px-8"
       >
         <div className="py-6 md:py-8 lg:py-10">
@@ -133,37 +173,46 @@ const Page = () => {
           {/* Company Name and Industry Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Company Name */}
-            <Controller
-              name="companyName"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  label="Company Name"
-                  placeholder="Flutterwave"
-                  className="dark:!text-black"
-                  labelClassName="dark:!text-black"
-                  error={formErrors.companyName?.message}
-                  {...field}
-                />
-              )}
-            />
+            <div>
+              <Controller
+                name="companyName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Company Name"
+                    placeholder="Flutterwave"
+                    className="dark:!text-black"
+                    labelClassName="dark:!text-black"
+                    error={formErrors.companyName?.message}
+                    {...field}
+                  />
+                )}
+              />
+              <p className=" text-sm">
+                Your workspace:{" "}
+                <b className=" capitalize">
+                  {watch("companyName") ?? "Example"}
+                </b>
+                .incidents.scrubbe.com
+              </p>
+            </div>
 
             <Controller
-              name="companySize"
+              name="companyPurpose"
               control={control}
               render={({ field }) => (
                 <Select
-                  label="Company Size"
+                  label="What do you need scrubbe IMS for"
                   className="dark:!text-black"
                   labelClassName="dark:!text-black"
                   options={[
-                    { value: "", label: "Select Company Size" },
-                    ...companySizeOptions.map((option) => ({
+                    { value: "", label: "Select your use case" },
+                    ...purpose.map((option) => ({
                       value: option,
                       label: option,
                     })),
                   ]}
-                  error={formErrors.companySize?.message}
+                  error={formErrors.companyPurpose?.message}
                   {...field}
                 />
               )}
@@ -200,6 +249,26 @@ const Page = () => {
                 </div>
 
                 {/* Role */}
+                <Select
+                  label="Level"
+                  className="dark:!text-black"
+                  labelClassName="dark:!text-black"
+                  options={[
+                    { value: "", label: "Select Level" },
+                    { value: "1st_Line", label: "1st Line" },
+                    { value: "2st_Line", label: "2st Line" },
+                    { value: "3st_Line", label: "3st Line" },
+                    { value: "Manager", label: "Manager" },
+                  ]}
+                  value={memberForm.level}
+                  onChange={(e) =>
+                    setMemberForm((prev) => ({
+                      ...prev,
+                      level: (e.target as HTMLSelectElement).value,
+                    }))
+                  }
+                />
+
                 <Select
                   label="Role"
                   className="dark:!text-black"
@@ -369,7 +438,12 @@ const Page = () => {
         </article>
 
         <div className=" flex justify-end mt-4">
-          <CButton className=" bg-IMSLightGreen w-[100px] text-base ">
+          <CButton
+            isLoading={loading}
+            disabled={loading}
+            type="submit"
+            className=" bg-IMSLightGreen w-[100px] text-base "
+          >
             Submit
           </CButton>
         </div>

@@ -42,28 +42,29 @@ const Hero = () => {
           variants={itemVariants as any}
           className="text-white text-5xl md:text-6xl font-bigshotOne"
         >
-          Revolutionize Your <br /> DevOps & SRE <br /> Operations
+          Manage Every Incident.
+          <br /> Faster. Smarter
         </motion.div>
         <motion.p
           variants={itemVariants as any}
           className="text-white text-lg md:text-xl max-w-lg mt-5"
         >
-          Empower your IT team with AI-driven insights, war room collaboration,
-          and Integration with Github, Gitlab, Slack and More
+          Scrubbe IMS helps DevOps and SRE teams reduce MTTR, meet SLAs, and
+          keep critical systems online.
         </motion.p>
         <motion.div
           variants={itemVariants as any}
-          className="flex gap-4 mt-4 md:mt-10"
+          className="flex md:flex-row flex-col gap-4 mt-4 md:mt-10"
         >
           <Link
             href={"https://www.scrubbe.com/auth/business-signup"}
             target="_blank"
           >
-            <CButton className="w-fit h-[50px] bg-IMSLightGreen text-white hover:bg-IMSDarkGreen shadow-none text-base">
+            <CButton className=" w-full md:!w-[300px] h-[50px] bg-IMSLightGreen text-white hover:bg-IMSDarkGreen shadow-none text-base">
               Get Started
             </CButton>
           </Link>
-          <CButton className="w-fit h-[50px] border bg-transparent hover:bg-transparent border-IMSLightGreen text-IMSLightGreen shadow-none text-base">
+          <CButton className="w-full md:!w-[300px]  h-[50px] border bg-transparent hover:bg-transparent border-IMSLightGreen text-IMSLightGreen shadow-none text-base">
             Request War Room Demo
           </CButton>
         </motion.div>

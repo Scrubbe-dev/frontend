@@ -36,7 +36,7 @@ const TicketDetails = () => {
     <div className="">
       <div className="p-6 mx-auto w-full">
         <div
-          className="flex items-center gap-2 mb-2 cursor-pointer"
+          className="flex items-center gap-2 mb-2 cursor-pointer dark:text-white"
           onClick={() => router.back()}
         >
           <ChevronLeft />{" "}
@@ -51,8 +51,8 @@ const TicketDetails = () => {
               key={t}
               className={`py-2 px-2 text-sm font-medium border-b-2 transition-colors ${
                 tab === i
-                  ? "border-green text-green"
-                  : "border-transparent text-gray-500 dark:text-gray-400 hover:text-green"
+                  ? "border-IMSLightGreen text-IMSLightGreen"
+                  : "border-transparent text-gray-500  dark:text-gray-400 hover:text-green"
               }`}
               onClick={() => setTab(i)}
             >

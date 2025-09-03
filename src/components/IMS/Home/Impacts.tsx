@@ -42,7 +42,12 @@ const Impacts = () => {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <div className="relative flex items-center justify-center">
+          <div className="relative flex items-center justify-center z-10">
+            <img
+              src="/IMS/grid-bg.svg"
+              alt=""
+              className=" min-w-[500px] h-[500px] absolute -z-20 opacity-20"
+            />
             <motion.div
               initial={{
                 borderRadius: "100%",
