@@ -3,6 +3,7 @@ export const endpoint = {
     account_setup: "/business/setup",
     decode_invite_token: "/business/decode_invite",
     ims_setup: "/ims/setup",
+    me: "/auth/me",
   },
   data_source: {
     fingerprint_configuration: "/fingerprint/configuration",

@@ -5,6 +5,9 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import useAuthStore from "@/lib/stores/auth.store";
 import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 const Navbar = () => {
@@ -13,6 +16,19 @@ const Navbar = () => {
   const { user } = useAuthStore();
   const [menu, setMenu] = useState(false);
   const statusFilterRef = useRef<HTMLDivElement>(null);
+  const { get } = useFetch();
+
+  const {} = useQuery({
+    queryKey: ["PROFIILE"],
+    queryFn: async () => {
+      const res = await get(endpoint.auth.me);
+      console.log({ res });
+      if (res.success) {
+        return res.data;
+      }
+      return null;
+    },
+  });
   useEffect(() => {
     if (!menu) return;
     function handleClickOutside(event: MouseEvent) {

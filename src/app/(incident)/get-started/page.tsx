@@ -47,7 +47,7 @@ export interface IMember {
 const Page = () => {
   const router = useRouter();
   const handleSkip = () => {
-    router.push(`/incident`);
+    router.push(`/incident/tickets`);
   };
 
   const { enterpriseSetup, addTeamMember, updateTeamMember, removeTeamMember } =
@@ -123,7 +123,7 @@ const Page = () => {
     console.log(res);
     if (res.success) {
       toast.success("Welcome to scrubbe IMS");
-      router.replace("/incident");
+      router.replace("/incident/tickets");
     } else {
       toast.error("Failed to submit enterprise setup");
     }
