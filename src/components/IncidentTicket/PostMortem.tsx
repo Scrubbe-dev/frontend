@@ -98,14 +98,13 @@ const PostMortem = ({ ticket, onClose }: PostMortemProps) => {
   console.log({ steps });
   return (
     <div className="flex h-[700px] overflow-hidden">
-      <div className="min-w-[250px] border-r dark:border-neutral-600 border-neutral-200 relative bg-[#1a2a44] p-4">
+      <div className="min-w-[250px] border-r dark:border-neutral-600 border-neutral-200 relative bg-IMSGreen p-4">
         <p className=" text-lg font-semibold text-white ">Resolution Steps</p>
 
         <div className="w-full mt-5 pr-3 ">
           {resolutionSteps.map(({ Icon, name, value }) => (
             <div
               key={value}
-              onClick={() => setSteps(value)}
               className={` cursor-pointer ${
                 value === steps ? "bg-white/10 text-white " : "text-neutral-200"
               }  flex flex-row gap-3 items-center p-3 w-full rounded-md`}
@@ -148,18 +147,17 @@ const BasicDetails = ({ setSteps, ticket }: Props) => {
   });
 
   useEffect(() => {
-    if (user && ticket) {
+    if (user || ticket) {
       console.log("id", ticket.ticketId);
       reset({
         impactedSystem: ticket.affectedSystem,
         incidentId: ticket?.ticketId,
         priority: ticket.priority,
-        reporter: `${user.firstName} ${user.lastName}`,
+        reporter: `${user?.firstName} ${user?.lastName}`,
         reason: ticket.reason,
       });
     }
   }, [reset, user, ticket]);
-
   return (
     <div className=" w-full">
       <h1 className="text-2xl font-bold dark:text-white text-black mb-3 ">
@@ -324,7 +322,7 @@ const Analysis = ({ setSteps, ticket }: Props) => {
     setSteps("resolution");
   };
 
-  console.log({ errors });
+  console.log("data", { errors });
 
   return (
     <div>
@@ -461,7 +459,8 @@ const Analysis = ({ setSteps, ticket }: Props) => {
           <ArrowLeft /> Previous
         </CButton>
         <CButton
-          onClick={() => handleSubmit(onSubmit)}
+          onClick={handleSubmit(onSubmit)}
+          type="submit"
           className="w-fit bg-green"
         >
           Next <ArrowRight />
@@ -548,9 +547,9 @@ const Resolution = ({ setSteps }: Props) => {
           <ArrowLeft /> Previous
         </CButton>
         <CButton
-          type="button"
-          className="w-fit bg-green"
           onClick={handleSubmit(onSubmit)}
+          type="submit"
+          className="w-fit bg-green"
         >
           Next <ArrowRight />
         </CButton>
@@ -1017,7 +1016,7 @@ const Followup = ({ setSteps }: Props) => {
   );
 };
 const Stakeholder = ({ ticket, setSteps }: Props) => {
-  const [channel, setChannel] = useState("Slack");
+  const [channel, setChannel] = useState("SLACK");
   const [stakeholders, setStakeholders] = useState(["Customers", "Regulators"]);
   const [stakeholder, setStakeholder] = useState("");
   const [messageContent, setMessageContent] = useState("");
@@ -1025,6 +1024,7 @@ const Stakeholder = ({ ticket, setSteps }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const { updateForm } = usePostMortermForm();
 
+  console.log({ channel });
   const getMessage = async () => {
     setIsLoading(true);
     const res = await get(
@@ -1047,7 +1047,7 @@ const Stakeholder = ({ ticket, setSteps }: Props) => {
 
   const onSubmit = () => {
     const data = {
-      communicationChannel: channel ?? "slack",
+      communicationChannel: channel ?? "SLACK",
       targetStakeholders: stakeholders ?? ["customer"],
       messageContent: messageContent,
     };

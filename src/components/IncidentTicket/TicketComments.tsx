@@ -131,7 +131,7 @@ const TicketComments = ({ ticket }: Props) => {
           <div
             key={c.id}
             className={`dark:bg-gray-800 bg-white ${
-              borderColors[c.firstname[0].toLowerCase()]
+              borderColors[c.firstname?.[0]?.toLowerCase()]
             } rounded-xl px-6 py-4 shadow-sm`}
           >
             <div className="font-semibold text-base dark:text-white text-gray-800 mb-1">
