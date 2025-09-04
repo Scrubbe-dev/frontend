@@ -23,10 +23,14 @@ function useFetch() {
       };
     } catch (error: any) {
       // console.log(error);
+
       return {
         success: false,
-        data: (error as { response: { data: { message: string } } })?.response
-          ?.data?.message,
+        data: (
+          error as {
+            response: { data: { message: string; errors: string[] | string } };
+          }
+        )?.response?.data?.message,
         status: (error as { response: { status: number } })?.response?.status,
       };
     }

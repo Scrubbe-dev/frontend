@@ -8,22 +8,26 @@ import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
+import { CgSpinner } from "react-icons/cg";
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 const Navbar = () => {
   const pathname = usePathname();
   const isIncidentTicket = pathname.split("/").includes("incident-ticket");
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   const [menu, setMenu] = useState(false);
   const statusFilterRef = useRef<HTMLDivElement>(null);
   const { get } = useFetch();
 
-  const {} = useQuery({
+  const { isLoading } = useQuery({
     queryKey: ["PROFIILE"],
     queryFn: async () => {
       const res = await get(endpoint.auth.me);
       console.log({ res });
       if (res.success) {
+        if (!user) {
+          setUser(res.data);
+        }
         return res.data;
       }
       return null;
@@ -73,7 +77,13 @@ const Navbar = () => {
               >
                 <div className="flex items-center gap-3 text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
                   <div className=" size-9 rounded-full bg-zinc-700 flex justify-center items-center text-[80%] text-white">
-                    {user?.firstName?.[0]}.{user?.lastName?.[0]}
+                    {isLoading && !user ? (
+                      <CgSpinner className=" animate-spin" />
+                    ) : (
+                      <>
+                        {user?.firstName?.[0]}.{user?.lastName?.[0]}
+                      </>
+                    )}
                   </div>
                   <p className=" text-nowrap">
                     {user?.firstName} {user?.lastName} (You)

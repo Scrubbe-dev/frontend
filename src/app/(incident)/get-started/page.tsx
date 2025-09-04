@@ -114,7 +114,12 @@ const Page = () => {
   const onSubmit = async (value: formType) => {
     const data = {
       ...value,
-      inviteMembers: enterpriseSetup.teamMembers,
+      inviteMembers: enterpriseSetup.teamMembers.map((value) => ({
+        inviteEmail: value.email,
+        role: value.role,
+        accessPermissions: value.permissions,
+        Level: value.level,
+      })),
     };
 
     setLoading(true);
@@ -125,7 +130,10 @@ const Page = () => {
       toast.success("Welcome to scrubbe IMS");
       router.replace("/incident/tickets");
     } else {
-      toast.error("Failed to submit enterprise setup");
+      console.log(res.data);
+      const message =
+        typeof res.data === "object" ? res.data.join(",") : res.data;
+      toast.error(message ?? "Failed to submit enterprise setup");
     }
     console.log(data);
   };
