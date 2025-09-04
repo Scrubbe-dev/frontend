@@ -65,6 +65,7 @@ type AuthActions = {
   resendOTP: () => Promise<void>;
   logout: () => Promise<void>;
   clearError: () => void;
+  setUser: (value: User) => void;
 };
 
 const useAuthStore = create<AuthState & AuthActions>()(
@@ -75,6 +76,9 @@ const useAuthStore = create<AuthState & AuthActions>()(
       user: null,
       isLoading: false,
       error: null,
+      setUser: (value) => {
+        set({ user: value });
+      },
       login: async (email, password) => {
         try {
           set({ isLoading: true, error: null });
