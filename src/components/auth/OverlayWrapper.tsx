@@ -7,6 +7,8 @@ interface OverlayWrapperProps {
   sidebarContent: ReactNode;
 }
 
+const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
+
 export default function OverlayWrapper({
   children,
   sidebarContent,
@@ -28,17 +30,21 @@ export default function OverlayWrapper({
         shouldShowOverlay
           ? "bg-neutral-100 dark:bg-dark items-center"
           : "dark:bg-dark bg-neutral-100 md:bg-white"
-      } flex flex-col-reverse justify-center  md:flex-row min-h-screen h-full  w-full overflow-hidden`}
+      }
+      ${IS_STANDALONE && "!bg-white"}
+      flex flex-col-reverse justify-center  md:flex-row min-h-screen h-full  w-full overflow-hidden`}
     >
       {/* Sidebar - first column in grid (71fr) */}
       <article
         className={`w-full transition-all duration-300 ${
-          shouldShowOverlay ? "relative hidden" : " md:flex hidden "
+          shouldShowOverlay && !IS_STANDALONE
+            ? "relative hidden"
+            : " md:flex hidden "
         }`}
       >
         {sidebarContent}
         {/* Overlay for sidebar */}
-        {shouldShowOverlay && (
+        {shouldShowOverlay && !IS_STANDALONE && (
           <div className="absolute inset-0 bg-black/90 z-10 transition-opacity duration-300" />
         )}
       </article>
@@ -46,7 +52,7 @@ export default function OverlayWrapper({
       {/* Auth content - second column in grid (73fr) */}
       <article
         className={`w-full p-4 lg:p-8 flex flex-col justify-start items-center transition-all duration-300 ${
-          shouldShowOverlay ? "relative z-20" : ""
+          shouldShowOverlay && !IS_STANDALONE ? "relative z-20" : ""
         }`}
       >
         <div

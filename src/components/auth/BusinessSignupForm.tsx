@@ -24,6 +24,8 @@ import { AxiosError } from "axios";
 import { getCookie } from "cookies-next";
 import { COOKIE_KEYS } from "@/lib/constant";
 
+const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
+
 // Define the form schema using zod
 const businessSignupSchema = z
   .object({
@@ -223,6 +225,10 @@ export default function BusinessSignupForm() {
   useEffect(() => {
     if (showSuccess) {
       const timeout = setTimeout(() => {
+        if (IS_STANDALONE) {
+          router.replace("/get-started");
+          return;
+        }
         if (formData?.purpose === "IMS") {
           const token = getCookie(COOKIE_KEYS.TOKEN);
           if (typeof window !== "undefined") {

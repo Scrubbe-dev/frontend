@@ -18,6 +18,8 @@ import { AxiosError } from "axios";
 import { getCookie } from "cookies-next";
 import { COOKIE_KEYS } from "@/lib/constant";
 
+const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
+
 // Define the form schema using zod
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -63,6 +65,10 @@ export default function SignInForm() {
       });
 
       // Show success toast after delay
+      if (IS_STANDALONE) {
+        router.replace("/incident/tickets");
+        return;
+      }
       if (path === "ezra" && userDetails?.purpose !== "IMS") {
         router.push(`/ezra/dashboard`);
       } else {
@@ -121,7 +127,12 @@ export default function SignInForm() {
       // In a real app, you would redirect here
       if (path === "ezra") {
         router.push(`/ezra/dashboard`);
+        return;
       } else {
+        if (IS_STANDALONE) {
+          router.replace("/incident/tickets");
+          return;
+        }
         if (userDetails?.accountType === "BUSINESS") {
           router.push(`/dashboard`);
         } else {

@@ -1,6 +1,8 @@
 import React, { ReactNode } from "react";
 import { Button } from "./button";
 
+const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
+
 interface Props {
   isLoading?: boolean;
   onClick?: () => void;
@@ -23,7 +25,11 @@ const CButton = ({
       onClick={onClick}
       disabled={disabled}
       size={"sm"}
-      className={`w-full text-white !py-2 px-3 rounded-md transition-colors bg-blue-600 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-200 disabled:hover:bg-blue-200 disabled:text-blue-500
+      className={`w-full text-white !py-2 px-3 rounded-md transition-colors disabled:opacity-40 ${
+        IS_STANDALONE
+          ? "bg-IMSLightGreen hover:bg-IMSDarkGreen "
+          : "bg-blue-600 hover:bg-blue-800"
+      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
       ${className}
       `}
     >

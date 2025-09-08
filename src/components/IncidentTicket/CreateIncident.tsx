@@ -644,6 +644,7 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
         render={({ field }) => (
           <TextArea
             label="Description"
+            info="Provide a detailed account of the incident"
             icon={<IoDocumentTextSharp />}
             rows={4}
             {...field}
@@ -660,6 +661,7 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
         render={({ field }) => (
           <TextArea
             label="Suggestion Fix"
+            info="Suggested potential solutions or actions to resolve the incident"
             icon={<TiSpanner />}
             rows={4}
             {...field}

@@ -4,6 +4,9 @@ export const endpoint = {
     decode_invite_token: "/business/decode_invite",
     ims_setup: "/ims/setup",
     me: "/auth/me",
+    forgot_password: "/auth/forgot-password",
+    valid_token: "/auth/validate-reset-token",
+    reset_password: "/auth/reset-password",
   },
   data_source: {
     fingerprint_configuration: "/fingerprint/configuration",
