@@ -1,6 +1,6 @@
+"use client";
 // Integrations.tsx
 import React, { useState } from "react";
-import { FiCheck, FiX } from "react-icons/fi"; // Assumes react-icons
 // You would replace this with actual SVG or image imports
 import {
   FaSlack,
@@ -33,6 +33,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAuthStore from "@/lib/stores/auth.store";
 import GitlabConfiguration from "./Configuration/GitlabConfiguration";
 import GithubConfiguration from "./Configuration/GithubConfiguration";
+import CButton from "../ui/Cbutton";
 
 // Array of all available integrations
 const integrations = [
@@ -286,10 +287,10 @@ const Integrations: React.FC = () => {
 
   return (
     <div className="min-h-screen !min-w-[600px]">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white ">
-        Available Integrations
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center ">
+        Integrations
       </h1>
-      <p className="mb-6 dark:text-white">
+      <p className="mb-6 dark:text-white text-center">
         Connect and manage your enterprise tools and services
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
@@ -307,8 +308,8 @@ const Integrations: React.FC = () => {
               className="bg rounded-lg shadow-sm border border-gray-200 dark:border-gray-500 p-6 flex flex-col gap-4"
             >
               {/* Integration Icon */}
-              <div className="flex ">
-                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 mr-4">
+              <div className="flex items-center">
+                <div className="flex-shrink-0 w-16 h-12 flex items-center justify-center rounded-lg bg-gray-100 mr-4">
                   {integration.icon ? (
                     <integration.icon size={28} className="text-gray-700" />
                   ) : (
@@ -336,15 +337,15 @@ const Integrations: React.FC = () => {
               </div>
 
               {/* Action Buttons and Status */}
-              <div className="ml-4 flex-shrink-0 flex flex-col items-end space-y-2">
+              <div className="flex-shrink-0 flex items-center gap-3">
                 {integration.development ? null : (
                   <div className="flex items-center gap-3">
-                    <button
+                    <CButton
                       onClick={() => setSelectedIntegration(integration.name)}
-                      className="px-4 py-2 text-sm font-medium text-green border border-green rounded-md hover:bg-blue-50 focus:outline-none"
+                      className="py-2 text-sm font-medium shadow-none w-fit px-7"
                     >
                       {isConnected ? "Connected" : "Connect"}
-                    </button>
+                    </CButton>
                     {isConnected &&
                       (integration.name === "GitHub" ||
                         integration.name === "GitLab") && (
@@ -359,24 +360,20 @@ const Integrations: React.FC = () => {
                       )}
                   </div>
                 )}
-                <div className="flex items-center text-xs text-gray-500">
+                <div className="flex items-center text-xs text-gray-500 gap-2">
                   {integration.development ? (
                     <span>Coming soon</span>
                   ) : (
                     <>
                       {isConnected ? (
                         <>
-                          <FiCheck
-                            size={12}
-                            className="text-emerald-500 mr-1"
-                          />
+                          <div className=" size-2 rounded-full bg-IMSLightGreen" />
 
                           <span>Connected</span>
                         </>
                       ) : (
                         <>
-                          <FiX size={12} className="text-red-500 mr-1" />
-
+                          <div className=" size-2 rounded-full bg-red-500" />
                           <span>Not connected</span>
                         </>
                       )}
