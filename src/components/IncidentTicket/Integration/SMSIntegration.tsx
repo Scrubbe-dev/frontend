@@ -73,7 +73,7 @@ const SMSIntegration: React.FC = () => {
 
   const whatsAppConfig = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return data.find((value: any) => value.provider === "WHATSAPP");
+    return data?.find((value: any) => value.provider === "WHATSAPP");
   }, [data]);
 
   useEffect(() => {

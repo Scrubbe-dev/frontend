@@ -18,6 +18,8 @@ import { AxiosError } from "axios";
 import { getCookie } from "cookies-next";
 import { COOKIE_KEYS } from "@/lib/constant";
 
+const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
+
 // Define the form schema using zod
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -63,6 +65,10 @@ export default function SignInForm() {
       });
 
       // Show success toast after delay
+      if (IS_STANDALONE) {
+        router.replace("/incident/tickets");
+        return;
+      }
       if (path === "ezra" && userDetails?.purpose !== "IMS") {
         router.push(`/ezra/dashboard`);
       } else {
@@ -121,7 +127,12 @@ export default function SignInForm() {
       // In a real app, you would redirect here
       if (path === "ezra") {
         router.push(`/ezra/dashboard`);
+        return;
       } else {
+        if (IS_STANDALONE) {
+          router.replace("/incident/tickets");
+          return;
+        }
         if (userDetails?.accountType === "BUSINESS") {
           router.push(`/dashboard`);
         } else {
@@ -328,25 +339,14 @@ export default function SignInForm() {
           </div>
 
           <div className="mt-6 text-center">
+            New User?{" "}
             <Link
-              href="/auth/demo-page"
-              className="text-blue-600 hover:underline inline-flex items-center"
+              href="/auth/business-signup"
+              className={`${
+                IS_STANDALONE ? "text-IMSLightGreen" : "text-blue-600"
+              } underline hover:underline inline-flex items-center`}
             >
-              Looking for our demo page?
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 ml-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
+              Create an Account
             </Link>
           </div>
         </form>

@@ -7,15 +7,21 @@ import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Input from "../ui/input";
 import CButton from "../ui/Cbutton";
-import OtpInput from "../ui/OtpInput";
+// import OtpInput from "../ui/OtpInput";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import { toast } from "sonner";
+import { FaEnvelope } from "react-icons/fa";
 
 export default function ForgotPassword() {
   const [stage, setStage] = useState<number>(1);
   const [email, setEmail] = useState<string>("");
+  const { post } = useFetch();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   // Add zod schema for password reset
   const passwordSchema = z
     .object({
@@ -63,29 +69,42 @@ export default function ForgotPassword() {
   // }, [stage, resendTimer]);
 
   // Handle email submission
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
-      setStage(2);
+      setLoading(true);
+      const res = await post(endpoint.auth.forgot_password, { email });
+      setLoading(false);
+      if (res.success) {
+        setStage(2);
+        toast.success(res.data.message);
+      } else {
+        toast.error("Something went wrong, Try again!");
+      }
     }
   };
 
   // Handle verification code input
 
   // Handle verification code submission
-  const handleVerificationSubmit = (value: string) => {
-    console.log(value);
-    setStage(3);
-  };
+  // const handleVerificationSubmit = (value: string) => {
+  //   console.log(value);
+  //   setStage(3);
+  // };
 
   // Handle password creation
-  const handlePasswordSubmit = () => {
-    setStage(4);
-    resetPasswordForm();
+  const handlePasswordSubmit = async (value: PasswordFormData) => {
+    setLoading(true);
+    const res = await post(endpoint.auth.reset_password, value);
+    setLoading(false);
+    if (res.success) {
+      resetPasswordForm();
+      setStage(4);
+    }
   };
 
   // Handle resend code
-  const handleResendCode = () => {};
+  // const handleResendCode = () => {};
 
   // Render different stages
   const renderStage = () => {
@@ -100,10 +119,10 @@ export default function ForgotPassword() {
               <ChevronLeft />
               <p>back</p>
             </div>
-            <h1 className="text-2xl font-semibold mb-2 dark:text-white">
+            <h1 className="text-xl font-semibold dark:text-white">
               Forgot Password?
             </h1>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
+            <p className="text-gray-600 dark:text-gray-300 text-base mb-6">
               Put your email address to get started
             </p>
 
@@ -116,8 +135,8 @@ export default function ForgotPassword() {
                 required
               />
 
-              <CButton type="submit" disabled={!email}>
-                Send Code
+              <CButton isLoading={loading} type="submit" disabled={!email}>
+                Submit
               </CButton>
             </form>
           </div>
@@ -127,27 +146,37 @@ export default function ForgotPassword() {
         return (
           <div className="w-full  mx-auto">
             <div
-              className=" flex gap-2 items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer dark:text-white"
+              className=" flex gap-2 text-sm items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer dark:text-white"
               onClick={() => setStage(1)}
             >
               <ChevronLeft />
               <p>back</p>
             </div>
-            <OtpInput
-              email={email}
-              handleResend={handleResendCode}
-              onSubmit={handleVerificationSubmit}
-            />
+            <div className="mx-auto flex justify-center w-full">
+              <div className=" bg-blue-50 rounded-full size-16 flex justify-center items-center text-blue-600 ring-4 ring-blue-100/15">
+                <FaEnvelope size={35} />
+              </div>
+            </div>
+            <h1 className="text-2xl font-semibold mb-2 dark:text-white text-center">
+              Check your Email
+            </h1>
+            <p className="text-gray-600 dark:text-gray-300 mb-4 text-center text-sm">
+              We have sent a password reset link to this email -{" "}
+              <span className=" text-blue-600 font-bold">{email} </span>
+              <br />
+              If your email is registered, you will receive a password reset
+              link
+            </p>
           </div>
         );
 
       case 3:
         return (
           <div className="w-full  mx-auto">
-            <h1 className="text-2xl font-semibold mb-2 dark:text-white">
+            <h1 className="text-xl font-semibold mb-2 dark:text-white">
               Create New Password
             </h1>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
+            <p className="text-gray-600 dark:text-gray-300 mb-6 text-base">
               Enter a password you will remember
             </p>
 
@@ -180,12 +209,13 @@ export default function ForgotPassword() {
                   />
                 )}
               />
-              <button
+              <CButton
                 type="submit"
+                isLoading={loading}
                 className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 Create Password
-              </button>
+              </CButton>
             </form>
           </div>
         );
@@ -193,29 +223,29 @@ export default function ForgotPassword() {
       case 4:
         return (
           <div className="w-full  mx-auto flex flex-col items-center justify-center">
-            <div className="mb-8">
+            <div className="mb-5">
               <div className="relative flex items-center justify-center scale-85">
-                <div className="size-[110px] bg-blue-300 rounded-full absolute z-10" />
-                <div className="size-[120px] bg-blue-200/70 rounded-full absolute z-10" />
-                <div className="size-[130px] bg-blue-100/50 rounded-full absolute z-10" />
-                <div className="size-[140px] bg-blue-100/30 rounded-full absolute z-10" />
-                <div className="flex items-center size-[100px] rounded-full justify-center bg-blue-700 z-20">
+                {/* <div className="size-[100px] bg-blue-300 rounded-full absolute z-10" /> */}
+                <div className="size-[90px] bg-blue-200/70 rounded-full absolute z-10" />
+                <div className="size-[110px] bg-blue-100/50 rounded-full absolute z-10" />
+                <div className="size-[130px] bg-blue-100/30 rounded-full absolute z-10" />
+                <div className="flex items-center size-[80px] rounded-full justify-center bg-blue-700 z-20">
                   <img src={"/check.svg"} alt="" />
                 </div>
               </div>
             </div>
 
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
               Successful
             </h1>
 
-            <p className="text-gray-600 dark:text-gray-300 text-center mb-8">
+            <p className="text-gray-600 dark:text-gray-300 text-center mb-5 text-sm">
               Your password has been reseted successfully
             </p>
 
             <Link
               href="/auth/signin"
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center"
+              className="w-full bg-blue-600 text-white py-2 px-4 text-sm font-semibold rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center"
             >
               Back to log in
             </Link>

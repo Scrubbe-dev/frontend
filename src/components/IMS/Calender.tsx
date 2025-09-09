@@ -5,6 +5,8 @@ import localeData from "dayjs/plugin/localeData";
 import isBetween from "dayjs/plugin/isBetween";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import AssignAnalyst from "./AssignTeam";
+import Modal from "../ui/Modal";
 
 // Extend dayjs with all necessary plugins
 dayjs.extend(localeData);
@@ -42,28 +44,31 @@ const DayButton = ({
   isCurrentMonth: boolean;
   isToday?: boolean;
   assignment?: Assignment | null;
-}) => (
-  <div
-    className={`w-full h-24 p-2 flex flex-col justify-center items-center border border-zinc-100 rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-gray-100 ${
-      isCurrentMonth ? "text-gray-800" : "text-gray-400"
-    } 
+}) => {
+  return (
+    <div
+      className={`w-full h-24 p-2 flex flex-col justify-center items-center border border-zinc-100 rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-gray-100 ${
+        isCurrentMonth ? "text-gray-800" : "text-gray-400"
+      } 
     ${isToday ? "bg-IMSLightGreen text-white hover:text-gray-400" : ""}
     shadow-sm`}
-  >
-    <span className="text-xl font-medium">{day}</span>
-    {assignment && (
-      <div className="text-xs text-green-600 font-semibold text-center mt-2">
-        {assignment.name}
-        <br />({dayjs(assignment.startDate).format("D/M/YY")} -{" "}
-        {dayjs(assignment.endDate).format("D/M/YY")})
-      </div>
-    )}
-  </div>
-);
+    >
+      <span className="text-xl font-medium">{day}</span>
+      {assignment && (
+        <div className="text-xs text-green-600 font-semibold text-center mt-2">
+          {assignment.name}
+          <br />({dayjs(assignment.startDate).format("D/M/YY")} -{" "}
+          {dayjs(assignment.endDate).format("D/M/YY")})
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(dayjs().month());
   const [currentYear, setCurrentYear] = useState(dayjs().year());
+  const [openAssignmentForm, setOpenAssignmentForm] = useState(false);
 
   const daysInCurrentMonth = getDaysInMonth(currentYear, currentMonth);
   const startDay = dayjs()
@@ -84,12 +89,14 @@ const Calendar = () => {
 
     for (const day of prevMonthDays) {
       days.push(
-        <DayButton
-          key={`prev-${day}`}
-          day={day}
-          isCurrentMonth={false}
-          isToday={false}
-        />
+        <div onClick={() => setOpenAssignmentForm(true)}>
+          <DayButton
+            key={`prev-${day}`}
+            day={day}
+            isCurrentMonth={false}
+            isToday={false}
+          />
+        </div>
       );
     }
 
@@ -105,13 +112,15 @@ const Calendar = () => {
         )
       );
       days.push(
-        <DayButton
-          key={`current-${day}`}
-          day={day}
-          isCurrentMonth={true}
-          isToday={isToday}
-          assignment={assignedPerson}
-        />
+        <div onClick={() => setOpenAssignmentForm(true)}>
+          <DayButton
+            key={`current-${day}`}
+            day={day}
+            isCurrentMonth={true}
+            isToday={isToday}
+            assignment={assignedPerson}
+          />
+        </div>
       );
     }
 
@@ -119,12 +128,14 @@ const Calendar = () => {
     const nextMonthDaysToAdd = 42 - totalDays; // 6 rows * 7 days
     for (let day = 1; day <= nextMonthDaysToAdd; day++) {
       days.push(
-        <DayButton
-          key={`next-${day}`}
-          day={day}
-          isCurrentMonth={false}
-          isToday={false}
-        />
+        <div onClick={() => setOpenAssignmentForm(true)}>
+          <DayButton
+            key={`next-${day}`}
+            day={day}
+            isCurrentMonth={false}
+            isToday={false}
+          />
+        </div>
       );
     }
 
@@ -179,6 +190,13 @@ const Calendar = () => {
       </div>
 
       <div className="grid grid-cols-7 gap-2">{renderDays()}</div>
+
+      <Modal
+        isOpen={openAssignmentForm}
+        onClose={() => setOpenAssignmentForm(false)}
+      >
+        <AssignAnalyst onClose={() => setOpenAssignmentForm(false)} />
+      </Modal>
     </div>
   );
 };

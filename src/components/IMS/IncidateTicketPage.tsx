@@ -278,12 +278,20 @@ const IncidentTicketPage = () => {
         <div className="text-xl font-bold dark:text-white text-black">
           Create and Manage new critical Incidents
         </div>
-        <CButton
-          onClick={() => router.push("/incident/tickets/create")}
-          className="w-fit  bg-IMSLightGreen text-white hover:bg-IMSGreen shadow-none"
-        >
-          Create New Incident <Plus />
-        </CButton>
+        <div className=" space-x-3">
+          <CButton
+            onClick={() => router.push("/incident/tickets/create")}
+            className="w-fit shadow-none"
+          >
+            Create New Incident <Plus />
+          </CButton>
+          <CButton
+            onClick={() => router.push("/incident/integrations")}
+            className="w-fit shadow-none"
+          >
+            Integrations
+          </CButton>
+        </div>
       </div>
 
       <div className="mt-5 dark:bg-dark bg-white p-6   h-full rounded-xl">

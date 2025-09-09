@@ -24,6 +24,8 @@ import { AxiosError } from "axios";
 import { getCookie } from "cookies-next";
 import { COOKIE_KEYS } from "@/lib/constant";
 
+const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
+
 // Define the form schema using zod
 const businessSignupSchema = z
   .object({
@@ -223,6 +225,10 @@ export default function BusinessSignupForm() {
   useEffect(() => {
     if (showSuccess) {
       const timeout = setTimeout(() => {
+        if (IS_STANDALONE) {
+          router.replace("/get-started");
+          return;
+        }
         if (formData?.purpose === "IMS") {
           const token = getCookie(COOKIE_KEYS.TOKEN);
           if (typeof window !== "undefined") {
@@ -616,25 +622,14 @@ export default function BusinessSignupForm() {
 
                   {/* Demo Page Link */}
                   <div className="text-center">
+                    Already have an account?{" "}
                     <Link
-                      href="/auth/demo-page"
-                      className="text-blue-600 hover:underline inline-flex items-center"
+                      href="/auth/signin"
+                      className={`${
+                        IS_STANDALONE ? "text-IMSLightGreen" : "text-blue-600"
+                      } underline hover:underline inline-flex items-center`}
                     >
-                      Looking for our demo page?
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 ml-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                        />
-                      </svg>
+                      Sign in
                     </Link>
                   </div>
                 </form>
