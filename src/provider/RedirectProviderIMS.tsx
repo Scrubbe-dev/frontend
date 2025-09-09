@@ -16,6 +16,7 @@ const RedirectContext = createContext<RedirectContextType | undefined>(
 
 export const RedirectProviderIMS = ({ children }: { children: ReactNode }) => {
   const [shouldRedirect, setShouldRedirect] = useState(false);
+
   const router = useRouter();
 
   const triggerRedirect = (status: number) => {
