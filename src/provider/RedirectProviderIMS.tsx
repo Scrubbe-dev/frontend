@@ -35,24 +35,13 @@ export const RedirectProviderIMS = ({ children }: { children: ReactNode }) => {
     console.log({ token, newToken });
     if (!token && !newToken) {
       // const timeout = setTimeout(() => {
-      if (typeof window !== "undefined") {
-        window.location.href =
-          (process.env.NEXT_PUBLIC_SCRUBBE ?? "https://scrubbe.com") +
-          "/auth/signin";
-        console.log("redirect away");
-      }
-      return;
+      return router.push("/auth/signin");
       // }, 1000);
       // return () => clearTimeout(timeout);
     }
     if (shouldRedirect) {
       // Redirect to the login page
-      if (typeof window !== "undefined") {
-        window.location.href = window.location.href =
-          (process.env.NEXT_PUBLIC_SCRUBBE ?? "https://scrubbe.com") +
-          "/auth/signin";
-      }
-      return;
+      return router.push("/auth/signin");
     }
   }, [shouldRedirect, router]);
 
