@@ -86,7 +86,7 @@ export default function RootLayout({
       lang="en"
       className={`${airbnbCereal.variable} ${bersley.variable} ${bigshotOne.variable}`}
     >
-      <body className="antialiased min-h-screen w-full flex flex-col bg-[#1F2B71] font-airbnb">
+      <body className="antialiased min-h-screen w-full flex flex-col font-airbnb">
         <Suspense
           fallback={
             <div className="h-screen bg-white flex justify-center items-center">
