@@ -628,7 +628,7 @@ export const IMSSidebar: NavItem[] = [
     Icon: LucideLayoutDashboard,
     link: "/incident",
     isMenu: false,
-    isActive: true,
+    isActive: false,
   },
   {
     name: "Incident",
@@ -664,14 +664,14 @@ export const IMSSidebar: NavItem[] = [
     Icon: IoMdCall,
     link: "/incident/on-call",
     isMenu: false,
-    isActive: true,
+    isActive: false,
   },
   {
     name: "Ingestion",
     Icon: CgArrowBottomRightR,
     link: "/incident/ingestion",
     isMenu: false,
-    isActive: true,
+    isActive: false,
   },
   {
     name: "Timeline",
