@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import moment from "moment";
 import { useParams } from "next/navigation";
-import EmptyState from "../ui/EmptyState";
+import useTicketDetails from "@/hooks/useTicketDetails";
 
 type IHistory = {
   action: string;
@@ -19,6 +19,7 @@ type IHistory = {
 const History = () => {
   const { id } = useParams();
   const { get } = useFetch();
+  const { data: ticket } = useTicketDetails();
   const { data, isLoading } = useQuery({
     queryKey: [querykeys.HISTORY],
     queryFn: async () => {
@@ -45,15 +46,6 @@ const History = () => {
     );
   }
 
-  if (!data || data?.history.length < 1) {
-    return (
-      <EmptyState
-        title="No History yet!"
-        description="This incident does not have an history yet!"
-      />
-    );
-  }
-
   const statusColors = (status: string) => {
     return (
       <span
@@ -75,7 +67,13 @@ const History = () => {
 
   return (
     <div className="flex flex-col max-h-[calc(100vh-200px)] overflow-y-auto">
-      <div className="flex-1 overflow-y-auto px-4 py-2 space-y-4 dark:bg-transparent bg-white">
+      <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2 dark:bg-transparent bg-white">
+        <div className="dark:text-white py-2 px-2 border rounded-sm text-base">
+          <b className=" capitalize">Ticket Created: </b>
+          <span className="opacity-60">
+            at <b>{moment(ticket.createdAt).format("YYYY-MM-DD")}</b>{" "}
+          </span>
+        </div>
         <div className="gap-2 flex flex-col-reverse">
           {(data?.history as IHistory[])?.map((item, id) => (
             <div

@@ -38,6 +38,8 @@ export type Ticket = {
   slaStatus: string;
   template: string;
   MTTR: string;
+  category: string;
+  subCategory: string;
   affectedSystem: string;
 };
 
