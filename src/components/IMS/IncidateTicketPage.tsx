@@ -287,12 +287,6 @@ const IncidentTicketPage = () => {
           >
             Create New Incident <Plus />
           </CButton>
-          <CButton
-            onClick={() => router.push("/incident/integrations")}
-            className="w-fit shadow-none"
-          >
-            Integrations
-          </CButton>
         </div>
       </div>
 

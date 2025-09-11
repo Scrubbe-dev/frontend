@@ -65,7 +65,7 @@ const Navbar = () => {
             onClick={() => setMenu((prev) => !prev)}
             className="flex items-center gap-1 relative"
           >
-            <div className=" cursor-pointer size-7 rounded-full bg-zinc-700 flex justify-center items-center text-sm text-white">
+            <div className=" cursor-pointer uppercase size-7 rounded-full bg-zinc-700 flex justify-center items-center text-sm text-white">
               {user?.firstName?.[0]}.{user?.lastName?.[0]}
             </div>
             <ChevronDown className=" text-zinc-400" size={16} />
