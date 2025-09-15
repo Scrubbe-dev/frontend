@@ -1,5 +1,7 @@
 // context/RedirectContext.tsx
 "use client";
+import useIdle from "@/hooks/useIdle";
+import useLogout from "@/hooks/useLogout";
 import { COOKIE_KEYS } from "@/lib/constant";
 import { getCookie, deleteCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
@@ -16,6 +18,8 @@ const RedirectContext = createContext<RedirectContextType | undefined>(
 
 export const RedirectProviderIMS = ({ children }: { children: ReactNode }) => {
   const [shouldRedirect, setShouldRedirect] = useState(false);
+  const { handleLogout } = useLogout();
+  useIdle(500000, handleLogout);
 
   const router = useRouter();
 

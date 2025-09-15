@@ -1,7 +1,9 @@
 export const endpoint = {
   auth: {
     account_setup: "/business/setup",
-    decode_invite_token: "/business/decode_invite",
+    invite_member: "/business/send-invite",
+    decode_invite_token: "/business/decode-invite",
+    accept_invite: "/business/accept-invite",
     ims_setup: "/ims/setup",
     me: "/auth/me",
     forgot_password: "/auth/forgot-password",
