@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type React from "react";
 
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Input from "../ui/input";
 import CButton from "../ui/Cbutton";
 // import OtpInput from "../ui/OtpInput";
@@ -15,6 +15,7 @@ import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import { toast } from "sonner";
 import { FaEnvelope } from "react-icons/fa";
+import { PasswordInput } from "../ui/password-input";
 
 export default function ForgotPassword() {
   const [stage, setStage] = useState<number>(1);
@@ -22,6 +23,10 @@ export default function ForgotPassword() {
   const { post } = useFetch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+
   // Add zod schema for password reset
   const passwordSchema = z
     .object({
@@ -43,6 +48,8 @@ export default function ForgotPassword() {
     control: passwordControl,
     handleSubmit: handlePasswordFormSubmit,
     formState: { errors: passwordErrors },
+    watch,
+    setValue,
     reset: resetPasswordForm,
   } = useForm<PasswordFormData>({
     resolver: zodResolver(passwordSchema),
@@ -95,13 +102,37 @@ export default function ForgotPassword() {
   // Handle password creation
   const handlePasswordSubmit = async (value: PasswordFormData) => {
     setLoading(true);
-    const res = await post(endpoint.auth.reset_password, value);
+    const res = await post(endpoint.auth.reset_password, {
+      token,
+      password: value.password,
+    });
     setLoading(false);
     if (res.success) {
       resetPasswordForm();
       setStage(4);
     }
   };
+
+  useEffect(() => {
+    const validateToken = async () => {
+      const res = await post(endpoint.auth.valid_token, { token });
+      console.log({ res });
+      if (res.success) {
+        if (!res.data.valid) {
+          toast.error("Invalid or Expired token");
+          setStage(1);
+          return;
+        }
+        return;
+      }
+      toast.error("Invalid or Expired token");
+      setStage(1);
+    };
+    if (token) {
+      setStage(3);
+      validateToken();
+    }
+  }, [token]);
 
   // Handle resend code
   // const handleResendCode = () => {};
@@ -181,19 +212,13 @@ export default function ForgotPassword() {
             </p>
 
             <form onSubmit={handlePasswordFormSubmit(handlePasswordSubmit)}>
-              <Controller
-                name="password"
-                control={passwordControl}
-                render={({ field }) => (
-                  <Input
-                    label="New Password"
-                    id="password"
-                    placeholder="Enter password"
-                    type="password"
-                    error={passwordErrors.password?.message}
-                    {...field}
-                  />
-                )}
+              <PasswordInput
+                label="Password"
+                // {...field}
+                value={watch("password")}
+                onValueChange={(value) => setValue("password", value)}
+                onValidationChange={setIsPasswordValid}
+                error={!isPasswordValid ? "complete all requirement" : ""}
               />
               <Controller
                 name="confirmPassword"
@@ -212,7 +237,7 @@ export default function ForgotPassword() {
               <CButton
                 type="submit"
                 isLoading={loading}
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="w-full bg-IMSLightGreen text-white py-3 px-4 rounded-md hover:bg-IMSDarkGreen transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 Create Password
               </CButton>
@@ -245,7 +270,7 @@ export default function ForgotPassword() {
 
             <Link
               href="/auth/signin"
-              className="w-full bg-blue-600 text-white py-2 px-4 text-sm font-semibold rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center"
+              className="w-full bg-IMSLightGreen text-white py-2 px-4 text-sm font-semibold rounded-md hover:bg-IMSDarkGreen transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center"
             >
               Back to log in
             </Link>

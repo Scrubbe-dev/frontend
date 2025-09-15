@@ -40,19 +40,9 @@ const Page = () => {
         >
           {tab === 0 && <div></div>}
 
-          {/* Comments Tab */}
           {tab === 1 && <Integrations />}
-
-          {/* Collaboration Tab */}
-          {/* {tab === 2 && <Collaboration ticket={ticket} />} */}
-
-          {/* History Tab */}
           {tab === 2 && <div></div>}
           {tab === 3 && <div></div>}
-
-          {/* Threat intel Tab */}
-          {/* {tab === 4 && <TreatIntel />} */}
-          {/* Other tabs can be implemented as needed */}
         </motion.div>
       </div>
     </div>

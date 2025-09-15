@@ -53,7 +53,7 @@ const Navbar = () => {
           ))}
         </ul>
 
-        <Link href={"/auth/business-signup"} target="_blank">
+        <Link href={"/auth/signin"}>
           <CButton
             // onClick={() => router.push("/incident/tickets/create")}
             className="w-fit h-[40px] hidden xl:flex bg-IMSLightGreen text-white hover:bg-IMSGreen shadow-none text-base"
@@ -114,7 +114,7 @@ const Navbar = () => {
             ))}
 
             <div className="pt-6 border-t border-gray-200 space-y-3">
-              <Link href={"/auth/business-signup"} target="_blank">
+              <Link href={"/auth/signin"}>
                 <CButton
                   onClick={() => {}}
                   className=" h-[40px]  bg-IMSLightGreen text-white hover:bg-IMSGreen shadow-none text-base"

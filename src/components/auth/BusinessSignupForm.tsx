@@ -23,6 +23,7 @@ import { PasswordInput } from "../ui/password-input";
 import { AxiosError } from "axios";
 import { getCookie } from "cookies-next";
 import { COOKIE_KEYS } from "@/lib/constant";
+import { BiCheck } from "react-icons/bi";
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 
@@ -255,31 +256,12 @@ export default function BusinessSignupForm() {
         <div className="w-full p-6 flex flex-col items-center justify-center min-h-96">
           <div className="mb-8">
             {/* Enhanced Success Icon with concentric circles */}
-            <div className="relative flex items-center justify-center">
-              <svg
-                width="200"
-                height="200"
-                viewBox="0 0 200 200"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                {/* Outermost light blue circle */}
-                <circle cx="100" cy="100" r="95" fill="#E6F3FF" opacity="0.4" />
-                {/* Second light blue circle */}
-                <circle cx="100" cy="100" r="75" fill="#CCE7FF" opacity="0.6" />
-                {/* Third medium blue circle */}
-                <circle cx="100" cy="100" r="55" fill="#99D6FF" opacity="0.8" />
-                {/* Inner dark blue circle */}
-                <circle cx="100" cy="100" r="35" fill="#2563EB" />
-                {/* Checkmark */}
-                <path
-                  d="M85 100L95 110L115 90"
-                  stroke="white"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+            <div className="relative flex items-center justify-center translate-y-[-50px]">
+              <div className=" size-[150px] rounded-full bg-emerald-100 absolute animate-ping" />
+              <div className=" size-[130px] rounded-full bg-emerald-200 absolute" />
+              <div className=" size-[110px] rounded-full bg-emerald-300 absolute" />
+              <div className=" size-[90px] rounded-full bg-emerald-500 absolute" />
+              <BiCheck className=" absolute text-white" size={40} />
             </div>
           </div>
 

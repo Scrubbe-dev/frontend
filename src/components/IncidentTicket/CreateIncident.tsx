@@ -81,6 +81,13 @@ const formScheme = z.object({
 
 type FormType = z.infer<typeof formScheme>;
 
+const MTTR: { [key: string]: { label: string; value: number } } = {
+  LOW: { label: "Average response time-15 minutes", value: 900 },
+  MEDIUM: { label: "Average response time-30 minutes", value: 1800 },
+  HIGH: { label: "Average response time-2 hours", value: 7200 },
+  CRITICAL: { label: "Average response time-4 hours", value: 14400 },
+};
+
 const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
   const { post, get } = useFetch();
   const queryClient = useQueryClient();
@@ -257,7 +264,10 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
         </h1>
         <p
           className={` text-xl font-semibold flex items-center gap-2 ${
-            elapsedTime >= 0 ? "text-red-500" : "text-emerald-500"
+            elapsedTime >= MTTR[watch("priority")]?.value &&
+            watch("priority") !== "INFORMATIONAL"
+              ? "text-red-500"
+              : "text-emerald-500"
           }`}
         >
           MTTR {formatTime(elapsedTime)}
@@ -486,7 +496,12 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
           </div>
 
           <div className=" space-y-2">
-            {priorityColors(watch("priority"))}
+            <div className="flex items-center gap-2">
+              {priorityColors(watch("priority"))}{" "}
+              <p className="text-sm ">{`${
+                MTTR[watch("priority")]?.label ?? ""
+              }`}</p>
+            </div>
             <Controller
               name="priority"
               control={control}

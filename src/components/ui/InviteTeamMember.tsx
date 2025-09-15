@@ -1,151 +1,194 @@
+"use client";
+
 import React, { useState } from "react";
 import Input from "./input";
 import Select from "./select";
 import CButton from "./Cbutton";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import { toast } from "sonner";
+
+// Zod Schema for validation
+const memberSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  role: z
+    .string({ message: "Please select a role" })
+    .nonempty({ message: "Please select a role" }),
+  level: z
+    .string({ message: "Please select a level" })
+    .nonempty({ message: "Please select a level" }),
+  permissions: z.array(z.string()).optional(),
+});
+
+type MemberFormValues = z.infer<typeof memberSchema>;
 
 const InviteTeamMember = () => {
-  const [memberForm, setMemberForm] = useState({
-    email: "",
-    role: "",
-    level: "",
-    permissions: [] as string[],
+  const { post } = useFetch();
+  const [loading, setLoading] = useState(false);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<MemberFormValues>({
+    resolver: zodResolver(memberSchema),
+    defaultValues: {
+      email: "",
+      role: "",
+      level: "",
+      permissions: [],
+    },
   });
+
+  const onSubmit = async (data: MemberFormValues) => {
+    console.log("Form data submitted:", data);
+    const value = {
+      inviteEmail: data.email,
+      level: data.level,
+      accessPermissions: data.permissions,
+      role: data.role,
+    };
+    setLoading(true);
+    const res = await post(endpoint.auth.invite_member, value);
+    setLoading(false);
+    if (res.success) {
+      toast.success(`${data.email} has been sent an invite`);
+    } else {
+      toast.error(res.data ?? "Couldn't send invite");
+    }
+  };
+
+  const allPermissions = [
+    { label: "View Dashboard", value: "VIEW_DASHBOARD" },
+    { label: "Modify Dashboard", value: "MODIFY_DASHBOARD" },
+    { label: "Execute Actions", value: "EXECUTE_ACTIONS" },
+    { label: "Manage Users", value: "MANAGE_USERS" },
+  ];
+
   return (
     <div className="">
-      {/* Name and Email Row */}
       <p className="dark:text-white text-lg font-semibold mb-3">
         Invite Team Member
       </p>
-      <div className="grid grid-cols-1 gap-6">
-        <Input
-          label="Email"
-          placeholder="Enter Email"
-          type="email"
-          value={memberForm.email}
-          className="dark:!text-black"
-          labelClassName="dark:!text-black"
-          onChange={(e) =>
-            setMemberForm((prev) => ({
-              ...prev,
-              email: e.target.value,
-            }))
-          }
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Email */}
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              label="Email"
+              placeholder="Enter Email"
+              type="email"
+              className="dark:!text-black"
+              labelClassName="dark:!text-black"
+              error={errors.email?.message}
+            />
+          )}
         />
-      </div>
 
-      {/* Role */}
-      <Select
-        label="Level"
-        className="dark:!text-black"
-        labelClassName="dark:!text-black"
-        options={[
-          { value: "", label: "Select Level" },
-          { value: "1st_Line", label: "1st Line" },
-          { value: "2st_Line", label: "2st Line" },
-          { value: "3st_Line", label: "3st Line" },
-          { value: "Manager", label: "Manager" },
-        ]}
-        value={memberForm.level}
-        onChange={(e) =>
-          setMemberForm((prev) => ({
-            ...prev,
-            level: (e.target as HTMLSelectElement).value,
-          }))
-        }
-      />
+        {/* Level Select */}
+        <Controller
+          name="level"
+          control={control}
+          render={({ field }) => (
+            <Select
+              {...field}
+              label="Level"
+              className="dark:!text-black"
+              labelClassName="dark:!text-black"
+              options={[
+                { value: "", label: "Select Level" },
+                { value: "1st_Line", label: "1st Line" },
+                { value: "2st_Line", label: "2st Line" },
+                { value: "3st_Line", label: "3st Line" },
+                { value: "Manager", label: "Manager" },
+              ]}
+              error={errors.level?.message}
+            />
+          )}
+        />
 
-      <Select
-        label="Role"
-        className="dark:!text-black"
-        labelClassName="dark:!text-black"
-        options={[
-          { value: "", label: "Select role" },
-          { value: "ADMIN", label: "Admin" },
-          { value: "MANAGER", label: "Manager" },
-          { value: "ANALYST", label: "Analyst" },
-          { value: "VIEWER", label: "Viewer" },
-        ]}
-        value={memberForm.role}
-        onChange={(e) =>
-          setMemberForm((prev) => ({
-            ...prev,
-            role: (e.target as HTMLSelectElement).value,
-          }))
-        }
-      />
+        {/* Role Select */}
+        <Controller
+          name="role"
+          control={control}
+          render={({ field }) => (
+            <Select
+              {...field}
+              label="Role"
+              className="dark:!text-black"
+              labelClassName="dark:!text-black"
+              options={[
+                { value: "", label: "Select role" },
+                { value: "ADMIN", label: "Admin" },
+                { value: "MANAGER", label: "Manager" },
+                { value: "ANALYST", label: "Analyst" },
+                { value: "VIEWER", label: "Viewer" },
+              ]}
+              error={errors.role?.message}
+            />
+          )}
+        />
 
-      {/* Access Permissions */}
-      <div className="space-y-4">
-        <h4 className="text-sm font-medium text-gray-700">
-          Access Permissions
-        </h4>
-        <div className="flex items-center gap-4">
-          {[
-            { label: "View Dashboard", value: "VIEW_DASHBOARD" },
-            {
-              label: "Modify Dashboard",
-              value: "MODIFY_DASHBOARD",
-            },
-            { label: "Execute Actions", value: "EXECUTE_ACTIONS" },
-            { label: "Manage Users", value: "MANAGE_USERS" },
-          ].map((permission) => (
-            <div key={permission.label} className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id={permission.value}
-                checked={memberForm.permissions.includes(permission.value)}
-                onChange={() =>
-                  setMemberForm((prev) => {
-                    if (prev.permissions.includes(permission.value)) {
-                      const filterPermission = prev.permissions.filter(
-                        (item) => item !== permission.value
-                      );
-                      return {
-                        ...prev,
-                        permissions: filterPermission,
-                      };
-                    } else {
-                      return {
-                        ...prev,
-                        permissions: [...prev.permissions, permission.value],
-                      };
-                    }
-                  })
-                }
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-              />
-              <label
-                htmlFor={permission.value}
-                className="text-sm text-gray-700"
-              >
-                {permission.label}
-              </label>
-            </div>
-          ))}
+        {/* Access Permissions */}
+        <div className="space-y-4">
+          <h4 className="text-sm font-medium text-gray-700">
+            Access Permissions
+          </h4>
+          <div className="flex flex-wrap items-center gap-4">
+            <Controller
+              name="permissions"
+              control={control}
+              render={({ field }) => (
+                <>
+                  {allPermissions.map((permission) => (
+                    <div
+                      key={permission.value}
+                      className="flex items-center space-x-2"
+                    >
+                      <input
+                        type="checkbox"
+                        id={permission.value}
+                        checked={field?.value?.includes(permission.value)}
+                        onChange={(e) => {
+                          const newPermissions = e.target.checked
+                            ? [...(field?.value || []), permission.value]
+                            : field?.value?.filter(
+                                (item) => item !== permission.value
+                              );
+                          field.onChange(newPermissions);
+                        }}
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                      />
+                      <label
+                        htmlFor={permission.value}
+                        className="text-sm text-gray-700"
+                      >
+                        {permission.label}
+                      </label>
+                    </div>
+                  ))}
+                </>
+              )}
+            />
+          </div>
         </div>
-      </div>
 
-      {/* Modal Actions */}
-      <div className="flex justify-end space-x-3 pt-6">
-        {/* <button
-        type="button"
-        onClick={() => {
-          setIsModalOpen(false);
-          resetMemberForm();
-          setEditingMember(null);
-        }}
-        className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-      >
-        Cancel
-      </button> */}
-
-        <CButton
-          onClick={() => {}}
-          className=" bg-IMSLightGreen hover:bg-IMSDarkGreen"
-        >
-          Invite Team Member
-        </CButton>
-      </div>
+        {/* Submit Button */}
+        <div className="flex justify-end pt-6">
+          <CButton
+            isLoading={loading}
+            type="submit"
+            className="bg-IMSLightGreen hover:bg-IMSDarkGreen"
+          >
+            Invite Team Member
+          </CButton>
+        </div>
+      </form>
     </div>
   );
 };

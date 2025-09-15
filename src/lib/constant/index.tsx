@@ -628,7 +628,7 @@ export const IMSSidebar: NavItem[] = [
     Icon: LucideLayoutDashboard,
     link: "/incident",
     isMenu: false,
-    isActive: false,
+    isActive: true,
   },
   {
     name: "Incident",
@@ -637,7 +637,27 @@ export const IMSSidebar: NavItem[] = [
     isMenu: false,
     isActive: true,
   },
-
+  {
+    name: "On-Call",
+    Icon: IoMdCall,
+    link: "/incident/on-call",
+    isMenu: false,
+    isActive: true,
+  },
+  {
+    name: "Ingestion",
+    Icon: CgArrowBottomRightR,
+    link: "/incident/ingestion",
+    isMenu: false,
+    isActive: true,
+  },
+  {
+    name: "Postmortems",
+    Icon: BiSolidBookBookmark,
+    link: "/incident/postmortems",
+    isMenu: false,
+    isActive: true,
+  },
   {
     name: "SLA Management",
     Icon: FaClock,
@@ -659,20 +679,7 @@ export const IMSSidebar: NavItem[] = [
     isMenu: false,
     isActive: false,
   },
-  {
-    name: "On-Call",
-    Icon: IoMdCall,
-    link: "/incident/on-call",
-    isMenu: false,
-    isActive: false,
-  },
-  {
-    name: "Ingestion",
-    Icon: CgArrowBottomRightR,
-    link: "/incident/ingestion",
-    isMenu: false,
-    isActive: false,
-  },
+
   {
     name: "Timeline",
     Icon: FaClock,
@@ -687,13 +694,7 @@ export const IMSSidebar: NavItem[] = [
     isMenu: false,
     isActive: false,
   },
-  {
-    name: "Postmortems",
-    Icon: BiSolidBookBookmark,
-    link: "/incident/postmortems",
-    isMenu: false,
-    isActive: false,
-  },
+
   {
     name: "Workflows",
     Icon: RiOrganizationChart,
