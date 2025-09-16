@@ -17,6 +17,7 @@ import TableLoader from "../ui/LoaderUI/TableLoader";
 import EmptyState from "../ui/EmptyState";
 import Input from "../ui/input";
 import { Button } from "@heroui/react";
+import { usePostMortermForm } from "@/lib/stores/post-morterm";
 
 const priorityColors = (priority: string) => {
   return (
@@ -70,12 +71,13 @@ const statusColors = (status: string) => {
 
 const Postmortems = () => {
   const { get } = useFetch();
+  const { setIncidentData } = usePostMortermForm();
   const { data, isLoading } = useQuery({
-    queryKey: [querykeys.INCIDENT_TICKET],
+    queryKey: [querykeys.POSTMORTEM_TICKET],
     queryFn: async () => {
       try {
         const res = await get(
-          `${endpoint.incident_ticket.get}?status=RESOLVED&priority=MEDIUM`
+          `${endpoint.incident_ticket.get_postmortems}?status=RESOLVED`
         );
         console.log({ res });
         if (res.success) {
@@ -89,6 +91,8 @@ const Postmortems = () => {
     },
     refetchOnWindowFocus: false,
   });
+
+  const incidentTickets = data?.data;
 
   const router = useRouter();
 
@@ -137,12 +141,15 @@ const Postmortems = () => {
       accessorKey: "Action",
       header: () => <span className="font-semibold">Action</span>,
       cell: (info: CellContext<Ticket, unknown>) => {
-        const id = info.row.original.id;
-
+        const id = info.row.original.ticketId;
+        const handleViewDetails = () => {
+          setIncidentData(info.row.original);
+          router.push("/incident/postmortems/" + id);
+        };
         return (
           <div className=" max-w-sm">
             <Button
-              onClick={() => router.push("/incident/postmortems/" + id)}
+              onClick={handleViewDetails}
               size="sm"
               className=" text-black"
             >
@@ -176,7 +183,7 @@ const Postmortems = () => {
   let content: ReactNode;
   if (isLoading) {
     content = <TableLoader />;
-  } else if (!isLoading && (!data || data?.length < 1)) {
+  } else if (!isLoading && (!incidentTickets || incidentTickets?.length < 1)) {
     content = (
       <EmptyState
         title="You have no incident ticket yet"
@@ -190,7 +197,7 @@ const Postmortems = () => {
         }
       />
     );
-  } else if (!isLoading && (data || data?.length > 0)) {
+  } else if (!isLoading && (incidentTickets || incidentTickets?.length > 0)) {
     content = (
       <div className=" bg-white p-4">
         <div className="flex justify-between items-start mb-5">
@@ -232,7 +239,7 @@ const Postmortems = () => {
             </div>
           </div>
         </div>
-        <Table data={data} columns={columns} />
+        <Table data={incidentTickets} columns={columns} />
       </div>
     );
   }

@@ -32,6 +32,7 @@ const InviteTeamMember = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<MemberFormValues>({
     resolver: zodResolver(memberSchema),
     defaultValues: {
@@ -55,6 +56,7 @@ const InviteTeamMember = () => {
     setLoading(false);
     if (res.success) {
       toast.success(`${data.email} has been sent an invite`);
+      reset();
     } else {
       toast.error(res.data ?? "Couldn't send invite");
     }

@@ -1,8 +1,9 @@
 "use client";
+import { usePostMortermForm } from "@/lib/stores/post-morterm";
 import { motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const TABS = [
   "Basic Details",
@@ -14,13 +15,24 @@ const TABS = [
 const Page = () => {
   const [tab, setTab] = useState(1);
   const { back } = useRouter();
+  const { incident } = usePostMortermForm();
+  const { id } = useParams();
+  console.log({ incident });
+  useEffect(() => {
+    if (!incident) {
+      back();
+    }
+  }, []);
   return (
     <div className="p-4 space-y-4">
       <div className="text-xl font-bold dark:text-white text-black">
         Postmortems
       </div>
       <div className=" p-4 bg-white rounded-lg space-y-4">
-        <div onClick={() => back()} className="flex items-center gap-1 text-sm">
+        <div
+          onClick={() => back()}
+          className="flex items-center gap-1 text-sm cursor-pointer"
+        >
           <ChevronLeft size={18} />
           Back
         </div>
@@ -51,21 +63,21 @@ const Page = () => {
               {/* Incident ID */}
               <div>
                 <h2 className="text-lg font-medium  mb-1">Incident ID :</h2>
-                <p className=" text-base font-light">INC-1045</p>
+                <p className=" text-base font-light">{id}</p>
               </div>
 
               {/* Date Resolved */}
               <div>
                 <h2 className="text-lg font-medium  mb-1">Date Resolved :</h2>
-                <p className=" text-base font-light">2025-08-21</p>
+                <p className=" text-base font-light">
+                  {incident?.ResolveIncident.updatedAt}
+                </p>
               </div>
 
               {/* Incident Title */}
               <div>
                 <h2 className="text-lg font-medium  mb-1">Incident Title</h2>
-                <p className=" text-base font-light">
-                  API Outage – Database Latency
-                </p>
+                <p className=" text-base font-light">{incident?.reason}</p>
               </div>
 
               {/* Incident Description */}
@@ -73,22 +85,21 @@ const Page = () => {
                 <h2 className="text-lg font-medium  mb-1">
                   Incident Description
                 </h2>
-                <p className=" text-base font-light">
-                  The API experienced a 30-minute outage due to database latency
-                  issues.
-                </p>
+                <p className=" text-base font-light">{incident?.description}</p>
               </div>
 
               {/* Priority */}
               <div>
                 <h2 className="text-lg font-medium  mb-1">Priority :</h2>
-                <p className=" text-base font-light">P1- High</p>
+                <p className=" text-base font-light">{incident?.priority}</p>
               </div>
 
               {/* Assigned to */}
               <div>
                 <h2 className="text-lg font-medium  mb-1">Assigned to :</h2>
-                <p className=" text-base font-light">Sarah</p>
+                <p className=" text-base font-light">
+                  {incident?.assignedToEmail ?? "N/A"}
+                </p>
               </div>
             </div>
           )}
@@ -99,7 +110,9 @@ const Page = () => {
                 <h2 className=" text-base font-bold text-gray-700">
                   Cause Category :
                 </h2>
-                <p className="text-gray-900 mt-1">Software Bug</p>
+                <p className="text-gray-900 mt-1 text-base ">
+                  {incident?.ResolveIncident.causeCategory}
+                </p>
               </div>
 
               {/* Root cause */}
@@ -107,7 +120,9 @@ const Page = () => {
                 <h2 className=" text-base font-bold text-gray-700">
                   Root cause :
                 </h2>
-                <p className="text-gray-900 mt-1">Someone hacked the system</p>
+                <p className="text-gray-900 mt-1">
+                  {incident?.ResolveIncident.rootCause}
+                </p>
               </div>
 
               {/* 5 Whys Section */}
@@ -118,58 +133,41 @@ const Page = () => {
 
                 {/* Why 1 */}
                 <div className="mb-4">
-                  <h3 className=" text-base font-bold text-gray-900">
-                    Why 1: Was the email phishing incident reported?
-                  </h3>
+                  <h3 className=" text-base font-bold text-gray-900">Why 1</h3>
                   <p className="text-gray-700 mt-1">
-                    The recipient noticed a suspicious link asking for login
-                    credentials
+                    {incident?.ResolveIncident.why1}
                   </p>
                 </div>
 
                 {/* Why 2 */}
                 <div className="mb-4">
-                  <h3 className=" text-base font-bold text-gray-900">
-                    Why 2: Why did the user feel uncertain about the
-                    email&apos;s authenticity?
-                  </h3>
+                  <h3 className=" text-base font-bold text-gray-900">Why 2:</h3>
                   <p className="text-gray-700 mt-1">
-                    The sender&apos;s email domain did not match the official
-                    company domain.
+                    {incident?.ResolveIncident.why2}
                   </p>
                 </div>
 
                 {/* Why 3 */}
                 <div className="mb-4">
-                  <h3 className=" text-base font-bold text-gray-900">
-                    Why 3: Why was the email not recognized as legitimate?
-                  </h3>
+                  <h3 className=" text-base font-bold text-gray-900">Why 3:</h3>
                   <p className="text-gray-700 mt-1">
-                    It bypassed the spam filter due to lack of advanced phishing
-                    detection.
+                    {incident?.ResolveIncident.why3}
                   </p>
                 </div>
 
                 {/* Why 4 */}
                 <div className="mb-4">
-                  <h3 className=" text-base font-bold text-gray-900">
-                    Why 4: Why were there no security measures in place to
-                    verify the email&apos;s source?
-                  </h3>
+                  <h3 className=" text-base font-bold text-gray-900">Why 4:</h3>
                   <p className="text-gray-700 mt-1">
-                    The mail server did not enforce strict authentication checks
+                    {incident?.ResolveIncident.why4}
                   </p>
                 </div>
 
                 {/* Why 5 */}
                 <div className="mb-4">
-                  <h3 className=" text-base font-bold text-gray-900">
-                    Why 5: Why was the email security protocol not updated to
-                    handle recent phishing tactics?
-                  </h3>
+                  <h3 className=" text-base font-bold text-gray-900">Why 5:</h3>
                   <p className="text-gray-700 mt-1">
-                    No threat intelligence feed or monitoring was in place to
-                    track evolving tactics.
+                    {incident?.ResolveIncident.why5}
                   </p>
                 </div>
               </div>
@@ -180,24 +178,17 @@ const Page = () => {
               {/* Temporary Fix section */}
               <div>
                 <h2 className="text-lg font-bold mb-2">Temporary Fix :</h2>
-                <ul className="list-none space-y-1  text-base font-light">
-                  <li>Block the sender&apos;s email address/domain.</li>
-                  <li>Quarantine the reported phishing email</li>
-                </ul>
+                <div className="list-none space-y-1  text-base font-light">
+                  <p>{incident?.ResolveIncident.temporaryFix}</p>
+                </div>
               </div>
 
               {/* Permanent Fix section */}
               <div>
                 <h2 className="text-lg font-bold mb-2">Permanent Fix</h2>
-                <ul className="list-none space-y-1  text-base font-light">
-                  <li>
-                    Upgrade to advanced email security gateway with phishing
-                    detection
-                  </li>
-                  <li>
-                    Conduct regular phishing awareness training for employees.
-                  </li>
-                </ul>
+                <p className="list-none space-y-1  text-base font-light">
+                  {incident?.ResolveIncident?.permanentFix}
+                </p>
               </div>
             </div>
           )}
@@ -208,7 +199,7 @@ const Page = () => {
               <div>
                 <h2 className="text-lg font-bold mb-1">Title :</h2>
                 <p className=" text-base">
-                  Phishing Email Reported – Credential Harvesting Attempt
+                  {incident?.ResolveIncident?.knowledgeTitleInternal}
                 </p>
               </div>
 
@@ -216,11 +207,7 @@ const Page = () => {
               <div>
                 <h2 className="text-lg font-bold mb-1">Summary</h2>
                 <p className=" text-base">
-                  A phishing email impersonating the IT department was reported
-                  by an employee. The email contained a malicious link to a fake
-                  login page designed to harvest user credentials. No accounts
-                  were compromised, as the incident was identified early and
-                  contained.
+                  {incident?.ResolveIncident?.knowledgeSummaryInternal}
                 </p>
               </div>
 
@@ -229,61 +216,76 @@ const Page = () => {
                 <h2 className="text-lg font-bold mb-2">
                   Identification Steps:
                 </h2>
-                <ul className="list-disc list-inside space-y-1">
-                  <li>
-                    Employee flagged the email due to suspicious sender domain
-                    and urgent tone.
-                  </li>
-                  <li>
-                    Security team verified headers and identified spoofed from
-                    address.
-                  </li>
-                  <li>
-                    Link analysis revealed redirect to a credential harvesting
-                    site.
-                  </li>
-                  <li>
-                    Logs were checked to confirm no other employees had clicked
-                    the link.
-                  </li>
-                </ul>
+                <p>{incident?.ResolveIncident?.resolutionStepsInternal}</p>
               </div>
 
               {/* Resolution Steps Section */}
               <div>
                 <h2 className="text-lg font-bold mb-2">Resolution Steps:</h2>
-                <ul className="list-disc list-inside space-y-1">
-                  <li>Quarantined the phishing email from all mailboxes.</li>
-                  <li>Blocked sender domain and associated IP addresses.</li>
-                </ul>
+                <div className="list-disc list-inside space-y-1">
+                  {incident?.ResolveIncident?.resolutionStepsInternal}
+                </div>
               </div>
 
               {/* Preventive Measures Section */}
               <div>
                 <h2 className="text-lg font-bold mb-2">Preventive measures</h2>
-                <ul className="list-disc list-inside space-y-1">
-                  <li>
-                    Implemented SPF, DKIM, and DMARC enforcement for stronger
-                    email authentication.
-                  </li>
-                  <li>
-                    Conducted phishing awareness training across all
-                    departments.
-                  </li>
-                </ul>
+                <p className="list-disc list-inside space-y-1">
+                  {incident?.ResolveIncident?.preventiveMeasuresInternal}
+                </p>
               </div>
 
               {/* Tags Section */}
               <div>
                 <h2 className="text-lg font-bold mb-2">Tags</h2>
                 <div className="flex space-x-2">
-                  <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">
-                    Phishing
-                  </span>
-                  <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">
-                    Email
-                  </span>
+                  {incident?.ResolveIncident?.knowledgeTagsInternal?.map(
+                    (tag) => (
+                      <span
+                        key={tag}
+                        className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm"
+                      >
+                        {tag}
+                      </span>
+                    )
+                  )}
                 </div>
+              </div>
+            </div>
+          )}
+          {tab === 5 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-lg font-bold mb-2">Follow up task</h2>
+                <p className=" text-base">
+                  {incident?.ResolveIncident?.followUpTask}
+                </p>
+              </div>
+              <div>
+                <h2 className="text-lg font-bold mb-2">Follow up owner</h2>
+                <p className=" text-base">
+                  {incident?.ResolveIncident?.followUpOwner}
+                </p>
+              </div>
+              <div>
+                <h2 className="text-lg font-bold mb-2">Follow up due date</h2>
+                <p className=" text-base">
+                  {incident?.ResolveIncident?.followUpDueDate}
+                </p>
+              </div>
+              <div>
+                <h2 className="text-lg font-bold mb-2">Follow up status</h2>
+                <p className=" text-base">
+                  {incident?.ResolveIncident?.followUpStatus}
+                </p>
+              </div>
+              <div>
+                <h2 className="text-lg font-bold mb-2">
+                  Follow up ticketing systems
+                </h2>
+                <p className=" text-base">
+                  {incident?.ResolveIncident?.followUpTicketingSystems}
+                </p>
               </div>
             </div>
           )}

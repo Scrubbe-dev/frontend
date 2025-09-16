@@ -16,6 +16,7 @@ import EmptyState from "@/components/ui/EmptyState";
 import TableLoader from "../ui/LoaderUI/TableLoader";
 import { usePathname, useRouter } from "next/navigation";
 import { formatTime } from "@/lib/utils";
+import { IncidentData } from "@/lib/stores/post-morterm";
 export type Ticket = {
   id: string;
   ticketId: string;
@@ -41,6 +42,8 @@ export type Ticket = {
   category: string;
   subCategory: string;
   affectedSystem: string;
+  ResolveIncident: IncidentData;
+  description: string;
 };
 
 const columns = [
