@@ -16,6 +16,7 @@ export const endpoint = {
   incident_ticket: {
     create: "/incident-ticket",
     get: "/incident-ticket",
+    get_postmortems: "/postmortems",
     getTicket: "/tickets",
     get_members: "/business/get_members",
     send_comment: "/incident-ticket/comment",

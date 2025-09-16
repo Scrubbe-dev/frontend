@@ -5,6 +5,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -17,6 +18,12 @@ import { z } from "zod";
 // Dummy components for each step's content
 type Props = {
   onContinue: () => void;
+  decodedUser?: {
+    role: string;
+    email: string;
+    businessId: string;
+    workspaceName: string;
+  };
 };
 
 const formType = z
@@ -38,11 +45,12 @@ const formType = z
 
 type IFormType = z.infer<typeof formType>;
 
-const AcceptInvite = ({ onContinue }: Props) => (
+const AcceptInvite = ({ onContinue, decodedUser }: Props) => (
   <div className="flex flex-col items-center p-8 bg-neutral-50">
     <h3 className=" font-bold mb-4">Accept invite</h3>
     <p className="text-gray-600 mb-4 text-center text-base">
-      You&apos;ve been invited to join Acme Corp on Scrubbe IMS.
+      You&apos;ve been invited to join{" "}
+      <strong>{decodedUser?.workspaceName}</strong> on Scrubbe IMS.
     </p>
     <CButton onClick={onContinue} className=" w-[200px]">
       Accept Invite and Continue
@@ -50,10 +58,9 @@ const AcceptInvite = ({ onContinue }: Props) => (
   </div>
 );
 
-const ProfileSetup = ({ onContinue }: Props) => {
+const ProfileSetup = ({ onContinue, decodedUser }: Props) => {
   const { post } = useFetch();
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+
   const {
     handleSubmit,
     control,
@@ -72,9 +79,7 @@ const ProfileSetup = ({ onContinue }: Props) => {
   });
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [decodeUser, setDecodeUser] = useState<
-    { role: string; email: string; businessId: string } | undefined
-  >();
+
   const [isWorkspace, setIsWorkspace] = useState(false);
   const [isPrivacyPolicy, setIsPrivacyPolicy] = useState(false);
 
@@ -82,9 +87,9 @@ const ProfileSetup = ({ onContinue }: Props) => {
     const data = {
       firstName: value.firstName,
       lastName: value.lastName,
-      email: decodeUser?.email,
+      email: decodedUser?.email,
       password: value.password,
-      businessId: decodeUser?.businessId,
+      businessId: decodedUser?.businessId,
     };
     if (!isPrivacyPolicy || !isWorkspace) {
       toast.error("Please accept privacy policy and workspace terms");
@@ -100,19 +105,6 @@ const ProfileSetup = ({ onContinue }: Props) => {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const res = await post(endpoint.auth.decode_invite_token, { token });
-      setLoading(false);
-      if (res.success) {
-        toast.success("decode successful");
-        setDecodeUser(res.data);
-      } else {
-        toast.error("decode failed");
-      }
-    })();
-  }, []);
   return (
     <form className="" onSubmit={handleSubmit(handleSubmitForm)}>
       <h3 className="text-lg font-medium mb-8 text-center">Profile Setup</h3>
@@ -145,11 +137,16 @@ const ProfileSetup = ({ onContinue }: Props) => {
           />
         </div>
 
-        <Input label="Work Email" placeholder="Enter Work Email" />
+        <Input
+          label="Work Email"
+          placeholder="Enter Work Email"
+          value={decodedUser?.email}
+          readOnly
+        />
 
         <Input
           label="Role"
-          value={decodeUser?.role}
+          value={decodedUser?.role}
           className="dark:!text-black"
           labelClassName="dark:!text-black"
           readOnly
@@ -178,7 +175,7 @@ const ProfileSetup = ({ onContinue }: Props) => {
         />
       </div>
       <br />
-      <CButton isLoading={loading} type="submit" disabled={isValid}>
+      <CButton isLoading={loading} type="submit" disabled={!isValid}>
         Continue
       </CButton>
 
@@ -257,20 +254,51 @@ const Review = () => {
 };
 
 const InvitationFlow = () => {
-  const [step, setStep] = useState(2);
-
+  const [step, setStep] = useState(1);
+  const [decodeUser, setDecodeUser] = useState<
+    | { role: string; email: string; businessId: string; workspaceName: string }
+    | undefined
+  >();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+  const { post } = useFetch();
+  const [loading, setLoading] = useState(false);
   const renderStep = () => {
     switch (step) {
       case 1:
-        return <AcceptInvite onContinue={() => setStep(2)} />;
+        return (
+          <AcceptInvite
+            onContinue={() => setStep(2)}
+            decodedUser={decodeUser}
+          />
+        );
       case 2:
-        return <ProfileSetup onContinue={() => setStep(3)} />;
+        return (
+          <ProfileSetup
+            onContinue={() => setStep(3)}
+            decodedUser={decodeUser}
+          />
+        );
       case 3:
         return <Review />;
       default:
         return null;
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const res = await post(endpoint.auth.decode_invite_token, { token });
+      setLoading(false);
+      if (res.success) {
+        toast.success("decode successful");
+        setDecodeUser(res.data);
+      } else {
+        toast.error("decode failed");
+      }
+    })();
+  }, []);
 
   const getStepClass = (stepNum: number) => {
     const baseClass =
@@ -339,7 +367,30 @@ const InvitationFlow = () => {
           </div>
         </div>
 
-        {renderStep()}
+        {loading ? (
+          <div className="mx-auto flex flex-col items-center gap-2">
+            <p>Verifying invite token</p>
+            <div className="w-64 h-1.5 bg-gray-200 rounded-full overflow-hidden ">
+              <motion.div
+                className="h-full bg-IMSLightGreen"
+                initial={{ width: 0 }}
+                animate={{ width: "100%" }}
+                transition={{
+                  duration: 2,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  repeatDelay: 0.5,
+                }}
+              />
+            </div>
+            <p className=" text-sm opacity-50">
+              Please wait for invite verification to be done
+            </p>
+          </div>
+        ) : (
+          renderStep()
+        )}
       </div>
     </div>
   );

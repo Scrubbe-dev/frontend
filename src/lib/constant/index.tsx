@@ -628,7 +628,7 @@ export const IMSSidebar: NavItem[] = [
     Icon: LucideLayoutDashboard,
     link: "/incident",
     isMenu: false,
-    isActive: true,
+    isActive: false,
   },
   {
     name: "Incident",
@@ -656,7 +656,7 @@ export const IMSSidebar: NavItem[] = [
     Icon: BiSolidBookBookmark,
     link: "/incident/postmortems",
     isMenu: false,
-    isActive: false,
+    isActive: true,
   },
   {
     name: "SLA Management",

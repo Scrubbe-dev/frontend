@@ -4,11 +4,26 @@ import Navbar from "../dashboard/Navbar";
 import Sidebar from "./Sidebar";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
+import { BsArrowBarLeft } from "react-icons/bs";
+import clsx from "clsx";
+import { useSidebar } from "@/lib/stores/useSidebar";
 
 const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
+  const { collapse, toggle } = useSidebar();
   const pathname = usePathname();
   return (
-    <div className="w-full h-screen dark:bg-[#111827] bg-white overflow-clip">
+    <div className="w-full h-screen dark:bg-[#111827] bg-white overflow-clip relative">
+      <div
+        onClick={toggle}
+        className={clsx(
+          "cursor-pointer",
+          collapse
+            ? " absolute left-3 transition-all duration-150 ease-out rotate-180 bottom-[10px] bg-IMSLightGreen size-10 shadow-lg rounded-full flex justify-center items-center "
+            : " hidden"
+        )}
+      >
+        <BsArrowBarLeft className=" text-white" />
+      </div>
       <div className="flex w-full h-full">
         <Sidebar />
         <div className="w-full h-full">

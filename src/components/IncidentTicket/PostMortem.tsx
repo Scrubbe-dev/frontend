@@ -105,6 +105,7 @@ const PostMortem = ({ ticket, onClose }: PostMortemProps) => {
           {resolutionSteps.map(({ Icon, name, value }) => (
             <div
               key={value}
+              onClick={() => setSteps(value)}
               className={` cursor-pointer ${
                 value === steps ? "bg-white/10 text-white " : "text-neutral-200"
               }  flex flex-row gap-3 items-center p-3 w-full rounded-md`}

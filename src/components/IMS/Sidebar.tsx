@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { IMSSidebar } from "@/lib/constant/index";
 import { FaSignOutAlt } from "react-icons/fa";
 import useLogout from "@/hooks/useLogout";
+import { BsArrowBarLeft } from "react-icons/bs";
+import { useSidebar } from "@/lib/stores/useSidebar";
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -17,11 +19,12 @@ const Sidebar = () => {
   // Helper: is a parent active (current route matches parent or any child)?
 
   const { handleLogout } = useLogout();
-
+  const { collapse, toggle } = useSidebar();
   return (
     <div
       className={clsx(
-        "border-r border-blue-400/50 flex flex-col justify-between bg-IMSGreen px-3 py-5 overflow-auto min-w-[210px]"
+        "border-r border-blue-400/50 flex-col justify-between bg-IMSGreen px-3 py-5 overflow-auto ",
+        collapse ? "hidden" : "flex"
       )}
     >
       <div className="relative">
@@ -36,6 +39,18 @@ const Sidebar = () => {
               alt="scrubbe.png"
               className="object-contain h-full "
             />
+          </div>
+
+          <div
+            onClick={toggle}
+            className={clsx(
+              "cursor-pointer",
+              collapse
+                ? " absolute left-10 top-[10px] bg-IMSLightGreen size-14 rounded-full flex justify-center items-center "
+                : ""
+            )}
+          >
+            <BsArrowBarLeft className=" text-white" />
           </div>
 
           {/* <div

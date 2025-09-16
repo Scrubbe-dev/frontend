@@ -9,6 +9,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import { CgSpinner } from "react-icons/cg";
+import { HiUserGroup } from "react-icons/hi";
+import Modal from "../ui/Modal";
+import InviteTeamMember from "../ui/InviteTeamMember";
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 const Navbar = () => {
@@ -18,6 +21,7 @@ const Navbar = () => {
   const [menu, setMenu] = useState(false);
   const statusFilterRef = useRef<HTMLDivElement>(null);
   const { get } = useFetch();
+  const [openInvite, setOpenInvite] = useState(false);
 
   const { isLoading } = useQuery({
     queryKey: ["PROFIILE"],
@@ -73,10 +77,10 @@ const Navbar = () => {
             {menu && (
               <div
                 ref={statusFilterRef}
-                className=" w-auto border z-50 border-gray-200 p-2 absolute   h-fit bg-white rounded-md top-full right-0 transform  mt-1"
+                className=" w-auto border z-50 border-gray-200 p-2 absolute   h-fit bg-white rounded-md top-full right-0 transform  mt-1 space-y-2"
               >
-                <div className="flex items-center gap-3 text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors">
-                  <div className=" size-9 rounded-full bg-zinc-700 flex justify-center items-center text-[80%] text-white">
+                <div className="flex border-b items-center gap-3 text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white hover:rounded-md transition-colors">
+                  <div className=" size-6 rounded-full bg-zinc-700 flex justify-center items-center text-[80%] text-white">
                     {isLoading && !user ? (
                       <CgSpinner className=" animate-spin" />
                     ) : (
@@ -88,6 +92,16 @@ const Navbar = () => {
                   <p className=" text-nowrap">
                     {user?.firstName} {user?.lastName} (You)
                   </p>
+                </div>
+                <div
+                  onClick={() => {
+                    setMenu(false);
+                    setOpenInvite(true);
+                  }}
+                  className="flex items-center gap-3 text-sm cursor-pointer text-gray-500 px-2 py-1 hover:bg-colorScBlue hover:text-white rounded-md transition-colors"
+                >
+                  <HiUserGroup />
+                  <p className=" text-nowrap">Invite Team</p>
                 </div>
               </div>
             )}
@@ -116,6 +130,10 @@ const Navbar = () => {
           )}
         </div>
       </div>
+
+      <Modal isOpen={openInvite} onClose={() => setOpenInvite(false)}>
+        <InviteTeamMember />
+      </Modal>
     </div>
   );
 };
