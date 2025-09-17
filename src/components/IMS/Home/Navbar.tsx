@@ -25,8 +25,8 @@ const tabs = [
   },
 
   {
-    title: "Result",
-    link: "/",
+    title: "Pricing",
+    link: "/pricing",
   },
 ];
 

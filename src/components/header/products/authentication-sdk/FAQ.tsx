@@ -1,96 +1,14 @@
+"use client";
 import React, { useState } from "react";
 
-const faqData = [
-  {
-    question: "What is the Scrubbe Authentication SDK?",
-    answer: `The Scrubbe Authentication SDK enables developers to securely integrate authentication into their applications using
-token-based access. It supports API keys, OAuth 2.0, and GitHub sign-in—tailored for
-both technical and nontechnical users.`,
-    iscode: false,
-  },
-  {
-    question: "What languages or frameworks are supported?",
-    answer: `Currently supported SDKs include:
-• Node.js
-• React (Frontend JavaScript)
-• TypeScript
-• Go (coming soon)`,
-    iscode: true,
-  },
-  {
-    question: "How do I install the SDK?",
-    answer: `You can install the SDK using your preferred package
-manager :
-• npm
-npm install @scrubbe/auth-sdk
-• yarn
-yarn add @scrubbe/auth-sdk
-• pnpm
-pnpm add @scrubbe/auth-sdk`,
-    iscode: true,
-  },
-  {
-    question: "How do I authenticate using an API key?",
-    answer: `Use your API key in request headers like this:
-Authorization: Bearer YOUR_API_KEY
-Or in JavaScript:
-scrubbe.auth("YOUR_API_KEY");`,
-    iscode: true,
-  },
-  {
-    question: "How do I enable GitHub login for my team?",
-    answer: `1. Go to your Scrubbe dashboard
-2. Navigate to Settings > Authentication
-3. Enable GitHub Sign-In
-4. Input your GitHub OAuth credentials`,
-    iscode: true,
-  },
-  {
-    question: "Can I authenticate with OAuth 2.0?",
-    answer: `Yes. Scrubbe supports OAuth 2.0 for secure, scalable tokenbased
-authentication. You can configure Scrubbe-managed
-OAuth or bring your own identity provider.
-`,
-    iscode: true,
-  },
-  {
-    question: "Does Scrubbe support multi-tenant authentication?",
-    answer: `Yes. Scrubbe is designed for multi-tenant SaaS environments.
-Tenants have logically separated user accounts and
-permissions under a shared authentication infrastructure.`,
-    iscode: true,
-  },
-  {
-    question: "How is session management handled?",
-    answer: `Scrubbe uses secure JWT-based sessions with:
-• Short TTL for access tokens (e.g. 15 minutes)
-• Long TTL for refresh tokens (e.g. 7 days)
-• Built-in token renewal methods in the SDK`,
-    iscode: true,
-  },
-  {
-    question: "Can I restrict access by role or user type?",
-    answer: `Yes. Scrubbe supports full Role-Based Access Control
-(RBAC):
-Js
-scrubbe.auth().hasRole("admin");
-You can also manage roles in the dashboard under Users &
-Access.`,
-    iscode: true,
-  },
-  {
-    question: "Where can I find example integration code?",
-    answer: `Each SDK includes a /docs folder with examples for:
-• Initial authentication
-• Token refresh flow
-• Secure credential storage
-Additionally, code samples are available in our GitHub
-Example Repository (link to be provided).`,
-    iscode: true,
-  },
-];
-
-const FAQ = () => {
+type Props = {
+  faqData: {
+    question: string;
+    answer: string;
+    iscode: boolean;
+  }[];
+};
+const FAQ = ({ faqData }: Props) => {
   return (
     <div className=" max-w-[1440px] h-full mx-auto flex flex-col items-center gap-y-6 relative z-10 px-4 md:px-6 lg:px-20 xl:px-20 py-20 bg-white">
       <div className="text-center mb-4">
@@ -104,13 +22,14 @@ const FAQ = () => {
         </p>
       </div>
 
-      <div className="mx-auto my-10  rounded-lg bg-white ">
+      <div className="mx-auto my-6  rounded-lg bg-white ">
         {faqData.map((item, index) => (
           <AccordionItem
             key={index}
             question={item.question}
             answer={item.answer}
             iscode={item.iscode}
+            index={index}
           />
         ))}
       </div>
@@ -124,12 +43,14 @@ const AccordionItem = ({
   question,
   answer,
   iscode,
+  index,
 }: {
   question: string;
   answer: string;
   iscode: boolean;
+  index?: number;
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(index == 0 ? true : false);
 
   return (
     <div className="border border-gray-200   mt-3 rounded-md">
