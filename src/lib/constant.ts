@@ -22,6 +22,7 @@ export const querykeys = {
   INCIDENT_DETAIL: "INCIDENT_DETAIL",
   HISTORY: "HISTORY",
   INTEGRATIONS: "INTEGRATIONS",
+  PRICING: "PRICING",
 };
 
 export const borderColors: { [key: string]: string } = {

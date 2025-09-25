@@ -19,7 +19,7 @@ const RedirectContext = createContext<RedirectContextType | undefined>(
 export const RedirectProviderIMS = ({ children }: { children: ReactNode }) => {
   const [shouldRedirect, setShouldRedirect] = useState(false);
   const { handleLogout } = useLogout();
-  useIdle(500000, handleLogout);
+  useIdle(2000000, handleLogout);
 
   const router = useRouter();
 

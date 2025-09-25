@@ -152,7 +152,7 @@ const Features = () => {
               <img src="/IMS/orb2.svg" alt="" className=" " />
             </div>
             <div className="flex gap-4 sm:flex-row flex-col-reverse">
-              <div className=" flex-1 flex flex-col gap-3 relative ">
+              <div className=" flex-1 hidden sm:flex flex-col gap-3 relative ">
                 <img
                   src="/IMS/Notifications.png"
                   alt=""

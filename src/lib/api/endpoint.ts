@@ -48,8 +48,14 @@ export const endpoint = {
     googlemeet: "/integrations/google/meet/connect",
     googlemeet_callback: "/integrations/google/meet/oauth/callback",
     github: "/integrations/github/connect",
-    github_callback: "/integrations/github/callback",
+    github_callback: "/integrations/github/callbacks/github",
     gitlab: "/integrations/gitlab/connect",
     gitlab_callback: "/integrations/gitlab/callback",
+  },
+  plans: {
+    get: "/pricing/plans",
+    create_subscription: "/pricing/subscriptions",
+    create_session: "/pricing/checkout/create-session",
+    getUserSubscription: "/pricing/customers",
   },
 };

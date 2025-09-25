@@ -4,33 +4,12 @@ import CButton from "@/components/ui/Cbutton";
 import EmptyState from "@/components/ui/EmptyState";
 import InviteTeamMember from "@/components/ui/InviteTeamMember";
 import Modal from "@/components/ui/Modal";
-import { useFetch } from "@/hooks/useFetch";
-import { endpoint } from "@/lib/api/endpoint";
-import { querykeys } from "@/lib/constant";
-import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import useMember from "@/hooks/useMember";
+import { useState } from "react";
 
 const OnCall = () => {
   const [openInvite, setOpenInvite] = useState(false);
-  const { get } = useFetch();
-  const { data: members } = useQuery<
-    { firstname: string; lastname: string; email: string }[]
-  >({
-    queryKey: [querykeys.GET_MEMBERS],
-    queryFn: async () => {
-      try {
-        const res = await get(endpoint.incident_ticket.get_members);
-        console.log({ memeber: res });
-        if (res.success) {
-          return res.data;
-        }
-        return [];
-      } catch (error) {
-        console.log(error);
-        return [];
-      }
-    },
-  });
+  const { data: members } = useMember();
 
   return (
     <div className="p-4">

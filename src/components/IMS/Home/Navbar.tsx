@@ -38,13 +38,13 @@ const Navbar = () => {
   return (
     <div className=" w-full p-5 container mx-auto fixed left-0 right-0 top-0 z-50">
       <div className=" h-[88px] flex justify-between items-center px-10 rounded-full bg-black/20 border border-gray-500 backdrop-blur-sm ">
-        <div className="h-[30px] w-[220px]">
+        <Link href={"/"} className="h-[30px] w-[220px]">
           <img
             src="/whitelogo.png"
             alt="scrubbe.png"
             className="object-contain h-full "
           />
-        </div>
+        </Link>
         <ul className="hidden xl:flex items-center gap-6 text-white ">
           {tabs.map((tab) => (
             <li key={tab.link}>

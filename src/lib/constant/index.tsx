@@ -14,7 +14,7 @@ import {
 import { LuRefreshCw } from "react-icons/lu";
 import { BsBoxSeam, BsDatabase, BsQuestionOctagon } from "react-icons/bs";
 import { FaBook, FaCircleQuestion, FaClock, FaCodepen } from "react-icons/fa6";
-import { FiGitMerge } from "react-icons/fi";
+import { FiGitMerge, FiUsers } from "react-icons/fi";
 import { HiOutlineCreditCard } from "react-icons/hi";
 import { TbCloudDataConnection, TbRouteSquare } from "react-icons/tb";
 import { TiFlowChildren } from "react-icons/ti";
@@ -25,6 +25,7 @@ import { MdAnalytics, MdGroup, MdLock } from "react-icons/md";
 import { BiSolidBookBookmark } from "react-icons/bi";
 import { RiOrganizationChart } from "react-icons/ri";
 import { FaBox, FaLink } from "react-icons/fa";
+import { AiOutlineQuestionCircle } from "react-icons/ai";
 
 export type NavItem = {
   name: string;
@@ -670,7 +671,7 @@ export const IMSSidebar: NavItem[] = [
     Icon: LuRefreshCw,
     link: "/incident/changes-problems",
     isMenu: false,
-    isActive: false,
+    isActive: true,
   },
   {
     name: "Runbooks",
@@ -740,6 +741,30 @@ export const IMSSidebar: NavItem[] = [
   {
     name: "Relationships",
     Icon: FaLink,
+    link: "/incident/relationships",
+    isMenu: false,
+    isActive: false,
+  },
+];
+
+export const SubSidebar = [
+  {
+    name: "Team Member",
+    Icon: FiUsers,
+    link: "/incident/team-management",
+    isMenu: false,
+    isActive: true,
+  },
+  {
+    name: "Billing & Usage",
+    Icon: HiOutlineCreditCard,
+    link: "/incident/billings",
+    isMenu: false,
+    isActive: true,
+  },
+  {
+    name: "Relationships",
+    Icon: AiOutlineQuestionCircle,
     link: "/incident/relationships",
     isMenu: false,
     isActive: false,
