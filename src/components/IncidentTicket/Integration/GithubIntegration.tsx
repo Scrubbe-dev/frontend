@@ -18,7 +18,7 @@ const GithubIntegration: React.FC = () => {
       console.log(res);
       if (res.success) {
         if (typeof window !== "undefined") {
-          window.location.href = res.data;
+          window.location.href = res.data.url;
         }
         return res.data;
       }

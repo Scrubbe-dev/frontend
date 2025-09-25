@@ -8,7 +8,7 @@ import { TeamMember } from "@/store/slices/enterpriseSetupSlice";
 import { useAppStore } from "@/store/StoreProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PenLine } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -49,6 +49,8 @@ const Page = () => {
   const handleSkip = () => {
     router.push(`/incident/tickets`);
   };
+  const searchParams = useSearchParams();
+  const path = searchParams.get("to");
 
   const { enterpriseSetup, addTeamMember, updateTeamMember, removeTeamMember } =
     useAppStore((state) => state);
@@ -128,6 +130,10 @@ const Page = () => {
     console.log(res);
     if (res.success) {
       toast.success("Welcome to scrubbe IMS");
+      if (path === "payment") {
+        router.replace("/pricing");
+        return;
+      }
       router.replace("/incident/tickets");
     } else {
       console.log(res.data);

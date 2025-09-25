@@ -8,22 +8,27 @@ import { querykeys } from "@/lib/constant";
 import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 
 const Page: React.FC = () => {
   const { get } = useFetch();
   const { replace } = useRouter();
+  const searchParams = useSearchParams();
+  const code = searchParams.get("code");
+
   const { isLoading, isError } = useQuery({
     queryKey: [querykeys.GITHUB_INTEGRATION],
     queryFn: async () => {
-      const res = await get(endpoint.integration.github_callback);
+      const res = await get(
+        `${endpoint.integration.github_callback}?code=${code}`
+      );
       if (res.success) {
-        replace("/dashboard/incident-ticket");
+        replace("/incident/ingestion");
         toast.error("Github Integration Successful");
         return res.data;
       }
-      replace("/dashboard/incident-ticket");
+      replace("/incident/ingestion");
       toast.error("Github Integration failed");
       return;
     },

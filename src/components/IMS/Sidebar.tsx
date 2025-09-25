@@ -3,7 +3,7 @@
 import Link from "next/link";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
-import { IMSSidebar } from "@/lib/constant/index";
+import { IMSSidebar, SubSidebar } from "@/lib/constant/index";
 import { FaSignOutAlt } from "react-icons/fa";
 import useLogout from "@/hooks/useLogout";
 import { BsArrowBarLeft } from "react-icons/bs";
@@ -92,7 +92,7 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <div className="flex flex-col ">
+      <div className="flex flex-col mt-6 ">
         {/* <div className="flex items-center gap-2 justify-between py-3 px-3">
             <div className="flex items-center gap-2">
               <Moon size={26} className={clsx(" fill-colorScBlue")} />
@@ -109,7 +109,30 @@ const Sidebar = () => {
               onChange={() => setTheme(theme === "dark" ? "light" : "dark")}
             />
           </div> */}
-
+        <p className=" text-sm text-white pl-3 pb-2">Account</p>
+        {SubSidebar.map((item) => {
+          const active = pathname === item.link;
+          const { Icon, link, name, isActive } = item;
+          return (
+            <Link href={isActive ? link : "#"} key={name} className="w-full">
+              <div
+                className={clsx(
+                  "flex items-center text-white gap-2 max-h-10 h-full rounded-lg cursor-pointer transition-all duration-300 px-3 py-3 w-full",
+                  active ? "bg-IMSLightGreen" : "bg-transparent",
+                  isActive ? "opacity-100" : "opacity-40"
+                )}
+              >
+                <Icon size={18} />
+                <div className="flex-1">
+                  <p className="text-sm transition-all delay-200 duration-100">
+                    {name}
+                  </p>
+                </div>
+              </div>
+              {/* Nested children */}
+            </Link>
+          );
+        })}
         <div
           onClick={() => handleLogout()}
           className="flex items-center gap-2 justify-between py-2 px-3 cursor-pointer text-white hover:bg-rose-500 transition-all duration-100 opacity-60 hover:opacity-100 rounded-sm "

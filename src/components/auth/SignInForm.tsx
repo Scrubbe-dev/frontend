@@ -66,6 +66,10 @@ export default function SignInForm() {
 
       // Show success toast after delay
       if (IS_STANDALONE) {
+        if (path === "payment") {
+          router.replace("/pricing");
+          return;
+        }
         router.replace("/incident/tickets");
         return;
       }
@@ -130,6 +134,10 @@ export default function SignInForm() {
         return;
       } else {
         if (IS_STANDALONE) {
+          if (path === "payment") {
+            router.replace("/pricing");
+            return;
+          }
           router.replace("/incident/tickets");
           return;
         }

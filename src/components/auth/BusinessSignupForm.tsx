@@ -227,6 +227,10 @@ export default function BusinessSignupForm() {
     if (showSuccess) {
       const timeout = setTimeout(() => {
         if (IS_STANDALONE) {
+          if (path === "payment") {
+            router.replace("/get-started?to=payment");
+            return;
+          }
           router.replace("/get-started");
           return;
         }

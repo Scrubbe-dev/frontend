@@ -24,8 +24,8 @@ const CButton = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      size={"sm"}
-      className={`w-full text-white !py-2 px-3 rounded-md transition-colors disabled:opacity-40 ${
+      size={"default"}
+      className={`w-full h-10 text-white !py-2 px-3 rounded-md transition-colors disabled:opacity-40 ${
         IS_STANDALONE
           ? "bg-IMSLightGreen hover:bg-IMSDarkGreen "
           : "bg-blue-600 hover:bg-blue-800"

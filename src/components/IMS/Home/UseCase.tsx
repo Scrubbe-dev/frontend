@@ -106,7 +106,7 @@ const UseCase = () => {
 
       <motion.img
         src="/IMS/usecase.png"
-        className="absolute right-[-100px] h-full max-h-[700px] -z-10"
+        className="absolute right-[-100px] h-full max-h-[700px] -z-10 hidden md:flex "
         alt="Use Case illustration"
         variants={imageVariants as any}
         initial="hidden"

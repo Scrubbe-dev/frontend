@@ -28,7 +28,7 @@ const Navbar = () => {
     queryFn: async () => {
       const res = await get(endpoint.auth.me);
       console.log({ res });
-      if (res.success) {
+      if (res.success && res.data) {
         if (!user) {
           setUser(res.data);
         }
