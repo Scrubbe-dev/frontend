@@ -16,7 +16,7 @@ const tabs = [
     link: "/",
   },
   {
-    title: "Compare",
+    title: "Community",
     link: "/",
   },
   {

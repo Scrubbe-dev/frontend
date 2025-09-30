@@ -154,7 +154,7 @@ const TicketComments = ({ ticket }: Props) => {
   return (
     <div className="dark:bg-gray-900 bg-gray-50 rounded-2xl p-6">
       {content}
-      <div className="mb-4">
+      <div className="my-4">
         <div className="font-semibold text-base dark:text-white text-gray-800 mb-2">
           Add comment
         </div>

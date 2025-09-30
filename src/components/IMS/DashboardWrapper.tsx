@@ -12,7 +12,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
   const { collapse, toggle } = useSidebar();
   const pathname = usePathname();
   return (
-    <div className="w-full h-screen dark:bg-[#111827] bg-white overflow-clip relative">
+    <div className="w-full  h-screen dark:bg-[#111827] bg-white overflow-auto relative">
       <div
         onClick={toggle}
         className={clsx(
@@ -24,7 +24,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
       >
         <BsArrowBarLeft className=" text-white" />
       </div>
-      <div className="flex w-full h-full">
+      <div className="flex w-full h-full min-w-[1500px] ">
         <Sidebar />
         <div className="w-full h-full">
           <Navbar />

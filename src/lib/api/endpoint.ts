@@ -58,4 +58,12 @@ export const endpoint = {
     create_session: "/pricing/checkout/create-session",
     getUserSubscription: "/pricing/customers",
   },
+  portal: {
+    get_companies: "/customer/companies",
+    register: "/customer/register",
+    login: "/customer/login",
+    create_incident: "/customer/create-incident",
+    get_incident: "/customer/get-incident",
+    get_incidents: "/customer/get-incidents",
+  },
 };

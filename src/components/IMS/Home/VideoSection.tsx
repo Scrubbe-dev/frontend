@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import CButton from "@/components/ui/Cbutton";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import React, { useRef, useState } from "react";
 import { FaPlay } from "react-icons/fa";
 
@@ -19,7 +21,23 @@ const VideoSection = () => {
     setIsPlaying(!isPlaying);
   };
   return (
-    <div className=" h-screen bg-[#000017] w-full">
+    <div className=" min-h-screen bg-[#000017] w-full p-10 space-y-7 ">
+      <p className="text-white text-3xl md:text-4xl font-bigshotOne text-center">
+        See how our Incident Management System Keeps your Team in Control
+      </p>
+      <div className="flex justify-center gap-3">
+        <Link
+          href={"https://www.scrubbe.com/auth/business-signup"}
+          target="_blank"
+        >
+          <CButton className=" w-full md:!w-[300px] h-[50px] bg-IMSLightGreen text-white hover:bg-IMSDarkGreen shadow-none text-base">
+            Get Started
+          </CButton>
+        </Link>
+        <CButton className="w-full md:!w-[300px]  h-[50px] border bg-transparent hover:bg-transparent border-IMSLightGreen text-IMSLightGreen shadow-none text-base">
+          Request War Room Demo
+        </CButton>
+      </div>
       <motion.div
         initial={{ scale: 0.3 }}
         whileInView={{ scale: 1 }}
@@ -28,13 +46,13 @@ const VideoSection = () => {
           ease: "easeIn",
         }}
         viewport={{ once: true }}
-        className=" container mx-auto flex justify-center items-center h-full rounded-2xl overflow-clip relative"
+        className=" container mx-auto flex justify-center items-center w-9/12 h-full rounded-2xl overflow-clip relative"
       >
         <video
           ref={videoRef}
           src="/video/scrubbe-ims.mp4"
-          width="640"
-          height="360"
+          width="500"
+          height="300"
           className=" h-full w-full "
           controls
           onPlay={() => setIsPlaying(true)}
