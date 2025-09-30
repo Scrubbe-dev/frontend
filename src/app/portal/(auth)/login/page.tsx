@@ -1,9 +1,16 @@
 "use client";
 import CButton from "@/components/ui/Cbutton";
 import Input from "@/components/ui/input";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import { COOKIE_KEYS } from "@/lib/constant";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { setCookie } from "cookies-next";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const signupSchema = z.object({
@@ -17,16 +24,30 @@ const signupSchema = z.object({
 type SignupFormData = z.infer<typeof signupSchema>;
 
 const Page = () => {
+  const [loading, setLoading] = useState(false);
+  const { post } = useFetch();
+  const router = useRouter();
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     control,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     mode: "onChange",
   });
   const handleSubmitForm = async (data: SignupFormData) => {
-    console.log(data);
+    setLoading(true);
+    const res = await post(endpoint.portal.login, data);
+    console.log(res);
+    setLoading(false);
+    if (res.success) {
+      const token = res.data.data.token;
+      setCookie(COOKIE_KEYS.TOKEN, token);
+      router.push("/portal/dashboard");
+      toast.success("Login successful");
+    } else {
+      toast.error(res.data ?? "Login failed");
+    }
   };
   return (
     <div className=" flex justify-center items-center h-full w-full">
@@ -68,8 +89,8 @@ const Page = () => {
 
           <CButton
             type="submit"
-            //   disabled={isLoading || !isValid || !isPasswordValid}
-            //   isLoading={isLoading}
+            disabled={loading || !isValid}
+            isLoading={loading}
           >
             Create Account
           </CButton>

@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import ProgressBar from "@/components/ezra/ProgressBar";
-import { Ticket } from "@/components/IMS/IncidateTicketPage";
 import History from "@/components/IncidentTicket/History";
 import TicketComments from "@/components/IncidentTicket/TicketComments";
-import useTicketDetails from "@/hooks/useTicketDetails";
+import usePortalTicketDetails from "@/hooks/usePortalTicketDetails";
 import { motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
 import moment from "moment";
@@ -19,10 +19,11 @@ const TABS = [
 ];
 const Page = () => {
   const [tab, setTab] = useState(0);
-  const { data, isLoading } = useTicketDetails();
+  const { data, isLoading } = usePortalTicketDetails();
   const router = useRouter();
-  const ticket = data as Ticket;
+  const ticket = data as any;
 
+  console.log({ data });
   if (isLoading) {
     return (
       <div className="p-6 max-w-2xl mx-auto w-full flex flex-col gap-5 animate-pulse">
@@ -114,7 +115,7 @@ const Page = () => {
                 </div>
                 <div className="text-gray-500 dark:text-gray-200">Title:</div>
                 <div className="text-right dark:text-white">
-                  {ticket?.reason}
+                  {ticket?.shortDescription}
                 </div>
                 <div className="text-gray-500 dark:text-gray-200">Status:</div>
                 <div className="text-right dark:text-white">
@@ -148,10 +149,10 @@ const Page = () => {
                   {moment(ticket?.createdAt).format("YYYY-MM-DD")}
                 </div>
                 <div className="text-gray-500 dark:text-gray-200">
-                  Last Updated:
+                  Description:
                 </div>
                 <div className="text-right dark:text-white">
-                  {moment(ticket?.createdAt).format("YYYY-MM-DD")}
+                  {ticket?.description}
                 </div>
               </div>
             </div>

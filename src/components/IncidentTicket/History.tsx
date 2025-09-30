@@ -71,7 +71,7 @@ const History = () => {
         <div className="dark:text-white py-2 px-2 border rounded-sm text-base">
           <b className=" capitalize">Ticket Created: </b>
           <span className="opacity-60">
-            at <b>{moment(ticket.createdAt).format("YYYY-MM-DD")}</b>{" "}
+            at <b>{moment(ticket?.createdAt).format("YYYY-MM-DD")}</b>{" "}
           </span>
         </div>
         <div className="gap-2 flex flex-col-reverse">
@@ -84,7 +84,7 @@ const History = () => {
                 {item?.action.split("_").join(" ")}:{" "}
               </b>
               <span className="opacity-60">
-                By <b>{item.actor}</b>{" "}
+                By <b>{item?.actor}</b>{" "}
                 {item?.action === "status_changed" ? (
                   <span>
                     {" "}

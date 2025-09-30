@@ -1,6 +1,6 @@
 // TicketForm.tsx
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +10,9 @@ import { useRouter } from "next/navigation";
 import Input from "@/components/ui/input";
 import TextArea from "@/components/ui/text-area";
 import CButton from "@/components/ui/Cbutton";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import { toast } from "sonner";
 
 // Define the Zod schema for validation
 const formSchema = z.object({
@@ -21,12 +24,8 @@ const formSchema = z.object({
     .string()
     .min(1, "Description is required.")
     .max(500, "Description cannot exceed 500 characters."),
-  priority: z.enum(["Low", "Medium", "High"], {
-    errorMap: () => ({ message: "Please select a priority." }),
-  }),
-  category: z.enum(["Hardware", "Software", "Network"], {
-    errorMap: () => ({ message: "Please select a category." }),
-  }),
+  priority: z.string().nonempty({ message: "Please select a priority." }),
+  category: z.string().nonempty({ message: "Please select a category." }),
 });
 
 // Define the TypeScript type from the schema
@@ -36,16 +35,28 @@ const TicketForm: React.FC = () => {
   const {
     handleSubmit,
     control, // Get the control object for the Controller component
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
+    mode: "onChange",
   });
   const router = useRouter();
+  const { post } = useFetch();
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = (data: FormData) => {
-    console.log("Form Submitted!", data);
-    // Send the data to your API
+  const onSubmit = async (data: FormData) => {
+    setLoading(true);
+    const res = await post(endpoint.portal.create_incident, data);
+    setLoading(false);
+    if (res.success) {
+      toast.success("Ticket created successfully");
+      router.push("/portal/dashboard");
+    } else {
+      toast.error("Failde to create ticket");
+    }
   };
+
+  console.log(errors);
 
   return (
     <div className="bg-white p-8 rounded-lg w-full max-w-5xl mx-auto ">
@@ -121,11 +132,6 @@ const TicketForm: React.FC = () => {
                 />
               )}
             />
-            {errors.priority && (
-              <p className="mt-2 text-sm text-red-600">
-                {errors.priority.message}
-              </p>
-            )}
           </div>
 
           {/* Category */}
@@ -150,18 +156,18 @@ const TicketForm: React.FC = () => {
                 />
               )}
             />
-            {errors.category && (
-              <p className="mt-2 text-sm text-red-600">
-                {errors.category.message}
-              </p>
-            )}
           </div>
         </div>
 
         {/* Submit Button */}
         <div className="flex justify-end">
-          <CButton type="submit" className=" w-fit px-6">
-            Submit
+          <CButton
+            isLoading={loading}
+            disabled={loading || !isValid}
+            type="submit"
+            className=" w-fit px-6"
+          >
+            Create Ticket
           </CButton>
         </div>
       </form>

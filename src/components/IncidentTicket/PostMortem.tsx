@@ -97,7 +97,7 @@ const PostMortem = ({ ticket, onClose }: PostMortemProps) => {
 
   console.log({ steps });
   return (
-    <div className="flex h-[700px] overflow-hidden">
+    <div className="flex min-h-[700px] overflow-hidden">
       <div className="min-w-[250px] border-r dark:border-neutral-600 border-neutral-200 relative bg-IMSGreen p-4">
         <p className=" text-lg font-semibold text-white ">Resolution Steps</p>
 
@@ -116,7 +116,9 @@ const PostMortem = ({ ticket, onClose }: PostMortemProps) => {
           ))}
         </div>
       </div>
-      <div className="p-4 w-full overscroll-y-scroll h-[700px]">{content}</div>
+      <div className="p-4 w-full overscroll-y-scroll min-h-[700px]">
+        {content}
+      </div>
     </div>
   );
 };
@@ -874,34 +876,35 @@ const Followup = ({ setSteps }: Props) => {
       <h2 className="text-xl font-bold mb-4 dark:text-white">
         Follow-Up Actions
       </h2>
-      <div className="grid grid-cols-4 gap-4 items-center border-b pb-2 mb-2">
-        <div className="font-semibold text-sm dark:text-white">Task *</div>
-        <div className="font-semibold text-sm dark:text-white">Owner *</div>
-        <div className="font-semibold text-sm dark:text-white">Due Date *</div>
-        <div className="font-semibold text-sm dark:text-white">Status</div>
-      </div>
 
-      <div className="grid grid-cols-4 gap-4 items-center">
+      <div className="grid gap-1 items-center">
         <Controller
           name="task"
           control={control}
-          render={({ field }) => <Input {...field} placeholder="Patch API" />}
+          render={({ field }) => (
+            <Input label="Task *" {...field} placeholder="Patch API" />
+          )}
         />
         <Controller
           name="owner"
           control={control}
-          render={({ field }) => <Input {...field} placeholder="Jane Smith" />}
+          render={({ field }) => (
+            <Input label="Owner *" {...field} placeholder="Jane Smith" />
+          )}
         />
         <Controller
           name="dueDate"
           control={control}
-          render={({ field }) => <Input type="date" {...field} />}
+          render={({ field }) => (
+            <Input label="Due Date *" type="date" {...field} />
+          )}
         />
         <Controller
           name="status"
           control={control}
           render={({ field }) => (
             <Select
+              label="Status"
               {...field}
               options={[
                 { value: "", label: "Select Status" },
@@ -1096,7 +1099,7 @@ const Stakeholder = ({ ticket, setSteps }: Props) => {
   };
 
   return (
-    <div className="">
+    <div className=" overflow-scroll">
       <div className="">
         <h1 className="text-2xl font-bold dark:text-white text-black">
           Stakeholder Communications
@@ -1196,7 +1199,7 @@ const Stakeholder = ({ ticket, setSteps }: Props) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center space-x-4 mb-8">
+        <div className="flex flex-wrap items-center gap-4 mb-8">
           <CButton
             onClick={getMessage}
             isLoading={isLoading}

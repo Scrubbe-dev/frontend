@@ -671,7 +671,7 @@ export const IMSSidebar: NavItem[] = [
     Icon: LuRefreshCw,
     link: "/incident/changes-problems",
     isMenu: false,
-    isActive: true,
+    isActive: false,
   },
   {
     name: "Runbooks",
@@ -753,14 +753,14 @@ export const SubSidebar = [
     Icon: FiUsers,
     link: "/incident/team-management",
     isMenu: false,
-    isActive: true,
+    isActive: false,
   },
   {
     name: "Billing & Usage",
     Icon: HiOutlineCreditCard,
     link: "/incident/billings",
     isMenu: false,
-    isActive: true,
+    isActive: false,
   },
   {
     name: "Relationships",
