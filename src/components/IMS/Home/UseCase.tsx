@@ -71,7 +71,7 @@ const UseCase = () => {
   return (
     <div className="bg-gradient-to-b from-[#00223B] to-[#00474D] min-h-[700px] flex items-center justify-between py-10 relative z-10 overflow-hidden">
       <motion.div
-        className="flex flex-col gap-4 pl-10 container mx-auto w-full flex-1"
+        className="flex flex-col gap-4 px-4 md:pl-10 container mx-auto w-full flex-1"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"

@@ -235,7 +235,7 @@ const PricingTable = () => {
       "MSP Clients",
       "Access Control",
       "Support",
-      "Action",
+      // "Action",
     ];
     const cycle: { [key: string]: string } = {
       Monthly: "month",
@@ -252,7 +252,9 @@ const PricingTable = () => {
 
         return {
           ...value,
-          feature: feature?.map((value) => value[1]),
+          feature: feature?.map((value) =>
+            value[1] === "Basic" ? `Basic Dashboards & Reporting` : value[1]
+          ),
         };
       });
   }, [data, billingCycle]);
@@ -317,6 +319,7 @@ const PricingTable = () => {
                 onChange={(e) => setAgent(e.target.value)}
                 type="number"
                 className=" max-w-[56px] rounded-md bg-white px-2"
+                min={1}
               />
               <span className="text-white pl-1">agents</span>
             </div>
