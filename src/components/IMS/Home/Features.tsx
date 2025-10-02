@@ -147,12 +147,12 @@ const Features = () => {
               </motion.div>
             </div>{" "}
           </div>
-          <div className=" min-h-[300px] max-h-[500px] sm:max-h-[300px] rounded-lg w-full p-4  bg-[#F4F6F3] relative z-10 overflow-clip">
+          <div className=" min-h-[500px] sm:min-h-[300px] h-full sm:max-h-[300px] rounded-lg w-full p-4  bg-[#F4F6F3] relative z-10 overflow-clip">
             <div className=" absolute -z-10 bottom-0">
               <img src="/IMS/orb2.svg" alt="" className=" " />
             </div>
             <div className="flex gap-4 sm:flex-row flex-col-reverse">
-              <div className=" flex-1 hidden sm:flex flex-col gap-3 relative ">
+              <div className=" flex-1 flex flex-col gap-3 relative ">
                 <img
                   src="/IMS/Notifications.png"
                   alt=""

@@ -25,7 +25,7 @@ const VideoSection = () => {
       <p className="text-white text-3xl md:text-4xl font-bigshotOne text-center">
         See how our Incident Management System Keeps your Team in Control
       </p>
-      <div className="flex justify-center gap-3">
+      <div className="flex flex-col md:flex-row justify-center gap-3">
         <Link
           href={"https://www.scrubbe.com/auth/business-signup"}
           target="_blank"
@@ -46,7 +46,7 @@ const VideoSection = () => {
           ease: "easeIn",
         }}
         viewport={{ once: true }}
-        className=" container mx-auto flex justify-center items-center w-9/12 h-full rounded-2xl overflow-clip relative"
+        className=" container mx-auto flex justify-center items-center w-12/12 md:w-9/12 h-full rounded-2xl overflow-clip relative"
       >
         <video
           ref={videoRef}

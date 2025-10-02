@@ -47,7 +47,6 @@ const Plan = () => {
       "MSP Clients",
       "Access Control",
       "Support",
-      "Action",
     ];
     const cycle: { [key: string]: string } = {
       Monthly: "month",
@@ -64,7 +63,9 @@ const Plan = () => {
 
         return {
           ...value,
-          feature: feature?.map((value) => value[1]),
+          feature: feature?.map((value) =>
+            value[1] === "Basic" ? `Basic Dashboards & Reporting` : value[1]
+          ),
         };
       });
   }, [data, billingCycle]);
