@@ -84,11 +84,17 @@ const Footer = () => {
               </Link>
             </div>
             <div className="md:text-lg font-medium flex flex-col gap-2">
-              <Link href={"#"}>
+              <Link href={"/privacy-policy"}>
                 <p>Privacy Policy</p>
               </Link>
-              <Link href={"#"}>
+              <Link href={"/terms-service"}>
                 <p>Terms of Service</p>
+              </Link>
+              <Link href={"/cookie-policy"}>
+                <p>Cookie Policy</p>
+              </Link>
+              <Link href={"/data-processing-agreement"}>
+                <p>Data Processing Agreement</p>
               </Link>
               <Link href={"#"}>
                 <p>Support</p>
