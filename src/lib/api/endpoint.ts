@@ -66,4 +66,5 @@ export const endpoint = {
     get_incident: "/customer/get-incident",
     get_incidents: "/customer/get-incidents",
   },
+  contact_us: "/mocktest/contact-us",
 };

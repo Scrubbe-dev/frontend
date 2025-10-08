@@ -21,7 +21,7 @@ import { endpoint } from "@/lib/api/endpoint";
 import { usePostMortermForm } from "@/lib/stores/post-morterm";
 import { toast } from "sonner";
 import { FaRegFilePdf } from "react-icons/fa6";
-import { Ticket } from "../IMS/IncidateTicketPage";
+import { Ticket } from "@/types";
 
 const resolutionSteps = [
   {

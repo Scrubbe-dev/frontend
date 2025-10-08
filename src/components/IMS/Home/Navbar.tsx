@@ -12,7 +12,7 @@ const tabs = [
     link: "/",
   },
   {
-    title: "How it Works",
+    title: "Documentation",
     link: "/",
   },
   {

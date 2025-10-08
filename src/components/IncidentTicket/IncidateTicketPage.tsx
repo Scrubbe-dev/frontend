@@ -23,8 +23,8 @@ import TableLoader from "../ui/LoaderUI/TableLoader";
 import Integrations from "./Integrations";
 import Modal from "../ui/Modal";
 import { usePathname, useRouter } from "next/navigation";
-import { Ticket } from "../IMS/IncidateTicketPage";
 import { formatTime } from "@/lib/utils";
+import { Ticket } from "@/types";
 
 const columns = [
   {

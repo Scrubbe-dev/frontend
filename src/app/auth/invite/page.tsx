@@ -192,7 +192,7 @@ const ProfileSetup = ({ onContinue, decodedUser }: Props) => {
         </div>
         <p className="text-gray-700 text-base">
           I accept the{" "}
-          <a href="#" className="text-IMSLightGreen underline">
+          <a href="#" target="_blank" className="text-IMSLightGreen underline">
             Workspace Policies
           </a>{" "}
           (e.g., SLA obligations, data handling rules)
@@ -211,7 +211,7 @@ const ProfileSetup = ({ onContinue, decodedUser }: Props) => {
         </div>
         <p className="text-gray-700 text-base">
           I agree to the{" "}
-          <a href="#" className="text-IMSLightGreen underline">
+          <a href="#" target="_blank" className="text-IMSLightGreen underline">
             Scrubbe IMS Terms & Privacy Policy
           </a>
         </p>
@@ -292,10 +292,10 @@ const InvitationFlow = () => {
       const res = await post(endpoint.auth.decode_invite_token, { token });
       setLoading(false);
       if (res.success) {
-        toast.success("decode successful");
+        // toast.success("decode successful");
         setDecodeUser(res.data);
       } else {
-        toast.error("decode failed");
+        // toast.error("decode failed");
       }
     })();
   }, []);

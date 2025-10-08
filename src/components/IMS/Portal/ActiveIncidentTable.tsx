@@ -1,7 +1,6 @@
 "use client";
 import { CellContext } from "@tanstack/react-table";
 import React, { useEffect, useRef, useState } from "react";
-import { Ticket } from "../IncidateTicketPage";
 import clsx from "clsx";
 import { Table } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
@@ -16,6 +15,7 @@ import { Filter, Plus } from "lucide-react";
 import TableLoader from "@/components/ui/LoaderUI/TableLoader";
 import ProgressBar from "@/components/ezra/ProgressBar";
 import { Button } from "@heroui/react";
+import { Ticket } from "@/types";
 
 const priorityColors = (priority: string) => {
   return (

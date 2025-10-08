@@ -5,7 +5,6 @@ import CButton from "../ui/Cbutton";
 import { PiExport } from "react-icons/pi";
 import clsx from "clsx";
 import { CellContext } from "@tanstack/react-table";
-import { Ticket } from "./IncidateTicketPage";
 import { useFetch } from "@/hooks/useFetch";
 import { useQuery } from "@tanstack/react-query";
 import { querykeys } from "@/lib/constant";
@@ -18,6 +17,7 @@ import EmptyState from "../ui/EmptyState";
 import Input from "../ui/input";
 import { Button } from "@heroui/react";
 import { usePostMortermForm } from "@/lib/stores/post-morterm";
+import { Ticket } from "@/types";
 
 const priorityColors = (priority: string) => {
   return (

@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
-import Image from "next/image";
 import * as z from "zod";
 import Input from "../ui/input";
 import Select from "../ui/select";
@@ -556,7 +555,7 @@ export default function BusinessSignupForm() {
                         })
                       }
                     >
-                      <Image
+                      <img
                         src="/icon-auth-gitlab.svg"
                         alt="GitLab"
                         width={38}
@@ -572,7 +571,7 @@ export default function BusinessSignupForm() {
                       type="button"
                       className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
                     >
-                      <Image
+                      <img
                         src="/icon-auth-aws.svg"
                         alt="AWS"
                         width={38}
@@ -593,7 +592,7 @@ export default function BusinessSignupForm() {
                         })
                       }
                     >
-                      <Image
+                      <img
                         src="/icon-auth-azure.svg"
                         alt="Azure"
                         width={38}

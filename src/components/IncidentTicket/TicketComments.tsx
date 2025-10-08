@@ -8,7 +8,7 @@ import moment from "moment";
 import EmptyState from "../ui/EmptyState";
 import useAuthStore from "@/lib/stores/auth.store";
 import { MdVerified } from "react-icons/md";
-import { Ticket } from "../IMS/IncidateTicketPage";
+import { Ticket } from "@/types";
 
 type Comments = {
   id: string;

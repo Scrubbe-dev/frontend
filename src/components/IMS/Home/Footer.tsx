@@ -79,7 +79,7 @@ const Footer = () => {
               <Link href={"#"}>
                 <p>API Reference</p>
               </Link>
-              <Link href={"#"}>
+              <Link href={"/contact-us"}>
                 <p>Contact Us</p>
               </Link>
             </div>
@@ -96,15 +96,15 @@ const Footer = () => {
               <Link href={"/data-processing-agreement"}>
                 <p>Data Processing Agreement</p>
               </Link>
-              <Link href={"#"}>
+              <Link href={"/contact-us"}>
                 <p>Support</p>
               </Link>
             </div>
             <div className="md:text-lg font-medium flex flex-col gap-2">
-              <Link href={"#"}>
+              <Link href={"/blog"}>
                 <p>Blog</p>
               </Link>
-              <Link href={"#"}>
+              <Link href={"/career"}>
                 <p>Careers</p>
               </Link>
             </div>

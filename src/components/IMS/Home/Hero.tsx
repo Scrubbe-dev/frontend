@@ -56,10 +56,7 @@ const Hero = () => {
           variants={itemVariants as any}
           className="flex md:flex-row flex-col gap-4 mt-4 md:mt-10"
         >
-          <Link
-            href={"https://www.scrubbe.com/auth/business-signup"}
-            target="_blank"
-          >
+          <Link href={"/auth/business-signup"}>
             <CButton className=" w-full md:!w-[300px] h-[50px] bg-IMSLightGreen text-white hover:bg-IMSDarkGreen shadow-none text-base">
               Get Started
             </CButton>

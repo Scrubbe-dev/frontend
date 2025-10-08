@@ -9,11 +9,10 @@ import { ChevronLeft } from "lucide-react";
 import EditIncidentTicket from "./EditIncidentTicket";
 import TicketComments from "../IncidentTicket/TicketComments";
 import useTicketDetails from "@/hooks/useTicketDetails";
-import { Ticket } from "./IncidateTicketPage";
 import Collaboration from "../IncidentTicket/Collaboration";
 import History from "../IncidentTicket/History";
 import TreatIntel from "../IncidentTicket/TreatIntel";
-// import { Ticket } from './IncidateTicketPage';
+import { Ticket } from "@/types";
 
 const TABS = [
   "Details",

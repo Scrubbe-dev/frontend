@@ -82,10 +82,10 @@ const formScheme = z.object({
 type FormType = z.infer<typeof formScheme>;
 
 const MTTR: { [key: string]: { label: string; value: number } } = {
-  LOW: { label: "Average response time-15 minutes", value: 900 },
-  MEDIUM: { label: "Average response time-30 minutes", value: 1800 },
-  HIGH: { label: "Average response time-2 hours", value: 7200 },
-  CRITICAL: { label: "Average response time-4 hours", value: 14400 },
+  CRITICAL: { label: "Average response time-15 minutes", value: 900 },
+  HIGH: { label: "Average response time-30 minutes", value: 1800 },
+  MEDIUM: { label: "Average response time-2 hours", value: 7200 },
+  LOW: { label: "Average response time-4 hours", value: 14400 },
 };
 
 const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
@@ -170,8 +170,9 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
         return [];
       }
     },
-    enabled: isOpen == true ? true : false,
   });
+
+  console.log({ members });
 
   const createIncidentTicket = async (value: FormType) => {
     mutateAsync({ data: value });
@@ -453,7 +454,6 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
         <Input
           icon={<Calendar size={16} />}
           label="Date Opened"
-          error={errors.affectedSystem?.message}
           value={new Date(Date.now()).toISOString().split("T").join(" ")}
           className=" text-black dark:text-white"
           readOnly
@@ -463,7 +463,6 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
           icon={<Clock size={16} />}
           info="Time taken to raise the incident"
           label="Time taken to raise incident"
-          error={errors.affectedSystem?.message}
           className=" text-black dark:text-white"
           value={formatTime(elapsedTime)}
           readOnly
