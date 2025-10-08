@@ -1,4 +1,4 @@
-import { Ticket } from "@/components/IMS/IncidateTicketPage";
+import { Ticket } from "@/types";
 import { create } from "zustand";
 
 type PostMortermForm = {

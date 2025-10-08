@@ -10,7 +10,7 @@ import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import { querykeys } from "@/lib/constant";
 import { Socket } from "socket.io-client";
-import { Ticket } from "../IMS/IncidateTicketPage";
+import { Ticket } from "@/types";
 
 type Message = {
   id: string;

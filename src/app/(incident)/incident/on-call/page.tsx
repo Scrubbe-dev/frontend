@@ -13,7 +13,7 @@ const OnCall = () => {
 
   return (
     <div className="p-4">
-      <div className="flex md:flex-row flex-col gap-4">
+      <div className="flex flex-row  gap-4">
         <div className="flex flex-col gap-4 md:flex-[.5] p-3">
           <p className="dark:text-white text-lg font-semibold">Team</p>
           {members && members.length < 1 ? (

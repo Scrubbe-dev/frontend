@@ -1,7 +1,6 @@
 "use client";
 import { CellContext } from "@tanstack/react-table";
 import React from "react";
-import { Ticket } from "../IncidateTicketPage";
 import clsx from "clsx";
 import { Table } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
@@ -10,6 +9,7 @@ import { endpoint } from "@/lib/api/endpoint";
 import { querykeys } from "@/lib/constant";
 import moment from "moment";
 import Select from "@/components/ui/select";
+import { Ticket } from "@/types";
 
 const statusColors = (status: string) => {
   return (

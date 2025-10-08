@@ -38,7 +38,7 @@ const TextArea = ({
           } ${labelClassName}`}
         >
           {icon && <div className="">{icon}</div>}
-          {label}{" "}
+          {label} {props.required && "*"}
           {info && (
             <div className="group relative">
               <RiInformationLine className=" text-IMSLightGreen cursor-pointer" />

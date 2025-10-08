@@ -320,6 +320,7 @@ const PricingTable = () => {
                 type="number"
                 className=" max-w-[56px] rounded-md bg-white px-2"
                 min={1}
+                max={120}
               />
               <span className="text-white pl-1">agents</span>
             </div>

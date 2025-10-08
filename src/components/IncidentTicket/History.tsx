@@ -6,6 +6,7 @@ import clsx from "clsx";
 import moment from "moment";
 import { useParams } from "next/navigation";
 import useTicketDetails from "@/hooks/useTicketDetails";
+import { IoWarning } from "react-icons/io5";
 
 type IHistory = {
   action: string;
@@ -96,6 +97,31 @@ const History = () => {
               </span>
             </div>
           ))}
+        </div>
+
+        <div>
+          {ticket?.mttrResponseBreachNotified && (
+            <div className="dark:text-white py-2 px-2 border rounded-sm text-base flex items-center gap-1">
+              <IoWarning className=" text-red-500" /> Mean Time to Response
+              Breached: at{" "}
+              <b>
+                {moment(ticket?.mttrTargetAck).format("YYYY-MM-DD, HH:mm a")}
+              </b>
+            </div>
+          )}
+        </div>
+        <div>
+          {ticket?.mttrResolveBreachNotified && (
+            <div className="dark:text-white py-2 px-2 border rounded-sm text-base flex items-center gap-1">
+              <IoWarning className=" text-red-500" /> Mean Time to Resolve
+              Breached: at{" "}
+              <b>
+                {moment(ticket?.mttrTargetResolve).format(
+                  "YYYY-MM-DD, HH:mm a"
+                )}
+              </b>
+            </div>
+          )}
         </div>
       </div>
     </div>

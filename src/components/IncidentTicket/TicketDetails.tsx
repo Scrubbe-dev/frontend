@@ -14,8 +14,8 @@ import PostMortem from "./PostMortem";
 import useTicketDetails from "@/hooks/useTicketDetails";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
-import { Ticket } from "../IMS/IncidateTicketPage";
 import EditIncidentTicket from "../IMS/EditIncidentTicket";
+import { Ticket } from "@/types";
 // import { Ticket } from './IncidateTicketPage';
 
 const TABS = [

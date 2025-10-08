@@ -13,7 +13,6 @@ import { endpoint } from "@/lib/api/endpoint";
 import { toast } from "sonner";
 import { querykeys } from "@/lib/constant";
 import useTicketDetails from "@/hooks/useTicketDetails";
-import { Ticket } from "./IncidateTicketPage";
 import { AiFillInfoCircle } from "react-icons/ai";
 import Select from "../ui/select";
 import {
@@ -32,6 +31,7 @@ import clsx from "clsx";
 import Modal from "../ui/Modal";
 import { Calendar, Clock } from "lucide-react";
 import { formatTime } from "@/lib/utils";
+import { Ticket } from "@/types";
 
 const formScheme = z.object({
   source: z.string().nonempty({ message: "source is required" }),
