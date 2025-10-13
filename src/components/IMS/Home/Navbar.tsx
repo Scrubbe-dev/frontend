@@ -17,7 +17,7 @@ const tabs = [
   },
   {
     title: "Community",
-    link: "/",
+    link: "/community",
   },
   {
     title: "Case Studies",

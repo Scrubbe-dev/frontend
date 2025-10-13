@@ -1,5 +1,5 @@
 "use client";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "../ui/button";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -55,14 +55,15 @@ const Navbar = () => {
   return (
     <div>
       <div className="h-[70px] w-full border-b border-neutral-200 dark:border-blue-400/50  flex justify-between items-center px-[3%]">
-        <div className=" w-[50%] dark:bg-zinc-800 bg-zinc-100 flex gap-3 items-center border border-zinc-200 dark:border-zinc-600 rounded-lg h-[38px] px-2">
+        {/* <div className=" w-[50%] dark:bg-zinc-800 bg-zinc-100 flex gap-3 items-center border border-zinc-200 dark:border-zinc-600 rounded-lg h-[38px] px-2">
           <input
             type="text"
             placeholder="Search..."
             className="bg-transparent outline-none dark:text-white w-full"
           />
           <Search className="dark:text-white" size={18} />
-        </div>
+        </div> */}
+        <div></div>
 
         <div className="flex items-center gap-3">
           <div

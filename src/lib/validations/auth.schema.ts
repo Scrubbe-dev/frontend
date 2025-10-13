@@ -65,7 +65,7 @@ export const businessSignupSchema = z
       .string()
       .min(1, { message: "Business address is required" }),
     companySize: z.string().min(1, { message: "Please select company size" }),
-    purpose: z.string().min(1, { message: "Please select a purpose" }),
+    purpose: z.string().optional(),
     password: z
       .string()
       .min(6, { message: "Password must be at least 6 characters" }),
