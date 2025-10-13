@@ -12,8 +12,20 @@ import {
   UsersRound,
 } from "lucide-react";
 import { LuRefreshCw } from "react-icons/lu";
-import { BsBoxSeam, BsDatabase, BsQuestionOctagon } from "react-icons/bs";
-import { FaBook, FaCircleQuestion, FaClock, FaCodepen } from "react-icons/fa6";
+import {
+  BsBoxSeam,
+  BsBriefcaseFill,
+  BsDatabase,
+  BsFillBarChartFill,
+  BsQuestionOctagon,
+} from "react-icons/bs";
+import {
+  FaBook,
+  FaCircleQuestion,
+  FaClock,
+  FaCodepen,
+  FaUserGroup,
+} from "react-icons/fa6";
 import { FiGitMerge, FiUsers } from "react-icons/fi";
 import { HiOutlineCreditCard } from "react-icons/hi";
 import { TbCloudDataConnection, TbRouteSquare } from "react-icons/tb";
@@ -22,10 +34,12 @@ import { GoLock } from "react-icons/go";
 import { IoIosNotifications, IoMdCall } from "react-icons/io";
 import { CgArrowBottomRightR } from "react-icons/cg";
 import { MdAnalytics, MdGroup, MdLock } from "react-icons/md";
-import { BiSolidBookBookmark } from "react-icons/bi";
-import { RiOrganizationChart } from "react-icons/ri";
+import { BiSolidBookBookmark, BiSolidMessageAltEdit } from "react-icons/bi";
+import { RiBloggerLine, RiOrganizationChart } from "react-icons/ri";
 import { FaBox, FaLink } from "react-icons/fa";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
+import { SiAccuweather } from "react-icons/si";
+import { GiScrollUnfurled } from "react-icons/gi";
 
 export type NavItem = {
   name: string;
@@ -745,6 +759,41 @@ export const IMSSidebar: NavItem[] = [
     isMenu: false,
     isActive: false,
   },
+  {
+    name: "Climate & Resilience Intelligence",
+    Icon: SiAccuweather,
+    link: "/incident/climate-resilience-intelligence",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Documentation",
+    Icon: GiScrollUnfurled,
+    link: "/incident/documentation",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Status & Communication Center",
+    Icon: BiSolidMessageAltEdit,
+    link: "/incident/status-communication-center",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Knowledge Based & Lessons Learned",
+    Icon: FaBook,
+    link: "/incident/knowledge-base",
+    isMenu: false,
+    isActive: false,
+  },
+  {
+    name: "Reports & Export",
+    Icon: BsFillBarChartFill,
+    link: "/incident/reports-export",
+    isMenu: false,
+    isActive: false,
+  },
 ];
 
 export const SubSidebar = [
@@ -768,5 +817,36 @@ export const SubSidebar = [
     link: "/incident/relationships",
     isMenu: false,
     isActive: false,
+  },
+];
+
+export const AdminSidebar: NavItem[] = [
+  {
+    name: "Dashboard",
+    Icon: LucideLayoutDashboard,
+    link: "/admin",
+    isMenu: false,
+    isActive: true,
+  },
+  {
+    name: "User",
+    Icon: FaUserGroup,
+    link: "/admin/users",
+    isMenu: false,
+    isActive: true,
+  },
+  {
+    name: "Blog",
+    Icon: RiBloggerLine,
+    link: "/admin/blogs",
+    isMenu: false,
+    isActive: true,
+  },
+  {
+    name: "Careers",
+    Icon: BsBriefcaseFill,
+    link: "/admin/careers",
+    isMenu: false,
+    isActive: true,
   },
 ];

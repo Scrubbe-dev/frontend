@@ -1,14 +1,14 @@
 "use client";
 import React from "react";
-import Navbar from "../dashboard/Navbar";
-import Sidebar from "./Sidebar";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { BsArrowBarLeft } from "react-icons/bs";
 import clsx from "clsx";
 import { useSidebar } from "@/lib/stores/useSidebar";
+import Navbar from "@/components/dashboard/Navbar";
+import Sidebar from "@/components/admin/Sidebar";
 
-const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   const { collapse, toggle } = useSidebar();
   const pathname = usePathname();
   return (
@@ -46,4 +46,4 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default DashboardWrapper;
+export default Layout;

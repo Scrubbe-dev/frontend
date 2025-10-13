@@ -67,7 +67,7 @@ const businessSignupSchema = z
       .string()
       .min(1, { message: "Business address is required" }),
     companySize: z.string().min(1, { message: "Please select company size" }),
-    purpose: z.string().min(1, { message: "Please select a purpose" }),
+    purpose: z.string().optional(),
     password: z
       .string()
       .min(6, { message: "Password must be at least 6 characters" }),
@@ -424,7 +424,7 @@ export default function BusinessSignupForm() {
                   </div>
 
                   {/* Company Size and Purpose Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-1 gap-4 mb-4">
                     <Controller
                       name="companySize"
                       control={control}
@@ -445,7 +445,7 @@ export default function BusinessSignupForm() {
                         />
                       )}
                     />
-                    <Controller
+                    {/* <Controller
                       name="purpose"
                       control={control}
                       render={({ field }) => (
@@ -467,7 +467,7 @@ export default function BusinessSignupForm() {
                           {...field}
                         />
                       )}
-                    />
+                    /> */}
                   </div>
 
                   {/* Password Fields Row */}
