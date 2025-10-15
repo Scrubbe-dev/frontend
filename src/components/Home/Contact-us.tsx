@@ -39,19 +39,30 @@ const ContactUs = () => {
     }
   };
   return (
-    <div className="bg-[#00263D] min-h-screen px-4  md:px-8 py-[10rem] font-sans ">
-      <div className="container mx-auto">
-        <div className="text-center flex flex-col justify-center items-center mb-10 bg-gradient-to-r from-[#5A519F] to-[#8D4C9A] rounded-[30px] p-6 md:p-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Contact Support
-          </h1>
-
-          <p className="text-lg text-white">
-            Get expert help with device fingerprinting and fraud detection. Our
-            team is here to assist you 24/7.{" "}
-          </p>
+    <div className="bg-[#00263D] min-h-screen font-sans ">
+      <div className="h-[500px] w-full bg-no-repeat bg-cover relative z-10">
+        <img
+          src="/IMS/contact-us.jpg"
+          className=" w-full h-full object-cover brightness-50 absolute z-0"
+          alt=""
+        />
+        <div className="container mx-auto p-4">
+          <div className=" absolute flex flex-col items-center justify-center h-full w-full">
+            <h1 className="text-white text-4xl md:text-5xl font-bigshotOne text-center">
+              We’re Here to Keep Your Operations Resilient.
+            </h1>
+            <p className=" max-w-2xl text-white text-center">
+              From onboarding to ongoing incident management, our dedicated
+              support ensures your team stays informed, connected, and always
+              operational.
+            </p>
+          </div>
         </div>
-
+      </div>
+      <div className="container mx-auto px-4  md:px-8 py-[5rem] ">
+        <p className=" text-2xl md:text-4xl font-bold text-white text-center mb-6">
+          Contact Support
+        </p>
         <div className=" grid lg:grid-cols-[1fr,.6fr] gap-6">
           <form onSubmit={handleContactUs} className="p-10 rounded-xl bg-white">
             <p className=" font-semibold text-xl">Send us a message</p>

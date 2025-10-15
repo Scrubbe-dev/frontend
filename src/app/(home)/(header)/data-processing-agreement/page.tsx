@@ -868,13 +868,13 @@ const ScrubbeDataProcessingAgreement = () => {
         {/* Header Block */}
 
         {/* Main Content Grid */}
-        <div className="w-full mx-auto grid grid-cols-12 gap-8 bg-white p-0 rounded-b-lg shadow-xl">
+        <div className="w-full min-h-[2000px] mx-auto md:grid grid-cols-12 gap-8 md:bg-transparent bg-white p-0 rounded-b-lg shadow-xl">
           {/* Left Column - Table of Contents */}
-          <div className="col-span-3 bg-gray-50 border-r border-gray-200 p-6">
+          <div className="md:block hidden sticky top-[100px] h-screen col-span-3 bg-gray-50 border-r border-gray-200 p-6">
             <h2 className="text-xl font-bold mb-4 border-b pb-2">
               Table of contents
             </h2>
-            <nav className="text-sm space-y-1">
+            <nav className="text-base space-y-1">
               {sections.map((section, index) => (
                 <a
                   key={section.id}
@@ -890,7 +890,7 @@ const ScrubbeDataProcessingAgreement = () => {
           </div>
 
           {/* Right Column - Terms Content */}
-          <div className="col-span-9 pl-6 text-gray-800">
+          <div className="col-span-9 md:px-4 text-gray-800 bg-white overflow-auto">
             <div className="p-2">
               <p className="mb-4">
                 This Data Processing Agreement (&quot;DPA&quot;) forms part of

@@ -1,16 +1,33 @@
 import EmptyState from "@/components/ui/EmptyState";
 import Input from "@/components/ui/input";
+import useAuthStore from "@/lib/stores/auth.store";
 import { Heart } from "lucide-react";
 import moment from "moment";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { BsSendFill } from "react-icons/bs";
 import { FaHeart, FaRegCommentDots } from "react-icons/fa";
-import { IoShareSocialSharp } from "react-icons/io5";
+import {
+  IoBookmark,
+  IoBookmarkOutline,
+  IoShareSocialSharp,
+} from "react-icons/io5";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MessageContent = ({ post }: { post: any }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [isComment, setIsComment] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const { user } = useAuthStore();
+  const router = useRouter();
+
+  const authGuard = (fn: () => void) => {
+    if (!user) {
+      router.push("/auth/signin?to=community");
+    } else {
+      fn();
+    }
+  };
   return (
     <div className="p-4 rounded-xl bg-white border-neutral-100 border flex flex-col gap-3">
       <div className="flex justify-between ">
@@ -44,7 +61,7 @@ const MessageContent = ({ post }: { post: any }) => {
 
       <div className=" border-t border-neutral-300 flex flex-wrap gap-5 p-3">
         <div className=" text-base flex flex-nowrap gap-1 items-center cursor-pointer">
-          <div onClick={() => setIsLiked((prev) => !prev)}>
+          <div onClick={() => authGuard(() => setIsLiked((prev) => !prev))}>
             {isLiked ? (
               <FaHeart size={17} className=" text-rose-600" />
             ) : (
@@ -63,6 +80,13 @@ const MessageContent = ({ post }: { post: any }) => {
         <div className=" text-base flex flex-nowrap gap-1 items-center cursor-pointer">
           <IoShareSocialSharp size={17} />
           <span>Share</span>
+        </div>
+        <div
+          onClick={() => authGuard(() => setIsSaved((prev) => !prev))}
+          className=" text-base flex flex-nowrap gap-1 items-center cursor-pointer"
+        >
+          {isSaved ? <IoBookmark size={17} /> : <IoBookmarkOutline size={17} />}
+          <span>Save</span>
         </div>
       </div>
 
@@ -85,7 +109,7 @@ const MessageContent = ({ post }: { post: any }) => {
           )}
 
           <div className="flex gap-4">
-            <div className=" flex-1">
+            <div onClick={() => authGuard(() => {})} className=" flex-1">
               <Input placeholder="Write a comment" />
             </div>
             <div className=" size-[42px] rounded-lg bg-IMSLightGreen text-white flex justify-center items-center">
