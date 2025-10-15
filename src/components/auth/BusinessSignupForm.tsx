@@ -230,6 +230,10 @@ export default function BusinessSignupForm() {
             router.replace("/get-started?to=payment");
             return;
           }
+          if (path === "community") {
+            router.replace("/get-started?to=community");
+            return;
+          }
           router.replace("/get-started");
           return;
         }

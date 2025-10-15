@@ -1,11 +1,13 @@
 "use client";
 import EmptyState from "@/components/ui/EmptyState";
 import MessageContent from "./MessageContent";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Modal from "@/components/ui/Modal";
 import TextArea from "@/components/ui/text-area";
 import { LuX } from "react-icons/lu";
 import CButton from "@/components/ui/Cbutton";
+import useAuthStore from "@/lib/stores/auth.store";
+import { useRouter } from "next/navigation";
 
 const posts = [
   {
@@ -345,6 +347,9 @@ const Community = () => {
   const [isNewPostModal, setIsNewPostModal] = useState(false);
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [allPost, setAllPost] = useState(posts);
+  const { user } = useAuthStore();
+  const router = useRouter();
 
   const addTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
@@ -365,6 +370,22 @@ const Community = () => {
       addTag();
     }
   };
+
+  const filterPosts = useCallback((tag: string) => {
+    let items = posts;
+    items = items.filter((item) => {
+      if (item.tags.includes(tag)) return item;
+    });
+    setAllPost(items);
+  }, []);
+
+  const authGuard = (fn: () => void) => {
+    if (!user) {
+      router.push("/auth/signin?to=community");
+    } else {
+      fn();
+    }
+  };
   return (
     <div className="mx-auto container p-2 md:p-10 rounded-lg bg-gray-50">
       <div className="p-2 gap-3 bg-[url('/IMS/portal-auth-bg.jpg')] w-full h-[300px] rounded-2xl bg-center flex flex-col items-center justify-center ">
@@ -375,7 +396,7 @@ const Community = () => {
           Where Devs, SREs, and Security Teams connect, share, and grow.
         </p>
         <div
-          onClick={() => setIsNewPostModal(true)}
+          onClick={() => authGuard(() => setIsNewPostModal(true))}
           className=" px-4 py-2 bg-white text-IMSLightGreen text-lg rounded-md font-bold mt-2 cursor-pointer"
         >
           Make A Post
@@ -384,11 +405,18 @@ const Community = () => {
 
       <div className="grid md:grid-cols-[1fr,.5fr] mt-10 gap-10">
         <div className="flex gap-4 flex-col">
-          {posts.map((post, index) => (
+          {allPost.map((post, index) => (
             <MessageContent post={post} key={index} />
           ))}
         </div>
         <div className="flex flex-col gap-4">
+          <div className="rounded-xl bg-white p-4 space-y-3">
+            <p className="font-medium text-lg">Trending Posts</p>
+            <EmptyState
+              title="No Trending Posts"
+              description="Check back here to get trending posts."
+            />
+          </div>
           <div className="rounded-xl bg-white p-4 space-y-3">
             <p className="font-medium text-lg">Scrubbe Announcements</p>
             <EmptyState
@@ -402,8 +430,9 @@ const Community = () => {
             <div className="flex flex-wrap gap-3">
               {mostPopularTags.map((tag, index) => (
                 <div
-                  className=" px-4 py-2 bg-neutral-100 text-neutral-600 text-sm rounded-md"
+                  className=" cursor-pointer px-4 py-2 bg-neutral-100 text-neutral-600 text-sm rounded-md"
                   key={index}
+                  onClick={() => filterPosts(tag)}
                 >
                   {tag}
                 </div>

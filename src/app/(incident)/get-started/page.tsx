@@ -134,6 +134,10 @@ const Page = () => {
         router.replace("/pricing");
         return;
       }
+      if (path === "community") {
+        router.replace("/community");
+        return;
+      }
       router.replace("/incident/tickets");
     } else {
       console.log(res.data);

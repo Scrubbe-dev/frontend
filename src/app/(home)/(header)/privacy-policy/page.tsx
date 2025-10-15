@@ -1237,7 +1237,7 @@ const ScrubbePrivacyPolicy = () => {
   );
 
   return (
-    <div className="bg-[#00263D] min-h-screen px-4  md:px-8 py-[10rem] font-sans">
+    <div className="bg-[#00263D] min-h-screen px-4  md:px-8 py-[10rem] font-sans overflow-clip">
       <style>{`
         /* Custom colors based on the screenshots */
         .bg-scrubbe-dark { background-color: #2c3e50; }
@@ -1260,13 +1260,13 @@ const ScrubbePrivacyPolicy = () => {
         {/* Header Block */}
 
         {/* Main Content Grid */}
-        <div className="w-full mx-auto grid grid-cols-12 gap-8 bg-white p-0 rounded-b-lg shadow-xl">
+        <div className="w-full min-h-[2000px] mx-auto md:grid grid-cols-12 gap-8 bg-white p-0 rounded-b-lg shadow-xl">
           {/* Left Column - Table of Contents */}
-          <div className="col-span-3 bg-gray-50 border-r border-gray-200 p-6">
+          <div className="md:block hidden sticky top-[100px] h-[calc(100vh+300px)] col-span-3 bg-gray-50 border-r border-gray-200 p-6">
             <h2 className="text-xl font-bold mb-4 border-b pb-2">
               Table of contents
             </h2>
-            <nav className="text-sm space-y-1">
+            <nav className="text-base space-y-1">
               {sections.map((section, index) => (
                 <a
                   key={section.id}
@@ -1282,7 +1282,7 @@ const ScrubbePrivacyPolicy = () => {
           </div>
 
           {/* Right Column - Terms Content */}
-          <div className="col-span-9 pl-6 text-gray-800">
+          <div className="col-span-9 md:px-4 text-gray-800 overflow-auto">
             {sections.map((section, index) => (
               <div key={section.id} className="mb-8">
                 <SectionHeader

@@ -69,6 +69,10 @@ export default function SignInForm() {
           router.replace("/pricing");
           return;
         }
+        if (path === "community") {
+          router.replace("/community");
+          return;
+        }
         router.replace("/incident/tickets");
         return;
       }
@@ -348,7 +352,7 @@ export default function SignInForm() {
           <div className="mt-6 text-center">
             New User?{" "}
             <Link
-              href="/auth/business-signup"
+              href={`/auth/business-signup?to=${path}`}
               className={`${
                 IS_STANDALONE ? "text-IMSLightGreen" : "text-blue-600"
               } underline hover:underline inline-flex items-center`}
