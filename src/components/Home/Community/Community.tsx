@@ -453,6 +453,7 @@ const Community = () => {
             label="Content"
             placeholder="Share incident details, Learnings or questions"
             required
+            rows={6}
           />
 
           <div className="space-y-2 -mt-4">
