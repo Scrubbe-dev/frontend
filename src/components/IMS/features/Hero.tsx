@@ -1,7 +1,9 @@
 import CButton from "@/components/ui/Cbutton";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const Hero = () => {
+  const router = useRouter();
   return (
     <div className="h-screen relative z-10">
       <img
@@ -19,7 +21,10 @@ const Hero = () => {
         </p>
         <div className="flex sm:flex-row flex-col gap-3 mt-4 ">
           <CButton className="w-[300px]">View Demo</CButton>
-          <CButton className="w-[300px] text-IMSLightGreen bg-white hover:text-white">
+          <CButton
+            onClick={() => router.push("/auth/signin")}
+            className="w-[300px] text-IMSLightGreen bg-white hover:text-white"
+          >
             Explore Integrations
           </CButton>
         </div>
