@@ -1,6 +1,7 @@
 "use client";
 import CButton from "@/components/ui/Cbutton";
 import Modal from "@/components/ui/Modal";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FaCheck } from "react-icons/fa";
 
@@ -50,6 +51,7 @@ const useCases: { [key: string]: { title: string; cases: string[] } } = {
 const UseCase = () => {
   const [open, setOpen] = useState(false);
   const [modalType, setModalType] = useState<string>("cloud");
+  const router = useRouter();
   return (
     <div>
       <div className=" min-h-[300px] container mx-auto py-10 md:px-10 px-4">
@@ -128,9 +130,14 @@ const UseCase = () => {
           Your Next Incident Doesn’t Have to Be a Disaster
         </p>
         <div className="flex sm:flex-row flex-col gap-3 mt-4 ">
-          <CButton className="w-[300px]">Get Started</CButton>
+          <CButton
+            className="w-[300px]"
+            onClick={() => router.push("/auth/signin")}
+          >
+            Get Started
+          </CButton>
           <CButton className="w-[300px] text-IMSLightGreen bg-white hover:text-white">
-            Book a Brochure
+            Download Brochure
           </CButton>
         </div>
       </div>
