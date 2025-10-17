@@ -9,7 +9,7 @@ import { IoMdClose } from "react-icons/io";
 const tabs = [
   {
     title: "Features",
-    link: "/",
+    link: "/features",
   },
   {
     title: "Documentation",
