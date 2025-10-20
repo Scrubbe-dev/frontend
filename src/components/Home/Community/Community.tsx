@@ -7,7 +7,10 @@ import TextArea from "@/components/ui/text-area";
 import { LuX } from "react-icons/lu";
 import CButton from "@/components/ui/Cbutton";
 import useAuthStore from "@/lib/stores/auth.store";
-import { useRouter } from "next/navigation";
+import { useCommunityAuth } from "@/lib/stores/useCommunityAuth";
+import SignUp from "./authentication/Signup";
+import SignIn from "./authentication/Signin";
+import ForgotPassword from "./authentication/ForgotPassword";
 
 const posts = [
   {
@@ -349,7 +352,7 @@ const Community = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [allPost, setAllPost] = useState(posts);
   const { user } = useAuthStore();
-  const router = useRouter();
+  const { setOpen } = useCommunityAuth();
 
   const addTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
@@ -381,7 +384,7 @@ const Community = () => {
 
   const authGuard = (fn: () => void) => {
     if (!user) {
-      router.push("/auth/signin?to=community");
+      setOpen(true, "signin");
     } else {
       fn();
     }
@@ -509,6 +512,10 @@ const Community = () => {
           </div>
         </div>
       </Modal>
+
+      <SignIn />
+      <SignUp />
+      <ForgotPassword />
     </div>
   );
 };
