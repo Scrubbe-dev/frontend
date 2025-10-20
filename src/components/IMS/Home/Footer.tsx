@@ -4,7 +4,7 @@
 import Link from "next/link";
 import React from "react";
 import { IconType } from "react-icons";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { motion } from "framer-motion";
 
@@ -62,7 +62,10 @@ const Footer = () => {
                 icon={FaLinkedin}
                 href="https://www.linkedin.com/company/scrubbe/"
               />
-              <SocialLink icon={FaGithub} href="#" />
+              <SocialLink
+                icon={FaInstagram}
+                href="https://www.instagram.com/scrubbehq/"
+              />
             </div>
           </div>
         </motion.div>
