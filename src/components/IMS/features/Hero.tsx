@@ -1,3 +1,4 @@
+"use client";
 import CButton from "@/components/ui/Cbutton";
 import { useRouter } from "next/navigation";
 import React from "react";
