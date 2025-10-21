@@ -20,8 +20,6 @@ import { FaGithub } from "react-icons/fa";
 import OtpInput from "../ui/OtpInput";
 import { PasswordInput } from "../ui/password-input";
 import { AxiosError } from "axios";
-import { getCookie } from "cookies-next";
-import { COOKIE_KEYS } from "@/lib/constant";
 import { BiCheck } from "react-icons/bi";
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
@@ -67,7 +65,6 @@ const businessSignupSchema = z
       .string()
       .min(1, { message: "Business address is required" }),
     companySize: z.string().min(1, { message: "Please select company size" }),
-    purpose: z.string().optional(),
     password: z
       .string()
       .min(6, { message: "Password must be at least 6 characters" }),
@@ -122,7 +119,6 @@ export default function BusinessSignupForm() {
       businessEmail: "",
       businessAddress: "",
       companySize: "",
-      purpose: "",
       password: "",
       confirmPassword: "",
     },
@@ -237,15 +233,7 @@ export default function BusinessSignupForm() {
           router.replace("/get-started");
           return;
         }
-        if (formData?.purpose === "IMS") {
-          const token = getCookie(COOKIE_KEYS.TOKEN);
-          if (typeof window !== "undefined") {
-            return (window.location.href =
-              (process.env.NEXT_PUBLIC_INCIDENT_URL ??
-                "https://incidents.scrubbe.com") +
-              `/get-started?token=${token}`);
-          }
-        }
+
         if (path) {
           return router.push(`/auth/account-setup?to=${path}`);
         } else {

@@ -40,6 +40,7 @@ import { FaBox, FaLink } from "react-icons/fa";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { SiAccuweather } from "react-icons/si";
 import { GiScrollUnfurled } from "react-icons/gi";
+import { PiStarFourFill } from "react-icons/pi";
 
 export type NavItem = {
   name: string;
@@ -709,6 +710,13 @@ export const IMSSidebar: NavItem[] = [
     isMenu: false,
     isActive: false,
   },
+  {
+    name: "Ai Suggestions",
+    Icon: PiStarFourFill,
+    link: "/incident/ai-suggestion",
+    isMenu: false,
+    isActive: true,
+  },
 
   {
     name: "Workflows",
@@ -812,9 +820,9 @@ export const SubSidebar = [
     isActive: false,
   },
   {
-    name: "Relationships",
+    name: "Support",
     Icon: AiOutlineQuestionCircle,
-    link: "/incident/relationships",
+    link: "/incident/support",
     isMenu: false,
     isActive: false,
   },
