@@ -102,6 +102,8 @@ const ProfileSetup = ({ onContinue, decodedUser }: Props) => {
     if (res.success) {
       toast.success("You've successfully accept this invite");
       onContinue();
+    } else {
+      toast.error(res.data);
     }
   };
 

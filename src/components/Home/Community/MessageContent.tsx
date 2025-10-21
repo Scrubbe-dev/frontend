@@ -1,9 +1,9 @@
 import EmptyState from "@/components/ui/EmptyState";
 import Input from "@/components/ui/input";
 import useAuthStore from "@/lib/stores/auth.store";
+import { useCommunityAuth } from "@/lib/stores/useCommunityAuth";
 import { Heart } from "lucide-react";
 import moment from "moment";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { BsSendFill } from "react-icons/bs";
 import { FaHeart, FaRegCommentDots } from "react-icons/fa";
@@ -19,11 +19,11 @@ const MessageContent = ({ post }: { post: any }) => {
   const [isComment, setIsComment] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const { user } = useAuthStore();
-  const router = useRouter();
+  const { setOpen } = useCommunityAuth();
 
   const authGuard = (fn: () => void) => {
     if (!user) {
-      router.push("/auth/signin?to=community");
+      setOpen(true, "signin");
     } else {
       fn();
     }
