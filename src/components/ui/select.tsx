@@ -49,8 +49,8 @@ const Select = ({
       <div
         className={`w-full dark:text-white  h-[42px] bg-transparent text-sm px-3 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
           isLoading
-            ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
-            : "border-gray-300"
+            ? "border-gray-400 bg-gray-50 opacity-70 cursor-not-allowed"
+            : "border-gray-400"
         } ${error ? "border-red-500" : ""} ${className}`}
       >
         <select

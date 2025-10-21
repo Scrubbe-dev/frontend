@@ -53,8 +53,8 @@ const TextArea = ({
         <textarea
           className={`w-full dark:text-white bg-transparent px-3 text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
             isLoading
-              ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
-              : "border-gray-300"
+              ? "border-gray-400 bg-gray-50 opacity-70 cursor-not-allowed"
+              : "border-gray-400"
           } ${error ? "border-red-500" : ""} ${className}`}
           disabled={isLoading}
           {...props}

@@ -644,7 +644,7 @@ export const IMSSidebar: NavItem[] = [
     Icon: LucideLayoutDashboard,
     link: "/incident",
     isMenu: false,
-    isActive: false,
+    isActive: true,
   },
   {
     name: "Incident",
@@ -658,14 +658,14 @@ export const IMSSidebar: NavItem[] = [
     Icon: IoMdCall,
     link: "/incident/on-call",
     isMenu: false,
-    isActive: false,
+    isActive: true,
   },
   {
     name: "Ingestion",
     Icon: CgArrowBottomRightR,
     link: "/incident/ingestion",
     isMenu: false,
-    isActive: false,
+    isActive: true,
   },
   {
     name: "Postmortems",
@@ -686,7 +686,7 @@ export const IMSSidebar: NavItem[] = [
     Icon: LuRefreshCw,
     link: "/incident/changes-problems",
     isMenu: false,
-    isActive: false,
+    isActive: true,
   },
   {
     name: "Runbooks",
@@ -701,7 +701,7 @@ export const IMSSidebar: NavItem[] = [
     Icon: FaClock,
     link: "/incident/timeline",
     isMenu: false,
-    isActive: false,
+    isActive: true,
   },
   {
     name: "Analytics",
@@ -810,14 +810,14 @@ export const SubSidebar = [
     Icon: FiUsers,
     link: "/incident/team-management",
     isMenu: false,
-    isActive: false,
+    isActive: true,
   },
   {
     name: "Billing & Usage",
     Icon: HiOutlineCreditCard,
     link: "/incident/billings",
     isMenu: false,
-    isActive: false,
+    isActive: true,
   },
   {
     name: "Support",
