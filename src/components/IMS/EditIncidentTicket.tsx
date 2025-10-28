@@ -32,6 +32,7 @@ import Modal from "../ui/Modal";
 import { Calendar, Clock } from "lucide-react";
 import { formatTime } from "@/lib/utils";
 import { Ticket } from "@/types";
+import CreateWarRoom from "./CreateWarRoom";
 
 const formScheme = z.object({
   source: z.string().nonempty({ message: "source is required" }),
@@ -92,6 +93,7 @@ const EditIncidentTicket = () => {
     resolver: zodResolver(formScheme),
     mode: "onChange",
   });
+  const [openWarRoom, setOpenWarRoom] = useState(false);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -148,6 +150,9 @@ const EditIncidentTicket = () => {
           if (data.status === "RESOLVED" || data.status === "CLOSED") {
             setOpenPostMortem(true);
             return;
+          }
+          if (data.priority === "CRITICAL") {
+            setOpenWarRoom(true);
           }
         }
       } catch (error) {
@@ -403,10 +408,10 @@ const EditIncidentTicket = () => {
             icon={<Calendar size={16} />}
             label="Date Opened"
             error={errors.affectedSystem?.message}
-            value={new Date(ticket.createdAt)
-              .toISOString()
-              .split("T")
-              .join(" ")}
+            value={new Date(ticket?.createdAt ?? "")
+              ?.toISOString()
+              ?.split("T")
+              ?.join(" ")}
             className=" text-black dark:text-white"
             readOnly
           />
@@ -417,7 +422,7 @@ const EditIncidentTicket = () => {
             label="Time taken to raise incident"
             error={errors.affectedSystem?.message}
             className=" text-black dark:text-white"
-            value={formatTime(Number(ticket.MTTR))}
+            value={formatTime(Number(ticket?.MTTR))}
             readOnly
           />
 
@@ -667,6 +672,10 @@ const EditIncidentTicket = () => {
         className="!p-0"
       >
         <PostMortem onClose={() => setOpenPostMortem(false)} ticket={ticket} />
+      </Modal>
+
+      <Modal isOpen={openWarRoom} onClose={() => setOpenWarRoom(false)}>
+        <CreateWarRoom onClose={() => setOpenWarRoom(false)} />
       </Modal>
     </div>
   );

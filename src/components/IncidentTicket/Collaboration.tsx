@@ -99,7 +99,7 @@ const Collaboration = ({ ticket }: Props) => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-300px)]">
+    <div className="flex flex-col h-[calc(100vh-200px)]">
       {/* Messages */}
       {isLoading ? (
         <div className="space-y-4 mb-8 max-h-[500px] overflow-y-auto ">
@@ -109,7 +109,7 @@ const Collaboration = ({ ticket }: Props) => {
           <div className=" h-14 rounded-md bg-gray-100 animate-pulse-dot" />
         </div>
       ) : (
-        <div className="flex-1 overflow-y-auto px-4 py-2 space-y-4 dark:bg-transparent bg-white">
+        <div className="flex-1 flex-grow overflow-y-auto px-4 py-2 space-y-4 dark:bg-transparent bg-white">
           {messages.map((msg) => {
             const isMe = msg.sender.email === user?.email;
             return (

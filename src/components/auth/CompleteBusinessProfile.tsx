@@ -12,7 +12,7 @@ export const businessProfileSignupSchema = z.object({
     .string()
     .min(1, { message: "Business address is required" }),
   companySize: z.string().min(1, { message: "Please select company size" }),
-  purpose: z.string().min(1, { message: "Please select a purpose" }),
+  // purpose: z.string().min(1, { message: "Please select a purpose" }),
 });
 
 export type BusinessProfileSignupFormData = z.infer<
@@ -37,7 +37,7 @@ const CompleteBusinessProfile = ({
     defaultValues: {
       businessAddress: "",
       companySize: "",
-      purpose: "",
+      // purpose: "",
     },
     mode: "onChange",
   });
@@ -57,7 +57,7 @@ const CompleteBusinessProfile = ({
           />
         )}
       />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 gap-4 mb-4">
         <Controller
           name="companySize"
           control={control}
@@ -78,7 +78,7 @@ const CompleteBusinessProfile = ({
             />
           )}
         />
-        <Controller
+        {/* <Controller
           name="purpose"
           control={control}
           render={({ field }) => (
@@ -100,7 +100,7 @@ const CompleteBusinessProfile = ({
               {...field}
             />
           )}
-        />
+        /> */}
       </div>
       <div className="flex items-center gap-4">
         <CButton

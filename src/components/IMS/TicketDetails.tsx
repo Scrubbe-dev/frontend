@@ -40,7 +40,7 @@ const TicketDetails = () => {
         >
           <ChevronLeft />{" "}
           <h1 className="text-xl font-bold dark:text-white">
-            Incident Details
+            Incident Details #({data?.ticketId})
           </h1>
         </div>
         {/* Tabs */}

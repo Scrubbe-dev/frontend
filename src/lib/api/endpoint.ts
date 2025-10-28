@@ -67,4 +67,9 @@ export const endpoint = {
     get_incidents: "/customer/get-incidents",
   },
   contact_us: "/mocktest/contact-us",
+  on_call: {
+    assign_member: "/assign-member",
+    get_all_assign: "/get-all-assign",
+    get_assign: "/get-assign",
+  },
 };

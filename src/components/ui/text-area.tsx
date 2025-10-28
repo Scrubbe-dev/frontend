@@ -19,15 +19,12 @@ const TextArea = ({
   label,
   error,
   isLoading = false,
-  type = "text",
   icon,
   className = "",
   labelClassName = "",
   info,
   ...props
 }: TextareaProps) => {
-  const isPasswordType = type === "password";
-
   return (
     <div className="mb-4">
       {label && (
@@ -60,11 +57,11 @@ const TextArea = ({
           {...props}
         />
 
-        {icon && !isPasswordType && (
+        {/* {icon && !isPasswordType && (
           <div className="absolute inset-y-0 right-0 flex items-center pr-3">
             {icon}
           </div>
-        )}
+        )} */}
       </div>
       {error && (
         <p className="text-red-500 text-xs mt-1 flex gap-1 items-center">
