@@ -8,7 +8,7 @@ import { FaClock, FaUser } from "react-icons/fa";
 import IncidentGraph from "./IncidentGraph";
 import TeamWorkloadChart from "./TeamWorkLoadChart";
 import RecurringIssuesTable from "./RecurringIssuesTable";
-import SlaBreachesChart from "./SlaBreachesChart";
+import SlaBreachesChart from "./SLA/SlaBreachesChart";
 import AtRiskIncidents from "./AtRiskIncidents";
 import RecentPostmortems from "./RecentPostmortems";
 import AutomationRuns from "./AutomationRun";

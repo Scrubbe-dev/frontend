@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import dayjs from "dayjs";
 import localeData from "dayjs/plugin/localeData";
 import isBetween from "dayjs/plugin/isBetween";
@@ -7,6 +7,10 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import AssignAnalyst from "./AssignTeam";
 import Modal from "../ui/Modal";
+import { useQuery } from "@tanstack/react-query";
+import { querykeys } from "@/lib/constant";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
 
 // Extend dayjs with all necessary plugins
 dayjs.extend(localeData);
@@ -14,9 +18,21 @@ dayjs.extend(isBetween);
 dayjs.extend(customParseFormat);
 dayjs.extend(isSameOrAfter);
 
-// On-call assignments data
-const assignments: any = [];
+// On-call assignments data (using a consistent interface for better type safety)
+interface Assignment {
+  date: string;
+  teamMembers: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    member: string;
+    startTime: string;
+    endTime: string;
+  }[];
+}
+// const assignments: Assignment[] = [];
 
+// Helper functions (no changes needed here)
 export const getDaysInMonth = (year: number, month: number) => {
   return dayjs().year(year).month(month).daysInMonth();
 };
@@ -27,48 +43,109 @@ export const getDaysInPreviousMonth = (year: number, month: number) => {
   return Array.from({ length: daysInPrevMonth }, (_, i) => i + 1);
 };
 
-interface Assignment {
-  name: string;
-  startDate: string;
-  endDate: string;
-}
-
 // Reusable Button Component for styling consistency
-const DayButton = ({
-  day,
-  isCurrentMonth,
-  isToday,
-  assignment,
-}: {
+interface DayButtonProps {
   day: number;
   isCurrentMonth: boolean;
   isToday?: boolean;
   assignment?: Assignment | null;
+  dateValue: dayjs.Dayjs; // Pass the full date object
+  onSelect: (
+    date: dayjs.Dayjs,
+    members?: {
+      email: string;
+      firstName: string;
+      lastName: string;
+      member: string;
+      startTime: string;
+      endTime: string;
+    }[]
+  ) => void; // Add selection handler
+  isSelected: boolean; // New prop for selected state styling
+}
+
+const DayButton: React.FC<DayButtonProps> = ({
+  day,
+  isCurrentMonth,
+  isToday,
+  assignment,
+  dateValue,
+  onSelect,
+  isSelected,
 }) => {
+  const handleClick = useCallback(() => {
+    // Only allow selection of days in the current month for this feature
+    if (isCurrentMonth) {
+      onSelect(dateValue, assignment?.teamMembers);
+    }
+  }, [dateValue, isCurrentMonth, onSelect, assignment]);
+
   return (
     <div
-      className={`w-full h-24 p-2 flex flex-col justify-center items-center border border-zinc-100 rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-gray-100 ${
-        isCurrentMonth ? "text-gray-800" : "text-gray-400"
-      } 
-    ${isToday ? "bg-IMSLightGreen text-white hover:text-gray-400" : ""}
-    shadow-sm`}
+      onClick={handleClick}
+      className={`w-full h-24 p-2 flex flex-col justify-center items-center border border-zinc-100 rounded-lg transition-all duration-300 ease-in-out cursor-pointer shadow-sm
+        ${isCurrentMonth ? "text-gray-800" : "text-gray-400"}
+        ${
+          isToday && isCurrentMonth
+            ? "bg-IMSLightGreen text-white hover:text-gray-200"
+            : "hover:bg-gray-100"
+        }
+        ${
+          isSelected
+            ? "!border-IMSLightGreen border-4 ring-2 ring-IMSLightGreen/50"
+            : ""
+        }
+      `}
     >
-      <span className="text-xl font-medium">{day}</span>
-      {assignment && (
-        <div className="text-xs text-green-600 font-semibold text-center mt-2">
-          {assignment.name}
-          <br />({dayjs(assignment.startDate).format("D/M/YY")} -{" "}
-          {dayjs(assignment.endDate).format("D/M/YY")})
+      {assignment ? (
+        <div>
+          {assignment.teamMembers.map((team) => (
+            <div key={team.member}>
+              <div className="text-xs text-green-600 font-semibold text-center mt-2">
+                {team.firstName}
+                <br />
+                {team.startTime}- {team.endTime}
+              </div>
+            </div>
+          ))}
         </div>
+      ) : (
+        <span className="text-xl font-medium">{day}</span>
       )}
     </div>
   );
 };
 
-const Calendar = () => {
+const Calendar: React.FC = () => {
   const [currentMonth, setCurrentMonth] = useState(dayjs().month());
   const [currentYear, setCurrentYear] = useState(dayjs().year());
   const [openAssignmentForm, setOpenAssignmentForm] = useState(false);
+  // ⭐️ New state to store the selected date
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>();
+  const [currentMembers, setCurrentMembers] = useState<
+    | {
+        email: string;
+        firstName: string;
+        lastName: string;
+        member: string;
+        startTime: string;
+        endTime: string;
+      }[]
+    | null
+    | undefined
+  >(null);
+  const { get } = useFetch();
+  const { data } = useQuery<Assignment[] | null>({
+    queryKey: [querykeys.GET_ALL_ASSIGN],
+    queryFn: async () => {
+      const res = await get(endpoint.on_call.get_all_assign);
+      console.log(res);
+      if (res.success) {
+        return res.data.data;
+      }
+      return null;
+    },
+  });
 
   const daysInCurrentMonth = getDaysInMonth(currentYear, currentMonth);
   const startDay = dayjs()
@@ -79,63 +156,103 @@ const Calendar = () => {
   const daysInPreviousMonth = getDaysInPreviousMonth(currentYear, currentMonth);
   const today = dayjs(); // Get today's date here
 
+  // ⭐️ Handler for selecting a date
+  const handleDaySelect = useCallback(
+    (
+      date: dayjs.Dayjs,
+      members?:
+        | {
+            email: string;
+            firstName: string;
+            lastName: string;
+            member: string;
+            startTime: string;
+            endTime: string;
+          }[]
+        | undefined
+    ) => {
+      setSelectedDate(date);
+      setCurrentMembers(members);
+      setOpenAssignmentForm(true); // Open the modal on selection
+      console.log(`Date selected: ${date.format("YYYY-MM-DD")}`);
+    },
+    []
+  );
+
   const renderDays = () => {
     const days = [];
-    const prevMonthDays = daysInPreviousMonth.slice(-startDay);
     const firstDayOfMonth = dayjs()
       .year(currentYear)
       .month(currentMonth)
       .date(1);
 
+    // Render Previous Month's days
+    const prevMonthDays = daysInPreviousMonth.slice(-startDay);
+    const prevMonthDate = firstDayOfMonth.subtract(1, "month");
     for (const day of prevMonthDays) {
+      const dateValue = prevMonthDate.date(day);
+      const isSelected = selectedDate
+        ? dateValue.isSame(selectedDate, "day")
+        : false;
+
       days.push(
-        <div onClick={() => setOpenAssignmentForm(true)}>
-          <DayButton
-            key={`prev-${day}`}
-            day={day}
-            isCurrentMonth={false}
-            isToday={false}
-          />
-        </div>
+        <DayButton
+          key={`prev-${day}`}
+          day={day}
+          isCurrentMonth={false}
+          isToday={false}
+          dateValue={dateValue}
+          onSelect={handleDaySelect}
+          isSelected={isSelected}
+        />
       );
     }
 
+    // Render Current Month's days
     for (let day = 1; day <= daysInCurrentMonth; day++) {
-      const isToday = firstDayOfMonth.date(day).isSame(today, "day");
       const currentDate = firstDayOfMonth.date(day);
-      const assignedPerson = assignments?.find((assignment: any) =>
-        currentDate.isBetween(
-          dayjs(assignment.startDate),
-          dayjs(assignment.endDate),
-          "day",
-          "[]"
-        )
+      const isToday = currentDate.isSame(today, "day");
+      const isSelected = selectedDate
+        ? currentDate.isSame(selectedDate, "day")
+        : false;
+
+      const assignedPerson = data?.find((assignment) =>
+        currentDate.isSame(dayjs(assignment.date), "day")
       );
       days.push(
-        <div onClick={() => setOpenAssignmentForm(true)}>
-          <DayButton
-            key={`current-${day}`}
-            day={day}
-            isCurrentMonth={true}
-            isToday={isToday}
-            assignment={assignedPerson}
-          />
-        </div>
+        <DayButton
+          key={`current-${day}`}
+          day={day}
+          isCurrentMonth={true}
+          isToday={isToday}
+          assignment={assignedPerson}
+          dateValue={currentDate}
+          onSelect={handleDaySelect}
+          isSelected={isSelected}
+        />
       );
     }
 
+    // Render Next Month's days
     const totalDays = days.length;
     const nextMonthDaysToAdd = 42 - totalDays; // 6 rows * 7 days
+    const nextMonthDate = firstDayOfMonth.add(1, "month");
     for (let day = 1; day <= nextMonthDaysToAdd; day++) {
+      const dateValue = nextMonthDate.date(day);
+      const isSelected = selectedDate
+        ? dateValue.isSame(selectedDate, "day")
+        : false;
+
       days.push(
-        <div onClick={() => setOpenAssignmentForm(true)}>
-          <DayButton
-            key={`next-${day}`}
-            day={day}
-            isCurrentMonth={false}
-            isToday={false}
-          />
-        </div>
+        <DayButton
+          key={`next-${day}`}
+          day={day}
+          isCurrentMonth={false}
+          isToday={false}
+          dateValue={dateValue}
+          onSelect={handleDaySelect}
+          isSelected={isSelected}
+        />
       );
     }
 
@@ -195,7 +312,12 @@ const Calendar = () => {
         isOpen={openAssignmentForm}
         onClose={() => setOpenAssignmentForm(false)}
       >
-        <AssignAnalyst onClose={() => setOpenAssignmentForm(false)} />
+        <AssignAnalyst
+          date={selectedDate?.format("YYYY-MM-DD") ?? ""}
+          onClose={() => setOpenAssignmentForm(false)}
+          previousMember={currentMembers}
+        />
+        {/* You can pass selectedDate to AssignAnalyst here if needed */}
       </Modal>
     </div>
   );

@@ -274,7 +274,6 @@ const useAuthStore = create<AuthState & AuthActions>()(
             image: signupData.image,
             businessAddress: signupData.businessAddress,
             companySize: signupData.companySize,
-            purpose: signupData.purpose,
           };
           const { data } = await apiClient.post(
             "/auth/oauth/business/register",

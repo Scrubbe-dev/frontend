@@ -1,6 +1,6 @@
 // AssignAnalyst.tsx
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,11 +8,16 @@ import { FaTrashAlt, FaPlus } from "react-icons/fa";
 import CButton from "../ui/Cbutton";
 import Select from "../ui/select";
 import Input from "../ui/input";
+import useMember from "@/hooks/useMember";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { querykeys } from "@/lib/constant";
 
 // Zod schema for form validation
 const schema = z.object({
-  startDate: z.string().min(1, "Start Date is required."),
-  endDate: z.string().min(1, "End Date is required."),
+  date: z.string().min(1, "Start Date is required."),
   teamMembers: z
     .array(
       z.object({
@@ -26,39 +31,73 @@ const schema = z.object({
 
 type formType = z.infer<typeof schema>;
 // Mock data for team member options
-const teamMemberOptions = [
-  { value: "alice", label: "Alice Thompson" },
-  { value: "ben", label: "Ben Carter" },
-  { value: "charlie", label: "Charlie Davis" },
-];
 
 type Props = {
   onClose: () => void;
+  previousMember?:
+    | {
+        email: string;
+        firstName: string;
+        lastName: string;
+        member: string;
+        startTime: string;
+        endTime: string;
+      }[]
+    | null;
+  date: string;
 };
 // Main Component
-const AssignAnalyst = ({ onClose }: Props) => {
+const AssignAnalyst = ({ onClose, date, previousMember }: Props) => {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      startDate: "",
-      endDate: "",
+      date: "",
       teamMembers: [{ member: "", startTime: "", endTime: "" }],
     },
   });
+
+  const { data: members } = useMember();
+  const { post } = useFetch();
+  const [loading, setloading] = useState(false);
+  const queryClient = useQueryClient();
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "teamMembers",
   });
 
-  const onSubmit = (data: formType) => {
-    console.log("Form Data:", data);
-    // Here you would send the data to your API
+  const onSubmit = async (data: formType) => {
+    setloading(true);
+    const res = await post(endpoint.on_call.assign_member, data);
+    setloading(false);
+    if (res.success) {
+      toast.success(`Team member has been assigned for ${data.date}`);
+      queryClient.refetchQueries({ queryKey: [querykeys.GET_ALL_ASSIGN] });
+      close();
+      return;
+    } else {
+      toast.error(JSON.stringify(res.data) ?? "Something went wrong");
+    }
   };
+
+  useEffect(() => {
+    setValue("date", date);
+    if (previousMember) {
+      setValue(
+        "teamMembers",
+        previousMember?.map((value) => ({
+          endTime: value.endTime,
+          startTime: value.startTime,
+          member: value.member,
+        }))
+      );
+    }
+  }, [date, previousMember]);
 
   return (
     <div className="bg-white dark:bg-gray-900 p-6 rounded-lg w-full">
@@ -72,27 +111,15 @@ const AssignAnalyst = ({ onClose }: Props) => {
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="py-6">
         <Controller
-          name="startDate"
+          name="date"
           control={control}
           render={({ field }) => (
             <Input
               label="Start Date"
               placeholder="mm/dd/yy"
               {...field}
-              error={errors.startDate?.message}
-            />
-          )}
-        />
-
-        <Controller
-          name="endDate"
-          control={control}
-          render={({ field }) => (
-            <Input
-              label="End Date"
-              placeholder="mm/dd/yy"
-              {...field}
-              error={errors.endDate?.message}
+              type="date"
+              error={errors.date?.message}
             />
           )}
         />
@@ -128,7 +155,10 @@ const AssignAnalyst = ({ onClose }: Props) => {
                     label=""
                     options={[
                       { value: "", label: "Select team member" },
-                      ...teamMemberOptions,
+                      ...(members?.map((member) => ({
+                        value: member.id,
+                        label: member.email,
+                      })) ?? []),
                     ]}
                     {...selectField}
                     error={errors.teamMembers?.[index]?.member?.message}
@@ -191,6 +221,7 @@ const AssignAnalyst = ({ onClose }: Props) => {
           <CButton
             className="text-white bg-IMSLightGreen hover:bg-IMSDarkGreen w-fit"
             type="submit"
+            isLoading={loading}
           >
             Assign
           </CButton>

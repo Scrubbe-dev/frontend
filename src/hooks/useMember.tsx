@@ -9,6 +9,7 @@ export type Member = {
   email: string;
   level: string;
   role: string;
+  id: string;
 };
 const useMember = () => {
   const { get } = useFetch();

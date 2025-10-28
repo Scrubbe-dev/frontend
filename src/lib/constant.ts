@@ -23,6 +23,7 @@ export const querykeys = {
   HISTORY: "HISTORY",
   INTEGRATIONS: "INTEGRATIONS",
   PRICING: "PRICING",
+  GET_ALL_ASSIGN: "GET_ALL_ASSIGN",
 };
 
 export const borderColors: { [key: string]: string } = {

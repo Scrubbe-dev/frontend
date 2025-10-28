@@ -10,7 +10,7 @@ import { useState } from "react";
 const OnCall = () => {
   const [openInvite, setOpenInvite] = useState(false);
   const { data: members } = useMember();
-
+  const [seeMore, setSeeMore] = useState(false);
   return (
     <div className="p-4">
       <div className="flex flex-row  gap-4">
@@ -31,23 +31,37 @@ const OnCall = () => {
             />
           ) : (
             <>
-              {members?.map((member, index) => (
-                <div
-                  key={index}
-                  className="bg-white dark:bg-dark rounded-md p-3 flex gap-3 items-center"
-                >
-                  <div className=" text-sm size-[30px] rounded-full flex justify-center items-center bg-gray-600 text-white uppercase">
-                    {member?.firstname[0]}
-                    {member?.lastname[0]}
+              {members
+                ?.slice(0, !seeMore ? 5 : members.length + 1)
+                .map((member, index) => (
+                  <div
+                    key={index}
+                    className="bg-white dark:bg-dark rounded-md p-3 flex gap-3 items-center"
+                  >
+                    <div className=" text-sm size-[30px] rounded-full flex justify-center items-center bg-gray-600 text-white uppercase">
+                      {member?.firstname?.[0]}
+                      {member?.lastname?.[0]}
+                    </div>
+                    <div>
+                      <p className=" font-medium dark:text-white capitalize">
+                        {member?.firstname} {member?.lastname}
+                      </p>
+                      <p className=" text-sm dark:text-white">
+                        {member?.email}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className=" font-medium dark:text-white capitalize">
-                      {member?.firstname} {member?.lastname}
-                    </p>
-                    <p className=" text-sm dark:text-white">{member?.email}</p>
+                ))}
+              {members && members?.length > 5 && (
+                <div className=" mx-auto">
+                  <div
+                    onClick={() => setSeeMore((prev) => !prev)}
+                    className=" border border-gray-300 p-2 rounded-md text-sm w-fit cursor-pointer"
+                  >
+                    See {seeMore ? "less" : " more"}
                   </div>
                 </div>
-              ))}
+              )}
             </>
           )}
         </div>

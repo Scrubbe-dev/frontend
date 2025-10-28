@@ -679,7 +679,7 @@ export const IMSSidebar: NavItem[] = [
     Icon: FaClock,
     link: "/incident/sla",
     isMenu: false,
-    isActive: false,
+    isActive: true,
   },
   {
     name: "Changes and Problems",
