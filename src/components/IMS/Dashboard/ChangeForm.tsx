@@ -22,8 +22,9 @@ const formScheme = z.object({
   priority: z.string().nonempty({ message: "priority is required" }),
   impact: z.string().nonempty({ message: "impact is required" }),
   status: z.string().nonempty({ message: "status is required" }),
-  proposedFix: z.string().optional(),
-  rootCauseNote: z.string().optional(),
+  riskLevel: z.string().nonempty({ message: "risk level is required" }),
+  rollback: z.string().optional(),
+  scheduleDate: z.string().nonempty({ message: "schedule date is required" }),
   owner: z.string().optional(),
   linkIncident: z.array(z.string()).optional(),
 });
@@ -32,7 +33,7 @@ type FormType = z.infer<typeof formScheme>;
 
 const TABS = ["General", "Incident"];
 
-const ProblemForm = ({ onClose }: { onClose: () => void }) => {
+const ChangeForm = ({ onClose }: { onClose: () => void }) => {
   const [tab, setTab] = useState(0);
   const [selectIncident, setSelectIncident] = useState<string[]>([]);
   const {
@@ -113,7 +114,7 @@ const ProblemForm = ({ onClose }: { onClose: () => void }) => {
                 render={({ field }) => (
                   <Input
                     label="Title"
-                    placeholder="Enter problem title"
+                    placeholder="Enter change title"
                     {...field}
                     error={errors.title?.message}
                     className=" text-black dark:text-white"
@@ -128,7 +129,7 @@ const ProblemForm = ({ onClose }: { onClose: () => void }) => {
                     label="Description"
                     rows={4}
                     {...field}
-                    placeholder="Describe the problem "
+                    placeholder="Describe the change "
                     className="w-full bg-transparent dark:!text-white !text-black border border-gray-300 rounded-md p-2 text-sm "
                     error={errors.description?.message}
                   />
@@ -162,10 +163,10 @@ const ProblemForm = ({ onClose }: { onClose: () => void }) => {
                   <Select
                     options={[
                       { label: "Select status ", value: "" },
-                      { label: "Open", value: "OPEN" },
-                      { label: "Acknowledge", value: "ACKNOWLEDGED" },
-                      { label: "RCA Found", value: "RCA_FOUND" },
-                      { label: "Resolved", value: "RESOLVED" },
+                      { label: "Planned", value: "PLANNED" },
+                      { label: "In-Progress", value: "IN_PROGRESS" },
+                      { label: "Completed", value: "COMPLETED" },
+                      { label: "Rolled back", value: "ROLLED_BACK" },
                     ]}
                     {...field}
                     label="Status"
@@ -208,6 +209,52 @@ const ProblemForm = ({ onClose }: { onClose: () => void }) => {
                     {...field}
                     error={errors.impact?.message}
                     className=" text-black dark:text-white"
+                  />
+                )}
+              />
+              <Controller
+                name="scheduleDate"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Scheduled Date"
+                    placeholder="dd/mm/yyyy"
+                    {...field}
+                    type="date"
+                    error={errors.title?.message}
+                    className=" text-black dark:text-white"
+                  />
+                )}
+              />
+              <Controller
+                name="riskLevel"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    label="Risk level"
+                    options={[
+                      { label: "Select risk level", value: "" },
+                      { label: "Low", value: "LOW" },
+                      { label: "Medium", value: "MEDIUM" },
+                      { label: "High", value: "HIGH" },
+                    ]}
+                    {...field}
+                    error={errors.impact?.message}
+                    className=" text-black dark:text-white"
+                  />
+                )}
+              />
+              <Controller
+                name="rollback"
+                control={control}
+                render={({ field }) => (
+                  <TextArea
+                    label="Roll back plan"
+                    rows={4}
+                    {...field}
+                    placeholder="Describe rollback plan"
+                    className="w-full bg-transparent dark:!text-white !text-black border border-gray-300 rounded-md p-2 text-sm "
+                    error={errors.description?.message}
                   />
                 )}
               />
@@ -278,35 +325,6 @@ const ProblemForm = ({ onClose }: { onClose: () => void }) => {
                   </div>
                 </div>
 
-                <Controller
-                  name="rootCauseNote"
-                  control={control}
-                  render={({ field }) => (
-                    <TextArea
-                      label="Root Cause Notes:"
-                      rows={4}
-                      {...field}
-                      placeholder="Enter root cause analysis"
-                      className="w-full bg-transparent dark:!text-white !text-black border border-gray-300 rounded-md p-2 text-sm "
-                      error={errors.rootCauseNote?.message}
-                    />
-                  )}
-                />
-                <Controller
-                  name="proposedFix"
-                  control={control}
-                  render={({ field }) => (
-                    <TextArea
-                      label="Proposed Fix:"
-                      rows={4}
-                      {...field}
-                      placeholder="Enter Proposed Fix"
-                      className="w-full bg-transparent dark:!text-white !text-black border border-gray-300 rounded-md p-2 text-sm "
-                      error={errors.proposedFix?.message}
-                    />
-                  )}
-                />
-
                 <div className=" flex justify-end gap-5">
                   <CButton
                     onClick={() => setTab(0)}
@@ -315,7 +333,7 @@ const ProblemForm = ({ onClose }: { onClose: () => void }) => {
                     Back
                   </CButton>
                   <CButton type="submit" className=" w-fit px-6">
-                    Create New Problem
+                    Create New Change
                   </CButton>
                 </div>
               </div>
@@ -327,4 +345,4 @@ const ProblemForm = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-export default ProblemForm;
+export default ChangeForm;

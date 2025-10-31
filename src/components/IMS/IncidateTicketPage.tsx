@@ -17,6 +17,7 @@ import TableLoader from "../ui/LoaderUI/TableLoader";
 import { usePathname, useRouter } from "next/navigation";
 import { formatTime } from "@/lib/utils";
 import { Ticket } from "@/types";
+import Pagination from "../ui/Pagination";
 
 const columns = [
   {
@@ -132,17 +133,23 @@ const IncidentTicketPage = () => {
   const [openStatusFilter, setOpenStatusFilter] = useState<boolean>(false);
   const pathname = usePathname();
   const router = useRouter();
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   // const { notification } = useNotificationProvider();
 
   const statusFilterRef = useRef<HTMLDivElement>(null);
   const { get } = useFetch();
   const { data, isLoading } = useQuery({
-    queryKey: [querykeys.INCIDENT_TICKET],
+    queryKey: [querykeys.INCIDENT_TICKET, currentPage],
     queryFn: async () => {
       try {
-        const res = await get(endpoint.incident_ticket.get);
+        const res = await get(
+          endpoint.incident_ticket.get + `?page=${currentPage}`
+        );
         console.log({ res });
         if (res.success) {
+          setTotalPages(res.data?.pagination.totalPages);
+          setCurrentPage(res.data?.pagination.currentPage);
           return res.data;
         }
         return [];
@@ -153,6 +160,8 @@ const IncidentTicketPage = () => {
     },
     refetchOnWindowFocus: false,
   });
+
+  const incidents = data?.incidents as Ticket[];
 
   useEffect(() => {
     if (!openStatusFilter) return;
@@ -179,7 +188,7 @@ const IncidentTicketPage = () => {
   if (isLoading) {
     content = <TableLoader />;
   }
-  if (!isLoading && (!data || data?.length < 1)) {
+  if (!isLoading && (!incidents || incidents?.length < 1)) {
     content = (
       <EmptyState
         title="You have no incident ticket yet"
@@ -194,7 +203,7 @@ const IncidentTicketPage = () => {
       />
     );
   }
-  if (data?.length > 0) {
+  if (incidents?.length > 0) {
     content = (
       <div className="space-y-5">
         <div className="flex justify-between items-start mb-5">
@@ -242,9 +251,13 @@ const IncidentTicketPage = () => {
             </CButton>
           </div>
         </div>
-        <Table data={data} columns={columns} onRowClick={handleRowClick} />
+        <Table data={incidents} columns={columns} onRowClick={handleRowClick} />
         <div className="flex justify-end mt-10">
-          {/* <Pagination page={1} totalPages={10} onPageChange={() => {}} /> */}
+          <Pagination
+            page={currentPage}
+            totalPages={totalPages}
+            onPageChange={(value) => setCurrentPage(value)}
+          />
         </div>
       </div>
     );

@@ -41,4 +41,12 @@ export type Ticket = {
   mttrResolveHalfNotified: boolean;
   mttrResponseBreachNotified: boolean;
   mttrResolveBreachNotified: boolean;
+  comments?: {
+    authorId: string;
+    authorType: string;
+    content: string;
+    createdAt: string;
+    id: string;
+    isInternal: false;
+  }[];
 };

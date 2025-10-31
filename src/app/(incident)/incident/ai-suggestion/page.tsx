@@ -142,7 +142,7 @@ const Page = () => {
         const res = await get(endpoint.incident_ticket.get);
         console.log({ res });
         if (res.success) {
-          return res.data;
+          return res.data.incidents;
         }
         return [];
       } catch (error) {

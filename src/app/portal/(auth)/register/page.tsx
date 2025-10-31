@@ -65,7 +65,9 @@ const Page = () => {
       toast.error(res.data ?? "Registration failed");
     }
   };
-  const { data } = useQuery<{ business: { name: string }; id: string }[]>({
+  const { data } = useQuery<
+    { business: { name: string }; id: string; name: string }[]
+  >({
     queryKey: ["BUSINESS"],
     queryFn: async () => {
       const data = await get(endpoint.portal.get_companies);
@@ -76,8 +78,8 @@ const Page = () => {
 
   const item =
     data
-      ?.filter((value) => value.business.name)
-      .map((value) => ({ label: value.business.name, value: value.id })) ?? [];
+      ?.filter((value) => value.id)
+      .map((value) => ({ label: value.name, value: value.id })) ?? [];
   return (
     <div className=" flex justify-center items-center h-full w-full">
       <div className=" max-w-2xl w-full p-4 px-6 rounded-lg bg-white">

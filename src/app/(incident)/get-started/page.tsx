@@ -274,8 +274,8 @@ const Page = () => {
                   options={[
                     { value: "", label: "Select Level" },
                     { value: "1st_Line", label: "1st Line" },
-                    { value: "2st_Line", label: "2st Line" },
-                    { value: "3st_Line", label: "3st Line" },
+                    { value: "2nd_Line", label: "2nd Line" },
+                    { value: "3rd_Line", label: "3rd Line" },
                     { value: "Manager", label: "Manager" },
                   ]}
                   value={memberForm.level}
