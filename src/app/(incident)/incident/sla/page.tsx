@@ -1,5 +1,7 @@
 "use client";
 import SLADashboard from "@/components/IMS/Dashboard/SLA/SlaManagement";
+import SlaPolicyBuilder from "@/components/IMS/Dashboard/SLA/SlaPolicyBuilder";
+import SlaReports from "@/components/IMS/Dashboard/SLA/SlaReports";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 
@@ -34,7 +36,8 @@ const Page = () => {
           key={tab}
         >
           {tab === 0 && <SLADashboard />}
-          {tab === 1 && <></>}
+          {tab === 1 && <SlaPolicyBuilder />}
+          {tab === 2 && <SlaReports />}
 
           {/* Collaboration Tab */}
         </motion.div>

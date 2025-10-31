@@ -1,4 +1,5 @@
 "use client";
+import ChangeForm from "@/components/IMS/Dashboard/ChangeForm";
 import Changes from "@/components/IMS/Dashboard/Changes";
 import ProblemForm from "@/components/IMS/Dashboard/ProblemForm";
 import Problems from "@/components/IMS/Dashboard/Problems";
@@ -62,10 +63,10 @@ const Page = () => {
       </div>
 
       <Modal onClose={() => setOpenProblemForm(false)} isOpen={openProblemForm}>
-        <ProblemForm />
+        <ProblemForm onClose={() => setOpenChangeForm(false)} />
       </Modal>
       <Modal onClose={() => setOpenChangeForm(false)} isOpen={openChangeForm}>
-        <ProblemForm />
+        <ChangeForm onClose={() => setOpenChangeForm(false)} />
       </Modal>
     </div>
   );

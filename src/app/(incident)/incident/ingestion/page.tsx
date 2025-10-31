@@ -1,5 +1,6 @@
 "use client";
 import Integrations from "@/components/IncidentTicket/Integrations";
+import Overview from "@/components/IncidentTicket/Overview";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 
@@ -38,7 +39,7 @@ const Page = () => {
           transition={{ duration: 0.3 }}
           key={tab}
         >
-          {tab === 0 && <div></div>}
+          {tab === 0 && <Overview />}
 
           {tab === 1 && <Integrations />}
           {tab === 2 && <div></div>}

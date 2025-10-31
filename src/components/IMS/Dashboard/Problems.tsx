@@ -4,7 +4,7 @@ import TableLoader from "@/components/ui/LoaderUI/TableLoader";
 import Modal from "@/components/ui/Modal";
 import { Table } from "@/components/ui/table";
 import { CellContext } from "@tanstack/react-table";
-import { ChevronDown, Plus } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
@@ -83,19 +83,7 @@ const Problems = () => {
   const isLoading = false;
   const [openProblemForm, setOpenProblemForm] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: Problems[] | undefined = [
-    {
-      createdAt: new Date().toISOString(),
-      description: "This is the description",
-      id: "1",
-      impact: "",
-      owner: "James",
-      priority: "CRITICAL",
-      status: "FCA Found",
-      problemId: "PRB001",
-      title: "This is the title",
-    },
-  ];
+  const data: Problems[] | undefined = [];
   const router = useRouter();
 
   useEffect(() => {
@@ -120,22 +108,22 @@ const Problems = () => {
   if (!isLoading && (!data || data?.length < 1)) {
     return (
       <EmptyState
-        title="Not Problem created yet"
-        action={
-          <CButton
-            onClick={() => router.push("/incident/tickets/create")}
-            className="w-fit  bg-IMSLightGreen text-white hover:bg-IMSGreen shadow-none"
-          >
-            Create New Problem <Plus />
-          </CButton>
-        }
+        title="No Problem created yet"
+        // action={
+        //   <CButton
+        //     onClick={() => router.push("/incident/tickets/create")}
+        //     className="w-fit  bg-IMSLightGreen text-white hover:bg-IMSGreen shadow-none"
+        //   >
+        //     Create New Problem <Plus />
+        //   </CButton>
+        // }
       />
     );
   }
 
   const handleRowClick = (ticket: Problems) => {
     console.log(ticket);
-    router.push(`/incident/changes-problems/${ticket.id}`);
+    router.push(`/incident/changes-problems/problems/${ticket.id}`);
   };
 
   return (
@@ -186,7 +174,7 @@ const Problems = () => {
       <Table data={data} columns={columns} onRowClick={handleRowClick} />
 
       <Modal onClose={() => setOpenProblemForm(false)} isOpen={openProblemForm}>
-        <ProblemForm />
+        <ProblemForm onClose={() => setOpenProblemForm(false)} />
       </Modal>
     </div>
   );

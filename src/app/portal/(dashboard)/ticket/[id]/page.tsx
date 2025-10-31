@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import ProgressBar from "@/components/ezra/ProgressBar";
+import TicketComments from "@/components/IMS/Portal/TicketComment";
 import History from "@/components/IncidentTicket/History";
-import TicketComments from "@/components/IncidentTicket/TicketComments";
 import usePortalTicketDetails from "@/hooks/usePortalTicketDetails";
 import { motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
@@ -23,7 +23,6 @@ const Page = () => {
   const router = useRouter();
   const ticket = data as any;
 
-  console.log({ data });
   if (isLoading) {
     return (
       <div className="p-6 max-w-2xl mx-auto w-full flex flex-col gap-5 animate-pulse">
@@ -105,14 +104,14 @@ const Page = () => {
                   Incident ID :
                 </div>
                 <div className=" text-right dark:text-white">
-                  {ticket?.ticketId}
+                  {ticket?.ticketNumber}
                 </div>
-                <div className="text-gray-500 dark:text-gray-200">
+                {/* <div className="text-gray-500 dark:text-gray-200">
                   Username :
                 </div>
                 <div className=" text-right dark:text-white">
                   {ticket?.userName}
-                </div>
+                </div> */}
                 <div className="text-gray-500 dark:text-gray-200">Title:</div>
                 <div className="text-right dark:text-white">
                   {ticket?.shortDescription}
