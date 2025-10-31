@@ -175,7 +175,8 @@ const EditIncidentTicket = () => {
         setValue(key as any, value ?? "")
       );
       setValue("username", ticket.userName ?? "");
-      // setValue("assignedTo", ticket.assignedToEmail ?? "");
+
+      setValue("assignedTo", ticket?.assignedToEmail ?? "");
     }
   }, [ticket]);
 

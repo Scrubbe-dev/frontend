@@ -62,6 +62,8 @@ interface DayButtonProps {
     }[]
   ) => void; // Add selection handler
   isSelected: boolean; // New prop for selected state styling
+  // ⭐️ NEW PROP: To indicate if the day is in the past
+  isPast: boolean;
 }
 
 const DayButton: React.FC<DayButtonProps> = ({
@@ -72,23 +74,31 @@ const DayButton: React.FC<DayButtonProps> = ({
   dateValue,
   onSelect,
   isSelected,
+  // ⭐️ Destructure the new prop
+  isPast,
 }) => {
   const handleClick = useCallback(() => {
-    // Only allow selection of days in the current month for this feature
-    if (isCurrentMonth) {
+    // ⭐️ Prevent selection of past days and days outside the current month
+    if (!isPast) {
       onSelect(dateValue, assignment?.teamMembers);
     }
-  }, [dateValue, isCurrentMonth, onSelect, assignment]);
+  }, [dateValue, onSelect, assignment, isPast]); // Add isPast to dependencies
+
+  // ⭐️ Conditional classes for past days
+  const pastDayClasses = isPast
+    ? "bg-gray-50 text-gray-400 cursor-not-allowed shadow-none"
+    : "hover:bg-gray-100 cursor-pointer shadow-sm";
 
   return (
     <div
       onClick={handleClick}
-      className={`w-full h-24 p-2 flex flex-col justify-center items-center border border-zinc-100 rounded-lg transition-all duration-300 ease-in-out cursor-pointer shadow-sm
-        ${isCurrentMonth ? "text-gray-800" : "text-gray-400"}
+      // ⭐️ Apply conditional classes, prioritizing isSelected and isToday, then isPast
+      className={`w-full h-24 p-2 flex flex-col justify-center items-center border border-zinc-100 rounded-lg transition-all duration-300 ease-in-out
+        ${pastDayClasses}
         ${
-          isToday && isCurrentMonth
+          isToday && isCurrentMonth && !isPast
             ? "bg-IMSLightGreen text-white hover:text-gray-200"
-            : "hover:bg-gray-100"
+            : ""
         }
         ${
           isSelected
@@ -101,7 +111,11 @@ const DayButton: React.FC<DayButtonProps> = ({
         <div>
           {assignment.teamMembers.map((team) => (
             <div key={team.member}>
-              <div className="text-xs text-green-600 font-semibold text-center mt-2">
+              <div
+                className={`text-xs font-semibold text-center mt-2 ${
+                  isPast ? "text-gray-500" : "text-green-600"
+                }`}
+              >
                 {team.firstName}
                 <br />
                 {team.startTime}- {team.endTime}
@@ -154,7 +168,8 @@ const Calendar: React.FC = () => {
     .startOf("month")
     .day();
   const daysInPreviousMonth = getDaysInPreviousMonth(currentYear, currentMonth);
-  const today = dayjs(); // Get today's date here
+  // ⭐️ Define today's date for comparison, keeping only the date part
+  const today = dayjs().startOf("day");
 
   // ⭐️ Handler for selecting a date
   const handleDaySelect = useCallback(
@@ -194,6 +209,8 @@ const Calendar: React.FC = () => {
       const isSelected = selectedDate
         ? dateValue.isSame(selectedDate, "day")
         : false;
+      // ⭐️ Check if the date is in the past
+      const isPast = dateValue.isBefore(today, "day");
 
       days.push(
         <DayButton
@@ -204,6 +221,8 @@ const Calendar: React.FC = () => {
           dateValue={dateValue}
           onSelect={handleDaySelect}
           isSelected={isSelected}
+          // ⭐️ Pass the new prop
+          isPast={isPast}
         />
       );
     }
@@ -215,6 +234,8 @@ const Calendar: React.FC = () => {
       const isSelected = selectedDate
         ? currentDate.isSame(selectedDate, "day")
         : false;
+      // ⭐️ Check if the date is in the past
+      const isPast = currentDate.isBefore(today, "day");
 
       const assignedPerson = data?.find((assignment) =>
         currentDate.isSame(dayjs(assignment.date), "day")
@@ -229,6 +250,8 @@ const Calendar: React.FC = () => {
           dateValue={currentDate}
           onSelect={handleDaySelect}
           isSelected={isSelected}
+          // ⭐️ Pass the new prop
+          isPast={isPast}
         />
       );
     }
@@ -242,6 +265,8 @@ const Calendar: React.FC = () => {
       const isSelected = selectedDate
         ? dateValue.isSame(selectedDate, "day")
         : false;
+      // ⭐️ Check if the date is in the past
+      const isPast = dateValue.isBefore(today, "day");
 
       days.push(
         <DayButton
@@ -252,6 +277,8 @@ const Calendar: React.FC = () => {
           dateValue={dateValue}
           onSelect={handleDaySelect}
           isSelected={isSelected}
+          // ⭐️ Pass the new prop
+          isPast={isPast}
         />
       );
     }
