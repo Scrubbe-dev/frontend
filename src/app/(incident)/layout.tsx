@@ -1,3 +1,4 @@
+import NextJsTopLoader from "@/lib/NextJsTopLoader";
 import { RedirectProviderIMS } from "@/provider/RedirectProviderIMS";
 import StandaloneTokenCollectorProvider from "@/provider/StandaloneTokenCollectorProvider";
 import { redirect } from "next/navigation";
@@ -12,6 +13,7 @@ const IncidentDashboard = ({ children }: { children: ReactNode }) => {
   }
   return (
     <StandaloneTokenCollectorProvider>
+      <NextJsTopLoader />
       <RedirectProviderIMS>
         {children}
         <Toaster position="top-center" />

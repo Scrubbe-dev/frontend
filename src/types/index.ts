@@ -49,4 +49,10 @@ export type Ticket = {
     id: string;
     isInternal: false;
   }[];
+  assignedTo: {
+    email: string;
+    firstName: string;
+    id: string;
+    lastName: string;
+  };
 };
