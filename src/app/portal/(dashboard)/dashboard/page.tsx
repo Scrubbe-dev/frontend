@@ -28,27 +28,27 @@ const Page = () => {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="Average Resolution Time"
-            value="4.2hrs"
+            value="0hrs"
             icon={<FaClock size={20} />}
             iconColor="bg-blue-50 text-blue-700"
           />
           <SlaCard
             value="CSAT Score"
-            title="92%"
+            title="0%"
             compliance={92}
             icon={<BiLike size={20} />}
             iconColor="bg-emerald-50 text-emerald-700"
           />
           <SlaCard
             value="First Contact Resolution"
-            title="78%"
+            title="0%"
             compliance={78}
             icon={<FaUser size={20} />}
             iconColor="bg-purple-100 text-purple-700"
           />
           <MetricCard
             title="Open Incidents"
-            value="142"
+            value="0"
             icon={<MdBookmark size={20} />}
             iconColor="bg-emerald-50 text-emerald-700"
           />

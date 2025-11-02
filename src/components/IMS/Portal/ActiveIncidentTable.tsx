@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { CellContext } from "@tanstack/react-table";
 import React, { useEffect, useRef, useState } from "react";
@@ -66,6 +67,7 @@ const statusColors = (status: string) => {
     </div>
   );
 };
+
 const ActiveIncidentTable = () => {
   const { get } = useFetch();
   const [filter, setFilter] = useState<string | undefined>();

@@ -32,7 +32,7 @@ const data = {
   datasets: [
     {
       label: "SLA Breaches",
-      data: [90, 105, 85, 115], // Example data points
+      data: [], // Example data points
       borderColor: "#22D3EE", // Tailwind's cyan-400
       backgroundColor: "rgba(34, 211, 238, 0.2)",
       fill: true,
