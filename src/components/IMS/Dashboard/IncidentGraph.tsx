@@ -42,7 +42,8 @@ const data = {
   datasets: [
     {
       label: "Opened",
-      data: [105, 108, 88, 85, 95, 82, 98, 120, 128],
+      data: [],
+      // data: [105, 108, 88, 85, 95, 82, 98, 120, 128],
       borderColor: "#3B82F6", // Blue
       backgroundColor: "rgba(59, 130, 246, 0.2)",
       fill: true,
@@ -50,7 +51,8 @@ const data = {
     },
     {
       label: "Resolved",
-      data: [95, 105, 92, 90, 88, 85, 95, 110, 116],
+      data: [],
+      // data: [95, 105, 92, 90, 88, 85, 95, 110, 116],
       borderColor: "#22D3EE", // Cyan
       backgroundColor: "rgba(34, 211, 238, 0.2)",
       fill: true,

@@ -56,3 +56,15 @@ export type Ticket = {
     lastName: string;
   };
 };
+
+export interface Assignment {
+  date: string;
+  teamMembers: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    member: string;
+    startTime: string;
+    endTime: string;
+  }[];
+}

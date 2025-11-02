@@ -11,6 +11,7 @@ export const initSocket = () => {
     auth: {
       token, // set the user token
     },
+    transports: ["websocket", "polling"],
   });
 
   return socket;

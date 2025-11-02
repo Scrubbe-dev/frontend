@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { querykeys } from "@/lib/constant";
 import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
+import { Assignment } from "@/types";
 
 // Extend dayjs with all necessary plugins
 dayjs.extend(localeData);
@@ -19,17 +20,7 @@ dayjs.extend(customParseFormat);
 dayjs.extend(isSameOrAfter);
 
 // On-call assignments data (using a consistent interface for better type safety)
-interface Assignment {
-  date: string;
-  teamMembers: {
-    email: string;
-    firstName: string;
-    lastName: string;
-    member: string;
-    startTime: string;
-    endTime: string;
-  }[];
-}
+
 // const assignments: Assignment[] = [];
 
 // Helper functions (no changes needed here)

@@ -1,5 +1,6 @@
 // RecurringIssuesTable.tsx
 
+import EmptyState from "@/components/ui/EmptyState";
 import React from "react";
 
 interface Issue {
@@ -21,17 +22,26 @@ const RecurringIssuesTable: React.FC<Props> = ({ issues }) => {
 
       {/* Issues List */}
       <div className="space-y-4">
-        {issues.map((issue, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-between border-b border-gray-200 pb-4 last:border-b-0 last:pb-0"
-          >
-            <span className="text-gray-700 text-base">{issue.name}</span>
-            <span className="bg-red-100 text-red-700 font-medium px-3 py-1 rounded-md text-sm">
-              {issue.incidents} Incidents
-            </span>
-          </div>
-        ))}
+        {issues && issues.length > 0 ? (
+          <>
+            {issues.map((issue, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between border-b border-gray-200 pb-4 last:border-b-0 last:pb-0"
+              >
+                <span className="text-gray-700 text-base">{issue.name}</span>
+                <span className="bg-red-100 text-red-700 font-medium px-3 py-1 rounded-md text-sm">
+                  {issue.incidents} Incidents
+                </span>
+              </div>
+            ))}
+          </>
+        ) : (
+          <EmptyState
+            title="No Recurring Issue "
+            description="Add new incident to get started."
+          />
+        )}
       </div>
     </div>
   );

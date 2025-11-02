@@ -50,13 +50,17 @@ const Collaboration = ({ ticket }: Props) => {
   useEffect(() => {
     // Correctly initialize socket and store it in ref
     const socket = initSocket();
-    console.log({ socket });
     socketRef.current = socket;
 
-    socket.on("connect", () => {
-      console.log("Connected to socket server");
-      socket.emit("joinConversation", { incidentTicketId: ticket?.id });
-    });
+    if (ticket) {
+      socket.on("connect", () => {
+        console.log("Connected to socket server");
+        socket.emit("joinConversation", { incidentTicketId: ticket?.id });
+        socket.emit("joinBusinessRoom", {
+          businessId: ticket?.businessId,
+        });
+      });
+    }
 
     // Use a single "newMessage" listener
     socket.on("newMessage", (message: Message) => {
@@ -79,7 +83,7 @@ const Collaboration = ({ ticket }: Props) => {
     return () => {
       socket.disconnect();
     };
-  }, [ticket?.id, queryClient]); // Add get and queryClient as dependencies for correct closure
+  }, [ticket, queryClient]); // Add get and queryClient as dependencies for correct closure
 
   // 3. Scroll to the bottom whenever messages change
   useEffect(() => {

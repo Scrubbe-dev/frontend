@@ -8,8 +8,11 @@ import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import { querykeys } from "@/lib/constant";
 import moment from "moment";
-import Select from "@/components/ui/select";
 import { Ticket } from "@/types";
+import { useRouter } from "next/navigation";
+import EmptyState from "@/components/ui/EmptyState";
+import CButton from "@/components/ui/Cbutton";
+import { Plus } from "lucide-react";
 
 const statusColors = (status: string) => {
   return (
@@ -39,6 +42,7 @@ const statusColors = (status: string) => {
 };
 const ActiveIncidentTable = () => {
   const { get } = useFetch();
+  const router = useRouter();
   const { data } = useQuery({
     queryKey: [querykeys.INCIDENT_TICKET],
     queryFn: async () => {
@@ -46,7 +50,7 @@ const ActiveIncidentTable = () => {
         const res = await get(endpoint.incident_ticket.get);
         console.log({ res });
         if (res.success) {
-          return res.data;
+          return res.data.incidents.splice(0, 5);
         }
         return [];
       } catch (error) {
@@ -88,69 +92,95 @@ const ActiveIncidentTable = () => {
       cell: (info: CellContext<Ticket, unknown>) =>
         moment(info.getValue() as string).fromNow(),
     },
-    {
-      accessorKey: "assignedToEmail",
-      header: () => <span className="font-semibold">Assigned to</span>,
-      cell: (info: CellContext<Ticket, unknown>) => {
-        console.log({ info });
-        const currentId = info.row.original.id;
+    // {
+    //   accessorKey: "assignedToEmail",
+    //   header: () => <span className="font-semibold">Assigned to</span>,
+    //   cell: (info: CellContext<Ticket, unknown>) => {
+    //     console.log({ info });
+    //     const currentId = info.row.original.id;
 
-        const teams = [
-          {
-            first_name: "Jane",
-            last_name: "morakinyo",
-            id: "1",
-            email: "olamidemoraks@gmail.com",
-          },
-          {
-            first_name: "david",
-            last_name: "morakinyo",
-            id: "1",
-            email: "olamidemoraks@gmail.com",
-          },
-          {
-            first_name: "david",
-            last_name: "morakinyo",
-            id: "1",
-            email: "olamidemoraks@gmail.com",
-          },
-          {
-            first_name: "david",
-            last_name: "morakinyo",
-            id: "1",
-            email: "olamidemoraks@gmail.com",
-          },
-        ];
+    //     const teams = [
+    //       {
+    //         first_name: "Jane",
+    //         last_name: "morakinyo",
+    //         id: "1",
+    //         email: "olamidemoraks@gmail.com",
+    //       },
+    //       {
+    //         first_name: "david",
+    //         last_name: "morakinyo",
+    //         id: "1",
+    //         email: "olamidemoraks@gmail.com",
+    //       },
+    //       {
+    //         first_name: "david",
+    //         last_name: "morakinyo",
+    //         id: "1",
+    //         email: "olamidemoraks@gmail.com",
+    //       },
+    //       {
+    //         first_name: "david",
+    //         last_name: "morakinyo",
+    //         id: "1",
+    //         email: "olamidemoraks@gmail.com",
+    //       },
+    //     ];
 
-        const handleOnchange = (value: string) => {
-          reassignTicketToTeam(currentId, value);
-        };
+    //     const handleOnchange = (value: string) => {
+    //       reassignTicketToTeam(currentId, value);
+    //     };
 
-        return (
-          <div className=" max-w-sm">
-            <Select
-              options={teams.map((item) => ({
-                label: item.first_name + " " + item.last_name,
-                value: item.id,
-              }))}
-              onChange={(e) => handleOnchange(e.target.value)}
-            />
-          </div>
-        );
-      },
-    },
+    //     return (
+    //       <div className=" max-w-sm">
+    //         <Select
+    //           options={teams.map((item) => ({
+    //             label: item.first_name + " " + item.last_name,
+    //             value: item.id,
+    //           }))}
+    //           onChange={(e) => handleOnchange(e.target.value)}
+    //         />
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
 
-  const reassignTicketToTeam = (id: string, teamId: string) => {
-    console.log(id, teamId);
+  // const reassignTicketToTeam = (id: string, teamId: string) => {
+  //   console.log(id, teamId);
+  // };
+  const handleRowClick = (ticket: Ticket) => {
+    console.log(ticket);
+    router.push(`/incident/${ticket.id}`);
   };
 
   return (
     <div className=" bg-white p-4">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">
-        Active Incidents Feed
-      </h2>
-      <Table data={data} columns={columns} />
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Active Incidents Feed
+        </h2>
+        <p
+          onClick={() => router.push("/incident/tickets")}
+          className="text-base text-IMSLightGreen underline"
+        >
+          See more
+        </p>
+      </div>
+      {data && data?.length > 0 ? (
+        <Table data={data} columns={columns} onRowClick={handleRowClick} />
+      ) : (
+        <EmptyState
+          title="You have no incident ticket yet"
+          action={
+            <CButton
+              onClick={() => router.push("/incident/tickets/create")}
+              className="w-fit  bg-IMSLightGreen text-white hover:bg-IMSGreen shadow-none"
+            >
+              Create New Incident <Plus />
+            </CButton>
+          }
+        />
+      )}
     </div>
   );
 };
