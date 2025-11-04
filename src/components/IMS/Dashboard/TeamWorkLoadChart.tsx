@@ -25,16 +25,23 @@ ChartJS.register(
 );
 
 // Sample data for the chart
-
-const TeamWorkloadChart = () => {
+type Props = {
+  workLoad: {
+    teamMember: string;
+    incidentCount: number;
+    assignedIncidents: number;
+  }[];
+};
+const TeamWorkloadChart = ({ workLoad }: Props) => {
+  console.log({ workLoad });
   const { data } = useMember();
   const teamData = useMemo(() => {
     return {
-      labels: data?.map((member) => member.firstname + " " + member.lastname),
+      labels: workLoad?.map((value) => value.teamMember),
       datasets: [
         {
           label: "Team / Members",
-          data: [],
+          data: workLoad?.map((value) => value.assignedIncidents),
           // data: [31, 28, 22, 34],
           backgroundColor: (context: any) => {
             // Create a gradient for the bars

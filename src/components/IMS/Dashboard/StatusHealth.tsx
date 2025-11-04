@@ -1,28 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // components/SystemHealthCard.tsx
 import React from "react";
 import StatusPill from "./StatusPill";
 
-type SystemStatus = {
-  API: "Healthy" | "Warning" | "Critical";
-  Auth: "Healthy" | "Warning" | "Critical";
-  Payment: "Healthy" | "Warning" | "Critical";
-  DB: "Healthy" | "Warning" | "Critical";
-  Storage: "Healthy" | "Warning" | "Critical";
-  Network: "Healthy" | "Warning" | "Critical";
-};
+type SystemStatus = { component: string; status: string; message: string }[];
 
 type Props = {
   statuses: SystemStatus;
 };
 
 const SystemHealthCard: React.FC<Props> = ({ statuses }) => {
-  const statusItems = Object.entries(statuses).map(([system, status]) => (
+  const statusItems = statuses?.map(({ status, component }) => (
     <div
-      key={system}
+      key={component}
       className="flex items-center justify-between text-gray-900 dark:text-gray-100 flex-1 flex-grow"
     >
-      <span className="text-sm">{system} :</span>
-      <StatusPill status={status} />
+      <span className="text-sm">{component} :</span>
+      <StatusPill status={status as any} />
     </div>
   ));
 

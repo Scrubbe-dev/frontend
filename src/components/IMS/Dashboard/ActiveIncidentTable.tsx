@@ -8,7 +8,6 @@ import { useFetch } from "@/hooks/useFetch";
 import { endpoint } from "@/lib/api/endpoint";
 import { querykeys } from "@/lib/constant";
 import moment from "moment";
-import { Ticket } from "@/types";
 import { useRouter } from "next/navigation";
 import EmptyState from "@/components/ui/EmptyState";
 import CButton from "@/components/ui/Cbutton";
@@ -40,7 +39,26 @@ const statusColors = (status: string) => {
     </div>
   );
 };
-const ActiveIncidentTable = () => {
+
+type Props = {
+  activeIncident: {
+    id: string;
+    title: string;
+    createdAt: string;
+    assignedTo: string;
+    status: string;
+  }[];
+};
+
+type Ticket = {
+  id: string;
+  title: string;
+  createdAt: string;
+  assignedTo: string;
+  status: string;
+};
+
+const ActiveIncidentTable = ({ activeIncident }: Props) => {
   const { get } = useFetch();
   const router = useRouter();
   const { data } = useQuery({
@@ -69,7 +87,7 @@ const ActiveIncidentTable = () => {
     },
 
     {
-      accessorKey: "reason",
+      accessorKey: "title",
       header: () => <span className="font-semibold">Short Description</span>,
       cell: (info: CellContext<Ticket, unknown>) => (
         <div className=" truncate text-nowrap max-w-sm">
@@ -167,7 +185,11 @@ const ActiveIncidentTable = () => {
         </p>
       </div>
       {data && data?.length > 0 ? (
-        <Table data={data} columns={columns} onRowClick={handleRowClick} />
+        <Table
+          data={activeIncident}
+          columns={columns}
+          onRowClick={handleRowClick}
+        />
       ) : (
         <EmptyState
           title="You have no incident ticket yet"

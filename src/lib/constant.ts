@@ -12,6 +12,7 @@ export const querykeys = {
   POSTMORTEM_TICKET: "POSTMORTEM_TICKET",
   API_KEYS: "API_KEYS",
   GET_MEMBERS: "GET_MEMBERS",
+  GET_INCIDENT_ID: "GET_INCIDENT_ID",
   COMMENTS: "COMMENTS",
   MESSAGES: "MESSAGES",
   ANALYTICS: "ANALYTICS",
@@ -24,6 +25,7 @@ export const querykeys = {
   INTEGRATIONS: "INTEGRATIONS",
   PRICING: "PRICING",
   GET_ALL_ASSIGN: "GET_ALL_ASSIGN",
+  METRICS: "METRICS",
 };
 
 export const borderColors: { [key: string]: string } = {
