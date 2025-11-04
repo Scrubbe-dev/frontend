@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import MetricCard from "./MetricCard";
 import OnCallCard from "./OnCallCard";
 import { MdOutlineAnalytics, MdBookmark } from "react-icons/md";
@@ -11,17 +12,12 @@ import RecurringIssuesTable from "./RecurringIssuesTable";
 import SlaBreachesChart from "./SLA/SlaBreachesChart";
 import AtRiskIncidents from "./AtRiskIncidents";
 import ActiveIncidentTable from "./ActiveIncidentTable";
+import { useQuery } from "@tanstack/react-query";
+import { querykeys } from "@/lib/constant";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
 
 const Dashboard = () => {
-  const systemStatuses: any = {
-    API: "Healthy",
-    Auth: "Healthy",
-    Payment: "Critical",
-    DB: "Warning",
-    Storage: "Warning",
-    Network: "Warning",
-  };
-
   // const topIssues = [
   //   { name: "DB Timeout :", incidents: 5 },
   //   { name: "API Rate Limit :", incidents: 4 },
@@ -54,33 +50,54 @@ const Dashboard = () => {
   //   { workflowId: "Workflow C", status: "Success", timestamp: "6 hours ago" },
   // ];
 
+  const { get } = useFetch();
+
+  const { data: metrics } = useQuery({
+    queryKey: [querykeys.METRICS],
+    queryFn: async () => {
+      const res = await get(endpoint.dashboard.get_metrics);
+      if (res.success) {
+        return res.data.data;
+      }
+    },
+  });
+  const { data: analytics } = useQuery({
+    queryKey: [querykeys.ANALYTICS],
+    queryFn: async () => {
+      const res = await get(endpoint.dashboard.get_analytics);
+      if (res.success) {
+        return res.data.data;
+      }
+    },
+  });
+
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title="Open Incidents"
-          value="0"
+          value={metrics?.metrics?.openIncidents ?? 0}
           icon={<MdBookmark size={20} />}
           iconColor="bg-emerald-50 text-emerald-700"
         />
         <MetricCard
           title="MTTA"
-          value="0 mins"
+          value={metrics?.metrics?.mtta ?? 0 + "min"}
           trend="down"
           icon={<MdOutlineAnalytics size={20} />}
           iconColor="bg-blue-100 text-blue-700"
         />
         <MetricCard
           title="MTTR"
-          value="0 mins"
+          value={metrics?.metrics?.mttr ?? 0 + "min"}
           trend="up"
           icon={<FaClock size={20} />}
           iconColor="bg-emerald-100 text-emerald-700"
         />
         <SlaCard
-          title="0%"
+          title={metrics?.metrics?.slaCompliance ?? 0 + "%"}
           value="SLA Compliance"
-          compliance={0}
+          compliance={metrics?.metrics?.slaCompliance ?? 0}
           icon={<FaUser size={20} />}
           iconColor="bg-purple-100 text-purple-700"
         />
@@ -88,20 +105,20 @@ const Dashboard = () => {
 
       <div className="mt-8 flex gap-6 w-full">
         <OnCallCard />
-        <SystemHealthCard statuses={systemStatuses} />
+        <SystemHealthCard statuses={metrics?.systemHealth} />
       </div>
 
       <div className="mt-8 w-full">
-        <ActiveIncidentTable />
+        <ActiveIncidentTable activeIncident={analytics?.activeIncidents} />
       </div>
 
       <div className="mt-8 grid grid-cols-2 gap-6 w-full">
-        <IncidentGraph />
-        <TeamWorkloadChart />
+        <IncidentGraph incidentTrends={analytics?.incidentTrends} />
+        <TeamWorkloadChart workLoad={analytics?.teamWorkload} />
       </div>
 
       <div className="mt-8 w-full">
-        <RecurringIssuesTable issues={[]} />
+        <RecurringIssuesTable issues={analytics?.recurringIssues} />
       </div>
       <div className="mt-8 grid grid-cols-2 gap-6 w-full">
         <SlaBreachesChart />

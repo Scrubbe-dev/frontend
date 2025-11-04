@@ -1,12 +1,12 @@
 // components/StatusPill.tsx
 import React from "react";
 
-type Status = "Healthy" | "Warning" | "Critical";
+type Status = "healthy" | "warning" | "critical";
 
 const statusColors = {
-  Healthy: "bg-emerald-100 text-emerald-700",
-  Warning: "bg-yellow-100 text-yellow-700",
-  Critical: "bg-red-100 text-red-700",
+  healthy: "bg-emerald-100 text-emerald-700",
+  warning: "bg-yellow-100 text-yellow-700",
+  critical: "bg-red-100 text-red-700",
 };
 
 const StatusPill: React.FC<{ status: Status }> = ({ status }) => {

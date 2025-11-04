@@ -20,6 +20,7 @@ export const endpoint = {
     getTicket: "/tickets",
     get_members: "/business/get_members",
     send_comment: "/incident-ticket/comment",
+    get_incident_id: "/incident-ticket/generate-id",
     get_comment: "/incident-ticket/comment",
     get_messages: "/incident-ticket/message",
     analytics: "/incident-ticket/analytics",
@@ -71,5 +72,9 @@ export const endpoint = {
     assign_member: "/assign-member",
     get_all_assign: "/get-all-assign",
     get_assign: "/get-assign",
+  },
+  dashboard: {
+    get_metrics: "/dashboard/metrics",
+    get_analytics: "/dashboard/analytics",
   },
 };

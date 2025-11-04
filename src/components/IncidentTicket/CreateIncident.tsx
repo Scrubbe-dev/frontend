@@ -77,6 +77,7 @@ const formScheme = z.object({
   escalation: z.string().optional(),
   affectedSystem: z.string().optional(),
   userName: z.string().nonempty({ message: "userName is required" }),
+  incidentId: z.string().nonempty(),
 });
 
 type FormType = z.infer<typeof formScheme>;
@@ -111,17 +112,17 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
   const [acknowledge, setAcknowledge] = useState(false);
   const { user } = useAuthStore();
 
-  const removeQuery = () => {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.delete("modal");
-    newSearchParams.delete("description");
-    newSearchParams.delete("priority");
-    newSearchParams.delete("title");
+  console.log("error", errors);
 
-    router.replace(`?${newSearchParams.toString()}`);
-  };
+  // const removeQuery = () => {
+  //   const newSearchParams = new URLSearchParams(searchParams.toString());
+  //   newSearchParams.delete("modal");
+  //   newSearchParams.delete("description");
+  //   newSearchParams.delete("priority");
+  //   newSearchParams.delete("title");
 
-  console.log({ errors });
+  //   router.replace(`?${newSearchParams.toString()}`);
+  // };
 
   const { mutateAsync, isPending } = useMutation({
     mutationKey: ["CREATE-INCIDENT"],
@@ -136,7 +137,7 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
         if (res.success) {
           toast.success("Incident ticket created successfully");
           queryClient.refetchQueries({ queryKey: [querykeys.INCIDENT_TICKET] });
-          removeQuery();
+          // removeQuery();
           if (isModal) {
             onClose();
           } else {
@@ -172,7 +173,25 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
     },
   });
 
-  console.log({ members });
+  const { data: newIncidentId } = useQuery({
+    queryKey: [querykeys.GET_INCIDENT_ID],
+    queryFn: async () => {
+      try {
+        const res = await get(endpoint.incident_ticket.get_incident_id);
+        console.log(newIncidentId);
+        if (res.success) {
+          setValue("incidentId", res.data.ticketId);
+          setValue("status", "OPEN");
+          return res.data;
+        }
+        return [];
+      } catch (error) {
+        console.log(error);
+        return [];
+      }
+    },
+    refetchOnWindowFocus: false,
+  });
 
   const createIncidentTicket = async (value: FormType) => {
     mutateAsync({ data: value });
@@ -261,7 +280,7 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
       )}
       <div className=" justify-between flex ">
         <h1 className="text-xl font-bold dark:text-white text-black">
-          Create New Incident
+          Create New Incident (#{newIncidentId?.ticketId})
         </h1>
         <p
           className={` text-xl font-semibold flex items-center gap-2 ${
@@ -687,7 +706,7 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
       />
 
       <div className="animated-gradient p-[2px] rounded-3xl w-fit">
-        <div className=" bg-[#111827] gap-2 px-6 py-2 text-white rounded-3xl font-medium text-sm flex items-center">
+        <div className=" cursor-pointer bg-[#111827] gap-2 px-6 py-2 text-white rounded-3xl font-medium text-sm flex items-center">
           Get AI Powered Suggestion
           <img src="/ezrastar1.svg" alt="ezrastar1.svg" className=" size-4" />
           {/* <PiStarFourFill className=" text-blue-500" size={22} /> */}

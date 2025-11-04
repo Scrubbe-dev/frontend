@@ -27,79 +27,72 @@ ChartJS.register(
 );
 
 // Data for the graph
-const data = {
-  labels: [
-    "Day 1",
-    "Day 2",
-    "Day 3",
-    "Day 4",
-    "Day 5",
-    "Day 6",
-    "Day 7",
-    "Day 8",
-    "Day 9",
-  ],
-  datasets: [
-    {
-      label: "Opened",
-      data: [],
-      // data: [105, 108, 88, 85, 95, 82, 98, 120, 128],
-      borderColor: "#3B82F6", // Blue
-      backgroundColor: "rgba(59, 130, 246, 0.2)",
-      fill: true,
-      tension: 0.4,
-    },
-    {
-      label: "Resolved",
-      data: [],
-      // data: [95, 105, 92, 90, 88, 85, 95, 110, 116],
-      borderColor: "#22D3EE", // Cyan
-      backgroundColor: "rgba(34, 211, 238, 0.2)",
-      fill: true,
-      tension: 0.4,
-    },
-  ],
-};
 
-// Chart options to customize appearance
-const options = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: "top",
-      labels: {
-        usePointStyle: true,
+type Props = {
+  incidentTrends: { date: string; opened: number; resolved: number }[];
+};
+const IncidentGraph = ({ incidentTrends }: Props) => {
+  const data = {
+    labels: incidentTrends?.map((value) => value.date),
+    datasets: [
+      {
+        label: "Opened",
+        data: incidentTrends?.map((value) => value.opened),
+        // data: [105, 108, 88, 85, 95, 82, 98, 120, 128],
+        borderColor: "#3B82F6", // Blue
+        backgroundColor: "rgba(59, 130, 246, 0.2)",
+        fill: true,
+        tension: 0.4,
       },
-    },
-    title: {
-      display: false,
-      text: "Incident Trend Graph ( Last 30 days)",
-    },
-  },
-  scales: {
-    x: {
+      {
+        label: "Resolved",
+        data: incidentTrends?.map((value) => value.resolved),
+        // data: [95, 105, 92, 90, 88, 85, 95, 110, 116],
+        borderColor: "#22D3EE", // Cyan
+        backgroundColor: "rgba(34, 211, 238, 0.2)",
+        fill: true,
+        tension: 0.4,
+      },
+    ],
+  };
+
+  // Chart options to customize appearance
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          usePointStyle: true,
+        },
+      },
       title: {
         display: false,
-      },
-      grid: {
-        display: false,
+        text: "Incident Trend Graph ( Last 30 days)",
       },
     },
-    y: {
-      title: {
-        display: true,
-        text: "Incidents",
+    scales: {
+      x: {
+        title: {
+          display: false,
+        },
+        grid: {
+          display: false,
+        },
       },
-      grid: {
-        borderDash: [8, 4],
-        color: "#e5e7eb",
+      y: {
+        title: {
+          display: true,
+          text: "Incidents",
+        },
+        grid: {
+          borderDash: [8, 4],
+          color: "#e5e7eb",
+        },
       },
     },
-  },
-};
-
-const IncidentGraph = () => {
+  };
   return (
     <div className="bg-white p-6 rounded-lg w-full">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">
