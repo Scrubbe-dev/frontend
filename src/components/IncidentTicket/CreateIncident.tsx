@@ -265,9 +265,7 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
   const content = (
     <form
       onSubmit={handleSubmit(createIncidentTicket)}
-      className={` space-y-5  mt-6 rounded-xl ${
-        isModal ? "p-0" : "p-4 shadow-md"
-      }`}
+      className={` space-y-5  mt-6 rounded-xl ${isModal ? "p-0" : "p-4"}`}
     >
       {!isModal && (
         <div
@@ -280,7 +278,7 @@ const CreateIncident = ({ isOpen, onClose, isModal }: CreateIncidentProps) => {
       )}
       <div className=" justify-between flex ">
         <h1 className="text-xl font-bold dark:text-white text-black">
-          Create New Incident (#{newIncidentId?.ticketId})
+          Incident ID ({newIncidentId?.ticketId})
         </h1>
         <p
           className={` text-xl font-semibold flex items-center gap-2 ${
