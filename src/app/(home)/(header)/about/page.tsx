@@ -1,19 +1,9 @@
-import AboutHero from "@/components/header/about/AboutHero";
-import OurMission from "@/components/header/about/OurMission";
-import WhatWeDo from "@/components/header/about/WhatWeDo";
-import WhoWeServe from "@/components/header/about/WhoWeServe";
-import WhyWeExist from "@/components/header/about/WhyWeExist";
-import React from "react";
+import AboutUs from "@/components/header/about/AboutUs";
+import IncidentAboutUs from "@/components/IMS/Home/AboutUs";
+const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
+
 const page = () => {
-  return (
-    <div className=" bg-white">
-      <AboutHero />
-      <OurMission />
-      <WhatWeDo />
-      <WhyWeExist />
-      <WhoWeServe />
-    </div>
-  );
+  return <>{IS_STANDALONE ? <IncidentAboutUs /> : <AboutUs />}</>;
 };
 
 export default page;
