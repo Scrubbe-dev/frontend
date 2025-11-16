@@ -1,5 +1,6 @@
 import AboutHero from "../about-us/AboutHero";
 import CTA from "../about-us/CTA";
+import Globe from "../about-us/GlobeWithPins";
 import Impact from "../about-us/Impact";
 import OurMission from "../about-us/OurMission";
 import WhoWeServe from "../about-us/WhoWeServe";
@@ -16,6 +17,7 @@ const IncidentAboutUs = () => {
       <WhoWeServe />
       <WhyChooseScrubbe />
       <Impact />
+      <Globe />
       <CTA />
     </div>
   );
