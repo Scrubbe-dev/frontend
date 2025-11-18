@@ -33,6 +33,7 @@ const AboutHero = () => {
   const [london, setLondon] = useState(
     getCurrentTimeForTimeZone(timeZones[0].zone)
   );
+  console.log(london);
   const [nairobi, setNairobi] = useState(
     getCurrentTimeForTimeZone(timeZones[1].zone)
   );
@@ -86,47 +87,47 @@ const AboutHero = () => {
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 place-items-center">
             <div className="flex flex-col items-center gap-3">
-              <Clock value={london} />
+              <Clock value={london} size={120} />
               <div>
                 <p className="font-bold text-center">London</p>
                 <p className=" text-center">
-                  {moment(london).format("HH:MM a")}
+                  {moment(london).format("HH:mm a")}
                 </p>
               </div>
             </div>
             <div className="flex flex-col items-center gap-3">
-              <Clock value={nairobi} />
+              <Clock value={nairobi} size={120} />
               <div>
                 <p className="font-bold text-center">Nairobi</p>
                 <p className=" text-center">
-                  {moment(nairobi).format("HH:MM a")}
+                  {moment(nairobi).format("HH:mm a")}
                 </p>
               </div>
             </div>
             <div className="flex flex-col items-center gap-3">
-              <Clock value={washington} />
+              <Clock value={washington} size={120} />
               <div>
                 <p className="font-bold text-center">Washington</p>
                 <p className=" text-center">
-                  {moment(washington).format("HH:MM a")}
+                  {moment(washington).format("HH:mm a")}
                 </p>
               </div>
             </div>
             <div className="flex flex-col items-center gap-3">
-              <Clock value={lagos} />
+              <Clock value={lagos} size={120} />
               <div>
                 <p className="font-bold text-center">Lagos</p>
                 <p className=" text-center">
-                  {moment(lagos).format("HH:MM a")}
+                  {moment(lagos).format("HH:mm a")}
                 </p>
               </div>
             </div>
             <div className="flex flex-col items-center gap-3">
-              <Clock value={capetown} />
+              <Clock value={capetown} size={120} />
               <div>
                 <p className="font-bold text-center">Capetown</p>
                 <p className=" text-center">
-                  {moment(capetown).format("HH:MM a")}
+                  {moment(capetown).format("HH:mm a")}
                 </p>
               </div>
             </div>{" "}
