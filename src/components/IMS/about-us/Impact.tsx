@@ -67,7 +67,7 @@ const imageVariants = {
 
 const Impact = () => {
   return (
-    <div className="bg-gradient-to-b from-[#00223B] to-[#00474D] min-h-[700px] grid grid-cols-2 place-items-center py-10 relative z-10 overflow-hidden">
+    <div className="bg-gradient-to-b from-[#00223B] to-[#00474D] min-h-[700px] grid md:grid-cols-2 place-items-center py-10 relative z-10 overflow-hidden">
       <motion.img
         src="/IMS/about/green_orb.png"
         className=" right-[-100px] h-full max-h-[600px] -z-10 hidden md:flex "

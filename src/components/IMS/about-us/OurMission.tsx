@@ -20,15 +20,17 @@ const OurMission = () => {
         <div className="bg-colorScGreen text-white p-5 rounded-lg space-y-3">
           <p className=" text-lg font-bold">Our Mission</p>
           <p>
-            From morning rush to the 11 p.m. finish line, we guarantee
-            operational perfection.
+            To empower DevOps, SREs, and IT teams with intelligent tools that
+            detect, respond, and recover from incidents faster ensuring business
+            resilience, even at the 11th hour.
           </p>
         </div>
         <div className="bg-colorScIndigo text-white p-5 rounded-lg space-y-3">
           <p className=" text-lg font-bold">Our Vision</p>
           <p>
-            To be the most trusted reliability platform powering modern DevOps,
-            SRE, and IT ecosystems.
+            To build the world’s most trusted resilience platform — where every
+            enterprise can anticipate failure, sustain uptime, and achieve
+            operational peace of mind.
           </p>
         </div>
         <div className="bg-[#42004C] text-white p-5 rounded-lg space-y-3">

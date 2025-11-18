@@ -40,8 +40,8 @@ const WhoWeServe = () => {
             </p>
           </div>
 
-          <div className="">
-            <div className="grid grid-cols-3 gap-3">
+          <div className="mt-8">
+            <div className="grid g md:grid-cols-3 gap-3">
               {ourDifference.slice(0, 3).map((value) => (
                 <div
                   key={value.text}
