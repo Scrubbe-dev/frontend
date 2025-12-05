@@ -32,6 +32,11 @@ const bigshotOne = localFont({
   variable: "--font-bigshotOne",
   display: "swap",
 });
+const electrolize = localFont({
+  src: "./fonts/Electrolize-Regular.ttf",
+  variable: "--font-electrolize",
+  display: "swap",
+});
 
 const airbnbCereal = localFont({
   src: [
@@ -84,7 +89,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${airbnbCereal.variable} ${bersley.variable} ${bigshotOne.variable}`}
+      className={`${airbnbCereal.variable} ${bersley.variable} ${bigshotOne.variable} ${electrolize.variable}`}
     >
       <body className="antialiased min-h-screen w-full flex flex-col font-airbnb">
         <Suspense

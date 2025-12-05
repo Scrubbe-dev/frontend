@@ -31,7 +31,6 @@ export const PasswordInput = React.forwardRef<
     label = "Password",
     showRequirements = true,
     onValidationChange,
-    className,
     error,
     value,
     onValueChange,
@@ -97,8 +96,10 @@ export const PasswordInput = React.forwardRef<
             label={label}
             value={value}
             onChange={handlePasswordChange}
-            className={className}
+            // className={className}
             {...props}
+            labelClassName="text-white"
+            className="text-white"
           />
           <button
             type="button"
@@ -131,7 +132,7 @@ export const PasswordInput = React.forwardRef<
                 <span
                   className={`${
                     requirement.met
-                      ? "text-green-600 dark:text-green-400"
+                      ? "text-emerald-600 dark:text-emerald-400"
                       : "text-zinc-500 dark:text-zinc-400"
                   }`}
                 >

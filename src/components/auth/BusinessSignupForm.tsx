@@ -6,17 +6,14 @@ import { toast } from "sonner";
 import Link from "next/link";
 import * as z from "zod";
 import Input from "../ui/input";
-import Select from "../ui/select";
 import CButton from "../ui/Cbutton";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import useAuthStore from "@/lib/stores/auth.store";
 import CompleteBusinessProfile, {
   BusinessProfileSignupFormData,
 } from "./CompleteBusinessProfile";
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
 import OtpInput from "../ui/OtpInput";
 import { PasswordInput } from "../ui/password-input";
 import { AxiosError } from "axios";
@@ -260,11 +257,11 @@ export default function BusinessSignupForm() {
             </div>
           </div>
 
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-2xl font-semibold text-gray-900 text-white mb-2">
             Successful
           </h1>
 
-          <p className="text-gray-600 dark:text-gray-300 text-center">
+          <p className="text-gray-300 text-center">
             Welcome {firstName} {lastName}! You have successfully created an
             account.
           </p>
@@ -332,10 +329,10 @@ export default function BusinessSignupForm() {
         <>
           {profileComplete && !showSuccess && (
             <>
-              <h1 className="text-xl md:text-2xl dark:text-white font-semibold mb-2 ">
+              <h1 className="text-xl md:text-2xl text-white font-semibold mb-2 ">
                 Complete Your Profile
               </h1>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">
+              <p className="text-gray-300 mb-6">
                 Just a few more details to get started
               </p>
 
@@ -353,8 +350,8 @@ export default function BusinessSignupForm() {
               <VerifyAccount />
             ) : (
               <>
-                <h1 className="text-xl md:text-2xl dark:text-white font-semibold mb-6 ">
-                  Business Signup
+                <h1 className="text-xl md:text-2xl text-white font-semibold mb-6 ">
+                  Create your workspace
                 </h1>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -369,6 +366,8 @@ export default function BusinessSignupForm() {
                           placeholder="First Name"
                           {...field}
                           error={errors.firstName?.message}
+                          labelClassName="text-white"
+                          className="text-white"
                         />
                       )}
                     />
@@ -382,13 +381,15 @@ export default function BusinessSignupForm() {
                           placeholder="Last Name"
                           {...field}
                           error={errors.lastName?.message}
+                          labelClassName="text-white"
+                          className="text-white"
                         />
                       )}
                     />
                   </div>
 
                   {/* Business Email and Business Address Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-1 gap-4 mb-4">
                     <Controller
                       name="businessEmail"
                       control={control}
@@ -398,10 +399,12 @@ export default function BusinessSignupForm() {
                           placeholder="Enter Business Email"
                           {...field}
                           error={errors.businessEmail?.message}
+                          labelClassName="text-white"
+                          className="text-white"
                         />
                       )}
                     />
-                    <Controller
+                    {/* <Controller
                       name="businessAddress"
                       control={control}
                       render={({ field }) => (
@@ -410,13 +413,15 @@ export default function BusinessSignupForm() {
                           placeholder="Enter Business Address"
                           {...field}
                           error={errors.businessAddress?.message}
+                          labelClassName="text-white"
+                          className="text-white"
                         />
                       )}
-                    />
+                    /> */}
                   </div>
 
                   {/* Company Size and Purpose Row */}
-                  <div className="grid grid-cols-1 gap-4 mb-4">
+                  {/* <div className="grid grid-cols-1 gap-4 mb-4">
                     <Controller
                       name="companySize"
                       control={control}
@@ -433,11 +438,13 @@ export default function BusinessSignupForm() {
                           ]}
                           error={errors.companySize?.message}
                           isLoading={isLoading}
+                          labelClassName="text-white"
+                          className="text-white"
                           {...field}
                         />
                       )}
                     />
-                    {/* <Controller
+                    <Controller
                       name="purpose"
                       control={control}
                       render={({ field }) => (
@@ -459,8 +466,8 @@ export default function BusinessSignupForm() {
                           {...field}
                         />
                       )}
-                    /> */}
-                  </div>
+                    />
+                  </div> */}
 
                   {/* Password Fields Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -471,6 +478,7 @@ export default function BusinessSignupForm() {
                       onValueChange={(value) => setValue("password", value)}
                       onValidationChange={setIsPasswordValid}
                       error={!isPasswordValid ? "complete all requirement" : ""}
+                      className="text-white"
                     />
                     <Controller
                       name="confirmPassword"
@@ -483,6 +491,8 @@ export default function BusinessSignupForm() {
                           error={errors.confirmPassword?.message}
                           isLoading={isLoading}
                           {...field}
+                          labelClassName="text-white"
+                          className="text-white"
                         />
                       )}
                     />
@@ -498,17 +508,17 @@ export default function BusinessSignupForm() {
                   </CButton>
 
                   {/* Divider */}
-                  <div className="relative my-6">
+                  {/* <div className="relative my-6">
                     <div className="absolute inset-0 flex items-center">
                       <div className="w-full border-t border-gray-300"></div>
                     </div>
                     <div className="relative flex justify-center text-sm">
                       <span className="px-2 bg-white text-gray-500">OR</span>
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* OAuth Buttons */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
+                  {/* <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
                     <button
                       type="button"
                       className="w-full flex gap-3 items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
@@ -517,7 +527,7 @@ export default function BusinessSignupForm() {
                       <div>
                         <FcGoogle size={33} />
                       </div>
-                      <span className="text-sm font-medium text-gray-700 dark:text-white">
+                      <span className="text-sm font-medium text-white">
                         Google
                       </span>
                     </button>
@@ -531,9 +541,9 @@ export default function BusinessSignupForm() {
                       }
                     >
                       <div>
-                        <FaGithub size={33} className=" dark:text-white" />
+                        <FaGithub size={33} className=" text-white" />
                       </div>
-                      <span className="text-sm font-medium text-gray-700 dark:text-white">
+                      <span className="text-sm font-medium text-white">
                         GitHub
                       </span>
                     </button>
@@ -554,7 +564,7 @@ export default function BusinessSignupForm() {
                         height={38}
                         className="mr-2"
                       />
-                      <span className="text-sm font-medium text-gray-700 dark:text-white">
+                      <span className="text-sm font-medium text-white">
                         GitLab
                       </span>
                     </button>
@@ -570,7 +580,7 @@ export default function BusinessSignupForm() {
                         height={38}
                         className="mr-2"
                       />
-                      <span className="text-sm font-medium text-gray-700 dark:text-white">
+                      <span className="text-sm font-medium text-white">
                         AWS
                       </span>
                     </button>
@@ -591,19 +601,19 @@ export default function BusinessSignupForm() {
                         height={38}
                         className="mr-2"
                       />
-                      <span className="text-sm font-medium text-gray-700 dark:text-white">
+                      <span className="text-sm font-medium text-white">
                         Azure
                       </span>
                     </button>
-                  </div>
+                  </div> */}
 
                   {/* Demo Page Link */}
-                  <div className="text-center">
+                  <div className="text-center text-white mt-3 text-base">
                     Already have an account?{" "}
                     <Link
                       href="/auth/signin"
                       className={`${
-                        IS_STANDALONE ? "text-IMSLightGreen" : "text-blue-600"
+                        IS_STANDALONE ? "text-IMSCyan" : "text-blue-600"
                       } underline hover:underline inline-flex items-center`}
                     >
                       Sign in

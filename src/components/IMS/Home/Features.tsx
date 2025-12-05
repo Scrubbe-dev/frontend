@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { ReactNode } from "react";
 import { motion } from "framer-motion";
 
 const containerVariants = {
@@ -26,221 +25,103 @@ const itemVariants = {
   },
 };
 
+const items = [
+  {
+    icon: "/IMS/icons/search1.png",
+    title: "Magic Insight Engine",
+    description:
+      "Automatically reconstructs the true incident timeline and delivers root cause in one sentence before the human even opens the ticket.",
+  },
+  {
+    icon: "/IMS/icons/document.png",
+    title: "Automatic On-Call Handover",
+    description:
+      "Every shift ends with a perfectly written summary. Zero effort. Zero gaps.",
+  },
+  {
+    icon: "/IMS/icons/ai.png",
+    title: "AI-Generated Simulations",
+    description:
+      "Your worst outages become live training drills. Teams get better. Repeat failures disappear.",
+  },
+];
+
 const Features = () => {
   return (
-    <div className=" min-h-[700px] bg-white">
+    <section className=" min-h-[700px] bg-[#060709]">
       <motion.div
         className="container mx-auto py-10 px-5 flex-col gap-6 flex"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
       >
-        <motion.p
-          className=" text-3xl md:text-5xl text-center max-w-2xl mx-auto font-bigshotOne"
-          variants={itemVariants as any}
-        >
-          Powerful Features for{" "}
-          <span className=" text-transparent bg-gradient-to-l bg-clip-text from-IMSDarkGreen to-[#8F166F]">
-            DevOps & SRE
-          </span>
-        </motion.p>
-
-        <motion.div variants={itemVariants as any}>
-          <Background>
-            <div className="flex gap-4 justify-between items-center h-full md:flex-row flex-col flex-1">
-              <div className="flex-[.8] text-white gap-4 flex flex-col">
-                <p className=" text-xl font-bold">GitHub & GitLab Sync</p>
-                <p>
-                  By syncing GitHub and GitLab with Scrubbe IMS, every failed
-                  build, broken deployment, or risky change can automatically
-                  raise an incident. DevOps teams get real-time visibility,
-                  faster MTTD, and shorter MTTR, keeping your CI/CD pipeline
-                  smooth and reliable
-                </p>
-              </div>
-
-              <div className="flex-1">
-                <img src="/IMS/github-gitlab.png" alt="" />
-              </div>
-            </div>
-          </Background>
-        </motion.div>
-
-        <motion.div
-          variants={itemVariants as any}
-          className="grid xl:grid-cols-2 gap-10"
-        >
-          {/* War Room */}
-          <div className=" min-h-[300px] rounded-lg w-full p-4  bg-[#F4F6F3] relative z-10 overflow-clip">
-            <div className=" absolute -z-10 bottom-0">
-              <img src="/IMS/orb2.svg" alt="" className=" " />
-            </div>
-            <div className="flex gap-4 sm:flex-row flex-col  z-10">
-              <div className="flex-1 gap-3 flex flex-col">
-                <p className=" text-xl font-bold">War Room Creation</p>
-                <p>
-                  Spin up a War Room in seconds align your teams when it matters
-                  most. When a critical incident strikes, speed and coordination
-                  are everything. Scrubbe IMS lets you instantly create a War
-                  Room — a dedicated collaboration space where engineers, SREs,
-                  and support teams can resolve issues together.
-                </p>
-              </div>
-
-              <div className=" relative flex justify-center items-center flex-1 pt-6">
-                <div className=" size-[200px] flex justify-center items-center">
-                  <motion.img
-                    initial={{ rotate: 0 }}
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 10,
-                      repeat: Infinity,
-                      repeatType: "loop",
-                    }}
-                    src="/IMS/rooms.svg"
-                    alt=""
-                    className="absolute"
-                  />
-                  <img src="/IMS/sheild.svg" alt="" className="absolute" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className=" min-h-[300px] sm:flex-row flex-col  rounded-lg w-full p-4  bg-[#F4F6F3] relative z-10 overflow-clip">
-            <div className=" absolute -z-10 bottom-0">
-              <img src="/IMS/orb2.svg" alt="" className=" " />
-            </div>
-            <div className="flex gap-4 sm:flex-row flex-col">
-              <div className="flex-1 gap-3 flex flex-col">
-                <p className=" text-xl font-bold">Multi-Channel Alerts</p>
-                <p>
-                  Never miss a critical alert reach your team on any channel,
-                  every time. Scrubbe IMS ensures your team gets notified
-                  instantly wherever they are. Incidents don’t wait, and neither
-                  should alerts.
-                </p>
-              </div>
-
-              <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                className=" flex-1 flex flex-col gap-3 "
-              >
-                <motion.img
-                  variants={itemVariants as any}
-                  src="/IMS/alert1.png"
-                  alt=""
-                  className=" -translate-x-5"
-                />
-                <motion.img
-                  variants={itemVariants as any}
-                  src="/IMS/alert2.png"
-                  alt=""
-                />
-                <motion.img
-                  variants={itemVariants as any}
-                  src="/IMS/alert3.png"
-                  alt=""
-                  className=" -translate-x-5"
-                />
-              </motion.div>
-            </div>{" "}
-          </div>
-          <div className=" min-h-[500px] sm:min-h-[300px] h-full sm:max-h-[300px] rounded-lg w-full p-4  bg-[#F4F6F3] relative z-10 overflow-clip">
-            <div className=" absolute -z-10 bottom-0">
-              <img src="/IMS/orb2.svg" alt="" className=" " />
-            </div>
-            <div className="flex gap-4 sm:flex-row flex-col-reverse">
-              <div className=" flex-1 flex flex-col gap-3 relative ">
+        <div className="grid md:grid-cols-3 gap-5">
+          {items.map((item) => (
+            <motion.div
+              key={item.title}
+              className="h-[218px] border border-IMSCyan/30 p-4 space-y-2 flex flex-col justify-center relative"
+              variants={itemVariants as any}
+            >
+              <div className="h-4 w-[2px] bg-IMSCyan absolute top-0 right-[-1px]" />
+              <div className="h-4 w-[2px] bg-IMSCyan absolute -top-2 left-[-1px]" />
+              <div className="h-4 w-[2px] bg-IMSCyan absolute bottom-0 left-[-1px]" />
+              <div className="h-4 w-[2px] bg-IMSCyan absolute bottom-0 right-[-1px]" />
+              <div className="h-[2px] w-4 bg-IMSCyan absolute bottom-0 right-[-1px]" />
+              <div className="h-[2px] w-4 bg-IMSCyan absolute bottom-0 left-[-1px]" />
+              <div className="h-[2px] w-4 bg-IMSCyan absolute -top-2 right-[-1px]" />
+              <div className="h-[2px] w-4 bg-IMSCyan absolute -top-2 left-[-1px]" />
+              <div className="size-14">
                 <img
-                  src="/IMS/Notifications.png"
-                  alt=""
-                  className=" absolute"
+                  src={item.icon}
+                  alt={item.title}
+                  className="  object-cover"
                 />
-                <motion.div
-                  variants={containerVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  className=" absolute flex flex-col items-center top-24"
-                >
-                  <motion.img
-                    variants={itemVariants as any}
-                    src="/IMS/alert4.png"
-                    alt=""
-                    className="w-[95%]"
-                  />
-                  <motion.img
-                    variants={itemVariants as any}
-                    src="/IMS/alert5.png"
-                    alt=""
-                    className="w-[95%]"
-                  />
-                </motion.div>
               </div>
-              <div className="flex-1 gap-3 flex flex-col">
-                <p className=" text-xl font-bold">Email Incident Raising</p>
-                <p>
-                  Raise incidents directly from email in simple, universal,
-                  effective way. Not every team lives in GitHub, GitLab, or
-                  Slack. With Scrubbe IMS, incidents can be raised just by
-                  sending an email. Vendors, support teams, and business units
-                  can trigger incidents without logging into the dashboard.
-                </p>
-              </div>
-            </div>{" "}
-          </div>
-          <div className=" min-h-[300px] rounded-lg w-full p-4  bg-[#F4F6F3] relative z-10 overflow-clip">
-            <div className=" absolute -z-10 bottom-0">
-              <img src="/IMS/orb2.svg" alt="" className=" " />
-            </div>
-            <div className="flex gap-4 sm:flex-row flex-col">
-              <div className=" flex-1 flex flex-col gap-3 ">
-                <img src="/IMS/integration.jpg" alt="" />
-              </div>
-              <div className="flex-1 gap-3 flex flex-col">
-                <p className=" text-xl font-bold">Seamless Integrations</p>
-                <p>
-                  Connect with Salesforce, ServiceNow, PagerDuty, Jira, and
-                  more.{" "}
-                </p>
-              </div>
-            </div>{" "}
-          </div>
-        </motion.div>
+              <p className="font-semibold text-lg text-white">{item.title}</p>
+              <p className="text-base text-white">{item.description}</p>
+            </motion.div>
+          ))}
+        </div>
 
-        <motion.div variants={itemVariants as any}>
-          <Background>
-            <div className="flex  gap-4 items-center justify-between w-full md:flex-row flex-col ">
-              <div className=" w-full text-white gap-2 flex flex-col flex-[.6]">
-                <p className=" text-3xl font-bold">AI-Driven Insights</p>
-                <p>Reduce MTTR with real-time AI resolution suggestions.</p>
-              </div>
+        <div className="grid md:grid-cols-2 gap-10 min-h-[400px] py-5 md:py-20 relative z-10">
+          <div className=" w-[40%] h-[300px] bg-IMSCyan opacity-10 rounded-[100%] blur-3xl absolute left-1/3 top-1/3 -z-10" />
+          <div className="flex flex-col justify-center space-y-10">
+            <motion.div variants={itemVariants as any} className=" space-y-5">
+              <h2 className=" text-white text-3xl md:text-4xl font-bigshotOne max-w-sm">
+                Auto-Deployment Failure Handling
+              </h2>
+              <ul className=" list-disc space-y-3 text-white text-base pl-4">
+                <li>
+                  Detects failed or rolled-back GitHub/GitLab deploys instantly
+                </li>
+                <li>Creates incident with full commit context and diff</li>
+                <li>
+                  Delivers AI-powered code intelligence or rollback commands
+                </li>
+              </ul>
+            </motion.div>
 
-              <div className="  flex-1">
-                <img src="/IMS/ai-message.png" alt="" className="" />
-              </div>
-            </div>
-          </Background>
-        </motion.div>
+            <motion.div variants={itemVariants as any} className=" space-y-5">
+              <h2 className=" text-white text-3xl md:text-4xl font-bigshotOne max-w-md">
+                Fraud & Threshold-Triggered Incidents
+              </h2>
+              <ul className=" list-disc space-y-3 text-white text-base pl-4">
+                <li>Connect any fraud, risk, or business metric </li>
+                <li>Incidents open automatically on breach</li>
+                <li>Execute workflows without human delay </li>
+              </ul>
+            </motion.div>
+          </div>
+          <motion.div
+            variants={itemVariants as any}
+            className=" scale-85 md:scale-100"
+          >
+            <img src="/IMS/auto-image.svg" alt="auto" />
+          </motion.div>
+        </div>
       </motion.div>
-    </div>
+    </section>
   );
 };
 
 export default Features;
-
-const Background = ({ children }: { children: ReactNode }) => {
-  return (
-    <div className=" min-h-[280px] md:max-h-[280px] flex items-center p-4 md:p-10 rounded-lg bg-IMSDarkGreen w-full relative overflow-clip z-10">
-      <div className="z-10 w-full">{children}</div>
-      <div className=" absolute bottom-0 h-full w-full flex justify-center z-0">
-        <img
-          src="/IMS/orb1.svg"
-          alt=""
-          className="translate-y-[100px] min-w-[500px] scale-110"
-        />
-      </div>
-    </div>
-  );
-};

@@ -9,9 +9,7 @@ import Input from "../ui/input";
 import CButton from "../ui/Cbutton";
 import useAuthStore from "@/lib/stores/auth.store";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
-import { FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { AxiosError } from "axios";
 import { getCookie } from "cookies-next";
@@ -184,7 +182,7 @@ export default function SignInForm() {
         </div>
       )}
       <div className="w-full p-6">
-        <h1 className=" text-xl md:text-2xl dark:text-white font-semibold mb-6">
+        <h1 className=" text-xl md:text-2xl text-white font-semibold mb-6">
           Sign in to Scrubbe
         </h1>
 
@@ -198,6 +196,8 @@ export default function SignInForm() {
                 placeholder="Enter Email"
                 {...field}
                 error={errors.email?.message}
+                labelClassName="text-white"
+                className="text-white"
               />
             )}
           />
@@ -212,6 +212,8 @@ export default function SignInForm() {
                 {...field}
                 type="password"
                 error={errors.password?.message}
+                labelClassName="text-white"
+                className="text-white"
               />
             )}
           />
@@ -230,14 +232,14 @@ export default function SignInForm() {
               />
               <label
                 htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-700"
+                className="ml-2 block text-sm text-gray-400"
               >
                 Remember me
               </label>
             </div>
             <Link
               href="/auth/forgot-password"
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-IMSCyan hover:underline"
             >
               Forgot password?
             </Link>
@@ -251,16 +253,16 @@ export default function SignInForm() {
             {isLoading ? " Signing in..." : "Sign in"}
           </CButton>
 
-          <div className="relative my-6">
+          {/* <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-2 bg-white text-gray-500">OR</span>
             </div>
-          </div>
+          </div> */}
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
+          {/* <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
             <button
               type="button"
               className="w-full flex gap-3 items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
@@ -269,9 +271,7 @@ export default function SignInForm() {
               <div>
                 <FcGoogle size={33} />
               </div>
-              <span className="text-sm font-medium text-gray-700 dark:text-white">
-                Google
-              </span>
+              <span className="text-sm font-medium text-white">Google</span>
             </button>
             <button
               type="button"
@@ -285,9 +285,7 @@ export default function SignInForm() {
               <div>
                 <FaGithub size={33} className=" dark:text-white" />
               </div>
-              <span className="text-sm font-medium text-gray-700 dark:text-white">
-                GitHub
-              </span>
+              <span className="text-sm font-medium text-white">GitHub</span>
             </button>
 
             <button
@@ -306,9 +304,7 @@ export default function SignInForm() {
                 height={38}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700 dark:text-white">
-                GitLab
-              </span>
+              <span className="text-sm font-medium text-white">GitLab</span>
             </button>
 
             <button
@@ -322,9 +318,7 @@ export default function SignInForm() {
                 height={38}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700 dark:text-white">
-                AWS
-              </span>
+              <span className="text-sm font-medium text-white">AWS</span>
             </button>
 
             <button
@@ -343,18 +337,16 @@ export default function SignInForm() {
                 height={38}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700 dark:text-white">
-                Azure
-              </span>
+              <span className="text-sm font-medium text-white">Azure</span>
             </button>
-          </div>
+          </div> */}
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center text-white text-base">
             New User?{" "}
             <Link
               href={`/auth/business-signup?to=${path}`}
               className={`${
-                IS_STANDALONE ? "text-IMSLightGreen" : "text-blue-600"
+                IS_STANDALONE ? "text-IMSCyan" : "text-blue-600"
               } underline hover:underline inline-flex items-center`}
             >
               Create an Account

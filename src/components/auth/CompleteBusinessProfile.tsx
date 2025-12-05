@@ -74,6 +74,8 @@ const CompleteBusinessProfile = ({
               ]}
               error={errors.companySize?.message}
               isLoading={isLoading}
+              labelClassName="text-white"
+              className="text-white"
               {...field}
             />
           )}

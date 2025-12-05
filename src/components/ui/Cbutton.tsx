@@ -25,9 +25,9 @@ const CButton = ({
       onClick={onClick}
       disabled={disabled}
       size={"default"}
-      className={`w-full h-10 text-white !py-2 px-3 rounded-md transition-colors disabled:opacity-40 ${
+      className={`w-full h-10 text-black !py-2 px-3 rounded-md transition-colors disabled:opacity-40 ${
         IS_STANDALONE
-          ? "bg-IMSLightGreen hover:bg-IMSDarkGreen "
+          ? "bg-IMSCyan hover:bg-IMSCyan "
           : "bg-blue-600 hover:bg-blue-800"
       } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
       ${className}
@@ -36,7 +36,7 @@ const CButton = ({
       {isLoading ? (
         <div className="flex items-center justify-center">
           <svg
-            className="animate-spin -ml-1 mr-3 h-4 w-4 text-white"
+            className="animate-spin -ml-1 mr-3 h-4 w-4 text-black"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
