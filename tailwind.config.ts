@@ -37,11 +37,13 @@ const config: Config = {
         airbnb: ["var(--font-airbnb-cereal)"],
         besley: ["var(--font-bersley)"],
         bigshotOne: ["var(--font-bigshotOne)"],
+        electrolize: ["var(--font-electrolize)"],
       },
       colors: {
         IMSGreen: "#072929",
         IMSLightGreen: "#28A745",
-        IMSDarkGreen: "#1F553E",
+        IMSDarkGreen: "#28A745",
+        IMSCyan: "#06EEFD",
         green: "#28A745",
         critical: "#dc2626", // red-600
         high: "#ea580c", // orange-600

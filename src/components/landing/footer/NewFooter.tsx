@@ -26,7 +26,7 @@ const theme = {
 const componentStyles = {
   footer: {
     container: "w-full max-w-[1440px] mx-auto px-10 py-8 z-10",
-    background: "bg-[#111827]",
+    background: "bg-[#06090B]",
     innerContainer: " w-full mx-auto",
     topRow:
       "grid grid-cols-1 xl:grid-cols-5 gap-8 mb-8 pb-8 border-b border-grayscrubbe-100/30",
@@ -133,78 +133,51 @@ const NewFooter: React.FC = () => {
   const productLinks: ColumnData = {
     title: "Product",
     links: [
-      { text: "SIEM platform", href: "#" },
-      { text: "SOAR automation", href: "#" },
-      { text: "Incident Management", href: "#" },
-      { text: "Fraud Detection", href: "#" },
-      { text: "Authentication SDK", href: "#" },
-      { text: "Compliance Tool", href: "#" },
-      { text: "Dashboard Preview", href: "#" },
+      { text: "Code Intelligence", href: "#" },
+      { text: "Incident Command Center", href: "#" },
+      { text: "Magic Insight", href: "#" },
+      { text: "On-Call Handover", href: "#" },
+      { text: "Simulations", href: "#" },
+      { text: "Fraud & Risk", href: "#" },
     ],
   };
 
   const solutionsLinks: ColumnData = {
-    title: "Solutions",
+    title: "Developer",
     links: [
-      { text: "Fintech", href: "#" },
-      { text: "SaaS Companies", href: "#" },
-      { text: "Security Team", href: "#" },
+      { text: "API Docs", href: "#" },
+      { text: "Webhooks", href: "#" },
+      { text: "Status", href: "#" },
       { text: "Real-Time threat Monitoring", href: "#" },
-      { text: "KYC and Fraud Protection", href: "#" },
     ],
   };
 
   const documentationLinks: ColumnData = {
-    title: "Documentation",
+    title: "Company",
     links: [
-      { text: "Fraud API", href: "#" },
-      { text: "Authentication SDK", href: "#" },
-      { text: "Blog", href: "#" },
-      { text: "Community", href: "#" },
-      { text: "Support", href: "#" },
+      { text: "About", href: "#" },
+      { text: "Career", href: "#" },
+      { text: "Privacy", href: "#" },
+      { text: "Security", href: "#" },
     ],
   };
 
   const pricingLinks: ColumnData = {
-    title: "Pricing",
+    title: "Contact",
     links: [
       // { text: "Authentication SDK Pricing", href: "#" },
       // { text: "SIEM and SOAR monitoring Pricing", href: "#" },
-      { text: "Modular Pricing", href: "#" },
+      { text: "Contact@scrubbe.com", href: "#" },
       { text: "Talk to sales", href: "#" },
-      { text: "Contact Us", href: "#" },
     ],
   };
 
   // Data for middle row columns
-  const moreLinks: ColumnData = {
-    title: "More",
-    links: [
-      { text: "Knowledge base", href: "#" },
-      { text: "Case studies", href: "#" },
-      { text: "White papers", href: "#" },
-      { text: "Compliance Check list", href: "#" },
-      { text: "Security and Trust", href: "#" },
-      { text: "Blog (Technical and Industrial Post)", href: "#" },
-      { text: "Careers", href: "#" },
-      { text: "About Us", href: "/about" },
-    ],
-  };
 
   // Compliance content from the screenshot
-  const complianceContent = [
-    {
-      id: 1,
-      text: "Your personal Data Protection in the cloud such as PII, KYC and Authentication information is guaranteed - compliant with ISO 27018.",
-    },
-    {
-      id: 2,
-      text: "Scrubbe is compliant with ISO 27001 - Information Security Management global standards necessary for controlling, processing and protecting customer data, internal systems and software assets.",
-    },
-  ];
 
   return (
-    <div className="w-full h-auto bg-[#111827]">
+    <div className="w-full h-auto bg-[#06090B]">
       <section
         className={`${componentStyles.footer.container} ${componentStyles.footer.background}`}
       >
@@ -291,34 +264,7 @@ const NewFooter: React.FC = () => {
                 links={pricingLinks.links}
               />
             </div>
-          </div>
 
-          {/* Middle Row - Compliance and More sections */}
-          <div className={componentStyles.footer.middleRow}>
-            {/* Empty column to align with logo */}
-            <div className="hidden xl:block"></div>
-
-            {/* More Column (takes 2 columns, under Product and Solutions) */}
-            <div className="col-span-1 xl:col-span-2">
-              <FooterColumn title={moreLinks.title} links={moreLinks.links} />
-            </div>
-
-            {/* Compliance Section (takes 2 columns, under Documentation and Pricing) */}
-            <div className="col-span-1 xl:col-span-2">
-              <ColumnHeader title="Compliance" />
-              <div className="mt-4 space-y-6">
-                {complianceContent.map((item) => (
-                  <div key={item.id} className="flex gap-3">
-                    <div className="font-semibold text-green-400">
-                      {item.id}.
-                    </div>
-                    <div className={`${theme.fonts.body} ${theme.colors.text}`}>
-                      {item.text}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
             <div className="w-full">
               <div className={componentStyles.logoSection.socialContainer}>
                 <SocialLink
@@ -343,6 +289,15 @@ const NewFooter: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className=" w-full flex justify-center items-center py-10">
+          <Image
+            src={"/IMS/Scrubbe.svg"}
+            alt="scrubbe"
+            height={500}
+            width={1200}
+          />
         </div>
       </section>
     </div>

@@ -77,7 +77,7 @@ const AboutHero = () => {
           at the 11th hour.
         </p>
         <div className="flex gap-4 text-[14px] sm:text-[16px] mt-6">
-          <CButton className="text-white font-medium py-3 px-6 rounded-md transition-colors">
+          <CButton className=" font-medium py-3 px-6 rounded-md transition-colors">
             Learn How Scrubbe Works
           </CButton>
         </div>{" "}

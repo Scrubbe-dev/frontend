@@ -143,17 +143,10 @@ export default function ForgotPassword() {
       case 1:
         return (
           <div className="w-full mx-auto">
-            <div
-              className=" flex gap-2 items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer dark:text-white"
-              onClick={() => router.back()}
-            >
-              <ChevronLeft />
-              <p>back</p>
-            </div>
-            <h1 className="text-xl font-semibold dark:text-white">
+            <h1 className="text-xl font-semibold text-white">
               Forgot Password?
             </h1>
-            <p className="text-gray-600 dark:text-gray-300 text-base mb-6">
+            <p className=" text-gray-300 text-base mb-6">
               Put your email address to get started
             </p>
 
@@ -164,11 +157,21 @@ export default function ForgotPassword() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                labelClassName="text-white"
+                className="text-white"
               />
 
               <CButton isLoading={loading} type="submit" disabled={!email}>
                 Submit
               </CButton>
+
+              <div
+                className="flex gap-2 items-center justify-center text-sm py-3 mb-3 opacity-60 hover:opacity-100 cursor-pointer text-white"
+                onClick={() => router.back()}
+              >
+                <ChevronLeft />
+                <p>Back to login</p>
+              </div>
             </form>
           </div>
         );
@@ -177,21 +180,21 @@ export default function ForgotPassword() {
         return (
           <div className="w-full  mx-auto">
             <div
-              className=" flex gap-2 text-sm items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer dark:text-white"
+              className=" flex gap-1 text-sm items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer text-white"
               onClick={() => setStage(1)}
             >
               <ChevronLeft />
               <p>back</p>
             </div>
             <div className="mx-auto flex justify-center w-full">
-              <div className=" bg-blue-50 rounded-full size-16 flex justify-center items-center text-blue-600 ring-4 ring-blue-100/15">
+              <div className=" bg-blue-50 rounded-full size-16 flex justify-center items-center text-IMSCyan ring-4 ring-blue-100/15">
                 <FaEnvelope size={35} />
               </div>
             </div>
-            <h1 className="text-2xl font-semibold mb-2 dark:text-white text-center">
+            <h1 className="text-2xl font-semibold mb-2 text-white text-center">
               Check your Email
             </h1>
-            <p className="text-gray-600 dark:text-gray-300 mb-4 text-center text-sm">
+            <p className=" text-gray-300 mb-4 text-center text-sm">
               We have sent a password reset link to this email -{" "}
               <span className=" text-blue-600 font-bold">{email} </span>
               <br />
@@ -204,10 +207,10 @@ export default function ForgotPassword() {
       case 3:
         return (
           <div className="w-full  mx-auto">
-            <h1 className="text-xl font-semibold mb-2 dark:text-white">
+            <h1 className="text-xl font-semibold mb-2 text-white">
               Create New Password
             </h1>
-            <p className="text-gray-600 dark:text-gray-300 mb-6 text-base">
+            <p className=" text-gray-300 mb-6 text-base">
               Enter a password you will remember
             </p>
 
@@ -231,13 +234,15 @@ export default function ForgotPassword() {
                     type="password"
                     error={passwordErrors.confirmPassword?.message}
                     {...field}
+                    labelClassName="text-white"
+                    className="text-white"
                   />
                 )}
               />
               <CButton
                 type="submit"
                 isLoading={loading}
-                className="w-full bg-IMSLightGreen text-white py-3 px-4 rounded-md hover:bg-IMSDarkGreen transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="w-full bg-IMSCyan text-white py-3 px-4 rounded-md hover:bg-IMSCyan transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 Create Password
               </CButton>
@@ -260,17 +265,17 @@ export default function ForgotPassword() {
               </div>
             </div>
 
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            <h1 className="text-xl font-semibold text-white mb-2">
               Successful
             </h1>
 
-            <p className="text-gray-600 dark:text-gray-300 text-center mb-5 text-sm">
+            <p className="text-gray-300 text-center mb-5 text-sm">
               Your password has been reseted successfully
             </p>
 
             <Link
               href="/auth/signin"
-              className="w-full bg-IMSLightGreen text-white py-2 px-4 text-sm font-semibold rounded-md hover:bg-IMSDarkGreen transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center"
+              className="w-full bg-IMSCyan text-white py-2 px-4 text-sm font-semibold rounded-md hover:bg-IMSCyan transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center"
             >
               Back to log in
             </Link>

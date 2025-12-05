@@ -5,7 +5,6 @@ import CookieToggleButton from "@/components/landing/CookieToggleButton";
 import Chatbot from "@/components/landing/Chatbot";
 import CookieConsentModal from "@/components/landing/CookieConsentModal";
 import Navbar from "@/components/IMS/Home/Navbar";
-import Footer from "@/components/IMS/Home/Footer";
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
@@ -16,7 +15,7 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
       <CookieConsentModal />
       <CookieToggleButton />
       <Chatbot />
-      {IS_STANDALONE ? <Footer /> : <NewFooter />}
+      <NewFooter />
     </>
   );
 };
