@@ -188,7 +188,7 @@ const Navbar = () => {
       <div className=" h-[88px] flex justify-between items-center px-10 bg-black/20 backdrop-blur-sm">
         <Link href={"/"} className="h-[30px] w-[220px]">
           <img
-            src="/whitelogo.png"
+            src="/IMS/logo-white.png"
             alt="scrubbe.png"
             className="object-contain h-full "
           />

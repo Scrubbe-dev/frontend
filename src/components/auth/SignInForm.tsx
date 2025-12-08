@@ -183,7 +183,7 @@ export default function SignInForm() {
       )}
       <div className="w-full p-6">
         <h1 className=" text-xl md:text-2xl text-white font-semibold mb-6">
-          Sign in to Scrubbe
+          Sign in to continue
         </h1>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -349,7 +349,7 @@ export default function SignInForm() {
                 IS_STANDALONE ? "text-IMSCyan" : "text-blue-600"
               } underline hover:underline inline-flex items-center`}
             >
-              Create an Account
+              Create Workspace
             </Link>
           </div>
         </form>

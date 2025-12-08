@@ -145,7 +145,7 @@ const Impacts = () => {
             </div>
           </Link>
         </motion.div>
-        <div className="grid sm:grid-cols-2 gap-6 max-w-3xl">
+        <div className="grid sm:grid-cols-2 gap-6 max-w-4xl">
           <motion.div
             variants={textItemVariants as any}
             className=" border rounded-lg px-4 py-6 bg-[#080A0F] border-[#1F2937] text-white space-y-2 min-h-[320px]"
