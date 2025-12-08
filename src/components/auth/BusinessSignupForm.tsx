@@ -15,72 +15,69 @@ import CompleteBusinessProfile, {
   BusinessProfileSignupFormData,
 } from "./CompleteBusinessProfile";
 import OtpInput from "../ui/OtpInput";
-import { PasswordInput } from "../ui/password-input";
 import { AxiosError } from "axios";
 import { BiCheck } from "react-icons/bi";
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 
 // Define the form schema using zod
-const businessSignupSchema = z
-  .object({
-    firstName: z.string().min(1, { message: "First name is required" }),
-    lastName: z.string().min(1, { message: "Last name is required" }),
-    businessEmail: z
-      .string()
-      .email({ message: "Please enter a valid email address" })
-      .refine(
-        (email) => {
-          // List of common public email domains
-          const publicDomains = [
-            "gmail.com",
-            "yahoo.com",
-            "hotmail.com",
-            "outlook.com",
-            "aol.com",
-            "icloud.com",
-            "mail.com",
-            "gmx.com",
-            "protonmail.com",
-            "zoho.com",
-            "yandex.com",
-            "msn.com",
-            "live.com",
-            "ymail.com",
-            "inbox.com",
-            "me.com",
-          ];
-          const domain = email.split("@")[1]?.toLowerCase();
-          return domain && !publicDomains.includes(domain);
-        },
-        {
-          message:
-            "Please use your business email address (not a public provider)",
-        }
-      ),
-    businessAddress: z
-      .string()
-      .min(1, { message: "Business address is required" }),
-    companySize: z.string().min(1, { message: "Please select company size" }),
-    password: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: "Confirm password must be at least 6 characters" }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
+export const businessSignupSchema = z.object({
+  fullName: z.string().min(1, { message: "First name is required" }),
+  businessName: z.string().min(1, { message: "Business name is required" }),
+  businessEmail: z
+    .string()
+    .email({ message: "Please enter a valid email address" })
+    .refine(
+      (email) => {
+        // List of common public email domains
+        const publicDomains = [
+          "gmail.com",
+          "yahoo.com",
+          "hotmail.com",
+          "outlook.com",
+          "aol.com",
+          "icloud.com",
+          "mail.com",
+          "gmx.com",
+          "protonmail.com",
+          "zoho.com",
+          "yandex.com",
+          "msn.com",
+          "live.com",
+          "ymail.com",
+          "inbox.com",
+          "me.com",
+        ];
+        const domain = email.split("@")[1]?.toLowerCase();
+        return domain && !publicDomains.includes(domain);
+      },
+      {
+        message:
+          "Please use your business email address (not a public provider)",
+      }
+    ),
+  businessAddress: z
+    .string()
+    .min(1, { message: "Business address is required" }),
+  companySize: z.string().min(1, { message: "Please select company size" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+  // confirmPassword: z
+  //   .string()
+  //   .min(6, { message: "Confirm password must be at least 6 characters" }),
+});
+// .refine((data) => data.password === data.confirmPassword, {
+//   message: "Passwords don't match",
+//   path: ["confirmPassword"],
+// });
 
 // TypeScript type based on the schema
 type BusinessSignupFormData = z.infer<typeof businessSignupSchema>;
 
 // Success Page Component Props Type
 interface SuccessPageProps {
-  firstName: string;
-  lastName: string;
+  fullName: string;
 }
 
 export default function BusinessSignupForm() {
@@ -101,23 +98,19 @@ export default function BusinessSignupForm() {
   const [refreshing, setRefreshing] = useState(false);
   const searchParams = useSearchParams();
   const path = searchParams.get("to");
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
   const {
     handleSubmit,
     control,
     formState: { errors, isValid },
-    watch,
-    setValue,
   } = useForm<BusinessSignupFormData>({
     resolver: zodResolver(businessSignupSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      fullName: "",
       businessEmail: "",
       businessAddress: "",
+      businessName: "",
       companySize: "",
       password: "",
-      confirmPassword: "",
     },
     mode: "onChange",
   });
@@ -242,7 +235,7 @@ export default function BusinessSignupForm() {
     }
   }, [showSuccess, router]);
 
-  const SuccessPage = ({ firstName, lastName }: SuccessPageProps) => {
+  const SuccessPage = ({ fullName }: SuccessPageProps) => {
     return (
       <Suspense fallback={<div>Loading...</div>}>
         <div className="w-full p-6 flex flex-col items-center justify-center min-h-96">
@@ -262,8 +255,7 @@ export default function BusinessSignupForm() {
           </h1>
 
           <p className="text-gray-300 text-center">
-            Welcome {firstName} {lastName}! You have successfully created an
-            account.
+            Welcome {fullName}! You have successfully created an account.
           </p>
         </div>
       </Suspense>
@@ -320,10 +312,7 @@ export default function BusinessSignupForm() {
           </div>
         )}
         {showSuccess && formData && (
-          <SuccessPage
-            firstName={formData.firstName || ""}
-            lastName={formData.lastName || ""}
-          />
+          <SuccessPage fullName={formData.fullName || ""} />
         )}
 
         <>
@@ -356,23 +345,23 @@ export default function BusinessSignupForm() {
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                   {/* First Name and Last Name Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-1 gap-4 mb-4">
                     <Controller
-                      name="firstName"
+                      name="fullName"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          label="First Name"
+                          label="Full Name"
                           placeholder="First Name"
                           {...field}
-                          error={errors.firstName?.message}
+                          error={errors.fullName?.message}
                           labelClassName="text-white"
                           className="text-white"
                         />
                       )}
                     />
 
-                    <Controller
+                    {/* <Controller
                       name="lastName"
                       control={control}
                       render={({ field }) => (
@@ -385,7 +374,7 @@ export default function BusinessSignupForm() {
                           className="text-white"
                         />
                       )}
-                    />
+                    /> */}
                   </div>
 
                   {/* Business Email and Business Address Row */}
@@ -399,6 +388,20 @@ export default function BusinessSignupForm() {
                           placeholder="Enter Business Email"
                           {...field}
                           error={errors.businessEmail?.message}
+                          labelClassName="text-white"
+                          className="text-white"
+                        />
+                      )}
+                    />
+                    <Controller
+                      name="businessName"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          label="Company/organization"
+                          placeholder="Enter company name"
+                          {...field}
+                          error={errors.businessName?.message}
                           labelClassName="text-white"
                           className="text-white"
                         />
@@ -470,8 +473,8 @@ export default function BusinessSignupForm() {
                   </div> */}
 
                   {/* Password Fields Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <PasswordInput
+                  <div className="grid grid-cols-1 gap-4 mb-6">
+                    {/* <PasswordInput
                       label="Password"
                       // {...field}
                       value={watch("password")}
@@ -479,16 +482,16 @@ export default function BusinessSignupForm() {
                       onValidationChange={setIsPasswordValid}
                       error={!isPasswordValid ? "complete all requirement" : ""}
                       className="text-white"
-                    />
+                    /> */}
                     <Controller
-                      name="confirmPassword"
+                      name="password"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          label="Confirm Password"
-                          placeholder="Confirm Password"
+                          label="Password"
+                          placeholder="*********"
                           type="password"
-                          error={errors.confirmPassword?.message}
+                          error={errors.password?.message}
                           isLoading={isLoading}
                           {...field}
                           labelClassName="text-white"
@@ -501,10 +504,10 @@ export default function BusinessSignupForm() {
                   {/* Submit Button */}
                   <CButton
                     type="submit"
-                    disabled={isLoading || !isValid || !isPasswordValid}
+                    disabled={isLoading || !isValid}
                     isLoading={isLoading}
                   >
-                    {isLoading ? "Processing..." : "Create Account"}
+                    {isLoading ? "Processing..." : "Create Workspace"}
                   </CButton>
 
                   {/* Divider */}

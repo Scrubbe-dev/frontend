@@ -8,7 +8,7 @@ import ApiReference from "./ApiReference";
 
 const Index = () => {
   return (
-    <>
+    <div className=" overflow-x-hidden">
       <Hero />
       <Features />
       <HowItWorks />
@@ -18,7 +18,7 @@ const Index = () => {
       {/* <FeatureComparisonTable /> */}
       <Impacts />
       <Contact />
-    </>
+    </div>
   );
 };
 

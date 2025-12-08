@@ -94,7 +94,7 @@ const Hero = () => {
           duration: 0.6,
           ease: "easeOut",
         }}
-        className=" max-w-[800px] absolute right-0 md:flex hidden translate-x-[15%]"
+        className=" min-w-[800px] absolute right-[-20%] md:flex hidden"
       >
         <img
           src="/IMS/hero-cubes.png"

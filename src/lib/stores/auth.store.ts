@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { loginSchema, businessSignupSchema } from "../validations/auth.schema";
+import { loginSchema } from "../validations/auth.schema";
 import { apiClient } from "../api/client";
 import Zod from "zod";
 import { developerSignupSchema } from "@/components/auth/DeveloperSignupForm";
@@ -10,6 +10,7 @@ import { developerProfileSignupSchema } from "@/components/auth/CompleteDevelope
 import { AxiosError } from "axios";
 import { deleteCookie, setCookie } from "cookies-next";
 import { COOKIE_KEYS } from "../constant";
+import { businessSignupSchema } from "@/components/auth/BusinessSignupForm";
 
 export type User = {
   accountType: string;
@@ -183,16 +184,15 @@ const useAuthStore = create<AuthState & AuthActions>()(
           set({ isLoading: true, error: null });
           const validatedData = businessSignupSchema.parse(signupData);
 
-          const firstName = validatedData.firstName || "";
-          const lastName = validatedData.lastName || "";
+          const fullName = validatedData.fullName || "";
+          const businessName = validatedData.businessName || "";
           const newBusinessData = {
             email: validatedData.businessEmail,
             password: validatedData.password,
-            firstName,
-            lastName,
-            companySize: validatedData.companySize,
+            fullName,
+            businessName,
+            // companySize: validatedData.companySize,
             businessAddress: validatedData.businessAddress,
-            purpose: validatedData.purpose,
             //  add other fields
           };
 
