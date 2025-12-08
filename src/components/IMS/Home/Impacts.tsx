@@ -148,7 +148,7 @@ const Impacts = () => {
         <div className="grid sm:grid-cols-2 gap-6 max-w-4xl">
           <motion.div
             variants={textItemVariants as any}
-            className=" border rounded-lg px-4 py-6 bg-[#080A0F] border-[#1F2937] text-white space-y-2 min-h-[320px]"
+            className=" border transition-all duration-150 ease-linear rounded-lg px-4 py-6 hover:bg-gradient-to-b from-[#0074834D] to-[#004B571A] bg-[#080A0F] border-[#1F2937] hover:border-IMSCyan text-white space-y-2 min-h-[320px]"
           >
             <p className="font-semibold text-lg">
               IDE-Based AI Coding Assistants
@@ -167,7 +167,7 @@ const Impacts = () => {
           </motion.div>
           <motion.div
             variants={textItemVariants as any}
-            className=" border rounded-lg px-4 py-6 bg-gradient-to-b from-[#0074834D] to-[#004B571A] border-IMSCyan text-white space-y-2 min-h-[320px]"
+            className=" border transition-all duration-150 ease-linear rounded-lg px-4 py-6 hover:bg-gradient-to-b from-[#0074834D] to-[#004B571A] border-[#1F2937] hover:border-IMSCyan text-white space-y-2 min-h-[320px]"
           >
             <p className="font-semibold text-lg">
               Scrubbe Incident Intelligence{" "}

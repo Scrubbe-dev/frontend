@@ -76,12 +76,14 @@ const ApiReference = () => {
 
         <div className="grid md:grid-cols-2 gap-10 place-items-center">
           {referenceImages.map((referenceImage) => (
-            <motion.img
-              src={`/IMS/${referenceImage}.svg`}
-              alt=""
-              key={referenceImage}
-              className="w-full"
-            />
+            <div key={referenceImage} className="relative group z-10">
+              <div className="w-full h-full absolute -z-10 bg-IMSCyan scale-50 group-hover:scale-80 blur-3xl transition-all duration-200 ease-linear" />
+              <motion.img
+                src={`/IMS/${referenceImage}.svg`}
+                alt=""
+                className="w-full   z-10"
+              />
+            </div>
           ))}
         </div>
       </motion.div>

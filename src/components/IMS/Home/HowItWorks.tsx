@@ -115,7 +115,11 @@ const HowItWorks = () => {
               </Link> */}
               </div>
             </motion.div>
-            <motion.div variants={itemVariants as any}>
+            <motion.div
+              variants={itemVariants as any}
+              className="relative group z-10"
+            >
+              <div className="w-full h-full absolute -z-10 bg-IMSCyan scale-50 group-hover:scale-80 blur-3xl transition-all duration-200 ease-linear" />
               <img src="/IMS/timeline.svg" alt="timeline" className="" />
             </motion.div>
           </div>
@@ -160,7 +164,12 @@ const HowItWorks = () => {
             Code Intelligence — From Failed Deploy to Suggested Fix{" "}
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 py-5 md:py-10">
-            <motion.div variants={itemVariants as any}>
+            <motion.div
+              variants={itemVariants as any}
+              className="relative group z-10"
+            >
+              <div className="w-full h-full absolute -z-10 bg-IMSCyan scale-50 group-hover:scale-80 blur-3xl transition-all duration-200 ease-linear" />
+
               <img
                 src="/IMS/intelligent-suggestion.svg"
                 alt="timeline"
@@ -255,7 +264,12 @@ const HowItWorks = () => {
                 </div>
               </Link>
             </motion.div>
-            <motion.div variants={itemVariants as any}>
+            <motion.div
+              variants={itemVariants as any}
+              className="relative group z-10"
+            >
+              <div className="w-full h-full absolute -z-10 bg-IMSCyan scale-50 group-hover:scale-80 blur-3xl transition-all duration-200 ease-linear" />
+
               <img
                 src="/IMS/on-call-schedule.svg"
                 alt="timeline"
