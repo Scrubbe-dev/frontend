@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -46,7 +47,50 @@ const items = [
   },
 ];
 
+const arrows = [
+  {
+    normal: "/IMS/arrow/right-down.svg",
+    glow: "/IMS/arrow/right-down-glow.svg",
+  },
+  {
+    normal: "/IMS/arrow/left-down.svg",
+    glow: "/IMS/arrow/left-down-glow.svg",
+  },
+  {
+    normal: "/IMS/arrow/up-right.svg",
+    glow: "/IMS/arrow/up-right-glow.svg",
+  },
+  {
+    normal: "/IMS/arrow/up-left.svg",
+    glow: "/IMS/arrow/up-left-glow.svg",
+  },
+];
+
 const Features = () => {
+  const [arrowindex, setArrowIndex] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setArrowIndex((prev) => {
+        if (prev === 0) {
+          return 1;
+        }
+        if (prev === 1) {
+          return 3;
+        }
+        if (prev === 3) {
+          return 2;
+        }
+        if (prev === 2) {
+          return 0;
+        }
+        return prev;
+      });
+    }, 4000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
   return (
     <section className=" min-h-[700px] bg-[#060709]">
       <motion.div
@@ -116,7 +160,32 @@ const Features = () => {
             variants={itemVariants as any}
             className=" scale-85 md:scale-100"
           >
-            <img src="/IMS/auto-image.svg" alt="auto" />
+            {/* <motion.img src="/IMS/auto-image.svg" alt="auto" /> */}
+            <div className="grid grid-cols-2 gap-7">
+              {arrows.map(({ glow, normal }, index) => {
+                const imgSrc = index === arrowindex ? glow : normal;
+                return (
+                  <AnimatePresence key={index === arrowindex ? -1 : index}>
+                    <div>
+                      <motion.img
+                        src={imgSrc}
+                        alt="auto"
+                        animate={{
+                          opacity: arrowindex == index ? [0.6, 1] : 0.5,
+                        }}
+                        // className="absolute"
+                        initial={{ opacity: 0.5 }}
+                        transition={{
+                          duration: 1,
+                          ease: "easeIn",
+                          type: "tween",
+                        }}
+                      />
+                    </div>
+                  </AnimatePresence>
+                );
+              })}
+            </div>
           </motion.div>
         </div>
       </motion.div>

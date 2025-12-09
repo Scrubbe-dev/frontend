@@ -33,29 +33,32 @@ const Hero = () => {
   return (
     <div className="h-screen bg-[url('/IMS/hero-bg.png')] bg-cover bg-center flex md:flex-row gap-5 relative z-0">
       <motion.div
-        className="container mx-auto flex flex-col justify-center md:items-start items-center h-full p-4 flex-1 z-10 md:pt-0 pt-32"
+        className="container mx-auto flex flex-col gap-3 justify-center md:items-start items-center h-full p-4 flex-1 z-10 md:pt-0 pt-32"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         <motion.div
           variants={itemVariants as any}
-          className="border-2 border-[#009FAD] w-fit md:p-3 p-2 rounded-full text-sm text-white bg-gradient-to-b from-[#009FAD] top-[#060809B2]"
+          className="border-2 border-[#009FAD] w-fit md:px-3 py-2 px-2 rounded-full text-sm text-white bg-gradient-to-b from-[#009FAD] top-[#060809B2]"
         >
           <p>No noise. No runbooks. No “what happened?” at 3 AM.</p>
         </motion.div>
         <motion.div
           variants={itemVariants as any}
-          className="text-white text-5xl md:text-6xl font-bigshotOne md:text-start text-center"
+          className="text-white text-4xl  font-bigshotOne md:text-start text-center max-w-xl"
         >
-          Incident Intelligence <br /> Platform
+          The AI Engineering Incident Platform Detect, triage, explain, and fix
+          failures across code, pipelines, and production — from one unified
+          control plane.
         </motion.div>
         <motion.p
           variants={itemVariants as any}
           className="text-white text-lg md:text-xl max-w-lg mt-5 md:text-start text-center"
         >
-          The first IMS that prevents repeat failures, reconstructs incidents
-          automatically and eliminates shift handovers.
+          From merge conflicts and broken pipelines to full production outages
+          and fraud spikes, Scrubbe resolves engineering incidents end-to-end
+          with AI-powered diagnostics and remediation.
         </motion.p>
         <motion.div
           variants={itemVariants as any}
@@ -63,7 +66,7 @@ const Hero = () => {
         >
           <CButton
             onClick={() => router.push("/auth/business-signup")}
-            className="  w-full px-5 h-[50px] bg-IMSCyan hover:bg-IMSDarkGreen shadow-none text-base"
+            className="  w-full px-5 h-[50px] bg-IMSCyan hover:bg-IMSCyan shadow-none text-base"
           >
             Get Started
           </CButton>
