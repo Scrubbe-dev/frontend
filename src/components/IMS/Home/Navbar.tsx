@@ -184,8 +184,8 @@ const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className=" w-full mx-auto fixed left-0 right-0 top-0 z-50  ">
-      <div className=" h-[88px] flex justify-between items-center px-10 bg-black/20 backdrop-blur-sm">
+    <div className=" w-full mx-auto fixed left-0 right-0 top-0 z-50 bg-black/20 backdrop-blur-sm h-[88px] flex items-center ">
+      <div className="flex justify-between items-center px-10 max-w-7xl mx-auto w-full">
         <Link href={"/"} className="h-[30px] w-[220px]">
           <img
             src="/IMS/logo-white.png"

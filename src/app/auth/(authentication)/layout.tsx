@@ -1,20 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { ReactNode, Suspense } from "react";
-// import ParticleCanvas from "@/components/auth/Particle";
+import ParticleCanvas from "@/components/auth/Particle";
 import Link from "next/link";
-// import AnalyticsSidebar from "@/components/auth/AnalyticsSidebar";
-// import AuthTabs from "@/components/auth/AuthTabs";
-// import OverlayWrapper from "@/components/auth/OverlayWrapper"; // Adjust path as needed
-// import ImsSidebar from "@/components/auth/ImsSidebar";
-
-// const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="w-full h-auto relative">
       <Suspense fallback={<div>Loading...</div>}>
-        {/* <ParticleCanvas /> */}
+        <ParticleCanvas />
         {/* <OverlayWrapper
           sidebarContent={IS_STANDALONE ? <ImsSidebar /> : <AnalyticsSidebar />}
         >

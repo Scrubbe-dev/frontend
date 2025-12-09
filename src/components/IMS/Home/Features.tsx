@@ -85,16 +85,16 @@ const Features = () => {
         }
         return prev;
       });
-    }, 4000);
+    }, 2000);
 
     return () => {
       clearInterval(interval);
     };
   });
   return (
-    <section className=" min-h-[700px] bg-[#060709]">
+    <section className=" min-h-[700px] bg-[#060709] ">
       <motion.div
-        className="container mx-auto py-10 px-5 flex-col gap-6 flex"
+        className="container mx-auto py-10 px-5 flex-col gap-6 flex max-w-6xl"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"

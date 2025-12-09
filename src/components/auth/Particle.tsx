@@ -94,10 +94,13 @@ const ParticleCanvas: FC = () => {
   const particlesRef = useRef<Particle[]>([]);
 
   // State: dimensions for canvas size
-  const [dimensions, setDimensions] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
+  const [dimensions, setDimensions] = useState<
+    | {
+        width: number;
+        height: number;
+      }
+    | undefined
+  >();
 
   // --- Utility Functions ---
 
@@ -164,9 +167,9 @@ const ParticleCanvas: FC = () => {
     if (!ctx) return;
 
     // 1. Set Canvas Dimensions and Initialize Particles
-    canvas.width = dimensions.width;
-    canvas.height = dimensions.height;
-    initParticles(dimensions.width, dimensions.height);
+    canvas.width = dimensions?.width ?? 0;
+    canvas.height = dimensions?.height ?? 0;
+    initParticles(dimensions?.width || 0, dimensions?.height || 0);
 
     // 2. Start Animation
     animationFrameRef.current = requestAnimationFrame(animate);
@@ -178,24 +181,34 @@ const ParticleCanvas: FC = () => {
       mouseRef.current.x = e.clientX;
       mouseRef.current.y = e.clientY;
     };
-    window.addEventListener("mousemove", handleMouseMove);
+    if (typeof window !== "undefined") {
+      window.addEventListener("mousemove", handleMouseMove);
 
-    const handleResize = () => {
+      const handleResize = () => {
+        setDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      };
+      window.addEventListener("resize", handleResize);
+
+      // 4. Cleanup Function
+      return () => {
+        cancelAnimationFrame(animationFrameRef.current);
+        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("resize", handleResize);
+      };
+    }
+  }, [animate, dimensions?.width, dimensions?.height, initParticles]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
       setDimensions({
         width: window.innerWidth,
         height: window.innerHeight,
       });
-    };
-    window.addEventListener("resize", handleResize);
-
-    // 4. Cleanup Function
-    return () => {
-      cancelAnimationFrame(animationFrameRef.current);
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [animate, dimensions.width, dimensions.height, initParticles]);
-
+    }
+  }, []);
   // 5. Render the Canvas element
   return (
     <canvas
