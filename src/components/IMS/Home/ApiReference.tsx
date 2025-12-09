@@ -41,7 +41,7 @@ const ApiReference = () => {
   return (
     <div className="min-h-[700px] bg-[#060709]">
       <motion.div
-        className="container mx-auto py-10 px-5 flex-col gap-6 flex"
+        className="container mx-auto py-10 px-5 flex-col gap-6 flex max-w-7xl"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"

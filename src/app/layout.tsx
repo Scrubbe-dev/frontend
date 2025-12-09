@@ -78,7 +78,7 @@ const airbnbCereal = localFont({
 export const metadata: Metadata = {
   title: "Scrubbe",
   description:
-    "Scrubbe's AI-driven platform combines SIEM and SOAR for automated threat detection, response, and unified security analytics.",
+    "AI-Powered Engineering Incident Management & Code Intelligence Platform",
 };
 //overflow-hidden
 export default function RootLayout({

@@ -35,7 +35,7 @@ const Impacts = () => {
     <div className="bg-[#060709] py-10 px-4 relative overflow-clip z-10">
       <div className="size-[400px] rounded-full opacity-30 bg-IMSCyan absolute left-[10%] -top-[10%] blur-3xl -z-10" />
 
-      <div className="flex gap-10 md:flex-row flex-col container h-full items-center mx-auto min-h-[600px]">
+      <div className="flex gap-10 md:flex-row flex-col container h-full items-center mx-auto min-h-[600px] max-w-7xl">
         {/* Animated Icon Section */}
         <motion.div
           className="flex-[.8] flex justify-center items-center h-full"
@@ -129,7 +129,7 @@ const Impacts = () => {
         </motion.div>
       </div>
 
-      <div className="container mx-auto flex md:flex-row md:justify-between flex-col gap-10 py-5">
+      <div className="container mx-auto flex md:flex-row md:justify-between flex-col gap-10 py-5 max-w-7xl">
         <motion.div
           variants={textItemVariants as any}
           className="flex flex-col gap-10"
