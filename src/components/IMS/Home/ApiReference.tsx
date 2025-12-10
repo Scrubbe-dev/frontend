@@ -83,7 +83,7 @@ const ApiReference = () => {
                 <div
                   key={index}
                   onClick={() => setItem(index)}
-                  className={`  min-w-24 px-2 py-2 text-IMSCyan text-center text-sm cursor-pointer ${
+                  className={`min-w-14 sm:min-w-24 px-2 py-2 text-IMSCyan text-center text-sm cursor-pointer ${
                     index === 0 && "rounded-l-lg"
                   } ${index === 3 && "rounded-r-lg"}
                   ${
