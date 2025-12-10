@@ -40,7 +40,11 @@ const HowItWorks = () => {
             variants={itemVariants as any}
             className=" text-4xl md:text-5xl text-white font-bigshotOne"
           >
-            The Incident Platform Built Around How Teams Actually Work
+            The{" "}
+            <span className=" text-transparent bg-clip-text bg-gradient-to-r from-IMSCyan via-[#8250BE] to-[#8250BE]">
+              Incident Platform{" "}
+            </span>{" "}
+            Built Around How Teams Actually Work
           </motion.h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 py-5 md:py-10">
@@ -130,7 +134,12 @@ const HowItWorks = () => {
             variants={itemVariants as any}
             className=" text-4xl md:text-5xl text-white font-bigshotOne"
           >
-            See the Real Root Cause — Not Just the Alert{" "}
+            See the{" "}
+            <span className=" text-transparent bg-clip-text bg-gradient-to-r from-IMSCyan  to-[#8250BE]">
+              {" "}
+              Real Root Cause
+            </span>{" "}
+            — Not Just the Alert{" "}
           </motion.h2>
           <motion.div variants={itemVariants as any} className="py-5">
             <div className="flex flex-col gap-3">
@@ -159,9 +168,12 @@ const HowItWorks = () => {
         <div className=" py-10">
           <motion.h2
             variants={itemVariants as any}
-            className=" text-4xl md:text-5xl text-white font-bigshotOne"
+            className=" text-4xl md:text-5xl text-white font-bigshotOne max-w-4xl"
           >
-            Code Intelligence — From Failed Deploy to Suggested Fix{" "}
+            Code Intelligence — From Failed Deploy to{" "}
+            <span className=" text-transparent bg-clip-text bg-gradient-to-r from-IMSCyan  to-[#8250BE]">
+              Suggested Fix{" "}
+            </span>
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 py-5 md:py-10">
             <motion.div
@@ -232,7 +244,12 @@ const HowItWorks = () => {
             variants={itemVariants as any}
             className=" text-4xl md:text-5xl text-white font-bigshotOne"
           >
-            On-Call Handover That Writes Itself{" "}
+            On-Call Handover That{" "}
+            <span className=" text-transparent bg-clip-text bg-gradient-to-r from-IMSCyan via-[#8250BE] to-[#8250BE]">
+              {" "}
+              Writes
+            </span>{" "}
+            Itself
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 py-5 md:py-10">
             <motion.div
@@ -284,7 +301,12 @@ const HowItWorks = () => {
             variants={itemVariants as any}
             className=" text-4xl md:text-5xl text-white font-bigshotOne"
           >
-            Train for Real Outages Before They Happen{" "}
+            Train for{" "}
+            <span className=" text-transparent bg-clip-text bg-gradient-to-r from-IMSCyan via-[#8250BE] to-[#8250BE]">
+              {" "}
+              Real Outages{" "}
+            </span>{" "}
+            Before They Happen{" "}
           </motion.h2>
 
           <motion.div
