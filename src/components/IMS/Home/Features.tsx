@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const containerVariants = {
@@ -73,19 +73,16 @@ const Features = () => {
       setArrowIndex((prev) => {
         if (prev === 0) {
           return 1;
-        }
-        if (prev === 1) {
+        } else if (prev === 1) {
           return 3;
-        }
-        if (prev === 3) {
+        } else if (prev === 3) {
           return 2;
-        }
-        if (prev === 2) {
+        } else if (prev === 2) {
           return 0;
         }
         return prev;
       });
-    }, 2000);
+    }, 1000);
 
     return () => {
       clearInterval(interval);
@@ -163,26 +160,37 @@ const Features = () => {
             {/* <motion.img src="/IMS/auto-image.svg" alt="auto" /> */}
             <div className="grid grid-cols-2 gap-7">
               {arrows.map(({ glow, normal }, index) => {
-                const imgSrc = index === arrowindex ? glow : normal;
                 return (
-                  <AnimatePresence key={index === arrowindex ? -1 : index}>
-                    <div>
-                      <motion.img
-                        src={imgSrc}
-                        alt="auto"
-                        animate={{
-                          opacity: arrowindex == index ? [0.6, 1] : 0.5,
-                        }}
-                        // className="absolute"
-                        initial={{ opacity: 0.5 }}
-                        transition={{
-                          duration: 1,
-                          ease: "easeIn",
-                          type: "tween",
-                        }}
-                      />
-                    </div>
-                  </AnimatePresence>
+                  <div
+                    className="relative"
+                    key={index === arrowindex ? -1 : index}
+                  >
+                    <motion.img
+                      src={normal}
+                      alt="auto"
+                      transition={{
+                        duration: 1,
+                        ease: "easeIn",
+                        type: "tween",
+                        delay: 1,
+                      }}
+                    />
+                    <motion.img
+                      src={glow}
+                      alt="auto"
+                      animate={{
+                        opacity: arrowindex == index ? 1 : 0,
+                      }}
+                      className="absolute top-0"
+                      initial={{ opacity: 0 }}
+                      transition={{
+                        duration: 1,
+                        ease: "easeIn",
+                        type: "tween",
+                        delay: 1,
+                      }}
+                    />
+                  </div>
                 );
               })}
             </div>

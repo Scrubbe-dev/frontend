@@ -31,8 +31,8 @@ const itemVariants = {
 const Hero = () => {
   const router = useRouter();
   return (
-    <div className="h-screen bg-[url('/IMS/hero-bg.png')]  bg-cover bg-center  relative z-0">
-      <div className="flex md:flex-row gap-5 mx-auto max-w-7xl items-center h-screen">
+    <div className="min-h-screen bg-[url('/IMS/hero-bg.png')]  bg-cover bg-center  relative z-0">
+      <div className="flex md:flex-row gap-5 mx-auto max-w-7xl items-center min-h-screen md:pt-0 pt-20">
         <motion.div
           className="container mx-auto flex flex-col gap-3 justify-center md:items-start items-center h-full p-4 flex-1 z-10 md:pt-0 pt-32"
           variants={containerVariants}
@@ -49,9 +49,12 @@ const Hero = () => {
             variants={itemVariants as any}
             className="text-white text-4xl  font-bigshotOne md:text-start text-center max-w-xl"
           >
-            The AI Engineering Incident Platform Detect, triage, explain, and
-            fix failures across code, pipelines, and production — from one
-            unified control plane.
+            The AI Engineering{" "}
+            <span className=" text-transparent bg-clip-text bg-gradient-to-r from-IMSCyan via-[#8250BE] to-[#8250BE]">
+              Incident Platform
+            </span>{" "}
+            Detect, triage, explain, and fix failures across code, pipelines,
+            and production — from one unified control plane.
           </motion.div>
           <motion.p
             variants={itemVariants as any}
@@ -78,7 +81,7 @@ const Hero = () => {
 
           <motion.div
             variants={itemVariants as any}
-            className="h-[500px] md:hidden flex"
+            className="h-[300px] md:hidden flex"
           >
             <img
               src="/IMS/hero-cubes.png"
