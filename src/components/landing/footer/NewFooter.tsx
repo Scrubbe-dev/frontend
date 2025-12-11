@@ -188,8 +188,8 @@ const NewFooter: React.FC = () => {
             <div className={componentStyles.logoSection.container}>
               <div className="relative w-32 h-8 xl:w-40 xl:h-10">
                 <Image
-                  src="/scrubbe-logo-white.png"
-                  alt="Scrubbe Logo"
+                  src="/IMS/logo-white.png"
+                  alt="scrubbe.png"
                   fill
                   sizes="(max-width: 1280px) 128px, 160px"
                   className="object-contain"
