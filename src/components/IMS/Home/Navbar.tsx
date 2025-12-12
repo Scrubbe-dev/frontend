@@ -222,7 +222,7 @@ const Navbar = () => {
           </ul>
 
           <div className="flex flex-row gap-3">
-            <Link href={"#"}>
+            <Link href={"/partners"}>
               <CButton
                 // onClick={() => router.push("/incident/tickets/create")}
                 className="w-fit h-[40px] hidden xl:flex bg-transparent hover:bg-transparent text-IMSCyan border border-IMSCyan shadow-none text-base"
