@@ -1,5 +1,4 @@
 "use client";
-import CButton from "@/components/ui/Cbutton";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import Clock from "react-clock";
@@ -17,23 +16,14 @@ const AboutHero = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function getCurrentTimeForTimeZone(timeZone: any) {
     const now = new Date();
-
-    // Format the date to a localized string that includes the full date and time,
-    // then create a new Date object from that string.
-    // This effectively converts the date to the target timezone's local time.
     const dateInTimeZone = new Date(now.toLocaleString("en-US", { timeZone }));
 
-    // Return the ISO 8601 string from this new Date object.
-    // The toISOString() method returns the string in UTC, but since we created the
-    // date object from the local time string of the target timezone, it will
-    // represent the correct time.
     return dateInTimeZone;
   }
 
   const [london, setLondon] = useState(
     getCurrentTimeForTimeZone(timeZones[0].zone)
   );
-  console.log(london);
   const [nairobi, setNairobi] = useState(
     getCurrentTimeForTimeZone(timeZones[1].zone)
   );
@@ -62,32 +52,61 @@ const AboutHero = () => {
   }, []);
   return (
     <div className="w-full min-h-[800px] relative z-0">
-      <img
-        src="/IMS/about/hero-img.png"
-        alt="incident management"
-        className="w-full h-full object-cover absolute z-[-1] inset-0"
-      />
       <div className="max-w-[1440px] mx-auto flex flex-col items-center justify-center h-full px-4 md:px-6 lg:px-20 xl:px-20 pt-40 py-20">
-        <h1 className="text-white md:text-[60px] text-[30px] font-bold font-bigshotOne max-w-3xl text-center">
-          Building the Future of Reliability – One Incident at a Time.
+        <h1 className="text-white md:text-[60px] text-[30px] font-bigshotOne max-w-4xl text-center">
+          Reliability-first{" "}
+          <span className=" text-transparent bg-clip-text bg-gradient-to-r from-IMSCyan via-[#8250BE] to-IMSCyan">
+            {" "}
+             incident intelligence {" "}
+          </span>{" "}
+          for teams who ship real money and real risk.
         </h1>
         <p className="text-white text-center  md:text-lg max-w-3xl">
-          Scrubbe is an AI-powered incident management platform that helps
-          DevOps, SRE, and IT teams detect, resolve, and prevent failures even
-          at the 11th hour.
+          Scrubbe is built for engineering and fraud teams who can’t afford
+          “best effort” incident management. We blend incident workflows,
+          code-aware remediation, CI/CD pipelines, and fraud signals into a
+          single system that actually helps you close the loop — not just log
+          the chaos.
         </p>
-        <div className="flex gap-4 text-[14px] sm:text-[16px] mt-6">
-          <CButton className=" font-medium py-3 px-6 rounded-md transition-colors">
-            Learn How Scrubbe Works
-          </CButton>
-        </div>{" "}
-        <div className="bg-[#F7F8FD] min-h-[300px] w-full rounded-lg mt-20 p-5 md:p-10 space-y-5 ">
-          <p className=" text-lg font-bold text-center">
-            We operate around the clock, so your systems never sleep
+
+        <div className=" grid md:grid-cols-2 max-w-4xl gap-8 mx-auto mt-10">
+          <div className=" bg-gradient-to-t from-[#004B571A] to-[#0074834D] border border-IMSCyan rounded-2xl p-4 flex-col gap-2 text-white">
+            <p>WHAT WE BELIEVE</p>
+            <p className=" font-semibold">
+              Incidents start in code, not tickets.
+            </p>
+            <p>
+              Most tools stare at tickets. Scrubbe stares at git log, pipelines,
+              metrics and fraud events.
+            </p>
+          </div>
+
+          <div className=" bg-gradient-to-t from-[#004B571A] to-[#0074834D] border border-IMSCyan rounded-2xl p-4 flex-col gap-2 text-white">
+            <p>WHO WE BUILD FOR</p>
+            <ul className=" pl-5 space-y-2 list-disc text-sm">
+              <li> Dev & SRE teams shipping weekly</li>
+              <li>Fintech & payments reliability</li>
+              <li>Fraud & risk engineering squads</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className=" bg-gradient-to-t from-[#004B571A] to-[#0074834D] border-IMSCyan border min-h-[300px] w-full rounded-lg mt-20 p-5 md:p-10 space-y-5 ">
+          <p className="text-2xl text-white font-bold text-center">
+            Reliability across regions
+          </p>
+          <p className=" text-lg font-bold text-center text-white">
+            We design for global uptime.{" "}
+          </p>
+          <p className="text-base text-white text-center">
+            Five regions, one incident brain — Scrubbe treats the planet as your
+            failure domain.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 place-items-center">
-            <div className="flex flex-col items-center gap-3">
-              <Clock value={london} size={120} />
+            <div className="flex flex-col items-center gap-3 text-white">
+              <div className="bg-white rounded-full">
+                <Clock value={london} size={120} />
+              </div>
               <div>
                 <p className="font-bold text-center">London</p>
                 <p className=" text-center">
@@ -95,8 +114,10 @@ const AboutHero = () => {
                 </p>
               </div>
             </div>
-            <div className="flex flex-col items-center gap-3">
-              <Clock value={nairobi} size={120} />
+            <div className="flex flex-col items-center gap-3 text-white">
+              <div className="bg-white rounded-full">
+                <Clock value={nairobi} size={120} />
+              </div>
               <div>
                 <p className="font-bold text-center">Nairobi</p>
                 <p className=" text-center">
@@ -104,8 +125,10 @@ const AboutHero = () => {
                 </p>
               </div>
             </div>
-            <div className="flex flex-col items-center gap-3">
-              <Clock value={washington} size={120} />
+            <div className="flex flex-col items-center gap-3 text-white">
+              <div className="bg-white rounded-full">
+                <Clock value={washington} size={120} />
+              </div>
               <div>
                 <p className="font-bold text-center">Washington</p>
                 <p className=" text-center">
@@ -113,8 +136,10 @@ const AboutHero = () => {
                 </p>
               </div>
             </div>
-            <div className="flex flex-col items-center gap-3">
-              <Clock value={lagos} size={120} />
+            <div className="flex flex-col items-center gap-3 text-white">
+              <div className="bg-white rounded-full">
+                <Clock value={lagos} size={120} />
+              </div>
               <div>
                 <p className="font-bold text-center">Lagos</p>
                 <p className=" text-center">
@@ -122,8 +147,10 @@ const AboutHero = () => {
                 </p>
               </div>
             </div>
-            <div className="flex flex-col items-center gap-3">
-              <Clock value={capetown} size={120} />
+            <div className="flex flex-col items-center gap-3 text-white">
+              <div className="bg-white rounded-full">
+                <Clock value={capetown} size={120} />
+              </div>
               <div>
                 <p className="font-bold text-center">Capetown</p>
                 <p className=" text-center">
@@ -132,6 +159,10 @@ const AboutHero = () => {
               </div>
             </div>{" "}
           </div>
+          <p className="text-white text-base text-center">
+            Scrubbe’s incident model was designed for teams operating
+            across time zones, currencies and regulatory zones.
+          </p>
         </div>
       </div>
     </div>
