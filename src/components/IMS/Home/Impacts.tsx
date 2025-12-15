@@ -33,7 +33,7 @@ const textItemVariants = {
 const Impacts = () => {
   return (
     <div className="bg-[#060709] py-10 px-4 relative overflow-clip z-10">
-      <div className="size-[400px] rounded-full opacity-30 bg-IMSCyan absolute left-[10%] -top-[10%] blur-3xl -z-10" />
+      <div className="size-[400px] rounded-full opacity-30 bg-IMSCyan absolute left-[10%] -top-[10%] blur-3xl z-20" />
 
       <div className="flex gap-10 md:flex-row flex-col container h-full items-center mx-auto min-h-[600px] max-w-7xl">
         {/* Animated Icon Section */}
@@ -44,10 +44,13 @@ const Impacts = () => {
           viewport={{ once: true }}
         >
           <div className="relative flex items-center justify-center z-10">
+            <div className="absolute -translate-y-10 z-10 opacity-25">
+              <img src="/IMS/grid-bg.svg" alt="" />
+            </div>
             <img
-              src="/IMS/impact.png"
+              src="/IMS/incident-analytics.png"
               alt=""
-              className=" md:min-w-[500px] md:h-[500px] "
+              className=" md:min-w-[600px] md:h-[400px] object-cover "
             />
             {/* <motion.div
               initial={{

@@ -1,4 +1,4 @@
-import IncidentAboutUs from "@/components/IMS/Home/AboutUs";
+import IncidentAboutUs from "@/components/IMS/about-us/AboutUs";
 
 const page = () => {
   return <IncidentAboutUs />;

@@ -26,7 +26,7 @@ const theme = {
 const componentStyles = {
   footer: {
     container: "w-full max-w-[1440px] mx-auto px-10 py-8 z-10",
-    background: "bg-[#06090B]",
+    background: "bg-[#08132F]",
     innerContainer: " w-full mx-auto",
     topRow:
       "grid grid-cols-1 xl:grid-cols-5 gap-8 mb-8 pb-8 border-b border-grayscrubbe-100/30",
@@ -177,7 +177,7 @@ const NewFooter: React.FC = () => {
   // Compliance content from the screenshot
 
   return (
-    <div className="w-full h-auto bg-[#06090B]">
+    <div className="w-full h-auto bg-[#08132F]">
       <section
         className={`${componentStyles.footer.container} ${componentStyles.footer.background}`}
       >

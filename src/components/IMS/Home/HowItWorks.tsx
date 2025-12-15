@@ -124,7 +124,11 @@ const HowItWorks = () => {
               className="relative group z-10"
             >
               <div className="w-full h-full absolute -z-10 bg-IMSCyan scale-50 group-hover:scale-80 blur-3xl transition-all duration-200 ease-linear" />
-              <img src="/IMS/timeline.svg" alt="timeline" className="" />
+              <img
+                src="/IMS/incident-widget.jpg"
+                alt="timeline"
+                className="border border-IMSCyan/30 rounded-2xl"
+              />
             </motion.div>
           </div>
         </div>
