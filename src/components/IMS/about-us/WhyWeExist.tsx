@@ -102,6 +102,11 @@ const WhyWeExist = () => {
               ))}
             </div>
             <div className="h-[1px] w-full bg-gray-400" />
+            <p>
+              IMS captures the incident, Pipelines show where it failed, Code
+              Engine proposes safe changes, Fraud adds risk context, and Ezra
+              turns it into a narrative humans and leadership can trust.
+            </p>
             <div className="grid md:grid-cols-3 gap-5">
               {items2.map((item, index) => (
                 <div
@@ -114,11 +119,6 @@ const WhyWeExist = () => {
                 </div>
               ))}
             </div>
-            <p>
-              IMS captures the incident, Pipelines show where it failed, Code
-              Engine proposes safe changes, Fraud adds risk context, and Ezra
-              turns it into a narrative humans and leadership can trust.
-            </p>
           </div>
         </>
 
@@ -140,7 +140,7 @@ const WhyWeExist = () => {
 
           <div className="border border-gray-400 rounded-2xl p-5 md:p-8 space-y-4">
             <div className="grid md:grid-cols-2 gap-5">
-              <div className="bg-[#030D25] hover:bg-[#032528B2] transition-all duration-200 cursor-pointer border border-IMSCyan rounded-2xl p-4 flex-col gap-3 text-white">
+              <div className="bg-[#030D25] transition-all duration-200 cursor-pointer border border-IMSCyan rounded-2xl p-4 flex-col gap-3 text-white">
                 <p className=" font-semibold">Typical ITSM</p>
                 <ul className=" pl-5 space-y-2 list-disc text-sm">
                   <li>Tickets created by manual forms and email.</li>
@@ -151,7 +151,7 @@ const WhyWeExist = () => {
                   </li>
                 </ul>
               </div>
-              <div className="bg-[#030D25] hover:bg-[#032528B2] transition-all duration-200 cursor-pointer  border border-IMSCyan rounded-2xl p-4 flex-col gap-3 text-white">
+              <div className="bg-[#032528B2] transition-all duration-200 cursor-pointer  border border-IMSCyan rounded-2xl p-4 flex-col gap-3 text-white">
                 <p className=" font-semibold">Scrubbe IMS + Code Engine</p>
                 <ul className=" pl-5 space-y-2 list-disc text-sm">
                   <li>
@@ -181,10 +181,10 @@ const WhyWeExist = () => {
         <>
           <div className="flex items-center justify-between w-full pt-10">
             <p>WHY WE STARTED SCRUBBE</p>
-            <div className="p-2 rounded-xl border flex items-center gap-2">
+            {/* <div className="p-2 rounded-xl border flex items-center gap-2">
               <FiSettings />
               <p className="text-sm">Built for engineering, not back-office</p>
-            </div>
+            </div> */}
           </div>
 
           <h1 className="text-white text-3xl md:text-5xl font-bigshotOne ">
