@@ -1,8 +1,11 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import { FaGithub, FaLinkedin, FaSquareXTwitter } from "react-icons/fa6";
 import { IconType } from "react-icons";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import CButton from "@/components/ui/Cbutton";
 
 // Centralized theme configuration - keeping only shared/reused styles
 const theme = {
@@ -26,7 +29,6 @@ const theme = {
 const componentStyles = {
   footer: {
     container: "w-full max-w-[1440px] mx-auto px-10 py-8 z-10",
-    background: "bg-[#08132F]",
     innerContainer: " w-full mx-auto",
     topRow:
       "grid grid-cols-1 xl:grid-cols-5 gap-8 mb-8 pb-8 border-b border-grayscrubbe-100/30",
@@ -176,11 +178,11 @@ const NewFooter: React.FC = () => {
 
   // Compliance content from the screenshot
 
+  const pathname = usePathname();
+  const bgColor = pathname === "/" ? "bg-[#060709]" : "bg-[#08132F]";
   return (
-    <div className="w-full h-auto bg-[#08132F]">
-      <section
-        className={`${componentStyles.footer.container} ${componentStyles.footer.background}`}
-      >
+    <div className={`w-full h-auto ${bgColor}`}>
+      <section className={`${componentStyles.footer.container}`}>
         <div className={componentStyles.footer.innerContainer}>
           {/* Top Row - Logo + 4 columns */}
           <div className={componentStyles.footer.topRow}>
@@ -263,6 +265,14 @@ const NewFooter: React.FC = () => {
                 title={pricingLinks.title}
                 links={pricingLinks.links}
               />
+              <Link href={"/partners"}>
+                <CButton
+                  // onClick={() => router.push("/incident/tickets/create")}
+                  className="w-fit h-[40px] hidden xl:flex bg-transparent hover:bg-transparent text-IMSCyan border border-IMSCyan shadow-none text-base"
+                >
+                  Join Early Design Partners
+                </CButton>
+              </Link>
             </div>
 
             <div className="w-full">
