@@ -31,7 +31,7 @@ const itemVariants = {
 const Hero = () => {
   const router = useRouter();
   return (
-    <div className="min-h-screen bg-[url('/IMS/hero-bg.png')]  bg-cover bg-center  relative z-0">
+    <div className="min-h-screen bg-[url('/IMS/hero-mobile-bg.png')] md:bg-[url('/IMS/hero-bg.png')]  bg-cover bg-center  relative z-0">
       <div className="flex md:flex-row gap-5 mx-auto max-w-7xl items-center min-h-screen md:pt-0 pt-20">
         <motion.div
           className="container mx-auto flex flex-col gap-3 justify-center md:items-start items-center h-full p-4 flex-1 z-10 md:pt-0 pt-32"
@@ -53,8 +53,8 @@ const Hero = () => {
             <span className=" text-transparent bg-clip-text bg-gradient-to-r from-IMSCyan via-[#8250BE] to-[#8250BE]">
               Incident Platform
             </span>{" "}
-            Detect, triage, explain, and fix failures across code, pipelines,
-            and production — from one unified control plane.
+            That Detect, triage, explain, and fix failures across code,
+            pipelines, and production — from one unified control plane.
           </motion.div>
           <motion.p
             variants={itemVariants as any}
