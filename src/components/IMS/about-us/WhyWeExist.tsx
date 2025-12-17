@@ -92,11 +92,11 @@ const WhyWeExist = () => {
               {items.map((item, index) => (
                 <div
                   key={index}
-                  className=" bg-gradient-to-t from-[#004B571A] to-[#0074834D] border border-IMSCyan rounded-2xl p-4 flex-col gap-3 text-white"
+                  className=" bg-gradient-to-t space-y-1 from-[#004B571A] to-[#0074834D] border border-IMSCyan/30 rounded-2xl p-4 flex-col gap-3 text-white"
                 >
                   <p className="text-sm uppercase pb-2">{item.label}</p>
                   <p className=" font-semibold">{item.title}</p>
-                  <p className="text-base">{item.description}</p>
+                  <p className="text-base opacity-60">{item.description}</p>
                   <p className="text-sm text-green">{item?.secondary}</p>
                 </div>
               ))}
@@ -111,11 +111,11 @@ const WhyWeExist = () => {
               {items2.map((item, index) => (
                 <div
                   key={index}
-                  className="bg-[#030D25]  border border-IMSCyan rounded-2xl p-4 flex-col gap-3 text-white"
+                  className="bg-[#030D25]  border border-IMSCyan/30 rounded-2xl p-4 flex-col gap-3 text-white"
                 >
                   <p className="text-sm uppercase pb-2">{item.label}</p>
-                  <p className=" font-semibold">{item.title}</p>
-                  <p className="text-base">{item.description}</p>
+                  <p className=" font-semibold ">{item.title}</p>
+                  <p className="text-base opacity-50">{item.description}</p>
                 </div>
               ))}
             </div>
@@ -140,7 +140,7 @@ const WhyWeExist = () => {
 
           <div className="border border-gray-400 rounded-2xl p-5 md:p-8 space-y-4">
             <div className="grid md:grid-cols-2 gap-5">
-              <div className="bg-[#030D25] transition-all duration-200 cursor-pointer border border-IMSCyan rounded-2xl p-4 flex-col gap-3 text-white">
+              <div className="bg-[#030D25] transition-all duration-200 cursor-pointer border border-IMSCyan/30 rounded-2xl p-4 flex flex-col gap-3 text-white">
                 <p className=" font-semibold">Typical ITSM</p>
                 <ul className=" pl-5 space-y-2 list-disc text-sm">
                   <li>Tickets created by manual forms and email.</li>
@@ -151,7 +151,7 @@ const WhyWeExist = () => {
                   </li>
                 </ul>
               </div>
-              <div className="bg-[#032528B2] transition-all duration-200 cursor-pointer  border border-IMSCyan rounded-2xl p-4 flex-col gap-3 text-white">
+              <div className="bg-[#032528B2] transition-all duration-200 cursor-pointer  border border-IMSCyan/30 rounded-2xl p-4 flex flex-col gap-3 text-white">
                 <p className=" font-semibold">Scrubbe IMS + Code Engine</p>
                 <ul className=" pl-5 space-y-2 list-disc text-sm">
                   <li>
@@ -197,7 +197,7 @@ const WhyWeExist = () => {
 
           <div className="border border-gray-400 rounded-2xl p-5 md:p-8 space-y-4">
             <div className="grid md:grid-cols-2 gap-5">
-              <div className="bg-[#030D25] hover:bg-[#032528B2]  transition-all duration-200 cursor-pointer border border-IMSCyan rounded-2xl p-4 flex-col gap-5 text-white">
+              <div className="bg-[#030D25] hover:bg-[#032528B2]  transition-all duration-200 cursor-pointer border border-IMSCyan/30 rounded-2xl p-4 flex flex-col gap-3 text-white">
                 <p className="text-base">
                   Scrubbe was born out of on-call shifts where incidents bounced
                   between tools and teams, and nobody had a single place that
@@ -230,7 +230,7 @@ const WhyWeExist = () => {
                 </p>
               </div>
               <div className=" space-y-6">
-                <div className="bg-[#030D25] hover:bg-[#032528B2] transition-all duration-200 cursor-pointer  border border-IMSCyan rounded-2xl p-4 flex-col gap-3 text-white">
+                <div className="bg-[#030D25] hover:bg-[#032528B2] transition-all duration-200 cursor-pointer  border border-IMSCyan/30 rounded-2xl p-4 flex flex-col gap-3 text-white">
                   <p className=" font-semibold">Scrubbe IMS + Code Engine</p>
                   <ul className=" pl-5 space-y-2 list-disc text-sm">
                     <li>
@@ -250,7 +250,7 @@ const WhyWeExist = () => {
                   </ul>
                 </div>
 
-                <div className="bg-[#030D25] hover:bg-[#032528B2] transition-all duration-200 cursor-pointer  border border-IMSCyan rounded-2xl p-4 flex-col gap-3 text-white">
+                <div className="bg-[#030D25] hover:bg-[#032528B2] transition-all duration-200 cursor-pointer  border border-IMSCyan/30 rounded-2xl p-4 flex flex-col gap-3 text-white">
                   <p className=" font-semibold">WHERE WE’RE GOING</p>
                   <p className="text-base py-2">
                     We’re still early. We’re actively working with design

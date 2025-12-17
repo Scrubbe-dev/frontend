@@ -8,7 +8,7 @@ import ApiReference from "./ApiReference";
 
 const Index = () => {
   return (
-    <div className=" overflow-x-hidden">
+    <div className=" overflow-x-hidden bg-[#060709]">
       <Hero />
       <Features />
       <HowItWorks />

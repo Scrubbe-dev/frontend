@@ -139,13 +139,13 @@ const Hero = () => {
         <div className=" h-[100%] bg-white w-[50%] absolute left-[30%]  min-[400px]:bottom-[-17%] bottom-[-14%] block sm:hidden min-[472px]:rotate-[75deg] min-[400px]:rotate-[72deg] rotate-[69deg]" />
         <div>
           <img
-            src="/Hero2.png"
+            src="/Emma2.gif"
             alt=""
             className=" lg:block hidden absolute right-0 max-w-[800px] h-full rounded-r-[40px] xl:scale-110 object-cover"
           />
 
           <img
-            src="/hero_small.png"
+            src="/Emma2.gif"
             alt=""
             className=" block md:hidden absolute bottom-0 w-full  h-[400px] brightness-50 rounded-b-[40px]"
           />

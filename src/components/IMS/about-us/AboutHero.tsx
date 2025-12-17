@@ -70,7 +70,7 @@ const AboutHero = () => {
           </p>
 
           <div className=" grid md:grid-cols-2 max-w-4xl gap-8 mx-auto mt-10">
-            <div className=" bg-gradient-to-t from-[#004B571A] to-[#0074834D] border border-IMSCyan rounded-2xl p-4 flex-col gap-2 text-white">
+            <div className=" bg-gradient-to-t from-[#004B571A] to-[#0074834D] border border-IMSCyan/30 rounded-2xl p-4 flex-col gap-2 text-white">
               <p>WHAT WE BELIEVE</p>
               <p className=" font-semibold">
                 Incidents start in code, not tickets.
@@ -81,7 +81,7 @@ const AboutHero = () => {
               </p>
             </div>
 
-            <div className=" bg-gradient-to-t from-[#004B571A] to-[#0074834D] border border-IMSCyan rounded-2xl p-4 flex-col gap-2 text-white">
+            <div className=" bg-gradient-to-t from-[#004B571A] to-[#0074834D] border border-IMSCyan/30 rounded-2xl p-4 flex-col gap-2 text-white">
               <p>WHO WE BUILD FOR</p>
               <ul className=" pl-5 space-y-2 list-disc text-sm">
                 <li> Dev & SRE teams shipping weekly</li>
@@ -92,7 +92,7 @@ const AboutHero = () => {
           </div>
         </div>
 
-        <div className=" bg-gradient-to-t from-[#004B571A] to-[#0074834D] h-fit border-IMSCyan border min-h-[300px] w-full rounded-lg p-5 md:p-10 space-y-5 ">
+        <div className=" bg-gradient-to-t from-[#004B571A] to-[#0074834D] h-fit border-IMSCyan/35 border min-h-[300px] w-full rounded-lg p-5 md:p-10 space-y-5 ">
           <p className="text-2xl text-white font-bold">
             Reliability across regions
           </p>
