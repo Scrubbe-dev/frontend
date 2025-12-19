@@ -84,7 +84,7 @@ const Hero = () => {
             className="h-[300px] md:hidden flex"
           >
             <img
-              src="/IMS/hero-cubes.png"
+              src="/IMS/light-colour.gif"
               alt="cube-blocks"
               className="h-full object-cover rotate-[-30deg] opacity-70"
             />
@@ -101,12 +101,12 @@ const Hero = () => {
             duration: 0.6,
             ease: "easeOut",
           }}
-          className=" min-w-[800px] absolute right-[-20%] md:flex hidden"
+          className=" min-w-[800px] absolute right-[-10%] md:flex hidden"
         >
           <img
-            src="/IMS/hero-cubes.png"
+            src="/IMS/light-colour.gif"
             alt="cube-blocks"
-            className="h-screen object-cover rotate-[-30deg] opacity-70"
+            className="h-screen object-cover opacity-70"
           />
         </motion.div>
       </div>
