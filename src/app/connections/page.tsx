@@ -1,4 +1,5 @@
-import React, { ReactNode } from "react";
+"use client";
+import React, { ReactNode, useState } from "react";
 import { AiOutlineCloud, AiOutlineKubernetes } from "react-icons/ai";
 import { BiGitRepoForked, BiGrid, BiLogoMongodb } from "react-icons/bi";
 import { BsDatabase } from "react-icons/bs";
@@ -14,6 +15,7 @@ import { RxStack } from "react-icons/rx";
 import { TbBrandBitbucket } from "react-icons/tb";
 import { VscAzure, VscTypeHierarchy } from "react-icons/vsc";
 import { WiNightCloudy } from "react-icons/wi";
+import ConfigureIntegration from "./ConfigureIntegration";
 
 const integrationModel = [
   {
@@ -203,9 +205,20 @@ const fraudModel = [
     Icon: MdOutlineOfflineBolt,
   },
 ];
-const page = () => {
+const Page = () => {
+  const [modalType, setModalType] = useState("none");
+  const [isOpen, setIsOpen] = useState(false);
+  const [integration, setIntegration] = useState("");
   return (
     <div className="bg-[#08132F] min-h-screen text-[#D1D5DB] font-sans p-10">
+      {isOpen && (
+        <ConfigureIntegration
+          open={isOpen}
+          setOpen={setIsOpen}
+          type={modalType}
+          integration={integration}
+        />
+      )}
       <div className="max-w-[1400px] mx-auto space-y-6">
         <div className="flex justify-between items-start mb-12">
           <div className="max-w-3xl">
@@ -252,6 +265,11 @@ const page = () => {
                   <div
                     key={rest.name}
                     className="border border-white/50 rounded-lg p-2 flex justify-between gap-2"
+                    onClick={() => {
+                      setIsOpen(true);
+                      setModalType("code_repos");
+                      setIntegration(rest.title);
+                    }}
                   >
                     <div className="flex gap-2 items-center">
                       <div className=" size-9 rounded-full bg-[#08132F] flex justify-center items-center border border-gray-400">
@@ -283,6 +301,11 @@ const page = () => {
                 {deploymentModel.map(({ Icon, ...rest }) => (
                   <div
                     key={rest.name}
+                    onClick={() => {
+                      setIsOpen(true);
+                      setModalType("cicd");
+                      setIntegration(rest.title);
+                    }}
                     className="border border-white/50 rounded-lg p-2 flex justify-between gap-2"
                   >
                     <div className="flex gap-2 items-center">
@@ -315,6 +338,11 @@ const page = () => {
                 {containersModel.map(({ Icon, ...rest }) => (
                   <div
                     key={rest.name}
+                    onClick={() => {
+                      setIsOpen(true);
+                      setModalType("runtime");
+                      setIntegration(rest.title);
+                    }}
                     className="border border-white/50 rounded-lg p-2 flex justify-between gap-2"
                   >
                     <div className="flex gap-2 items-center">
@@ -347,6 +375,11 @@ const page = () => {
                 {databaseModel.map(({ Icon, ...rest }) => (
                   <div
                     key={rest.name}
+                    onClick={() => {
+                      setIsOpen(true);
+                      setModalType("datastores");
+                      setIntegration(rest.title);
+                    }}
                     className="border border-white/50 rounded-lg p-2 flex justify-between gap-2"
                   >
                     <div className="flex gap-2 items-center">
@@ -379,6 +412,11 @@ const page = () => {
                 {fraudModel.map(({ Icon, ...rest }) => (
                   <div
                     key={rest.name}
+                    onClick={() => {
+                      setIsOpen(true);
+                      setModalType("fraud_metrics");
+                      setIntegration(rest.title);
+                    }}
                     className="border border-white/50 rounded-lg p-2 flex justify-between gap-2"
                   >
                     <div className="flex gap-2 items-center">
@@ -457,7 +495,7 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
 
 const StepWrapper = ({
   subtitle,
