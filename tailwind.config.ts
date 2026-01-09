@@ -49,7 +49,7 @@ const config: Config = {
         high: "#ea580c", // orange-600
         medium: "#fbbf24", // yellow-400
         low: "#3b82f6",
-        dark: "#111827",
+        dark: "#08132F",
         subDark: "#1F2937",
         darkEzra: "#110F0F",
         subDarkEzra: "#1F1F24",

@@ -8,7 +8,7 @@ const IncidentDashboard = ({ children }: { children: ReactNode }) => {
     // If we're in standalone mode, redirect any dashboard page to the incident page.
     redirect("/");
   }
-  return <DashboardWrapper>{children}</DashboardWrapper>;
+  return <>{children}</>;
 };
 
 export default IncidentDashboard;
