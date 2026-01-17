@@ -1,0 +1,23 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # 1. Install pnpm globally
+        - npm install -g pnpm
+        # 2. Install dependencies using pnpm
+        - pnpm install --frozen-lockfile
+    build:
+      commands:
+        # 3. Build your Next.js app
+        - pnpm run build
+  artifacts:
+    # 4. IMPORTANT: Set the correct output directory
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    # Cache pnpm store to speed up future builds
+    paths:
+      - node_modules/**/*
+      - .pnpm-store/**/*
