@@ -1,6 +1,7 @@
 "use client";
 import AiSuggestion from "@/components/IMS/Dashboard/AiSuggestion";
 import useTicketDetails from "@/hooks/useTicketDetails";
+import { Ticket } from "@/types";
 import { motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -10,7 +11,9 @@ const TABS = ["Incident Details", "AI Suggestions", "Next Action"];
 const Page = () => {
   const [tab, setTab] = useState(1);
   const { back } = useRouter();
-  const { data: incident } = useTicketDetails();
+  const { data } = useTicketDetails();
+
+  const incident = data as Ticket
 
   return (
     <div className="p-4 space-y-4">

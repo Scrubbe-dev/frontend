@@ -23,10 +23,10 @@ const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <div
-      className={`flex flex-col items-center justify-center p-8 text-center text-gray-500 rounded-lg border border-dashed border-gray-300 bg-white ${className}`}
+      className={`flex flex-col items-center justify-center p-8 text-center text-gray-500 rounded-lg border border-dashed border-gray-300 bg-dark ${className}`}
     >
-      {image && <div className="mb-4">{image}</div>}
-      <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
+      {image && <div className="mb-4 text-white">{image}</div>}
+      <h3 className="text-xl font-semibold">{title}</h3>
       <p className="mt-2 text-sm">{description}</p>
       {action && <div className="mt-6">{action}</div>}
     </div>

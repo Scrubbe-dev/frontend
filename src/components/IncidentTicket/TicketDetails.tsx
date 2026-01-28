@@ -260,7 +260,7 @@ const TicketDetails = () => {
           )}
 
           {/* Comments Tab */}
-          {tab === 1 && <TicketComments ticket={ticket} />}
+          {/* {tab === 1 && <TicketComments ticket={ticket} />} */}
 
           {/* Collaboration Tab */}
           {tab === 2 && <Collaboration ticket={ticket} />}

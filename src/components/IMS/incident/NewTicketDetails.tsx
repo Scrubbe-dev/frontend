@@ -1,57 +1,82 @@
 "use client";
 import React, { useState } from "react";
-import Modal from "../ui/Modal";
-import Select from "../ui/select";
-import CButton from "../ui/Cbutton";
+import Modal from "../../ui/Modal";
+import Select from "../../ui/select";
+import CButton from "../../ui/Cbutton";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
-import EditIncidentTicket from "./EditIncidentTicket";
-import TicketComments from "../IncidentTicket/TicketComments";
+import EditIncidentTicket from "../EditIncidentTicket";
+import TicketComments from "../../IncidentTicket/TicketComments";
 import useTicketDetails from "@/hooks/useTicketDetails";
-import Collaboration from "../IncidentTicket/Collaboration";
-import History from "../IncidentTicket/History";
-import TreatIntel from "../IncidentTicket/TreatIntel";
-import { Ticket } from "@/types";
+import Collaboration from "../../IncidentTicket/Collaboration";
+import History from "../../IncidentTicket/History";
+import TreatIntel from "../../IncidentTicket/TreatIntel";
+import { Ticket, Tticket } from "@/types";
+import { priorityColors, statusColors } from "./NewIncidentList";
+import NewEditIncidentTicket from "./NewEditIncidentTicket";
 
 const TABS = [
   "Details",
   "Comments",
-  "Collaboration",
-  "History",
+//   "Collaboration",
+  "Timeline",
   // "Threat intel",
 ];
 
-const TicketDetails = () => {
+const NewTicketDetails = () => {
   const [tab, setTab] = useState(0);
   const [isExcuteLockAccount, setIsExcuteLockAccount] = useState(false);
   const [isMergeTicket, setIsMergeTicket] = useState(false);
   const [isEscalateTicket, setIsEscalateTicket] = useState(false);
   const router = useRouter();
   const { data } = useTicketDetails();
-  const ticket = data as Ticket;
+  const ticket = data as Tticket;
 
   return (
-    <div className="">
+    <div className="bg-dark text-white">
       <div className="p-6 mx-auto w-full">
         <div
-          className="flex items-center gap-2 mb-2 cursor-pointer dark:text-white"
+          className="flex items-center gap-2 mb-2 cursor-pointer text-white"
           onClick={() => router.back()}
         >
           <ChevronLeft />{" "}
-          <h1 className="text-xl font-bold dark:text-white">
-            Incident Details #({data?.ticketId})
-          </h1>
+          <h1 className="text-xl font-bold text-white">{data?.ticketId}</h1>
         </div>
+        <p className="font-semibold mb-2">
+          checkout-service DB pool exhaustion
+        </p>
+        <p className="text-sm mb-2">
+          This is where incidents live in Scrubbe: signal-rich, CI/CD-linked,
+          and ready for Ezra summaries. Filter by priority, type, service, time
+          window, or ownership — then click an incident to work it end-to-end.
+        </p>
+
+        {
+            ticket && <div className="flex items-center gap-3">
+            <div>{priorityColors(ticket?.state ?? "")}</div>
+            <div>{statusColors(ticket?.severity ?? "")}</div>
+            <p className="p-1 px-2 text-xs rounded-md capitalize border">
+              {ticket?.environment} • {ticket?.region}
+            </p>
+            <p className="p-1 px-2 text-xs rounded-md capitalize border">
+             {ticket?.serviceArea}
+            </p>
+            <p className="p-1 px-2 text-xs rounded-md capitalize border">
+            {ticket?.sourceType}
+            </p>
+          </div>
+        }
+
         {/* Tabs */}
-        <div className="flex gap-8 border-b border-gray-200 mb-6">
+        <div className="flex gap-8 border-b border-gray-400 mb-6">
           {TABS.map((t, i) => (
             <button
               key={t}
-              className={`py-2 px-2 text-sm font-medium border-b-2 transition-colors ${
+              className={`py-2 px-2 flex-1 text-sm font-medium border-b-2 transition-colors ${
                 tab === i
-                  ? "border-IMSLightGreen text-IMSLightGreen"
-                  : "border-transparent text-gray-500  dark:text-gray-400 hover:text-green"
+                  ? "border-IMSCyan text-IMSCyan"
+                  : "border-transparent text-white hover:text-IMSCyan"
               }`}
               onClick={() => setTab(i)}
             >
@@ -66,17 +91,17 @@ const TicketDetails = () => {
           transition={{ duration: 0.3 }}
           key={tab}
         >
-          {tab === 0 && <EditIncidentTicket />}
-          {/* {tab === 1 && <TicketComments ticket={ticket} />} */}
+          {tab === 0 && <NewEditIncidentTicket />}
+          {tab === 1 && <TicketComments ticket={ticket} />}
 
           {/* Collaboration Tab */}
-          {tab === 2 && <Collaboration ticket={ticket} />}
+          {/* {tab === 2 && <Collaboration ticket={ticket} />} */}
 
           {/* History Tab */}
           {tab === 3 && <History />}
 
           {/* Threat intel Tab */}
-          {tab === 4 && <TreatIntel />}
+          {/* {tab === 4 && <TreatIntel />} */}
         </motion.div>
       </div>
 
@@ -198,4 +223,4 @@ const TicketDetails = () => {
   );
 };
 
-export default TicketDetails;
+export default NewTicketDetails;

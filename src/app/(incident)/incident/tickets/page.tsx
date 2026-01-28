@@ -1,8 +1,8 @@
-import IncidentTicketPage from "@/components/IMS/IncidateTicketPage";
+import NewIncidentList from "@/components/IMS/incident/NewIncidentList";
 import React from "react";
 
 const Page = () => {
-  return <IncidentTicketPage />;
+  return <NewIncidentList />;
 };
 
 export default Page;

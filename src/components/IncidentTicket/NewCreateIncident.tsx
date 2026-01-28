@@ -16,7 +16,7 @@ import { querykeys } from "@/lib/constant";
 import { endpoint } from "@/lib/api/endpoint";
 import { useFetch } from "@/hooks/useFetch";
 
-const incidentSchema = z.object({
+ const incidentSchema = z.object({
   // Section: Basics & Source
   summary: z.string().min(5, "Summary must be at least 5 characters"),
   serviceArea: z.string().min(1, "Service area is required"),
@@ -39,7 +39,7 @@ const incidentSchema = z.object({
   financialExposure: z.string(),
   blastRadius: z.string(),
   regulatory: z.string().optional(),
-  customerCommNeeded: z.boolean().default(false),
+  customerCommNeeded: z.boolean(),
   customerMessage: z.string().optional(),
 
   // Section: Ownership
@@ -61,12 +61,12 @@ const incidentSchema = z.object({
   rootCauseCategory: z.string(),
   relatedIncident: z.string().optional(),
   internalNotes: z.string().optional(),
-  postActions: z.array(z.string()).default([]),
-  ezraFocusMode: z.enum(["exec", "sre", "fraud"]),
+  postActions: z.array(z.string()),
+  ezraFocusMode: z.string().optional(),
   ezraInstructions: z.string().optional(),
 });
 
-type IncidentFormValues = z.infer<typeof incidentSchema>;
+export type IncidentFormValues = z.infer<typeof incidentSchema>;
 
 const RaiseIncident = () => {
   const {
@@ -260,7 +260,7 @@ const RaiseIncident = () => {
                           {...field}
                           placeholder="Checkout-service DB pool exhaustion"
                           className="!bg-[#08132F]"
-                          error={errors.summary?.message}
+                          error={errors.summary?.message as string}
                         />
                       )}
                     />
@@ -277,7 +277,7 @@ const RaiseIncident = () => {
                           {...field}
                           placeholder="Checkout-service . payments"
                           className="!bg-[#08132F]"
-                          error={errors.serviceArea?.message}
+                          error={errors.serviceArea?.message as string}
                         />
                       )}
                     />
@@ -319,7 +319,7 @@ const RaiseIncident = () => {
                             },
                           ]}
                           className="!bg-[#08132F]"
-                          error={errors.sourceType?.message}
+                          error={errors.sourceType?.message as string}
                         />
                       )}
                     />
@@ -346,7 +346,7 @@ const RaiseIncident = () => {
                             },
                           ]}
                           className="!bg-[#08132F]"
-                          error={errors.detection?.message}
+                          error={errors.detection?.message as string}
                         />
                       )}
                     />
@@ -380,10 +380,10 @@ const RaiseIncident = () => {
                         <Select
                           {...field}
                           options={[
-                            { value: "P1 - Critical", label: "P1 - Critical" },
-                            { value: "P2 - High", label: "P2 - High" },
-                            { value: "P3 - Medium", label: "P3 - Medium" },
-                            { value: "P4 - Low", label: "P4 - Low" },
+                            { value: "P1", label: "P1 - Critical" },
+                            { value: "P2", label: "P2 - High" },
+                            { value: "P3", label: "P3 - Medium" },
+                            { value: "P4", label: "P4 - Low" },
                           ]}
                           className="!bg-[#08132F]"
                         />
@@ -797,7 +797,7 @@ const RaiseIncident = () => {
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {(watch("metrics") ?? []).map((item, idx) => (
+                        {(watch("metrics") ?? []).map((item:string, idx:number) => (
                           <div
                             className="text-sm  rounded-full px-2 py-1 w-fit bg-dark"
                             key={idx}
@@ -820,7 +820,7 @@ const RaiseIncident = () => {
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {(watch("logStreams") ?? []).map((item, idx) => (
+                        {(watch("logStreams") ?? []).map((item:string, idx:number) => (
                           <div
                             className="text-sm  rounded-full px-2 py-1 w-fit bg-dark"
                             key={idx}
@@ -843,7 +843,7 @@ const RaiseIncident = () => {
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {(watch("pipelines") ?? []).map((item, idx) => (
+                        {(watch("pipelines") ?? []).map((item:string, idx:number) => (
                           <div
                             className="text-sm  rounded-full px-2 py-1 w-fit bg-dark"
                             key={idx}
@@ -866,7 +866,7 @@ const RaiseIncident = () => {
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {(watch("fraudRiskView") ?? []).map((item, idx) => (
+                        {(watch("fraudRiskView") ?? []).map((item:string, idx:number) => (
                           <div
                             className="text-sm  rounded-full px-2 py-1 w-fit bg-dark"
                             key={idx}

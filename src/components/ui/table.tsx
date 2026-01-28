@@ -8,6 +8,7 @@ import {
   SortingState,
   flexRender,
 } from "@tanstack/react-table";
+import EmptyState from "./EmptyState";
 
 interface TableProps<TData> extends React.HTMLAttributes<HTMLTableElement> {
   data?: TData[];
@@ -43,19 +44,21 @@ const Table = <TData extends object>({
   });
 
   return (
-    <div className="overflow-x-auto dark:bg-background bg-white rounded-lg">
+    <div className="overflow-x-auto dark:bg-background bg-[#0A1635] rounded-lg">
       {data && data.length < 1 ? (
-        <></>
+        <>
+          <EmptyState title="No Items yet"/>
+        </>
       ) : (
         <table
           className={cn("w-full caption-bottom text-sm", className)}
           {...props}
         >
-          <thead className="dark:bg-[#374151] dark:text-white bg-blue-50">
+          <thead className="text-white bg-[#374151]">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
-                className=" dark:border-zinc-600 border-zinc-300 transition-colors  data-[state=selected]:bg-zinc-100  dark:data-[state=selected]:bg-zinc-800"
+                className="dark:border-zinc-600 border-zinc-300 transition-colors  data-[state=selected]:bg-zinc-100  dark:data-[state=selected]:bg-zinc-800"
               >
                 {headerGroup.headers.map((header) => {
                   return (
@@ -98,7 +101,7 @@ const Table = <TData extends object>({
                 data-state={row.getIsSelected() && "selected"}
                 onClick={() => onRowClick?.(row.original)}
                 className={cn(
-                  "border-b dark:border-zinc-600 border-zinc-300 transition-colors hover:bg-zinc-100/50 data-[state=selected]:bg-zinc-100 dark:hover:bg-zinc-800/50 dark:data-[state=selected]:bg-zinc-800",
+                  "border-b dark:border-zinc-600 border-zinc-300 transition-colors  data-[state=selected]:bg-zinc-100  dark:data-[state=selected]:bg-zinc-800",
                   typeof rowClassName === "function"
                     ? rowClassName(row.original)
                     : rowClassName,

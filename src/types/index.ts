@@ -1,3 +1,4 @@
+import { IncidentFormValues } from "@/components/IncidentTicket/NewCreateIncident";
 import { IncidentData } from "@/lib/stores/post-morterm";
 
 export type Ticket = {
@@ -56,6 +57,12 @@ export type Ticket = {
     lastName: string;
   };
 };
+
+export type Tticket = {
+  id: string;
+  ticketId: string;
+  createdAt:string
+} & IncidentFormValues
 
 export interface Assignment {
   date: string;

@@ -14,3 +14,13 @@ export const formatTime = (totalSeconds: number) => {
 
   return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 };
+
+export const getEmailDomain = (email: string): {domain:string, email:string} => {
+  if (!email || !email.includes('@')) return {domain: "", email: ""};
+  
+  // We split by '@' and take the last element in case of weird edge cases
+  return {
+    domain: email.split('@').pop()?.replace(".com", "") || '',
+    email: `${email.split("@")[0].substring(0,3)}*****@` + email.split('@').pop() || ''
+  }
+};

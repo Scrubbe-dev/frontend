@@ -1,5 +1,5 @@
+// @typescript-eslint/no-explicit-any
 "use client";
-
 import React from "react";
 import { Info } from "lucide-react";
 import { RiInformationLine } from "react-icons/ri";
@@ -8,7 +8,7 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   error?: string;
   isLoading?: boolean;
-  options: { value: string; label: string }[];
+  options: { value: any; label: string }[];
   labelClassName?: string;
   info?: string;
   icon?: React.ReactNode;

@@ -1,8 +1,8 @@
-import TicketDetails from "@/components/IMS/TicketDetails";
+import NewTicketDetails from "@/components/IMS/incident/NewTicketDetails";
 import React from "react";
 
 const Page = () => {
-  return <TicketDetails />;
+  return <NewTicketDetails />;
 };
 
 export default Page;

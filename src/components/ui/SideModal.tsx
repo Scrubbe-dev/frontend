@@ -6,6 +6,7 @@ interface SideModalProps {
   onClose: () => void;
   children: React.ReactNode;
   title: string;
+  subTitle?:string
 }
 
 const SideModal: React.FC<SideModalProps> = ({
@@ -13,6 +14,7 @@ const SideModal: React.FC<SideModalProps> = ({
   onClose,
   children,
   title,
+  subTitle
 }) => {
   return (
     <>
@@ -31,6 +33,7 @@ const SideModal: React.FC<SideModalProps> = ({
           <div className="flex items-center justify-between p-4 border-b border-gray-500 shrink-0">
             <div>
               <h2 className="text-xl font-semibold text-white ">{title}</h2>
+              <p className="text-gray-200 text-sm">{subTitle}</p>
             </div>
             <button
               onClick={onClose}
