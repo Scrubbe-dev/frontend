@@ -39,19 +39,14 @@ const ContactUs = () => {
     }
   };
   return (
-    <div className="bg-[#00263D] min-h-screen font-sans ">
+    <div className="bg-dark min-h-screen font-sans w-full ">
       <div className="h-[500px] w-full bg-no-repeat bg-cover relative z-10">
-        <img
-          src="/IMS/contact-us.jpg"
-          className=" w-full h-full object-cover brightness-50 absolute z-0"
-          alt=""
-        />
         <div className="container mx-auto p-4">
           <div className=" absolute flex flex-col items-center justify-center h-full w-full">
-            <h1 className="text-white text-4xl md:text-5xl font-bigshotOne text-center">
-              We’re Here to Keep Your Operations Resilient.
+            <h1 className="text-white text-4xl md:text-6xl font-bigshotOne text-center">
+              We’re Here to Keep Your <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-IMSCyan to-[#8250BE]">Operations Resilient</span>.
             </h1>
-            <p className=" max-w-2xl text-white text-center">
+            <p className=" max-w-2xl text-white text-center pt-4">
               From onboarding to ongoing incident management, our dedicated
               support ensures your team stays informed, connected, and always
               operational.
@@ -64,7 +59,10 @@ const ContactUs = () => {
           Contact Support
         </p>
         <div className=" grid lg:grid-cols-[1fr,.6fr] gap-6">
-          <form onSubmit={handleContactUs} className="p-10 rounded-xl bg-white">
+          <form
+            onSubmit={handleContactUs}
+            className="bg-gradient-to-b from-[#0074834D] to-[#004B571A] border rounded-xl transition-all border-IMSCyan/40 overflow-clip text-white p-10"
+          >
             <p className=" font-semibold text-xl">Send us a message</p>
             <p>
               Choose your inquiry type and we&apos;ll connect you with the right
@@ -73,9 +71,9 @@ const ContactUs = () => {
             <div className="grid sm:grid-cols-3 mt-4 gap-4">
               <div
                 onClick={() => setType("technical-support")}
-                className={`p-4 py-6 border ${
+                className={`p-4 py-6 border cursor-pointer ${
                   type === "technical-support"
-                    ? "border-greenscrubbe-300 bg-greenscrubbe-300/10"
+                    ? "border-greenscrubbe-300 "
                     : "border-zinc-300"
                 } rounded-xl `}
               >
@@ -84,9 +82,9 @@ const ContactUs = () => {
               </div>
               <div
                 onClick={() => setType("sales-inquiry")}
-                className={`p-4 py-6 border ${
+                className={`p-4 py-6 border cursor-pointer ${
                   type === "sales-inquiry"
-                    ? "border-greenscrubbe-300 bg-greenscrubbe-300/10"
+                    ? "border-greenscrubbe-300 "
                     : "border-zinc-300"
                 } rounded-xl `}
               >
@@ -95,9 +93,9 @@ const ContactUs = () => {
               </div>
               <div
                 onClick={() => setType("general-support")}
-                className={`p-4 py-6 border ${
+                className={`p-4 py-6 border cursor-pointer ${
                   type === "general-support"
-                    ? "border-greenscrubbe-300 bg-greenscrubbe-300/10"
+                    ? "border-greenscrubbe-300 "
                     : "border-zinc-300"
                 } rounded-xl `}
               >
@@ -111,12 +109,14 @@ const ContactUs = () => {
                 label="First Name"
                 required
                 value={formData.first_name}
+                labelClassName="text-white"
                 onChange={(e) => handleChange(e.target.value, "first_name")}
               />
               <Input
                 label="Last Name"
                 required
                 value={formData.last_name}
+                labelClassName="text-white"
                 onChange={(e) => handleChange(e.target.value, "last_name")}
               />
               <Input
@@ -124,17 +124,19 @@ const ContactUs = () => {
                 type="email"
                 required
                 value={formData.email}
+                labelClassName="text-white"
                 onChange={(e) => handleChange(e.target.value, "email")}
               />
-              <Input label="Phone Number" />
-              <Input label="Company's Name" />
-              <Input label="Job Title" />
-              <Input label="Subject" />
+              <Input label="Phone Number" labelClassName="text-white" />
+              <Input label="Company's Name" labelClassName="text-white" />
+              <Input label="Job Title" labelClassName="text-white" />
             </div>
+            <Input label="Subject" labelClassName="text-white" />
             <TextArea
               label="Message"
               required
               value={formData.message}
+              labelClassName="text-white"
               onChange={(e) => handleChange(e.target.value, "message")}
             />
 
@@ -144,10 +146,12 @@ const ContactUs = () => {
               </CButton>
             </div>
           </form>
-          <div className="p-10 rounded-xl bg-white">
+          <div 
+            className="bg-gradient-to-b from-[#0074834D] to-[#004B571A] border rounded-xl transition-all border-IMSCyan/40 overflow-clip text-white p-10"
+            >
             <p className=" font-semibold text-xl">Send us a message</p>
             <div className="flex flex-col gap-3 mt-3">
-              <div className="p-4 py-6 border border-greenscrubbe-300 rounded-xl bg-greenscrubbe-300/10 flex-row flex gap-3 items-center">
+              <div className="p-4 py-6 border border-IMSCyan rounded-xl  flex-row flex gap-3 items-center">
                 <BiEnvelope size={23} />
                 <div className=" space-y-2">
                   <p className=" font-medium">Email Support</p>
@@ -156,14 +160,14 @@ const ContactUs = () => {
                   </Link>
                 </div>
               </div>
-              <div className="p-4 py-6 border border-greenscrubbe-300 rounded-xl bg-greenscrubbe-300/10 flex-row flex gap-3 items-center">
+              <div className="p-4 py-6 border border-IMSCyan rounded-xl  flex-row flex gap-3 items-center">
                 <BiChat size={23} />
                 <div className=" space-y-2">
                   <p className=" font-medium">Live Chat</p>
                   <p>Available 24/7</p>
                 </div>
               </div>
-              <div className="p-4 py-6 border border-greenscrubbe-300 rounded-xl bg-greenscrubbe-300/10 flex-row flex gap-3 items-center">
+              <div className="p-4 py-6 border border-IMSCyan rounded-xl  flex-row flex gap-3 items-center">
                 <MdPhoneInTalk size={23} />
                 <div className=" space-y-2">
                   <p className=" font-medium">Support Hours</p>
@@ -176,16 +180,16 @@ const ContactUs = () => {
 
             <div className="flex flex-col gap-2 mt-7">
               <p className=" font-semibold text-xl">Quick Link</p>
-              <Link href={"/#"} className=" text-IMSLightGreen underline">
+              <Link href={"/#"} className=" text-IMSCyan underline">
                 Documentation
               </Link>
-              <Link href={"/#"} className=" text-IMSLightGreen underline">
+              <Link href={"/#"} className=" text-IMSCyan underline">
                 API Reference
               </Link>
-              <Link href={"/#"} className=" text-IMSLightGreen underline">
+              <Link href={"/#"} className=" text-IMSCyan underline">
                 Knowledge Base
               </Link>
-              <Link href={"/#"} className=" text-IMSLightGreen underline">
+              <Link href={"/#"} className=" text-IMSCyan underline">
                 System Status
               </Link>
             </div>

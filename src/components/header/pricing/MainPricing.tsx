@@ -1,8 +1,8 @@
 "use client";
 import CButton from "@/components/ui/Cbutton";
-import Switch from "@/components/ui/Switch";
+import { Switch } from "@heroui/react";
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -162,11 +162,20 @@ const businessPricing = [
   },
 ];
 
+const Card = ({body,subtitle,title}: {subtitle: string, title: string, body:string | ReactNode}) => {
+  return <div
+  className={`min-h-[100px] bg-gradient-to-b text-white from-[#0074834D] to-[#004B571A] border rounded-xl transition-all border-IMSCyan/40 overflow-clip p-3`}>
+    <p className="text-sm">{subtitle}</p>
+    <p className="text-sm font-semibold mt-1">{title}</p>
+    <div className="text-sm">{body}</div>
+  </div>
+}
+
 const MainPricing = () => {
   const [type, setType] = useState("business");
   const [duration, setDuration] = useState("monthly");
   return (
-    <div className=" bg-white px-4 md:px-6 lg:px-20 xl:px-20 py-20 min-h-screen">
+    <div className=" bg-dark px-4 md:px-6 lg:px-20 xl:px-20 py-40 min-h-screen">
       <motion.div
         className=" max-w-[1440px] mx-auto space-y-8 "
         variants={containerVariants}
@@ -174,59 +183,79 @@ const MainPricing = () => {
         whileInView="show"
         viewport={{ once: true, amount: 0.3 }}
       >
-        <p className=" text-colorScBlue text-3xl md:text-5xl font-bold text-center">
-          Pricing
+        <p className=" text-white text-3xl md:text-5xl font-bold text-center font-bigshotOne max-w-lg mx-auto ">
+        Pricing that scales with  <span className="text-transparent bg-clip-text bg-gradient-to-r from-IMSCyan via-[#8250BE] to-[#8250BE]">trust and authority.</span>
         </p>
-        <p className="text-center font-medium">
-          Security automation you can scale wit from startup to enterprise.
+        <p className="text-center font-medium text-white max-w-3xl mx-auto">
+        Scrubbe isn’t priced like an ITSM tool. You’re not paying for “tickets”. You’re paying for how much decision-making authority you delegate — under strict policies, playbooks, and a full decision log.
         </p>
-        <div className="flex mx-auto border w-fit rounded-lg p-2">
-          <div
-            onClick={() => setType("business")}
-            className={`${
-              type == "business"
-                ? "bg-colorScBlue text-white"
-                : "bg-transparent text-gray-600"
-            } rounded-md p-1  w-[150px] text-center cursor-pointer`}
-          >
-            Business
-          </div>
-          <div
-            onClick={() => setType("developer")}
-            className={`${
-              type == "developer"
-                ? "bg-colorScBlue text-white"
-                : "bg-transparent text-gray-600"
-            } rounded-md p-1  w-[150px] text-center cursor-pointer`}
-          >
-            Developer
+        <div className="flex gap-3 justify-center">
+          <CButton className="bg-IMSCyan text-dark w-fit px-4">
+            View Plans
+          </CButton>
+          <CButton className="border-IMSCyan border bg-transparent hover:bg-transparent text-IMSCyan w-fit px-4">
+          Estimate Cost
+          </CButton>
+          <CButton className=" bg-transparent hover:bg-transparent text-IMSCyan w-fit">
+          Key terms 
+          </CButton>
+        </div>
+        <div className="grid grid-cols-4 gap-5">
+          <Card title="Platform + SRE + Eng leaders" subtitle="Best for" body="Control-plane adoption curve"/>
+          <Card title="Governed executions" subtitle="Primary metric" body="Not incidents / tickets"/>
+          <Card title="Observe → Govern → Execute" subtitle="Expansion path" body="As trust increases"/>
+          <Card title="Scrubbe prices on delegated authority" subtitle="Position alignment" body={
+            <ul className="text-sm space-y-1">
+              <li>Observe = reasoning</li>
+              <li>Govern = policies + gates</li>
+              <li>Execute = prod authority</li>
+            </ul>
+          }/>
+        </div>
+       
+       <div>
+        <div className="flex justify-between items-center">
+          <p className="text-base text-white">Plans & tiers</p>
+          <div className="flex gap-3">
+            <div className="border-IMSCyan border bg-transparent hover:bg-transparent text-IMSCyan w-fit px-4 rounded-lg py-2 text-sm">Compare Features</div>
+            <div className="border-IMSCyan border bg-transparent hover:bg-transparent text-IMSCyan w-fit px-4 rounded-lg py-2 text-sm">Help me choose</div>
           </div>
         </div>
+
+        <div>
+        <p className=" text-white text-2xl md:text-4xl font-bold font-bigshotOne ">
+        Choose your authority level
+        </p>
+        <p className="text-base text-white">Start read-only, then unlock governance, activation, and execution as confidence grows.</p>
+        </div>
+       </div>
+
 
         <div className="mx-auto w-fit flex items-center gap-3">
           <p
             className={`${
               duration === "monthly"
-                ? "text-colorScBlue font-semibold"
+                ? "text-IMSCyan font-semibold"
                 : "text-gray-700"
             }`}
           >
             Monthly
           </p>
           <Switch
-            onChange={(value) =>
-              setDuration(() => (value == false ? "monthly" : "yearly"))
+            onChange={(e) =>
+              setDuration(() => (e.target.checked == false ? "monthly" : "yearly"))
             }
+            color="success"
             checked={duration == "monthly" ? false : true}
           />
           <p
             className={`${
               duration === "yearly"
-                ? "text-colorScBlue font-semibold"
-                : "text-gray-700"
+                ? "text-IMSCyan font-semibold"
+                : "text-white"
             }`}
           >
-            Yearly
+            Annual
           </p>
         </div>
 

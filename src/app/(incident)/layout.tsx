@@ -1,6 +1,5 @@
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
-import { RedirectProviderIMS } from "@/provider/RedirectProviderIMS";
-import StandaloneTokenCollectorProvider from "@/provider/StandaloneTokenCollectorProvider";
+// import { RedirectProviderIMS } from "@/provider/RedirectProviderIMS";
 import { redirect } from "next/navigation";
 import React, { ReactNode } from "react";
 import { Toaster } from "sonner";
@@ -12,13 +11,13 @@ const IncidentDashboard = ({ children }: { children: ReactNode }) => {
     redirect("/");
   }
   return (
-    <StandaloneTokenCollectorProvider>
+    // <RedirectProviderIMS>
+    <>
       <NextJsTopLoader />
-      <RedirectProviderIMS>
-        {children}
-        <Toaster position="top-center" />
-      </RedirectProviderIMS>
-    </StandaloneTokenCollectorProvider>
+      {children}
+      <Toaster position="top-center" />
+    </>
+    // </RedirectProviderIMS>
   );
 };
 

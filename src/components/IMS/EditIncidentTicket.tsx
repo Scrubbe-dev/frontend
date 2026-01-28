@@ -409,10 +409,10 @@ const EditIncidentTicket = () => {
             icon={<Calendar size={16} />}
             label="Date Opened"
             error={errors.affectedSystem?.message}
-            value={new Date(ticket?.createdAt ?? "")
-              ?.toISOString()
-              ?.split("T")
-              ?.join(" ")}
+            // value={new Date(ticket?.createdAt ?? "")
+            //   ?.toISOString()
+            //   ?.split("T")
+            //   ?.join(" ")}
             className=" text-black dark:text-white"
             readOnly
           />

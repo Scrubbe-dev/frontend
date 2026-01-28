@@ -54,6 +54,7 @@ const TextArea = ({
               : "border-gray-400"
           } ${error ? "border-red-500" : ""} ${className}`}
           disabled={isLoading}
+          rows={4}
           {...props}
         />
 

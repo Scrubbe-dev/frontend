@@ -1,208 +1,187 @@
-// PricingAndAddons.tsx
-import React from "react";
-import { FiCheck, FiX } from "react-icons/fi"; // Assumes react-icons
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const EzraPlans: any[] = [
-  {
-    plan: "Ezra Lite",
-    price: "$99/ Month",
-    features: [
-      "Alert Summaries",
-      "Timestamp",
-      "Rule Generation",
-      "SOC Co-Pilot",
-      "Data Privacy",
-      "Language Support",
-    ],
-    featureDetails: {
-      "Alert Summaries": "✅",
-      "Rule Generation": "❌",
-      "SOC Co-Pilot": "❌",
-      "Data Privacy": "N/A",
-      "Language Support": "English Only",
-    },
-    action: "Add Ezra Lite",
-  },
-  {
-    plan: "Ezra Pro",
-    price: "$399/ Month",
-    features: [
-      "Alert Summaries",
-      "Rule Generation",
-      "SOC Co-Pilot",
-      "Data Privacy",
-      "Language Support",
-    ],
-    featureDetails: {
-      "Alert Summaries": "✅",
-      "Rule Generation": "✅ Drafting Assistance",
-      "SOC Co-Pilot": "✅ AI-assisted alert triage",
-      "Data Privacy": "✅ AI in private context",
-      "Language Support": "English (Spanish, French) Coming soon",
-    },
-    action: "Add Ezra Pro",
-  },
-  {
-    plan: "Ezra Enterprise",
-    price: "Custom Pricing",
-    features: [
-      "Alert Summaries",
-      "Rule Generation",
-      "SOC Co-Pilot",
-      "Data Privacy",
-      "Language Support",
-    ],
-    featureDetails: {
-      "Alert Summaries": "✅ Threat Severity Modeling",
-      "Rule Generation": "✅ Prompt Guardrails & Templates",
-      "SOC Co-Pilot": "✅ Auto-mitigations + Escalation",
-      "Data Privacy": "✅ On-Prem Model Option",
-      "Language Support": "5+ Languages Coming soon",
-    },
-    action: "Add Ezra Enterprise",
-  },
-];
-
-const Optionals = [
-  {
-    feature: "Additional Fingerprint Requests",
-    price: "$49 per 10,000 requests",
-    action: "Add Feature",
-  },
-  {
-    feature: "Extended Log Retention",
-    price: "Starting at $250/mo (up to 1 year)",
-    action: "Add Feature",
-  },
-  {
-    feature: "SIEM Forwarders (AWS/GCP/Azure)",
-    price: "Included in Growth+",
-    action: "Add Feature",
-  },
-  {
-    feature: "Audit Trail Exports (JSON/CSV)",
-    price: "Included in Growth+",
-    action: "Add Feature",
-  },
-  {
-    feature: "Audit Trail Exports (JSON/CSV)",
-    price: "$100/mo or included in Enterprise",
-    action: "Add Feature",
-  },
-  {
-    feature: "SSO / SCIM",
-    price: "Included in Enterprise only",
-    action: "Add Feature",
-  },
-];
+import React, { ReactNode } from 'react';
+import { Check } from 'lucide-react';
+import CButton from '@/components/ui/Cbutton';
+import { TiSpanner, TiSpannerOutline } from 'react-icons/ti';
+import { IoDocumentOutline } from 'react-icons/io5';
+import { HiOutlineCube } from 'react-icons/hi';
 
 const PricingAndAddons = () => {
+  const tiers = ['Observe', 'Govern', 'Execute', 'Enterprise'];
+
+  const features = [
+    { name: 'Unified incident ingestion', values: ['check', 'check', 'check', 'check'] },
+    { name: 'Signal Graph (view/edit)', values: ['View', 'Edit', 'Edit', 'Edit + Template'] },
+    { name: 'Ezra summaries + evidence', values: ['check', 'check', 'check (board-ready)', 'check (custom)'] },
+    { name: 'Policy Engine', values: ['dash', 'check', 'check', 'check + Multi-org'] },
+    { name: 'Playbook editor + canonical library', values: ['View', 'check', 'check', 'check + Custom'] },
+    { name: 'Auto-activation', values: ['dash', 'Delivery + limited', 'Delivery + prod', 'Full'] },
+    { name: 'Code Engine execution', values: ['dash', 'Staging', 'Prod (gated)', 'Prod + custom'] },
+    { name: 'Governed executions metering', values: ['Limited', 'Included', 'Higher included', 'Custom'] },
+    { name: 'Decision Log + export', values: ['Read', 'check', 'check', 'check + Retention'] },
+    { name: 'Enterprise controls', values: ['dash', 'Basic', 'Advanced', 'Full'] },
+  ];
+
+  const renderCell = (val: string) => {
+    if (val.startsWith('check')) {
+      return (
+        <div className="flex items-center gap-2">
+          <Check className="text-emerald-400 w-5 h-5" />
+          {val.length > 5 && <span className="text-gray-300 text-sm">{val.replace('check ', '')}</span>}
+        </div>
+      );
+    }
+    if (val === 'dash') {
+      return <span className="text-rose-500 text-xl">—</span>;
+    }
+    return <span className="text-gray-300 text-sm">{val}</span>;
+  };
+
+
+  const Card = ({ body, subtitle, title, icon }: { subtitle: string, title: string, body: string | ReactNode, icon?: ReactNode }) => {
+    return <div
+      className={`min-h-[100px] bg-[#030D25] text-white from-[#0074834D] to-[#004B571A] border rounded-xl transition-all border-IMSCyan/40 overflow-clip p-3`}>
+      <p className="text-sm flex items-center gap-1">{icon} {subtitle}</p>
+      <p className="text-sm font-semibold mt-1">{title}</p>
+      <div className="text-sm">{body}</div>
+    </div>
+  }
+
   return (
-    <div className="bg-white">
-      <div className=" max-w-[1440px] mx-auto p-8">
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-4">Ezra AI Add-On (Optional)</h2>
-          <p className="text-gray-600 max-w-2xl mb-8">
-            Ezra can be enabled on any plan to add LLM-powered rule writing,
-            incident response, and alert summarization.
-          </p>
+    <div className="bg-dark text-white p-8 min-h-screen font-sans">
+      {/* Header Section */}
+      <div className="max-w-7xl mx-auto mb-12">
+        <p className="text-white text-lg mb-2">Feature comparison</p>
+        <h1 className="text-5xl font-bold mb-2 font-bigshotOne">What you get, and why it matters</h1>
+        <p className="text-gray-400">Hover the dotted terms for definitions.</p>
+      </div>
 
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <div className="grid grid-cols-4 bg-gray-50 divide-x divide-gray-200">
-              <div className="px-6 py-4 text-sm font-medium text-gray-500 uppercase">
-                Ezra Plan
-              </div>
-              {EzraPlans.map((plan, index) => (
-                <div
-                  key={index}
-                  className="px-6 py-4 text-sm font-medium text-gray-500 uppercase"
-                >
-                  {plan.plan}
-                </div>
+      {/* Table Container */}
+      <div className="max-w-7xl mx-auto overflow-x-auto border border-slate-800 rounded-lg">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-[#007483]">
+              <th className="p-4 font-semibold border-r border-slate-700/50">Capability</th>
+              {tiers.map((tier) => (
+                <th key={tier} className="p-4 font-semibold">
+                  {tier}
+                </th>
               ))}
-            </div>
-            <div className="divide-y divide-gray-200">
-              {Object.keys(EzraPlans[0].featureDetails).map(
-                (feature, featureIndex) => (
-                  <div
-                    key={featureIndex}
-                    className="grid grid-cols-4 divide-x divide-gray-200"
-                  >
-                    <div className="px-6 py-4 text-sm text-gray-900 font-medium">
-                      {feature}
-                    </div>
-                    {EzraPlans.map((plan, planIndex) => (
-                      <div
-                        key={planIndex}
-                        className="px-6 py-4 text-sm text-gray-500"
-                      >
-                        {plan?.featureDetails[feature] === "✅" && (
-                          <FiCheck className="text-green-500" />
-                        )}
-                        {plan.featureDetails[feature] === "❌" && (
-                          <FiX className="text-red-500" />
-                        )}
-                        {plan.featureDetails[feature] !== "✅" &&
-                          plan.featureDetails[feature] !== "❌" &&
-                          plan.featureDetails[feature]}
-                      </div>
-                    ))}
-                  </div>
-                )
-              )}
-              <div className="grid grid-cols-4 divide-x divide-gray-200 bg-gray-50">
-                <div className="px-6 py-4 text-sm font-medium text-gray-500 uppercase">
-                  Action
-                </div>
-                {EzraPlans.map((plan, index) => (
-                  <div key={index} className="">
-                    <button className="w-full h-full text-white bg-blue-600 hover:bg-blue-700 font-medium  text-sm px-4 py-2">
-                      {plan.action}
-                    </button>
-                  </div>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-800">
+            {features.map((feature, idx) => (
+              <tr key={idx} className="hover:bg-slate-900/50 transition-colors">
+                <td className="p-4 border-r border-slate-800">
+                  <span className="border-b border-dotted border-gray-500 cursor-help">
+                    {feature.name}
+                  </span>
+                </td>
+                {feature.values.map((val, i) => (
+                  <td key={i} className="p-4">
+                    {renderCell(val)}
+                  </td>
                 ))}
-              </div>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="max-w-7xl mx-auto mt-12">
+        <div className='grid grid-cols-2 gap-5'>
+          <div className='border border-zinc-500 rounded-xl p-3'>
+            <p className='text-sm'>Metering</p>
+            <p className='text-2xl font-bigshotOne'>Governed executions (not tickets)</p>
+            <p className='text-sm'>A governed execution is the atomic unit of value in Scrubbe.</p>
+
+            <div className='grid grid-cols-2 gap-3 mt-4'>
+              <Card title='Includes 20,000 executions / month' subtitle='Govern (illustrative)' body="Overage: £120 per extra 1,000" />
+              <Card title='Includes 80,000 executions / month' subtitle='Executive (illustrative)' body="Overage: £120 per extra 1,000" />
             </div>
+
+            <div className='mt-4 space-x-3'>
+              <CButton className="bg-IMSCyan text-dark w-fit px-4">
+                Use estimator
+              </CButton>
+              <CButton className="border-IMSCyan border bg-transparent hover:bg-transparent text-IMSCyan w-fit px-4">
+                Understand metering
+              </CButton>
+            </div>
+          </div>
+          <div className='border border-zinc-500 rounded-xl p-3 flex flex-col justify-between'>
+            <div>
+              <p className='text-sm'>Why this works</p>
+              <p className='text-2xl font-bigshotOne'>Clean expansion + clean incentives</p>
+              <ul className='text-sm space-y-2'>
+                <li className='flex items-center gap-1'>
+                  <Check className="text-emerald-400 w-5 h-5" />
+                  No “incident inflation” incentives
+                </li>
+                <li className='flex items-center gap-1'>
+                  <Check className="text-emerald-400 w-5 h-5" />
+                  Maps to actual system authority
+                </li>
+                <li className='flex items-center gap-1'>
+                  <Check className="text-emerald-400 w-5 h-5" />
+                  Investors understand the metric
+                </li>
+                <li className='flex items-center gap-1'>
+                  <Check className="text-emerald-400 w-5 h-5" />
+                  Customers feel ROI as automation grows
+                </li>
+              </ul>
+            </div>
+            <CButton className="bg-IMSCyan text-dark w-fit px-4">
+              Talk to Sales
+            </CButton>
           </div>
         </div>
 
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-4">Optionals</h2>
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <div className="grid grid-cols-3 bg-gray-50 divide-x divide-gray-200">
-              <div className="px-6 py-4 text-sm font-medium text-gray-500 uppercase">
-                Feature
-              </div>
-              <div className="px-6 py-4 text-sm font-medium text-gray-500 uppercase">
-                Add-on Price / Notes
-              </div>
-              <div className="px-6 py-4 text-sm font-medium text-gray-500 uppercase">
-                Action
-              </div>
-            </div>
-            <div className="divide-y divide-gray-200">
-              {Optionals.map((optional, index) => (
-                <div
-                  key={index}
-                  className="grid grid-cols-3 divide-x divide-gray-200"
-                >
-                  <div className="px-6 py-4 text-sm text-gray-900 font-medium">
-                    {optional.feature}
-                  </div>
-                  <div className="px-6 py-4 text-sm text-gray-500">
-                    {optional.price}
-                  </div>
-                  <div className="">
-                    <button className="w-full h-full text-white bg-blue-600 hover:bg-blue-700 font-medium text-sm px-4 py-2">
-                      {optional.action}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div className='border border-zinc-500 rounded-xl p-3 mt-12'>
+          <p className='text-sm'>Enterprise</p>
+          <p className='text-2xl font-bigshotOne'>Procurement-ready governance</p>
+          <p className='text-sm'>Deployment flexibility, deeper compliance exports, and multi-org policy ownership.</p>
+
+          <div className='grid grid-cols-3 gap-4 mt-6'>
+
+            <Card body={
+              <ul className="text-sm space-y-1 mt-1">
+                <li>SSO/SAML • SCIM</li>
+                <li>RBAC + custom roles</li>
+                <li>Multi-org governance boundaries</li>
+              </ul>
+            }
+              subtitle='Identity & access'
+              title=''
+              icon={<TiSpannerOutline className='size-4 text-IMSCyan' />}
+            />
+
+            <Card body={
+              <ul className="text-sm space-y-1 mt-1">
+                <li>Evidence packs (exportable)</li>
+                <li>Retention + immutable logs</li>
+                <li>Approval workflows</li>
+              </ul>
+            }
+              subtitle='Compliance & audit'
+              title=''
+              icon={<IoDocumentOutline className='size-4 text-IMSCyan' />}
+            />
+            <Card body={
+              <ul className="text-sm space-y-1 mt-1">
+                <li>VPC / private cloud options</li>
+                <li>On-prem (select)</li>
+                <li>Dedicated support + SLAs</li>
+              </ul>
+            }
+              subtitle='Deployment'
+              title=''
+              icon={<HiOutlineCube className='size-4 text-orange-400' />}
+            />
+
           </div>
         </div>
+
+      
       </div>
     </div>
   );
