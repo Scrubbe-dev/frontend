@@ -1,6 +1,7 @@
 "use client";
 import Cbutton from "@/components/ezra-landing/Cbutton";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const navItem = [
@@ -17,32 +18,36 @@ const NavbarEzra = () => {
   const textColor = "text-gray-800";
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 30) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
+    if (typeof window !== "undefined") {
+      const handleScroll = () => {
+        if (window.scrollY > 30) {
+          setScrolled(true);
+        } else {
+          setScrolled(false);
+        }
+      };
 
-    window.addEventListener("scroll", handleScroll);
-    // Initial check
-    handleScroll();
+      window.addEventListener("scroll", handleScroll);
+      // Initial check
+      handleScroll();
 
-    return () => {
-      document.body.style.overflow = "auto";
-      window.removeEventListener("scroll", handleScroll);
-    };
+      return () => {
+        document.body.style.overflow = "auto";
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }
   }, []);
 
   // Close menu on route change (optional, for better UX)
   useEffect(() => {
     if (menuOpen) {
       const close = () => setMenuOpen(false);
-      window.addEventListener("resize", close);
-      return () => window.removeEventListener("resize", close);
+      if (typeof window !== "undefined") {
+        window.addEventListener("resize", close);
+        return () => window.removeEventListener("resize", close);
+      }
     }
   }, [menuOpen]);
 
@@ -106,7 +111,9 @@ const NavbarEzra = () => {
           </p>
         </div>
         <div className="hidden md:block">
-          <Cbutton>Log In</Cbutton>
+          <Cbutton onClick={() => router.push("/auth/signin?to=ezra")}>
+            Log In
+          </Cbutton>
         </div>
         {/* Mobile menu dropdown */}
         {menuOpen && (
@@ -122,7 +129,12 @@ const NavbarEzra = () => {
               </Link>
             ))}
             <div className="w-full flex justify-center py-4">
-              <Cbutton className="w-11/12">Log In</Cbutton>
+              <Cbutton
+                onClick={() => router.push("/auth/signin?to=ezra")}
+                className="w-11/12"
+              >
+                Log In
+              </Cbutton>
             </div>
           </div>
         )}

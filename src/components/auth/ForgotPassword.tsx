@@ -1,164 +1,138 @@
 "use client";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type React from "react";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { useRouter, useSearchParams } from "next/navigation";
 import Input from "../ui/input";
 import CButton from "../ui/Cbutton";
-import OtpInput from "../ui/OtpInput";
+// import OtpInput from "../ui/OtpInput";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useAuthStore from "@/lib/stores/auth.store";
-import { 
-  forgotPasswordSchema, 
-  resetPasswordSchema, 
-  type ForgotPasswordFormData,
-  type ResetPasswordFormData 
-} from "@/lib/validations/auth.schema";
+import * as z from "zod";
+import { useFetch } from "@/hooks/useFetch";
+import { endpoint } from "@/lib/api/endpoint";
+import { toast } from "sonner";
+import { FaEnvelope } from "react-icons/fa";
+import { PasswordInput } from "../ui/password-input";
 
 export default function ForgotPassword() {
   const [stage, setStage] = useState<number>(1);
   const [email, setEmail] = useState<string>("");
-  const [resetToken, setResetToken] = useState<string>("");
-  const [verificationCode, setVerificationCode] = useState<string[]>(Array(6).fill(""));
-  const [resendTimer, setResendTimer] = useState<number>(60);
-  const [isResendDisabled, setIsResendDisabled] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const { post } = useFetch();
   const router = useRouter();
-  
-  const { forgotPassword, resetPassword, validateResetToken } = useAuthStore();
+  const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+
+  // Add zod schema for password reset
+  const passwordSchema = z
+    .object({
+      password: z
+        .string()
+        .min(6, { message: "Password must be at least 6 characters" }),
+      confirmPassword: z
+        .string()
+        .min(6, { message: "Confirm password must be at least 6 characters" }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords don't match",
+      path: ["confirmPassword"],
+    });
+
+  type PasswordFormData = z.infer<typeof passwordSchema>;
 
   const {
     control: passwordControl,
     handleSubmit: handlePasswordFormSubmit,
-    formState: { errors: passwordErrors, isValid: isPasswordValid },
+    formState: { errors: passwordErrors },
+    watch,
+    setValue,
     reset: resetPasswordForm,
-  } = useForm<ResetPasswordFormData>({
-    resolver: zodResolver(resetPasswordSchema),
-    defaultValues: { token: "", password: "" },
-    mode: "onChange",
+  } = useForm<PasswordFormData>({
+    resolver: zodResolver(passwordSchema),
+    defaultValues: { password: "", confirmPassword: "" },
   });
+
+  // Handle timer for resend code
+  // useEffect(() => {
+  //   let interval: NodeJS.Timeout;
+
+  //   if (stage === 2 && resendTimer > 0) {
+  //     interval = setInterval(() => {
+  //       setResendTimer((prev) => prev - 1);
+  //     }, 1000);
+  //   }
+
+  //   if (resendTimer === 0) {
+  //     setIsResendDisabled(false);
+  //   }
+
+  //   return () => {
+  //     if (interval) clearInterval(interval);
+  //   };
+  // }, [stage, resendTimer]);
 
   // Handle email submission
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-
-    try {
-      setIsLoading(true);
-      await forgotPassword(email);
-      
-      toast.success("Reset link sent!", {
-        description: "If your email is registered, you will receive a password reset link.",
-      });
-      
-      setStage(2);
-      // Start resend timer
-      setResendTimer(60);
-      setIsResendDisabled(true);
-    } catch (error) {
-      toast.error("Failed to send reset link", {
-        description: error instanceof Error ? error.message : "Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
+    if (email) {
+      setLoading(true);
+      const res = await post(endpoint.auth.forgot_password, { email });
+      setLoading(false);
+      if (res.success) {
+        setStage(2);
+        toast.success(res.data.message);
+      } else {
+        toast.error("Something went wrong, Try again!");
+      }
     }
   };
 
   // Handle verification code submission
-  const handleVerificationSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const code = verificationCode.join("");
-    
-    if (code.length !== 6) {
-      toast.error("Invalid code", {
-        description: "Please enter the complete 6-digit code.",
-      });
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      
-      // Validate the reset token/code
-      const isValid = await validateResetToken(code);
-      
-      if (isValid) {
-        setResetToken(code);
-        setStage(3);
-        resetPasswordForm({ token: code, password: "" });
-      } else {
-        toast.error("Invalid code", {
-          description: "The code you entered is invalid or has expired.",
-        });
-      }
-    } catch (error) {
-      toast.error("Validation failed", {
-        description: "Unable to validate the code. Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const handleVerificationSubmit = (value: string) => {
+  //   console.log(value);
+  //   setStage(3);
+  // };
 
   // Handle password creation
-  const handlePasswordSubmit = async (data: ResetPasswordFormData) => {
-    try {
-      setIsLoading(true);
-      
-      await resetPassword(resetToken, data.password);
-      
-      toast.success("Password reset successful!", {
-        description: "You can now sign in with your new password.",
-      });
-      
+  const handlePasswordSubmit = async (value: PasswordFormData) => {
+    setLoading(true);
+    const res = await post(endpoint.auth.reset_password, {
+      token,
+      password: value.password,
+    });
+    setLoading(false);
+    if (res.success) {
+      resetPasswordForm();
       setStage(4);
-    } catch (error) {
-      toast.error("Password reset failed", {
-        description: error instanceof Error ? error.message : "Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    const validateToken = async () => {
+      const res = await post(endpoint.auth.valid_token, { token });
+      console.log({ res });
+      if (res.success) {
+        if (!res.data.valid) {
+          toast.error("Invalid or Expired token");
+          setStage(1);
+          return;
+        }
+        return;
+      }
+      toast.error("Invalid or Expired token");
+      setStage(1);
+    };
+    if (token) {
+      setStage(3);
+      validateToken();
+    }
+  }, [token]);
+  
   // Handle resend code
-  const handleResendCode = async () => {
-    if (isResendDisabled) return;
-
-    try {
-      setIsLoading(true);
-      await forgotPassword(email);
-      
-      // Reset verification code
-      setVerificationCode(Array(6).fill(""));
-      // Reset timer
-      setResendTimer(60);
-      setIsResendDisabled(true);
-      
-      toast.success("Code resent!", {
-        description: "A new reset link has been sent to your email.",
-      });
-    } catch (error) {
-      toast.error("Failed to resend code", {
-        description: "Please try again later.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Handle timer countdown
-  const handleResendTimer = () => {
-    if (resendTimer > 0) {
-      setResendTimer(prev => prev - 1);
-    } else {
-      setIsResendDisabled(false);
-    }
-  };
+  // const handleResendCode = () => {};
 
   // Render different stages
   const renderStage = () => {
@@ -166,16 +140,11 @@ export default function ForgotPassword() {
       case 1:
         return (
           <div className="w-full mx-auto">
-            <div
-              className="flex gap-2 items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer"
-              onClick={() => router.back()}
-            >
-              <ChevronLeft />
-              <p>back</p>
-            </div>
-            <h1 className="text-2xl font-semibold mb-2">Forgot Password?</h1>
-            <p className="text-gray-600 mb-6">
-              Enter your email address to receive a password reset link
+            <h1 className="text-xl font-semibold text-white">
+              Forgot Password?
+            </h1>
+            <p className=" text-gray-300 text-base mb-6">
+              Put your email address to get started
             </p>
 
             <form onSubmit={handleEmailSubmit}>
@@ -186,12 +155,21 @@ export default function ForgotPassword() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                disabled={isLoading}
+                labelClassName="text-white"
+                className="text-white"
               />
 
-              <CButton type="submit" disabled={!email || isLoading} isLoading={isLoading}>
-                Send Reset Link
+              <CButton isLoading={loading} type="submit" disabled={!email}>
+                Submit
               </CButton>
+
+              <div
+                className="flex gap-2 items-center justify-center text-sm py-3 mb-3 opacity-60 hover:opacity-100 cursor-pointer text-white"
+                onClick={() => router.back()}
+              >
+                <ChevronLeft />
+                <p>Back to login</p>
+              </div>
             </form>
           </div>
         );
@@ -200,83 +178,71 @@ export default function ForgotPassword() {
         return (
           <div className="w-full mx-auto">
             <div
-              className="flex gap-2 items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer"
+              className=" flex gap-1 text-sm items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer text-white"
               onClick={() => setStage(1)}
             >
               <ChevronLeft />
               <p>back</p>
             </div>
-            <h1 className="text-2xl font-semibold mb-2">Email Verification</h1>
-            <p className="text-gray-600 mb-4">
-              We have sent a verification code to your email address
+            <div className="mx-auto flex justify-center w-full">
+              <div className=" bg-blue-50 rounded-full size-16 flex justify-center items-center text-IMSCyan ring-4 ring-blue-100/15">
+                <FaEnvelope size={35} />
+              </div>
+            </div>
+            <h1 className="text-2xl font-semibold mb-2 text-white text-center">
+              Check your Email
+            </h1>
+            <p className=" text-gray-300 mb-4 text-center text-sm">
+              We have sent a password reset link to this email -{" "}
+              <span className=" text-blue-600 font-bold">{email} </span>
+              <br />
+              If your email is registered, you will receive a password reset
+              link
             </p>
-
-            <p className="text-blue-600 mb-6 font-bold">{email}</p>
-
-            <form onSubmit={handleVerificationSubmit}>
-              <div className="flex gap-2 mb-6">
-                <OtpInput
-                  value={verificationCode}
-                  onChange={setVerificationCode}
-                  disabled={isLoading}
-                />
-              </div>
-
-              <CButton type="submit" disabled={isLoading || verificationCode.some(digit => !digit)} isLoading={isLoading}>
-                Continue
-              </CButton>
-
-              <div className="text-center mt-4">
-                <button
-                  type="button"
-                  onClick={handleResendCode}
-                  disabled={isResendDisabled || isLoading}
-                  className={`text-sm ${
-                    isResendDisabled
-                      ? "text-gray-400"
-                      : "text-blue-600 hover:underline"
-                  }`}
-                >
-                  {isResendDisabled 
-                    ? `Resend code in ${resendTimer}s` 
-                    : "Resend code"
-                  }
-                </button>
-              </div>
-            </form>
           </div>
         );
 
       case 3:
         return (
-          <div className="w-full mx-auto">
-            <h1 className="text-2xl font-semibold mb-2">Create New Password</h1>
-            <p className="text-gray-600 mb-6">
-              Enter a new password for your account
+          <div className="w-full  mx-auto">
+            <h1 className="text-xl font-semibold mb-2 text-white">
+              Create New Password
+            </h1>
+            <p className=" text-gray-300 mb-6 text-base">
+              Enter a password you will remember
             </p>
 
             <form onSubmit={handlePasswordFormSubmit(handlePasswordSubmit)}>
+              <PasswordInput
+                label="Password"
+                // {...field}
+                value={watch("password")}
+                onValueChange={(value) => setValue("password", value)}
+                onValidationChange={setIsPasswordValid}
+                error={!isPasswordValid ? "complete all requirement" : ""}
+              />
               <Controller
-                name="password"
+                name="confirmPassword"
                 control={passwordControl}
                 render={({ field }) => (
                   <Input
-                    label="New Password"
-                    id="password"
-                    placeholder="Enter password"
+                    label="Confirm Password"
+                    id="confirmPassword"
+                    placeholder="Confirm Password"
                     type="password"
-                    error={passwordErrors.password?.message}
-                    disabled={isLoading}
+                    error={passwordErrors.confirmPassword?.message}
                     {...field}
+                    labelClassName="text-white"
+                    className="text-white"
                   />
                 )}
               />
-              <CButton 
-                type="submit" 
-                disabled={isLoading || !isPasswordValid}
-                isLoading={isLoading}
+              <CButton
+                type="submit"
+                isLoading={loading}
+                className="w-full bg-IMSCyan text-white py-3 px-4 rounded-md hover:bg-IMSCyan transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
-                Reset Password
+                Create Password
               </CButton>
             </form>
           </div>
@@ -284,32 +250,30 @@ export default function ForgotPassword() {
 
       case 4:
         return (
-          <div className="w-full mx-auto flex flex-col items-center justify-center">
-            <div className="mb-8">
+          <div className="w-full  mx-auto flex flex-col items-center justify-center">
+            <div className="mb-5">
               <div className="relative flex items-center justify-center scale-85">
-                <div className="size-[110px] bg-blue-300 rounded-full absolute z-10" />
-                <div className="size-[120px] bg-blue-200/70 rounded-full absolute z-10" />
-                <div className="size-[130px] bg-blue-100/50 rounded-full absolute z-10" />
-                <div className="size-[140px] bg-blue-100/30 rounded-full absolute z-10" />
-                <div className="flex items-center size-[100px] rounded-full justify-center bg-blue-700 z-20">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                {/* <div className="size-[100px] bg-blue-300 rounded-full absolute z-10" /> */}
+                <div className="size-[90px] bg-blue-200/70 rounded-full absolute z-10" />
+                <div className="size-[110px] bg-blue-100/50 rounded-full absolute z-10" />
+                <div className="size-[130px] bg-blue-100/30 rounded-full absolute z-10" />
+                <div className="flex items-center size-[80px] rounded-full justify-center bg-blue-700 z-20">
+                  <img src={"/check.svg"} alt="" />
                 </div>
               </div>
             </div>
 
-            <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-              Password Reset Successful!
+            <h1 className="text-xl font-semibold text-white mb-2">
+              Successful
             </h1>
 
-            <p className="text-gray-600 text-center mb-8">
-              Your password has been reset successfully. You can now sign in with your new password.
+            <p className="text-gray-300 text-center mb-5 text-sm">
+              Your password has been reseted successfully
             </p>
 
             <Link
               href="/auth/signin"
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center"
+              className="w-full bg-IMSCyan text-white py-2 px-4 text-sm font-semibold rounded-md hover:bg-IMSCyan transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center"
             >
               Back to Sign In
             </Link>

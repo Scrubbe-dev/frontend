@@ -1,16 +1,15 @@
+import { apiClient } from "@/lib/api/client";
+import { endpoint } from "@/lib/api/endpoint";
+import { toast } from "sonner";
 import type { StateCreator } from "zustand";
 
 export interface TeamMember {
   id: string;
-  name: string;
+  name?: string;
   email: string;
   role: string;
-  permissions: {
-    viewDashboard: boolean;
-    modifyDashboard: boolean;
-    executeActions: boolean;
-    manageUsers: boolean;
-  };
+  level?: string;
+  permissions: string[];
 }
 
 export interface CompanyLogo {
@@ -43,13 +42,14 @@ export interface EnterpriseSetup {
   defaultDashboard: "SIEM" | "SOAR" | "Custom";
   preferredIntegrations: string[]; // ['Jira', 'Freshdesk', 'Service Now']
   notificationChannels: string[]; // ['Slack', 'Microsoft Teams', 'Email', 'SMS']
-  defaultIncidentPriority: string[]; // ['High', 'Medium', 'Low']
+  defaultIncidentPriority: string; // ['High', 'Medium', 'Low']
 }
 
 export type enterpriseSetupSliceType = {
   enterpriseSetup: EnterpriseSetup;
   currentStep: number;
   isSubmitting: boolean;
+  isSuccess: boolean;
   errors: Record<string, string>;
 
   // Actions
@@ -113,16 +113,16 @@ const initialEnterpriseSetup: EnterpriseSetup = {
   defaultDashboard: "SIEM",
   preferredIntegrations: ["Jira"],
   notificationChannels: ["Slack"],
-  defaultIncidentPriority: ["High"],
+  defaultIncidentPriority: "HIGH",
 };
 
-export const createEnterpriseSetupSlice: StateCreator<enterpriseSetupSliceType> = (
-  set,
-  get
-) => ({
+export const createEnterpriseSetupSlice: StateCreator<
+  enterpriseSetupSliceType
+> = (set, get) => ({
   enterpriseSetup: initialEnterpriseSetup,
   currentStep: 0,
   isSubmitting: false,
+  isSuccess: false,
   errors: {},
 
   // Set company information
@@ -282,9 +282,7 @@ export const createEnterpriseSetupSlice: StateCreator<enterpriseSetupSliceType> 
   toggleIncidentPriority: (priority) => {
     set((state) => {
       const currentPriorities = state.enterpriseSetup.defaultIncidentPriority;
-      const newPriorities = currentPriorities.includes(priority)
-        ? currentPriorities.filter((item) => item !== priority)
-        : [...currentPriorities, priority];
+      const newPriorities = currentPriorities == priority ? "" : priority;
 
       return {
         enterpriseSetup: {
@@ -397,46 +395,54 @@ export const createEnterpriseSetupSlice: StateCreator<enterpriseSetupSliceType> 
 
     try {
       // Simulate API call
-      const formData = new FormData();
+      const dashboardPreference: { [key: string]: string } = {
+        SIEM: "SCRUBBE_DASHBOARD_SIEM",
+        SOAR: "SCRUBBE_DASHBOARD_SOAR",
+        CUSTOM: "SCRUBBE_DASHBOARD_CUSTOM",
+      };
 
-      // Add company information
-      formData.append("companyName", enterpriseSetup.companyName);
-      formData.append("industry", enterpriseSetup.industry);
-      formData.append("companySize", enterpriseSetup.companySize);
-      formData.append("primaryRegion", enterpriseSetup.primaryRegion);
+      const integration: { [key: string]: string } = {
+        Jira: "JIRA",
+        Freshdesk: "FRESHDESK",
+        "Service Now": "SERVICE_NOW",
+      };
 
-      if (enterpriseSetup.companyLogo?.file) {
-        formData.append("companyLogo", enterpriseSetup.companyLogo.file);
-      }
+      const notificationChannel: { [key: string]: string } = {
+        Slack: "SLACK",
+        "Microsoft Teams": "MICROSOFT_TEAMS",
+        Email: "EMAIL",
+        SMS: "SMS",
+      };
 
-      // Add admin contact
-      formData.append("adminName", enterpriseSetup.adminName);
-      formData.append("adminEmail", enterpriseSetup.adminEmail);
-      formData.append("adminPhone", enterpriseSetup.adminPhone);
-      formData.append("adminJobTitle", enterpriseSetup.adminJobTitle);
-
-      // Add team members and preferences as JSON
-      formData.append(
-        "teamMembers",
-        JSON.stringify(enterpriseSetup.teamMembers)
-      );
-      formData.append(
-        "colorScheme",
-        JSON.stringify(enterpriseSetup.colorScheme)
-      );
-      formData.append("defaultDashboard", enterpriseSetup.defaultDashboard);
-      formData.append(
-        "preferredIntegrations",
-        JSON.stringify(enterpriseSetup.preferredIntegrations)
-      );
-      formData.append(
-        "notificationChannels",
-        JSON.stringify(enterpriseSetup.notificationChannels)
-      );
-      formData.append(
-        "defaultIncidentPriority",
-        JSON.stringify(enterpriseSetup.defaultIncidentPriority)
-      );
+      const data = {
+        companyName: enterpriseSetup.companyName,
+        industry: enterpriseSetup.industry,
+        companySize: enterpriseSetup.companySize,
+        primaryRegion: enterpriseSetup.primaryRegion,
+        companyLogo: "",
+        firstName: enterpriseSetup.adminName.split(" ")[0] ?? "",
+        lastName: enterpriseSetup.adminName.split(" ")[1] ?? "",
+        adminEmail: enterpriseSetup.adminEmail,
+        adminJobTitle: enterpriseSetup.adminJobTitle,
+        inviteMembers: enterpriseSetup.teamMembers.map((value) => ({
+          inviteEmail: value.email,
+          role: value.role,
+          accessPermissions: value.permissions,
+        })),
+        dashboardPreference: {
+          colorScheme: enterpriseSetup.colorScheme.primaryColor,
+          defaultDashboard:
+            dashboardPreference[enterpriseSetup.defaultDashboard],
+          preferredIntegration: enterpriseSetup.preferredIntegrations.map(
+            (value) => integration[value]
+          ),
+          notificationChannels: enterpriseSetup.notificationChannels.map(
+            (value) => notificationChannel[value]
+          ),
+          defaultPriority:
+            enterpriseSetup.defaultIncidentPriority.toUpperCase(),
+        },
+      };
 
       // Replace with actual API endpoint
       // const response = await fetch('/api/enterprise-setup', {
@@ -449,11 +455,11 @@ export const createEnterpriseSetupSlice: StateCreator<enterpriseSetupSliceType> 
       // }
 
       // Simulate successful submission
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      console.log("Enterprise setup submitted successfully", enterpriseSetup);
+      await apiClient.put(endpoint.auth.account_setup, data);
+      set({ isSuccess: true });
     } catch (error) {
       console.error("Error submitting enterprise setup:", error);
+      toast.error("Failed to submit enterprise setup");
       set({
         errors: {
           submit:

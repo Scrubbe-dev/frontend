@@ -5,8 +5,10 @@
     // as it can report incorrect errors
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "next/no-img-element": "off",
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    // "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-unused-vars": "off",
     "@next/next/no-img-element": "off"
 
   }

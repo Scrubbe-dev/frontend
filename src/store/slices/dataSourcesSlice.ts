@@ -7,7 +7,14 @@ export type DataSourceId =
   | "gcp"
   | "postgres"
   | "api"
-  | "add-new";
+  | "fingerprint"
+  | "add-new"
+  | "sentinel-one"
+  | "crowdstrike"
+  | "okta"
+  | "carbon-black"
+  | "cisco-umbrella"
+  | "infoblox";
 
 export interface DataSourceItem {
   id: DataSourceId;
@@ -30,6 +37,7 @@ export type dataSourcesSliceType = {
   selectedDataSource: DataSourceId;
   dataSourceItems: DataSourceItem[];
   cardData: CardData[];
+  telemetryData: CardData[];
 
   // Actions
   setSelectedDataSource: (source: DataSourceId) => void;
@@ -52,6 +60,13 @@ export const createDataSourcesSlice: StateCreator<dataSourcesSliceType> = (
     { id: "gcp", name: "GCP", icon: null },
     { id: "postgres", name: "Postgres", icon: null },
     { id: "api", name: "API", icon: null },
+    { id: "fingerprint", name: "Fingerprint", icon: null },
+    { id: "sentinel-one", name: "Sentinel One", icon: null },
+    { id: "crowdstrike", name: "Crowdstrike", icon: null },
+    { id: "okta", name: "Okta", icon: null },
+    { id: "carbon-black", name: "Carbon Black", icon: null },
+    { id: "cisco-umbrella", name: "Cisco Umbrella", icon: null },
+    { id: "infoblox", name: "Infoblox", icon: null },
     { id: "add-new", name: "Add New Source", icon: null },
     // FiPlus will be imported in the component where it's used
   ],
@@ -107,6 +122,79 @@ export const createDataSourcesSlice: StateCreator<dataSourcesSliceType> = (
       timestamp: "2025-05-22",
       processedData: "1.2 TB",
     },
+    {
+      id: "fingerprint",
+      logo: null,
+      title: "FingerPrint",
+      status: "connected",
+      statusColor: "green",
+      buttonText: "Disconnect",
+      timestamp: "2025-05-22",
+      processedData: "1.2 TB",
+    },
+  ],
+
+  telemetryData: [
+    {
+      id: "sentinel-one",
+      logo: null,
+      title: "Sentinel One",
+      status: "connected",
+      statusColor: "green",
+      buttonText: "Disconnect",
+      timestamp: "2025-05-22",
+      processedData: "1.2 TB",
+    },
+    {
+      id: "crowdstrike",
+      logo: null,
+      title: "Crowdstrike",
+      status: "ingesting",
+      statusColor: "yellow",
+      buttonText: "Pause",
+      timestamp: "2025-05-22",
+      processedData: "1.2 TB",
+    },
+    {
+      id: "okta",
+      logo: null,
+      title: "Okta",
+      status: "error",
+      statusColor: "red",
+      buttonText: "Retry",
+      timestamp: "2025-05-22",
+      processedData: "1.2 TB",
+    },
+    {
+      id: "carbon-black",
+      logo: null,
+      title: "Carbon Black",
+      status: "connected",
+      statusColor: "green",
+      buttonText: "Disconnect",
+      timestamp: "2025-05-22",
+      processedData: "1.2 TB",
+    },
+    {
+      id: "cisco-umbrella",
+      logo: null,
+      title: "Cisco Umbrella",
+      status: "connected",
+      statusColor: "green",
+      buttonText: "Disconnect",
+      timestamp: "2025-05-22",
+      processedData: "1.2 TB",
+    },
+    {
+      id: "infoblox",
+      logo: null,
+      title: "Infoblox",
+      status: "connected",
+      statusColor: "green",
+      buttonText: "Disconnect",
+      timestamp: "2025-05-22",
+      processedData: "1.2 TB",
+    },
   ],
 
   // Actions
@@ -115,10 +203,10 @@ export const createDataSourcesSlice: StateCreator<dataSourcesSliceType> = (
   },
 
   getFilteredCards: () => {
-    const { selectedDataSource, cardData } = get();
+    const { selectedDataSource, cardData, telemetryData } = get();
 
     if (selectedDataSource === "dashboard") {
-      return cardData; // Return all cards for dashboard view
+      return [...cardData, ...telemetryData]; // Return all cards for dashboard view
     }
 
     if (selectedDataSource === "add-new") {

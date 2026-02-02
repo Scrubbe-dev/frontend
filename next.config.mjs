@@ -1,13 +1,13 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-   experimental: {
+  experimental: {
     missingSuspenseWithCSRBailout: false,
   },
-   images: {
-    loader: 'custom',
-    loaderFile: './Imageloader.js',
-  }, 
+  //  images: {
+  //   loader: 'custom',
+  //   loaderFile: './Imageloader.js',
+  // }, 
   /* output: 'export' */
 };
 

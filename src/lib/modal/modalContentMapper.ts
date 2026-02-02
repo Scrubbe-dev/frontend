@@ -39,6 +39,11 @@ const contentMap: ContentMap = {
     logs: lazy(() => import("@/components/data-sources/api/Logs")),
     metrics: lazy(() => import("@/components/data-sources/api/Metrics")),
   },
+  fingerprint: {
+    configure: lazy(
+      () => import("@/components/data-sources/fingerprint/Configure")
+    ),
+  },
   "add-new": {
     configure: lazy(
       () => import("@/components/data-sources/add-new/Configure")

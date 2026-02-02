@@ -230,10 +230,9 @@ const Chatbot: React.FC = () => {
         className="absolute bottom-0 right-0 w-12 h-12 rounded-full bg-colorScBlack hover:bg-blue-700 flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-105 focus:outline-none"
       >
         <div className="relative w-6 h-6">
-          <Image
+          <img
             src="/scrubbe-logo-icon.png"
             alt="Scrubbe Logo"
-            fill
             sizes="24px"
             className="object-contain"
           />

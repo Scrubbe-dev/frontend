@@ -12,6 +12,7 @@ import DashboardContent from "./DashboardContent";
 import { Button } from "@/components/ui/button";
 import { FaCodepen } from "react-icons/fa6";
 import { BsQuestionOctagon } from "react-icons/bs";
+import { useEffect } from "react";
 
 export const navItem = [
   {
@@ -57,8 +58,15 @@ export const navItem = [
     enable: false,
   },
 ];
-const EzraDashboard = () => {
+interface EzraDashboardProps {
+  path?: string;
+}
+const EzraDashboard = ({ path = "dashboard" }: EzraDashboardProps) => {
   const { pathname, setPathname } = useEzraMockStore();
+
+  useEffect(() => {
+    setPathname(path);
+  }, [path, setPathname]);
   return (
     <div className=" w-full bg-[#111827] h-full flex">
       <div className=" w-[26%] border-r border-[#94C5FC] h-full p-4">

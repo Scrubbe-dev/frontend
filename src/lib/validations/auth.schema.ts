@@ -85,36 +85,51 @@ export const developerSignupSchema = z
 // Business signup schema
 export const businessSignupSchema = z
   .object({
-    fullName: z
+    firstName: z.string().min(1, { message: "First name is required" }),
+    lastName: z.string().min(1, { message: "Last name is required" }),
+    businessEmail: z
       .string()
-      .min(3, "Full name must be at least 3 characters")
-      .max(100, "Full name must be less than 100 characters"),
-    email: businessEmailSchema,
-    githubUsername: z
-      .string()
-      .min(2, "GitHub username must be at least 2 characters")
-      .max(39, "GitHub username must be less than 39 characters")
-      .regex(/^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/, "Invalid GitHub username format"),
-    experience: z
-      .string()
-      .max(50, "Experience must be less than 50 characters")
-      .optional(),
-    password: passwordSchema,
-    confirmPassword: z.string().optional(),
+      .email({ message: "Please enter a valid email address" })
+      .refine(
+        (email) => {
+          // List of common public email domains
+          const publicDomains = [
+            "gmail.com",
+            "yahoo.com",
+            "hotmail.com",
+            "outlook.com",
+            "aol.com",
+            "icloud.com",
+            "mail.com",
+            "gmx.com",
+            "protonmail.com",
+            "zoho.com",
+            "yandex.com",
+            "msn.com",
+            "live.com",
+            "ymail.com",
+            "inbox.com",
+            "me.com",
+          ];
+          const domain = email.split("@")[1]?.toLowerCase();
+          return domain && !publicDomains.includes(domain);
+        },
+        {
+          message:
+            "Please use your business email address (not a public provider)",
+        }
+      ),
     businessAddress: z
       .string()
-      .min(10, "Business address must be at least 10 characters")
-      .max(255, "Business address must be less than 255 characters")
-      .optional(),
-    companySize: z
+      .min(1, { message: "Business address is required" }),
+    companySize: z.string().min(1, { message: "Please select company size" }),
+    purpose: z.string().optional(),
+    password: z
       .string()
-      .min(1, "Company size is required")
-      .max(50, "Company size must be less than 50 characters")
-      .optional(),
-    purpose: z
+      .min(6, { message: "Password must be at least 6 characters" }),
+    confirmPassword: z
       .string()
-      .max(500, "Purpose must be less than 500 characters")
-      .optional(),
+      .min(6, { message: "Confirm password must be at least 6 characters" }),
   })
   .refine((data) => !data.confirmPassword || data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -146,6 +161,8 @@ export const resetPasswordSchema = z.object({
   password: passwordSchema,
 });
 
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema >
+
 // Change password schema
 export const changePasswordSchema = z
   .object({
@@ -171,22 +188,3 @@ export const refreshTokenSchema = z.object({
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type DeveloperSignupFormData = z.infer<typeof developerSignupSchema>;
 export type BusinessSignupFormData = z.infer<typeof businessSignupSchema>;
-export type VerifyEmailFormData = z.infer<typeof verifyEmailSchema>;
-export type ResendOtpFormData = z.infer<typeof resendOtpSchema>;
-export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
-export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
-export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
-export type RefreshTokenFormData = z.infer<typeof refreshTokenSchema>;
-
-// Export all schemas
-export const authSchemas = {
-  login: loginSchema,
-  developerSignup: developerSignupSchema,
-  businessSignup: businessSignupSchema,
-  verifyEmail: verifyEmailSchema,
-  resendOtp: resendOtpSchema,
-  forgotPassword: forgotPasswordSchema,
-  resetPassword: resetPasswordSchema,
-  changePassword: changePasswordSchema,
-  refreshToken: refreshTokenSchema,
-};

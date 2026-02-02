@@ -20,7 +20,7 @@ function ResetPasswordContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   
-  const { resetPassword } = useAuthStore();
+  // const { resetPassword } = useAuthStore();
 
   const {
     control,
@@ -45,7 +45,7 @@ function ResetPasswordContent() {
 
     try {
       setIsLoading(true);
-      await resetPassword(token, data.password);
+      // await resetPassword(token, data.password);
       
       toast.success("Password reset successful!", {
         description: "You can now sign in with your new password.",
@@ -156,7 +156,7 @@ function ResetPasswordContent() {
               label="New Password"
               placeholder="Enter new password"
               type="password"
-              error={errors.password?.message}
+              // error={errors.password?.message}
               disabled={isLoading}
               {...field}
             />

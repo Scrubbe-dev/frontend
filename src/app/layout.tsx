@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { StoreProvider } from "@/store/StoreProvider";
-import CookieConsentModal from "@/components/landing/CookieConsentModal";
-import CookieToggleButton from "@/components/landing/CookieToggleButton";
-import NavbarWrapper from "@/components/landing/header/NavbarWrapper";
-import FooterWrapper from "@/components/landing/footer/FooterWrapper";
-import Chatbot from "@/components/landing/Chatbot";
-//import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import NextJsTopLoader from "@/lib/NextJsTopLoader";
 import AuthProvider from "@/provider/AuthProvider";
 import ModalManager from "@/components/landing/ModalManager";
+import ThemeProvider from "@/components/ThemeProvider";
+import Image from "next/image";
+import { QueryClientProviders } from "@/provider/QueryClientProvider";
 
 const bersley = localFont({
   src: [
@@ -27,6 +25,16 @@ const bersley = localFont({
     },
   ],
   variable: "--font-bersley",
+  display: "swap",
+});
+const bigshotOne = localFont({
+  src: "./fonts/BigshotOne-Regular.ttf",
+  variable: "--font-bigshotOne",
+  display: "swap",
+});
+const electrolize = localFont({
+  src: "./fonts/Electrolize-Regular.ttf",
+  variable: "--font-electrolize",
   display: "swap",
 });
 
@@ -70,7 +78,7 @@ const airbnbCereal = localFont({
 export const metadata: Metadata = {
   title: "Scrubbe",
   description:
-    "Scrubbe's AI-driven platform combines SIEM and SOAR for automated threat detection, response, and unified security analytics.",
+    "AI-Powered Engineering Incident Management & Code Intelligence Platform",
 };
 //overflow-hidden
 export default function RootLayout({
@@ -79,22 +87,41 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${airbnbCereal.variable} ${bersley.variable}`}>
-      <body className="antialiased min-h-screen w-full flex flex-col bg-[#1F2B71] font-airbnb">
-        <AuthProvider>
-          <NextJsTopLoader />
-          <StoreProvider>
-            {/*  <AnnouncementBar /> disabled for now till official launch */}
-            <NavbarWrapper />
-            <main className="flex-grow h-full w-full">{children}</main>
-            <FooterWrapper />
-            <CookieConsentModal />
-            <CookieToggleButton />
-            <Chatbot />
-            <ModalManager />
-          </StoreProvider>
-          <Toaster position="top-center" />
-        </AuthProvider>
+    <html
+      lang="en"
+      className={`${airbnbCereal.variable} ${bersley.variable} ${bigshotOne.variable} ${electrolize.variable}`}
+    >
+      <body className="antialiased min-h-screen w-full flex flex-col font-airbnb">
+        <Suspense
+          fallback={
+            <div className="h-screen bg-white flex justify-center items-center">
+              <Image
+                src="/scrubbe-logo-01.png"
+                alt="scrubbe-logo-01.png"
+                fill
+                sizes="(min-width: 300px) 100vw"
+                className="object-contain scale-75 "
+              />{" "}
+            </div>
+          }
+        >
+          <QueryClientProviders>
+            <ThemeProvider>
+              <AuthProvider>
+                <NextJsTopLoader />
+                <StoreProvider>
+                  {/*  <AnnouncementBar /> disabled for now till official launch */}
+                  {/* <NavbarWrapper /> */}
+                  <main className="flex-grow h-full w-full">{children}</main>
+                  {/* <FooterWrapper /> */}
+
+                  <ModalManager />
+                </StoreProvider>
+                <Toaster position="top-center" />
+              </AuthProvider>
+            </ThemeProvider>
+          </QueryClientProviders>
+        </Suspense>
       </body>
     </html>
   );

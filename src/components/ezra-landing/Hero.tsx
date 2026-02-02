@@ -8,7 +8,7 @@ const Hero = () => {
     "AWS",
     "Azura",
     "GCP",
-    "CrowdStrick",
+    "Crowdstrike",
     "Cisco Umbrella",
     "Okta",
     "Splunk",

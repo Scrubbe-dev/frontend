@@ -5,6 +5,8 @@ import { FaDatabase } from "react-icons/fa6";
 import { HiLightningBolt } from "react-icons/hi";
 import { RiSettings4Fill } from "react-icons/ri";
 import EzraDashboard from "./EzraDashboard/Index";
+import Cbutton from "../ezra-landing/Cbutton";
+import { useRouter } from "next/navigation";
 
 const features = [
   {
@@ -36,6 +38,7 @@ const itemVariants = {
 };
 
 const FraudAnalyst = () => {
+  const router = useRouter();
   return (
     <section className=" bg-[url('/grainy_bg.png')] bg-colorScBlack  relative overflow-clip">
       <div className=" max-w-[1440px] h-full mx-auto flex flex-col items-center justify-between gap-y-6 relative z-10 px-4 md:px-6 lg:px-20 xl:px-20 pt-10">
@@ -81,6 +84,10 @@ const FraudAnalyst = () => {
               </motion.div>
             ))}
           </motion.div>
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <Cbutton onClick={() => router.push("/ezra")}>Try Ezra</Cbutton>
         </motion.div>
 
         <motion.div

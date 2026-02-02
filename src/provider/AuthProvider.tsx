@@ -1,38 +1,28 @@
 "use client";
+import { SessionProvider } from "next-auth/react";
+import { ReactNode } from "react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Tooltip,
+  Legend,
+  ArcElement,
+  PointElement,
+  LineElement,
+} from "chart.js";
 
-import { SessionProvider, useSession } from "next-auth/react";
-import { ReactNode, useEffect } from "react";
-import useAuthStore from "@/lib/stores/auth.store";
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-// Inner component to sync session with Zustand store
-function SessionSync({ children }: { children: ReactNode }) {
-  const { data: session, status } = useSession();
-  const setUser = useAuthStore((state) => state.setUser);
-
-  useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      setUser(session.user);
-    } else if (status === "unauthenticated") {
-      setUser(null);
-    }
-  }, [session, status, setUser]);
-
-  return <>{children}</>;
-}
-
-export default function AuthProvider({ children }: AuthProviderProps) {
-  return (
-    <SessionProvider 
-      refetchInterval={5 * 60} // Refetch session every 5 minutes
-      refetchOnWindowFocus={true}
-    >
-      <SessionSync>
-        {children}
-      </SessionSync>
-    </SessionProvider>
-  );
+ChartJS.register(
+  CategoryScale,
+  LinearScale, // <-- This registers the required scale for the Y-Axis
+  BarElement,
+  Tooltip,
+  ArcElement,
+  PointElement,
+  LineElement,
+  Legend
+);
+export default function AuthProvider({ children }: { children: ReactNode }) {
+  return <SessionProvider>{children}</SessionProvider>;
 }

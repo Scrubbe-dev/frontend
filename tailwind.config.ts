@@ -1,10 +1,9 @@
 import { heroui } from "@heroui/react";
 import tailwindcssAnimate from "tailwindcss-animate";
-
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: "media",
+  darkMode: "class",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -13,6 +12,21 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontSize: {
+        xs: "0.625rem" /* was 0.75rem (12px) -> now 10px */,
+        sm: "0.75rem" /* was 0.875rem (14px) -> now 12px */,
+        base: "0.875rem" /* was 1rem (16px) -> now 14px */,
+        lg: "1rem" /* was 1.125rem (18px) -> now 16px */,
+        xl: "1.0625rem" /* was 1.25rem (20px) -> now 18px */,
+        "2xl": "1.375rem" /* was 1.5rem (24px) -> now 22px */,
+        "3xl": "1.625rem" /* was 1.875rem (30px) -> now 26px */,
+        "4xl": "2.0625rem" /* was 2.25rem (36px) -> now 34px */,
+        "5xl": "2.875rem" /* was 3rem (48px) -> now 46px */,
+        "6xl": "3.875rem" /* was 4rem (64px) -> now 62px */,
+        "7xl": "4.875rem" /* was 5rem (80px) -> now 78px */,
+        "8xl": "5.875rem" /* was 6rem (96px) -> now 94px */,
+        "9xl": "7.875rem" /* was 8rem (128px) -> now 126px */,
+      },
       fontFamily: {
         Montserrat: ["Montserrat", "sans-serif"],
         Raleway: ["Raleway", "sans-serif"],
@@ -22,9 +36,20 @@ const config: Config = {
         trebuchetMs: ["Trebuchet MS"],
         airbnb: ["var(--font-airbnb-cereal)"],
         besley: ["var(--font-bersley)"],
+        bigshotOne: ["var(--font-bigshotOne)"],
+        electrolize: ["var(--font-electrolize)"],
       },
       colors: {
-        dark: "#111827",
+        IMSGreen: "#072929",
+        IMSLightGreen: "#28A745",
+        IMSDarkGreen: "#28A745",
+        IMSCyan: "#06EEFD",
+        green: "#28A745",
+        critical: "#dc2626", // red-600
+        high: "#ea580c", // orange-600
+        medium: "#fbbf24", // yellow-400
+        low: "#3b82f6",
+        dark: "#08132F",
         subDark: "#1F2937",
         darkEzra: "#110F0F",
         subDarkEzra: "#1F1F24",
@@ -69,7 +94,6 @@ const config: Config = {
           foreground: "hsl(var(--destructive-foreground))",
         },
         border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         chart: {
           "1": "hsl(var(--chart-1))",
@@ -154,6 +178,9 @@ const config: Config = {
       },
       animation: {
         "meteor-effect": "meteor 5s linear infinite",
+        "fade-in": "fadeIn 0.8s ease-out forwards",
+        "slide-up": "slideUp 0.6s ease-out forwards",
+        "pulse-dot": "pulseDot 1.4s infinite ease-in-out",
       },
       keyframes: {
         meteor: {
@@ -163,6 +190,18 @@ const config: Config = {
             transform: "rotate(215deg) translateX(-500px)",
             opacity: "0",
           },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        slideUp: {
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        pulseDot: {
+          "0%, 100%": { opacity: "0.2" },
+          "50%": { opacity: "1" },
         },
       },
     },

@@ -1,25 +1,103 @@
 "use client";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import * as z from "zod";
 import Input from "../ui/input";
-import Select from "../ui/select";
 import CButton from "../ui/Cbutton";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import { Loader2 } from "lucide-react";
 import useAuthStore from "@/lib/stores/auth.store";
-import { businessSignupSchema, type BusinessSignupFormData } from "@/lib/validations/auth.schema";
+import CompleteBusinessProfile, {
+  BusinessProfileSignupFormData,
+} from "./CompleteBusinessProfile";
+import OtpInput from "../ui/OtpInput";
+import { AxiosError } from "axios";
+import { BiCheck } from "react-icons/bi";
+
+const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
+
+// Define the form schema using zod
+export const businessSignupSchema = z.object({
+  fullName: z.string().min(1, { message: "First name is required" }),
+  businessName: z.string().min(1, { message: "Business name is required" }),
+  businessEmail: z
+    .string()
+    .email({ message: "Please enter a valid email address" })
+    .refine(
+      (email) => {
+        // List of common public email domains
+        const publicDomains = [
+          "gmail.com",
+          "yahoo.com",
+          "hotmail.com",
+          "outlook.com",
+          "aol.com",
+          "icloud.com",
+          "mail.com",
+          "gmx.com",
+          "protonmail.com",
+          "zoho.com",
+          "yandex.com",
+          "msn.com",
+          "live.com",
+          "ymail.com",
+          "inbox.com",
+          "me.com",
+        ];
+        const domain = email.split("@")[1]?.toLowerCase();
+        return domain && !publicDomains.includes(domain);
+      },
+      {
+        message:
+          "Please use your business email address (not a public provider)",
+      }
+    ),
+  businessAddress: z
+    .string()
+    .min(1, { message: "Business address is required" }),
+  companySize: z.string().min(1, { message: "Please select company size" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+  // confirmPassword: z
+  //   .string()
+  //   .min(6, { message: "Confirm password must be at least 6 characters" }),
+});
+// .refine((data) => data.password === data.confirmPassword, {
+//   message: "Passwords don't match",
+//   path: ["confirmPassword"],
+// });
+
+// TypeScript type based on the schema
+type BusinessSignupFormData = z.infer<typeof businessSignupSchema>;
+
+// Success Page Component Props Type
+interface SuccessPageProps {
+  fullName: string;
+}
 
 export default function BusinessSignupForm() {
-  const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [registeredEmail, setRegisteredEmail] = useState("");
+  const [formData, setFormData] =
+    useState<Partial<BusinessSignupFormData> | null>(null);
   const router = useRouter();
-  
-  const { registerBusiness } = useAuthStore();
-
+  const [profileComplete, setProfileComplete] = useState(false);
+  const [isOTP, setIsOTP] = useState(false);
+  const {
+    businessSignup,
+    businessProfileSignup,
+    isLoading,
+    verifyEmail,
+    resendOTP,
+    error,
+  } = useAuthStore();
+  const [refreshing, setRefreshing] = useState(false);
+  const searchParams = useSearchParams();
+  const path = searchParams.get("to");
   const {
     handleSubmit,
     control,
@@ -29,385 +107,528 @@ export default function BusinessSignupForm() {
     resolver: zodResolver(businessSignupSchema),
     defaultValues: {
       fullName: "",
-      email: "",
-      githubUsername: "",
-      experience: "",
-      password: "",
-      confirmPassword: "",
+      businessEmail: "",
       businessAddress: "",
+      businessName: "",
       companySize: "",
-      purpose: "",
+      password: "",
     },
     mode: "onChange",
   });
+  const session = useSession();
 
   const onSubmit = async (data: BusinessSignupFormData) => {
     try {
-      setIsLoading(true);
+      // Set loading state
+      // Log form values
+      // Simulate a 5-second delay
+      await businessSignup(data);
 
-      const user = await registerBusiness(data);
-      setRegisteredEmail(user.email);
-      setShowSuccess(true);
-      reset();
+      // Store form data and show success page
+      setFormData(data);
+      setIsOTP(true);
 
-      toast.success("Business account created successfully!", {
-        description: "Please check your email to verify your account.",
-        duration: 5000,
-      });
+      // Reset loading state
     } catch (error) {
       console.error("Registration error:", error);
       toast.error("Registration failed", {
         description:
-          error instanceof Error ? error.message : "Something went wrong.",
+          error instanceof AxiosError
+            ? error.response?.data?.message
+            : "Signup failed",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const handleContinue = () => {
-    router.push("/auth/verify-email?email=" + encodeURIComponent(registeredEmail));
+  const onProfileSubmit = async (data: BusinessProfileSignupFormData) => {
+    try {
+      const details = {
+        ...data,
+        ...session.data?.user,
+      };
+      await businessProfileSignup(details);
+
+      // Store form data and show success page
+      setFormData({ ...data, ...session.data?.user });
+      setShowSuccess(true);
+
+      // Reset loading state
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("Registration failed", {
+        description:
+          error instanceof AxiosError
+            ? error.response?.data?.message
+            : "Signup failed",
+      });
+    }
   };
 
-  // Success Page Component
-  const SuccessPage = () => {
+  // Check if email from oauth is not a business mail
+  useEffect(() => {
+    const publicDomains = [
+      "gmail.com",
+      "yahoo.com",
+      "hotmail.com",
+      "outlook.com",
+      "aol.com",
+      "icloud.com",
+      "mail.com",
+      "gmx.com",
+      "protonmail.com",
+      "zoho.com",
+      "yandex.com",
+      "msn.com",
+      "live.com",
+      "ymail.com",
+      "inbox.com",
+      "me.com",
+    ];
+
+    if (
+      session.status == "authenticated" &&
+      session.data.user &&
+      !profileComplete
+    ) {
+      const domain = session?.data?.user.email?.split("@")[1]?.toLowerCase();
+      if (domain && !publicDomains.includes(domain)) {
+        setProfileComplete(true);
+        return;
+      }
+      toast.error(
+        "Please use your business email address (not a public provider)"
+      );
+
+      const interval = setTimeout(() => {
+        signOut();
+      }, 4000);
+
+      return () => {
+        clearTimeout(interval);
+      };
+    }
+  }, [session, profileComplete]);
+
+  useEffect(() => {
+    if (showSuccess) {
+      const timeout = setTimeout(() => {
+        if (IS_STANDALONE) {
+          if (path === "payment") {
+            router.replace("/get-started?to=payment");
+            return;
+          }
+          if (path === "community") {
+            router.replace("/get-started?to=community");
+            return;
+          }
+          router.replace("/get-started");
+          return;
+        }
+
+        if (path) {
+          return router.push(`/auth/account-setup?to=${path}`);
+        } else {
+          return router.push(`/auth/account-setup`);
+        }
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [showSuccess, router]);
+
+  const SuccessPage = ({ fullName }: SuccessPageProps) => {
     return (
-      <div className="w-full p-6 flex flex-col items-center justify-center min-h-96">
-        <div className="mb-8">
-          <div className="relative flex items-center justify-center">
-            <svg
-              width="200"
-              height="200"
-              viewBox="0 0 200 200"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="100" cy="100" r="95" fill="#E6F3FF" opacity="0.4" />
-              <circle cx="100" cy="100" r="75" fill="#CCE7FF" opacity="0.6" />
-              <circle cx="100" cy="100" r="55" fill="#99D6FF" opacity="0.8" />
-              <circle cx="100" cy="100" r="35" fill="#2563EB" />
-              <path
-                d="M85 100L95 110L115 90"
-                stroke="white"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+      <Suspense fallback={<div>Loading...</div>}>
+        <div className="w-full p-6 flex flex-col items-center justify-center min-h-96">
+          <div className="mb-8">
+            {/* Enhanced Success Icon with concentric circles */}
+            <div className="relative flex items-center justify-center translate-y-[-50px]">
+              <div className=" size-[150px] rounded-full bg-emerald-100 absolute animate-ping" />
+              <div className=" size-[130px] rounded-full bg-emerald-200 absolute" />
+              <div className=" size-[110px] rounded-full bg-emerald-300 absolute" />
+              <div className=" size-[90px] rounded-full bg-emerald-500 absolute" />
+              <BiCheck className=" absolute text-white" size={40} />
+            </div>
           </div>
+
+          <h1 className="text-2xl font-semibold text-gray-900 text-white mb-2">
+            Successful
+          </h1>
+
+          <p className="text-gray-300 text-center">
+            Welcome {fullName}! You have successfully created an account.
+          </p>
         </div>
+      </Suspense>
+    );
+  };
 
-        <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-          Business Account Created!
-        </h1>
+  const handleVerifyOTP = async (code: string) => {
+    try {
+      if (code.length != 6) {
+        toast.error("Incorrect OTP code");
+        return;
+      }
+      setRefreshing(true);
+      await verifyEmail(code);
+      setRefreshing(false);
+      toast.success("Email verified successfully");
+      setShowSuccess(true);
+    } catch (_) {
+      console.log(_);
+      toast.error(JSON.stringify(error));
+    }
+  };
 
-        <p className="text-gray-600 text-center mb-6">
-          Welcome! Your business account has been created. Please verify your email address to continue.
-        </p>
-
-        <CButton onClick={handleContinue} type="button">
-          Continue to Verification
-        </CButton>
-
-        <div className="mt-4 text-center">
-          <Link
-            href="/auth/signin"
-            className="text-blue-600 hover:underline text-sm"
-          >
-            Already verified? Sign in
-          </Link>
-        </div>
+  const handleResendOTP = async () => {
+    try {
+      setRefreshing(true);
+      await resendOTP();
+      setRefreshing(false);
+      toast.success("OTP sent successfully");
+    } catch (_) {
+      console.log(_);
+      toast.error(JSON.stringify(error));
+    }
+  };
+  const VerifyAccount = async () => {
+    return (
+      <div>
+        <OtpInput
+          email={formData?.businessEmail ?? ""}
+          handleResend={handleResendOTP}
+          onSubmit={handleVerifyOTP}
+          isLoading={refreshing}
+        />
       </div>
     );
   };
 
   return (
-    <div className="w-full p-6">
-      {showSuccess ? (
-        <SuccessPage />
-      ) : (
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="w-full p-6">
+        {session.status == "loading" && (
+          <div className=" absolute inset-0 bg-black/20 z-[1000] flex justify-center pt-[20%] ">
+            <Loader2 className=" animate-spin text-primary-500" size={30} />
+          </div>
+        )}
+        {showSuccess && formData && (
+          <SuccessPage fullName={formData.fullName || ""} />
+        )}
+
         <>
-          <h1 className="text-xl md:text-2xl font-semibold mb-6">
-            Business Signup
-          </h1>
+          {profileComplete && !showSuccess && (
+            <>
+              <h1 className="text-xl md:text-2xl text-white font-semibold mb-2 ">
+                Complete Your Profile
+              </h1>
+              <p className="text-gray-300 mb-6">
+                Just a few more details to get started
+              </p>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {/* Full Name */}
-            <div className="mb-4">
-              <Controller
-                name="fullName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="Full Name"
-                    placeholder="Enter your full name"
-                    error={errors.fullName?.message}
-                    isLoading={isLoading}
-                    {...field}
-                  />
-                )}
+              <CompleteBusinessProfile
+                onSubmit={onProfileSubmit}
+                isLoading={isLoading}
               />
-            </div>
-
-            {/* Email and GitHub Username Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="Business Email"
-                    placeholder="Enter Business Email"
-                    type="email"
-                    error={errors.email?.message}
-                    isLoading={isLoading}
-                    {...field}
-                  />
-                )}
-              />
-              <Controller
-                name="githubUsername"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="GitHub Username"
-                    placeholder="Enter username"
-                    error={errors.githubUsername?.message}
-                    isLoading={isLoading}
-                    {...field}
-                  />
-                )}
-              />
-            </div>
-
-            {/* Business Address */}
-            <div className="mb-4">
-              <Controller
-                name="businessAddress"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="Business Address"
-                    placeholder="Enter Business Address"
-                    error={errors.businessAddress?.message}
-                    isLoading={isLoading}
-                    {...field}
-                  />
-                )}
-              />
-            </div>
-
-            {/* Company Size and Purpose Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <Controller
-                name="companySize"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    label="Company's size"
-                    options={[
-                      { value: "", label: "Select Size" },
-                      { value: "1-10", label: "1-10 employees" },
-                      { value: "11-50", label: "11-50 employees" },
-                      { value: "51-200", label: "51-200 employees" },
-                      { value: "201-500", label: "201-500 employees" },
-                      { value: "500+", label: "500+ employees" },
-                    ]}
-                    error={errors.companySize?.message}
-                    isLoading={isLoading}
-                    {...field}
-                  />
-                )}
-              />
-              <Controller
-                name="purpose"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    label="What do you need scrubbe for?"
-                    options={[
-                      { value: "", label: "Select Purpose" },
-                      { value: "code-review", label: "Code Review" },
-                      {
-                        value: "security-scanning",
-                        label: "Security Scanning",
-                      },
-                      {
-                        value: "quality-assurance",
-                        label: "Quality Assurance",
-                      },
-                      { value: "compliance", label: "Compliance" },
-                      { value: "other", label: "Other" },
-                    ]}
-                    error={errors.purpose?.message}
-                    isLoading={isLoading}
-                    {...field}
-                  />
-                )}
-              />
-            </div>
-
-            {/* Password Fields Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <Controller
-                name="password"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="Create Password"
-                    placeholder="Enter password"
-                    type="password"
-                    error={errors.password?.message}
-                    isLoading={isLoading}
-                    {...field}
-                  />
-                )}
-              />
-              <Controller
-                name="confirmPassword"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="Confirm Password"
-                    placeholder="Confirm Password"
-                    type="password"
-                    error={errors.confirmPassword?.message}
-                    isLoading={isLoading}
-                    {...field}
-                  />
-                )}
-              />
-            </div>
-
-            {/* Submit Button */}
-            <CButton
-              type="submit"
-              disabled={isLoading || !isValid}
-              isLoading={isLoading}
-            >
-              {isLoading ? "Creating Account..." : "Create Account"}
-            </CButton>
-
-            {/* Divider */}
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">OR</span>
-              </div>
-            </div>
-
-            {/* OAuth Buttons */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6">
-              <button
-                type="button"
-                disabled={isLoading}
-                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                <Image
-                  src="/icon-auth-github.svg"
-                  alt="GitHub"
-                  width={38}
-                  height={38}
-                  className="mr-2"
-                />
-                <span className="text-sm font-medium text-gray-700">
-                  GitHub
-                </span>
-              </button>
-
-              <button
-                type="button"
-                disabled={isLoading}
-                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                <Image
-                  src="/icon-auth-gitlab.svg"
-                  alt="GitLab"
-                  width={38}
-                  height={38}
-                  className="mr-2"
-                />
-                <span className="text-sm font-medium text-gray-700">
-                  GitLab
-                </span>
-              </button>
-
-              <button
-                type="button"
-                disabled={isLoading}
-                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                <Image
-                  src="/icon-auth-aws.svg"
-                  alt="AWS"
-                  width={38}
-                  height={38}
-                  className="mr-2"
-                />
-                <span className="text-sm font-medium text-gray-700">AWS</span>
-              </button>
-
-              <button
-                type="button"
-                disabled={isLoading}
-                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                <Image
-                  src="/icon-auth-azure.svg"
-                  alt="Azure"
-                  width={38}
-                  height={38}
-                  className="mr-2"
-                />
-                <span className="text-sm font-medium text-gray-700">
-                  Azure
-                </span>
-              </button>
-
-              <button
-                type="button"
-                disabled={isLoading}
-                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                <Image
-                  src="/icon-auth-sso.svg"
-                  alt="SSO"
-                  width={38}
-                  height={38}
-                  className="mr-2"
-                />
-                <span className="text-sm font-medium text-gray-700">SSO</span>
-              </button>
-            </div>
-
-            {/* Demo Page Link */}
-            <div className="text-center">
-              <Link
-                href="/auth/demo-page"
-                className="text-blue-600 hover:underline inline-flex items-center"
-              >
-                Looking for our demo page?
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 ml-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </Link>
-            </div>
-          </form>
+            </>
+          )}
         </>
-      )}
-    </div>
+
+        {!profileComplete && !showSuccess && (
+          <>
+            {isOTP ? (
+              <VerifyAccount />
+            ) : (
+              <>
+                <h1 className="text-xl md:text-2xl text-white font-semibold mb-6 ">
+                  Create your workspace
+                </h1>
+
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  {/* First Name and Last Name Row */}
+                  <div className="grid grid-cols-1 gap-4 mb-4">
+                    <Controller
+                      name="fullName"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          label="Full Name"
+                          placeholder="First Name"
+                          {...field}
+                          error={errors.fullName?.message}
+                          labelClassName="text-white"
+                          className="text-white"
+                        />
+                      )}
+                    />
+
+                    {/* <Controller
+                      name="lastName"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          label="Last Name"
+                          placeholder="Last Name"
+                          {...field}
+                          error={errors.lastName?.message}
+                          labelClassName="text-white"
+                          className="text-white"
+                        />
+                      )}
+                    /> */}
+                  </div>
+
+                  {/* Business Email and Business Address Row */}
+                  <div className="grid grid-cols-1 gap-4 mb-4">
+                    <Controller
+                      name="businessEmail"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          label="Business Email"
+                          placeholder="Enter Business Email"
+                          {...field}
+                          error={errors.businessEmail?.message}
+                          labelClassName="text-white"
+                          className="text-white"
+                        />
+                      )}
+                    />
+                    <Controller
+                      name="businessName"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          label="Company/organization"
+                          placeholder="Enter company name"
+                          {...field}
+                          error={errors.businessName?.message}
+                          labelClassName="text-white"
+                          className="text-white"
+                        />
+                      )}
+                    />
+                    {/* <Controller
+                      name="businessAddress"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          label="Business Address"
+                          placeholder="Enter Business Address"
+                          {...field}
+                          error={errors.businessAddress?.message}
+                          labelClassName="text-white"
+                          className="text-white"
+                        />
+                      )}
+                    /> */}
+                  </div>
+
+                  {/* Company Size and Purpose Row */}
+                  {/* <div className="grid grid-cols-1 gap-4 mb-4">
+                    <Controller
+                      name="companySize"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          label="Company's size"
+                          options={[
+                            { value: "", label: "Select Size" },
+                            { value: "1-10", label: "1-10 employees" },
+                            { value: "11-50", label: "11-50 employees" },
+                            { value: "51-200", label: "51-200 employees" },
+                            { value: "201-500", label: "201-500 employees" },
+                            { value: "500+", label: "500+ employees" },
+                          ]}
+                          error={errors.companySize?.message}
+                          isLoading={isLoading}
+                          labelClassName="text-white"
+                          className="text-white"
+                          {...field}
+                        />
+                      )}
+                    />
+                    <Controller
+                      name="purpose"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          label="What do you need scrubbe for?"
+                          options={[
+                            { value: "", label: "Select Purpose" },
+                            {
+                              value: "IMS",
+                              label: "Incident Management System (IMS)",
+                            },
+                            {
+                              value: "FRAUD_MANAGEMENT_IMS",
+                              label: "Fraud Management + Incident Management",
+                            },
+                          ]}
+                          error={errors.purpose?.message}
+                          isLoading={isLoading}
+                          {...field}
+                        />
+                      )}
+                    />
+                  </div> */}
+
+                  {/* Password Fields Row */}
+                  <div className="grid grid-cols-1 gap-4 mb-6">
+                    {/* <PasswordInput
+                      label="Password"
+                      // {...field}
+                      value={watch("password")}
+                      onValueChange={(value) => setValue("password", value)}
+                      onValidationChange={setIsPasswordValid}
+                      error={!isPasswordValid ? "complete all requirement" : ""}
+                      className="text-white"
+                    /> */}
+                    <Controller
+                      name="password"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          label="Password"
+                          placeholder="*********"
+                          type="password"
+                          error={errors.password?.message}
+                          isLoading={isLoading}
+                          {...field}
+                          labelClassName="text-white"
+                          className="text-white"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  {/* Submit Button */}
+                  <CButton
+                    type="submit"
+                    disabled={isLoading || !isValid}
+                    isLoading={isLoading}
+                  >
+                    {isLoading ? "Processing..." : "Create Workspace"}
+                  </CButton>
+
+                  {/* Divider */}
+                  {/* <div className="relative my-6">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-2 bg-white text-gray-500">OR</span>
+                    </div>
+                  </div> */}
+
+                  {/* OAuth Buttons */}
+                  {/* <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
+                    <button
+                      type="button"
+                      className="w-full flex gap-3 items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
+                      onClick={() => signIn("google")}
+                    >
+                      <div>
+                        <FcGoogle size={33} />
+                      </div>
+                      <span className="text-sm font-medium text-white">
+                        Google
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      className="w-full gap-3 group flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md   transition-colors"
+                      onClick={() =>
+                        signIn("github", {
+                          // callbackUrl: "/auth/account-setup",
+                        })
+                      }
+                    >
+                      <div>
+                        <FaGithub size={33} className=" text-white" />
+                      </div>
+                      <span className="text-sm font-medium text-white">
+                        GitHub
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
+                      onClick={() =>
+                        signIn("gitlab", {
+                          // callbackUrl: "/auth/account-setup",
+                        })
+                      }
+                    >
+                      <img
+                        src="/icon-auth-gitlab.svg"
+                        alt="GitLab"
+                        width={38}
+                        height={38}
+                        className="mr-2"
+                      />
+                      <span className="text-sm font-medium text-white">
+                        GitLab
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
+                    >
+                      <img
+                        src="/icon-auth-aws.svg"
+                        alt="AWS"
+                        width={38}
+                        height={38}
+                        className="mr-2"
+                      />
+                      <span className="text-sm font-medium text-white">
+                        AWS
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
+                      onClick={() =>
+                        signIn("microsoft-entra-id", {
+                          // callbackUrl: "/auth/account-setup",
+                        })
+                      }
+                    >
+                      <img
+                        src="/icon-auth-azure.svg"
+                        alt="Azure"
+                        width={38}
+                        height={38}
+                        className="mr-2"
+                      />
+                      <span className="text-sm font-medium text-white">
+                        Azure
+                      </span>
+                    </button>
+                  </div> */}
+
+                  {/* Demo Page Link */}
+                  <div className="text-center text-white mt-3 text-base">
+                    Already have an account?{" "}
+                    <Link
+                      href="/auth/signin"
+                      className={`${
+                        IS_STANDALONE ? "text-IMSCyan" : "text-blue-600"
+                      } underline hover:underline inline-flex items-center`}
+                    >
+                      Sign in
+                    </Link>
+                  </div>
+                </form>
+              </>
+            )}
+          </>
+        )}
+      </div>
+    </Suspense>
   );
 }

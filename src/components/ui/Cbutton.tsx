@@ -1,6 +1,8 @@
 import React, { ReactNode } from "react";
 import { Button } from "./button";
 
+const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
+
 interface Props {
   isLoading?: boolean;
   onClick?: () => void;
@@ -22,14 +24,19 @@ const CButton = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`w-full text-white !py-3 px-4 rounded-md transition-colors bg-blue-600 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-200 disabled:hover:bg-blue-200 disabled:text-blue-500
+      size={"default"}
+      className={`w-full h-10 text-black !py-2 px-3 rounded-md transition-colors disabled:opacity-40 ${
+        IS_STANDALONE
+          ? "bg-IMSCyan hover:bg-IMSCyan "
+          : "bg-blue-600 hover:bg-blue-800"
+      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
       ${className}
       `}
     >
       {isLoading ? (
         <div className="flex items-center justify-center">
           <svg
-            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+            className="animate-spin -ml-1 mr-3 h-4 w-4 text-black"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

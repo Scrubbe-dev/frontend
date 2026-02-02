@@ -21,7 +21,9 @@ export default function Demo() {
       await new Promise((resolve) => setTimeout(resolve, 5000));
 
       // Redirect user to home page
-      window.location.href = "/";
+      if (typeof window !== "undefined") {
+        window.location.href = "/";
+      }
     } catch (error) {
       console.error("Sign in error:", error);
       setIsLoading(false);

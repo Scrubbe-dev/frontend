@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import hljs from "highlight.js";
+import { useRef, useState } from "react";
+// import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-dark-reasonable.min.css";
 
 interface CodeHighlighterProps {
@@ -15,11 +15,11 @@ export default function CodeHighlighter({
   const codeRef = useRef<HTMLElement>(null);
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    if (codeRef.current) {
-      hljs.highlightElement(codeRef.current);
-    }
-  }, [code]);
+  // useEffect(() => {
+  //   if (codeRef.current) {
+  //     hljs.highlightElement(codeRef.current);
+  //   }
+  // }, [code]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code).then(() => {

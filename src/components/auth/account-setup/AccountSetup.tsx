@@ -2,11 +2,10 @@
 import { useAppStore } from "@/store/StoreProvider";
 import { TeamMember } from "@/store/slices/enterpriseSetupSlice";
 import type React from "react";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { FiUpload } from "react-icons/fi";
 
@@ -15,6 +14,9 @@ import Select from "@/components/ui/select";
 import Input from "@/components/ui/input";
 import CButton from "@/components/ui/Cbutton";
 import { PenLine } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import useAuthStore from "@/lib/stores/auth.store";
 
 // Zod schema for form validation
 const companyInfoSchema = z.object({
@@ -36,7 +38,6 @@ const AccountSetup = () => {
     clearError,
     setAdminContact,
     setDashboardPreferences,
-    toggleIntegration,
     toggleNotificationChannel,
     toggleIncidentPriority,
     submitEnterpriseSetup,
@@ -44,15 +45,17 @@ const AccountSetup = () => {
     addTeamMember,
     updateTeamMember,
     removeTeamMember,
+    isSuccess,
   } = useAppStore((state) => state);
-
+  const { user } = useAuthStore();
   // Fixed: Initialize with the file from companyLogo object
   const [uploadedLogo, setUploadedLogo] = useState<File | null>(
     enterpriseSetup.companyLogo?.file || null
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const searchParams = useSearchParams();
+  const path = searchParams.get("to");
   const {
     handleSubmit,
     formState: { errors: formErrors },
@@ -156,12 +159,7 @@ const AccountSetup = () => {
     name: "",
     email: "",
     role: "",
-    permissions: {
-      viewDashboard: true,
-      modifyDashboard: false,
-      executeActions: false,
-      manageUsers: false,
-    },
+    permissions: [] as string[],
   });
 
   const resetMemberForm = () => {
@@ -169,12 +167,7 @@ const AccountSetup = () => {
       name: "",
       email: "",
       role: "",
-      permissions: {
-        viewDashboard: true,
-        modifyDashboard: false,
-        executeActions: false,
-        manageUsers: false,
-      },
+      permissions: [],
     });
   };
 
@@ -187,16 +180,17 @@ const AccountSetup = () => {
   const handleEditMember = (member: TeamMember) => {
     setEditingMember(member);
     setMemberForm({
-      name: member.name,
+      name: member.name ?? "",
       email: member.email,
       role: member.role,
-      permissions: { ...member.permissions },
+      permissions: member.permissions,
     });
     setIsModalOpen(true);
   };
 
   const handleSaveMember = () => {
-    if (!memberForm.name.trim() || !memberForm.email.trim()) {
+    if (!memberForm.email.trim()) {
+      toast.error("please fill all details");
       return;
     }
 
@@ -215,31 +209,57 @@ const AccountSetup = () => {
     removeTeamMember(id);
   };
 
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      setAdminContact({
+        adminEmail: user.email,
+        adminName: `${user.firstName} ${user.lastName}`,
+      });
+    }
+    if (isSuccess) {
+      if (path && path === "ezra") {
+        toast.success("Account setup successful");
+        router.push(`/alert-settings?to=${path}`);
+      } else {
+        router.push(`/alert-settings`);
+      }
+    }
+  }, [isSuccess, path, router, user]);
+
+  const handleSkip = () => {
+    if (path && path === "ezra") {
+      router.push(`/alert-settings?to=${path}`);
+    } else {
+      router.push(`/alert-settings`);
+    }
+  };
+
   return (
     <section className="w-full h-auto bg-[#F9FAFB]">
       {/* Skip Button */}
       <div className="flex justify-end  w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <Link href="/data-sources">
-          <button
-            type="button"
-            className="px-4 py-2 text-blue-600 border border-blue-200 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors text-[16px] font-medium flex items-center space-x-2"
+        <button
+          onClick={handleSkip}
+          type="button"
+          className="px-4 py-2 text-blue-600 border border-blue-200 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors text-[16px] font-medium flex items-center space-x-2"
+        >
+          <span>Skip</span>
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <span>Skip</span>
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 8l4 4m0 0l-4 4m4-4H3"
-              />
-            </svg>
-          </button>
-        </Link>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M17 8l4 4m0 0l-4 4m4-4H3"
+            />
+          </svg>
+        </button>
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -267,6 +287,8 @@ const AccountSetup = () => {
                     <Input
                       label="Company Name"
                       placeholder="Flutterwave"
+                      className="dark:!text-black"
+                      labelClassName="dark:!text-black"
                       error={
                         formErrors.companyName?.message || errors.companyName
                       }
@@ -283,6 +305,8 @@ const AccountSetup = () => {
                   render={({ field }) => (
                     <Select
                       label="Industry"
+                      className="dark:!text-black"
+                      labelClassName="dark:!text-black"
                       options={[
                         { value: "", label: "Select Industry" },
                         ...industryOptions.map((option) => ({
@@ -307,6 +331,8 @@ const AccountSetup = () => {
                   render={({ field }) => (
                     <Select
                       label="Company Size"
+                      className="dark:!text-black"
+                      labelClassName="dark:!text-black"
                       options={[
                         { value: "", label: "Select Company Size" },
                         ...companySizeOptions.map((option) => ({
@@ -330,6 +356,8 @@ const AccountSetup = () => {
                   render={({ field }) => (
                     <Select
                       label="Primary Region"
+                      className="dark:!text-black"
+                      labelClassName="dark:!text-black"
                       options={[
                         { value: "", label: "Select Region" },
                         ...regionOptions.map((option) => ({
@@ -350,7 +378,7 @@ const AccountSetup = () => {
 
               {/* Company Logo Upload */}
               <div className="space-y-4">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 ">
                   Upload company Logo
                 </label>
                 {/* Upload Area */}
@@ -485,6 +513,9 @@ const AccountSetup = () => {
                   label="Admin Name"
                   placeholder="Enter Name"
                   value={enterpriseSetup.adminName}
+                  defaultValue={user?.firstName + " " + user?.lastName}
+                  className="dark:!text-black"
+                  labelClassName="dark:!text-black"
                   onChange={(e) => {
                     setAdminContact({ adminName: e.target.value });
                     clearError("adminName");
@@ -498,12 +529,16 @@ const AccountSetup = () => {
                   placeholder="Enter Email"
                   type="email"
                   value={enterpriseSetup.adminEmail}
+                  defaultValue={user?.email}
+                  className="dark:!text-black"
+                  labelClassName="dark:!text-black"
                   onChange={(e) => {
                     setAdminContact({ adminEmail: e.target.value });
                     clearError("adminEmail");
                   }}
                   error={errors.adminEmail}
                   isLoading={isSubmitting}
+                  // readOnly
                 />
               </div>
 
@@ -515,6 +550,8 @@ const AccountSetup = () => {
                   placeholder="Enter Phone number"
                   type="tel"
                   value={enterpriseSetup.adminPhone}
+                  className="dark:!text-black"
+                  labelClassName="dark:!text-black"
                   onChange={(e) => {
                     setAdminContact({ adminPhone: e.target.value });
                     clearError("adminPhone");
@@ -527,6 +564,8 @@ const AccountSetup = () => {
                   label="Admin Job title"
                   placeholder="Enter job title"
                   value={enterpriseSetup.adminJobTitle}
+                  className="dark:!text-black"
+                  labelClassName="dark:!text-black"
                   onChange={(e) => {
                     setAdminContact({ adminJobTitle: e.target.value });
                     clearError("adminJobTitle");
@@ -651,25 +690,16 @@ const AccountSetup = () => {
                 </button>
               </div>
 
-              <div className="space-y-6">
+              <div className="">
                 {/* Name and Email Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input
-                    label="Name"
-                    placeholder="Enter Name"
-                    value={memberForm.name}
-                    onChange={(e) =>
-                      setMemberForm((prev) => ({
-                        ...prev,
-                        name: e.target.value,
-                      }))
-                    }
-                  />
+                <div className="grid grid-cols-1 gap-6">
                   <Input
                     label="Email"
                     placeholder="Enter Email"
                     type="email"
                     value={memberForm.email}
+                    className="dark:!text-black"
+                    labelClassName="dark:!text-black"
                     onChange={(e) =>
                       setMemberForm((prev) => ({
                         ...prev,
@@ -682,12 +712,14 @@ const AccountSetup = () => {
                 {/* Role */}
                 <Select
                   label="Role"
+                  className="dark:!text-black"
+                  labelClassName="dark:!text-black"
                   options={[
                     { value: "", label: "Select role" },
-                    { value: "Admin", label: "Admin" },
-                    { value: "Manager", label: "Manager" },
-                    { value: "Analyst", label: "Analyst" },
-                    { value: "Viewer", label: "Viewer" },
+                    { value: "ADMIN", label: "Admin" },
+                    { value: "MANAGER", label: "Manager" },
+                    { value: "ANALYST", label: "Analyst" },
+                    { value: "VIEWER", label: "Viewer" },
                   ]}
                   value={memberForm.role}
                   onChange={(e) =>
@@ -704,101 +736,54 @@ const AccountSetup = () => {
                     Access Permissions
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="modal-viewDashboard"
-                        checked={memberForm.permissions.viewDashboard}
-                        onChange={(e) =>
-                          setMemberForm((prev) => ({
-                            ...prev,
-                            permissions: {
-                              ...prev.permissions,
-                              viewDashboard: e.target.checked,
-                            },
-                          }))
-                        }
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                      />
-                      <label
-                        htmlFor="modal-viewDashboard"
-                        className="text-sm text-gray-700"
+                    {[
+                      { label: "View Dashboard", value: "VIEW_DASHBOARD" },
+                      { label: "Modify Dashboard", value: "MODIFY_DASHBOARD" },
+                      { label: "Execute Actions", value: "EXECUTE_ACTIONS" },
+                      { label: "Manage Users", value: "MANAGE_USERS" },
+                    ].map((permission) => (
+                      <div
+                        key={permission.label}
+                        className="flex items-center space-x-2"
                       >
-                        View Dashboard
-                      </label>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="modal-modifyDashboard"
-                        checked={memberForm.permissions.modifyDashboard}
-                        onChange={(e) =>
-                          setMemberForm((prev) => ({
-                            ...prev,
-                            permissions: {
-                              ...prev.permissions,
-                              modifyDashboard: e.target.checked,
-                            },
-                          }))
-                        }
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                      />
-                      <label
-                        htmlFor="modal-modifyDashboard"
-                        className="text-sm text-gray-700"
-                      >
-                        Modify Dashboard
-                      </label>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="modal-executeActions"
-                        checked={memberForm.permissions.executeActions}
-                        onChange={(e) =>
-                          setMemberForm((prev) => ({
-                            ...prev,
-                            permissions: {
-                              ...prev.permissions,
-                              executeActions: e.target.checked,
-                            },
-                          }))
-                        }
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                      />
-                      <label
-                        htmlFor="modal-executeActions"
-                        className="text-sm text-gray-700"
-                      >
-                        Execute Actions
-                      </label>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="modal-manageUsers"
-                        checked={memberForm.permissions.manageUsers}
-                        onChange={(e) =>
-                          setMemberForm((prev) => ({
-                            ...prev,
-                            permissions: {
-                              ...prev.permissions,
-                              manageUsers: e.target.checked,
-                            },
-                          }))
-                        }
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                      />
-                      <label
-                        htmlFor="modal-manageUsers"
-                        className="text-sm text-gray-700"
-                      >
-                        Manage Users
-                      </label>
-                    </div>
+                        <input
+                          type="checkbox"
+                          id={permission.value}
+                          checked={memberForm.permissions.includes(
+                            permission.value
+                          )}
+                          onChange={() =>
+                            setMemberForm((prev) => {
+                              if (prev.permissions.includes(permission.value)) {
+                                const filterPermission =
+                                  prev.permissions.filter(
+                                    (item) => item !== permission.value
+                                  );
+                                return {
+                                  ...prev,
+                                  permissions: filterPermission,
+                                };
+                              } else {
+                                return {
+                                  ...prev,
+                                  permissions: [
+                                    ...prev.permissions,
+                                    permission.value,
+                                  ],
+                                };
+                              }
+                            })
+                          }
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                        />
+                        <label
+                          htmlFor={permission.value}
+                          className="text-sm text-gray-700"
+                        >
+                          {permission.label}
+                        </label>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
@@ -1028,38 +1013,6 @@ const AccountSetup = () => {
               </div>
 
               {/* Preferred Integration */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium text-gray-900">
-                  Preferred Integration
-                </h3>
-                <p className="text-sm text-gray-600">
-                  You can select more than one
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  {["Jira", "Freshdesk", "Service Now"].map((integration) => (
-                    <div
-                      key={integration}
-                      className="flex items-center space-x-2"
-                    >
-                      <input
-                        type="checkbox"
-                        id={integration.toLowerCase().replace(" ", "")}
-                        checked={enterpriseSetup.preferredIntegrations.includes(
-                          integration
-                        )}
-                        onChange={() => toggleIntegration(integration)}
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                      />
-                      <label
-                        htmlFor={integration.toLowerCase().replace(" ", "")}
-                        className="text-sm text-gray-700"
-                      >
-                        {integration}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
               {/* Notification Channels */}
               <div className="space-y-4">
@@ -1073,12 +1026,6 @@ const AccountSetup = () => {
                         You can select more than one
                       </p>
                     </div>
-                    <button
-                      type="button"
-                      className="self-start px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-50 text-blue-600 rounded-md border border-blue-200 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors text-xs sm:text-sm font-medium whitespace-nowrap"
-                    >
-                      Go to notification settings
-                    </button>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-4">
@@ -1114,11 +1061,9 @@ const AccountSetup = () => {
                 <h3 className="text-lg font-medium text-gray-900">
                   Default Incident Priority
                 </h3>
-                <p className="text-sm text-gray-600">
-                  You can select more than one
-                </p>
+
                 <div className="flex flex-wrap gap-4">
-                  {["High", "Medium", "Low"].map((priority) => (
+                  {["HIGH", "MEDIUM", "LOW"].map((priority) => (
                     <div key={priority} className="flex items-center space-x-2">
                       <input
                         type="checkbox"
