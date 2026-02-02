@@ -231,6 +231,7 @@ const MainPricing = () => {
        </div>
 
 
+        <div>
         <div className="mx-auto w-fit flex items-center gap-3">
           <p
             className={`${
@@ -258,8 +259,10 @@ const MainPricing = () => {
             Annual
           </p>
         </div>
+        <p className="text-sm text-white text-center pt-2">Annual includes ~15% discount (illustrative).</p>
+        </div>
 
-        <div className=" grid grid-cols-3 gap-6">
+        {/* <div className=" grid grid-cols-3 gap-6">
           {type === "business" ? (
             <>
               {businessPricing
@@ -309,7 +312,7 @@ const MainPricing = () => {
           ) : (
             <></>
           )}
-        </div>
+        </div> */}
       </motion.div>
     </div>
   );
