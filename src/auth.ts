@@ -5,7 +5,17 @@ import Gitlab from "next-auth/providers/gitlab";
 // import Cognito from "next-auth/providers/cognito";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = NextAuth({
   providers: [
     Github({
       authorization: {

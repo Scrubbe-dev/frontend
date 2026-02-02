@@ -1,10 +1,11 @@
 "use client";
+
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import * as z from "zod";
+import { useRouter, useSearchParams } from "next/navigation";
 import Input from "../ui/input";
 import CButton from "../ui/Cbutton";
 import useAuthStore from "@/lib/stores/auth.store";

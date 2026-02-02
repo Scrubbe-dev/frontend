@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import type React from "react";
-
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -77,6 +76,7 @@ export default function ForgotPassword() {
 
   // Handle email submission
   const handleEmailSubmit = async (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
       setLoading(true);
@@ -90,8 +90,6 @@ export default function ForgotPassword() {
       }
     }
   };
-
-  // Handle verification code input
 
   // Handle verification code submission
   // const handleVerificationSubmit = (value: string) => {
@@ -154,6 +152,7 @@ export default function ForgotPassword() {
               <Input
                 label="Email"
                 placeholder="Enter email"
+                type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -178,7 +177,7 @@ export default function ForgotPassword() {
 
       case 2:
         return (
-          <div className="w-full  mx-auto">
+          <div className="w-full mx-auto">
             <div
               className=" flex gap-1 text-sm items-center mb-3 opacity-60 hover:opacity-100 cursor-pointer text-white"
               onClick={() => setStage(1)}
@@ -277,7 +276,7 @@ export default function ForgotPassword() {
               href="/auth/signin"
               className="w-full bg-IMSCyan text-white py-2 px-4 text-sm font-semibold rounded-md hover:bg-IMSCyan transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center"
             >
-              Back to log in
+              Back to Sign In
             </Link>
           </div>
         );
@@ -287,5 +286,5 @@ export default function ForgotPassword() {
     }
   };
 
-  return <div className="w-full  mx-auto p-6">{renderStage()}</div>;
+  return <div className="w-full mx-auto p-6">{renderStage()}</div>;
 }

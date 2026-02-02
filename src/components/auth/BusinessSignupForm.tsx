@@ -102,6 +102,7 @@ export default function BusinessSignupForm() {
     handleSubmit,
     control,
     formState: { errors, isValid },
+    reset,
   } = useForm<BusinessSignupFormData>({
     resolver: zodResolver(businessSignupSchema),
     defaultValues: {

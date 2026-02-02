@@ -8,7 +8,7 @@ const Detection = () => {
           Customizable Anomaly Detection Dashboard
         </p>
       </div>
-      <img src="/anomaly_bg.png" className=" scale-105" />
+      <img src="/anomaly_bg.png" className=" scale-105"  alt="anomaly_bg.png"/>
     </div>
   );
 };

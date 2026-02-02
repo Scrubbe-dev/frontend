@@ -65,6 +65,23 @@ type AuthActions = {
   verifyEmail: (code: string) => Promise<void>;
   resendOTP: () => Promise<void>;
   logout: () => Promise<void>;
+  
+  // Registration actions
+  registerDeveloper: (data: DeveloperSignupData) => Promise<User>;
+  registerBusiness: (data: BusinessSignupData) => Promise<User>;
+  
+  // Verification actions
+  verifyEmail: (userId: string, code: string) => Promise<void>;
+  resendOTP: (userId: string) => Promise<void>;
+  
+  // Password actions
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (token: string, password: string) => Promise<void>;
+  validateResetToken: (token: string) => Promise<boolean>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
+  
+  // Session actions
+  setUser: (user: User | null) => void;
   clearError: () => void;
   setUser: (value: User) => void;
 };
@@ -140,11 +157,52 @@ const useAuthStore = create<AuthState & AuthActions>()(
                 ? error.response?.data?.message
                 : "Login failed",
             isLoading: false,
+            isAuthenticated: false 
           });
           throw error;
         }
       },
-      developerSignup: async (signupData) => {
+
+      // Logout
+      logout: async () => {
+        try {
+          set({ isLoading: true });
+          
+          // Call server logout if refresh token exists
+          const { user } = get();
+          if (user?.refreshToken) {
+            try {
+              await apiClient.post("/auth/logout", { 
+                refreshToken: user.refreshToken 
+              });
+            } catch (error) {
+              console.error("Server logout error:", error);
+              // Continue with client logout even if server logout fails
+            }
+          }
+          
+          await nextAuthSignOut({ 
+            redirect: true, 
+            callbackUrl: "/auth/signin" 
+          });
+          
+          set({ 
+            user: null, 
+            isLoading: false, 
+            isAuthenticated: false,
+            error: null 
+          });
+        } catch (error) {
+          set({ 
+            isLoading: false, 
+            error: error instanceof Error ? error.message : "Logout failed" 
+          });
+          throw error;
+        }
+      },
+
+      // Register Developer
+      registerDeveloper: async (data: DeveloperSignupData) => {
         try {
           set({ isLoading: true, error: null });
           const validatedData = developerSignupSchema.parse(signupData);
@@ -179,7 +237,9 @@ const useAuthStore = create<AuthState & AuthActions>()(
           throw error;
         }
       },
-      businessSignup: async (signupData) => {
+
+      // Register Business
+      registerBusiness: async (data: BusinessSignupData) => {
         try {
           set({ isLoading: true, error: null });
           const validatedData = businessSignupSchema.parse(signupData);
@@ -337,7 +397,19 @@ const useAuthStore = create<AuthState & AuthActions>()(
           throw error;
         }
       },
-      logout: async () => {
+
+      // Validate Reset Token
+      validateResetToken: async (token: string) => {
+        try {
+          const response = await apiClient.post("/auth/validate-reset-token", { token });
+          return response.data?.valid === true;
+        } catch (error) {
+          return false;
+        }
+      },
+
+      // Change Password
+      changePassword: async (currentPassword: string, newPassword: string) => {
         try {
           set({ isLoading: true });
           deleteCookie(COOKIE_KEYS.TOKEN);
@@ -349,11 +421,39 @@ const useAuthStore = create<AuthState & AuthActions>()(
             isLoading: false,
           });
         } catch (error) {
-          set({ isLoading: false });
+          set({ 
+            error: error instanceof Error ? error.message : "Password change failed", 
+            isLoading: false 
+          });
           throw error;
         }
       },
+
+      // Set user directly
+      setUser: (user: User | null) => {
+        set({ 
+          user, 
+          isAuthenticated: !!user,
+          error: null 
+        });
+      },
+
+      // Clear error
       clearError: () => set({ error: null }),
+
+      // Update tokens
+      updateTokens: (tokens: AuthTokens) => {
+        const { user } = get();
+        if (user) {
+          set({ 
+            user: { 
+              ...user, 
+              accessToken: tokens.accessToken, 
+              refreshToken: tokens.refreshToken 
+            } 
+          });
+        }
+      },
     }),
     {
       name: "auth-storage",
@@ -367,3 +467,4 @@ const useAuthStore = create<AuthState & AuthActions>()(
 );
 
 export default useAuthStore;
+

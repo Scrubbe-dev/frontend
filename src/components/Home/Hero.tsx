@@ -32,7 +32,7 @@ const Hero = () => {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [steps.length]);
+  }, [steps]);
 
   // Progress countdown effect
   useEffect(() => {

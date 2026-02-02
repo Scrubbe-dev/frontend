@@ -15,7 +15,7 @@ const NaturalLanguage = () => {
           View Details
         </Button>
       </div>
-      <img src="/natural_language_bg.png" className=" scale-105" />
+      <img src="/natural_language_bg.png" className=" scale-105"  alt="natural_language_bg.png"/>
     </div>
   );
 };

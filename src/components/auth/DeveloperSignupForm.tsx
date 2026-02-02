@@ -1,84 +1,22 @@
 "use client";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import Image from "next/image";
-import * as z from "zod";
+import { useRouter } from "next/navigation";
 import Input from "../ui/input";
-import { Controller } from "react-hook-form";
 import CButton from "../ui/Cbutton";
-import Select from "../ui/select";
 import useAuthStore from "@/lib/stores/auth.store";
-import { signIn, useSession } from "next-auth/react";
-import CompleteDeveloperProfile, {
-  DeveloperProfileSignupFormData,
-} from "./CompleteDeveloperProfile";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Loader2 } from "lucide-react";
-import { FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import OtpInput from "../ui/OtpInput";
-import { PasswordInput } from "../ui/password-input";
-import { AxiosError } from "axios";
-import { BiCheck } from "react-icons/bi";
-
-// Define the form schema using zod
-export const developerSignupSchema = z
-  .object({
-    firstName: z.string().min(1, { message: "First name is required" }),
-    lastName: z.string().min(1, { message: "Last name is required" }),
-    email: z.string().email({ message: "Please enter a valid email address" }),
-    githubUsername: z.string().optional(),
-    experience: z
-      .string()
-      .min(1, { message: "Please select experience level" }),
-    password: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: "Confirm password must be at least 6 characters" }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-// TypeScript type based on the schema
-type DeveloperSignupFormData = z.infer<typeof developerSignupSchema>;
-
-// Success Page Component Props Type
-interface SuccessPageProps {
-  firstName: string;
-  lastName: string;
-}
+import { developerSignupSchema, type DeveloperSignupFormData } from "@/lib/validations/auth.schema";
 
 export default function DeveloperSignupForm() {
   const [showSuccess, setShowSuccess] = useState(false);
-  const [formData, setFormData] =
-    useState<Partial<DeveloperSignupFormData> | null>(null);
-  const {
-    developerSignup,
-    isLoading,
-    developerProfileSignup,
-    resendOTP,
-    verifyEmail,
-  } = useAuthStore();
-
-  const session = useSession();
-  const [profileComplete, setProfileComplete] = useState(false);
-  const searchParams = useSearchParams();
-  const path = searchParams.get("to");
-  const inviteEmail = searchParams.get("email");
-  const invite = searchParams.get("invite");
-  const isInvite = Boolean(invite);
-
+  const [registeredEmail, setRegisteredEmail] = useState("");
   const router = useRouter();
-  const [isOTP, setIsOTP] = useState(false);
-  // const [password, setPassword] = useState("");
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  
+  const { registerDeveloper } = useAuthStore();
 
   const {
     handleSubmit,
@@ -86,11 +24,11 @@ export default function DeveloperSignupForm() {
     setValue,
     watch,
     control,
+    reset,
   } = useForm<DeveloperSignupFormData>({
     resolver: zodResolver(developerSignupSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      fullName: "",
       email: "",
       githubUsername: "",
       experience: "",
@@ -102,214 +40,112 @@ export default function DeveloperSignupForm() {
 
   const onSubmit = async (data: DeveloperSignupFormData) => {
     try {
-      // Log form values
-      console.log(data, " developer registration");
+      setIsLoading(true);
 
-      // Simulate a 5-second delay
-      await developerSignup(data);
-      // Store form data and show success page
-      setFormData(data);
-      setIsOTP(true);
-    } catch (error) {
-      toast.error("Registration failed", {
-        description:
-          error instanceof AxiosError
-            ? error.response?.data?.message
-            : "Signup failed",
-      });
-    }
-  };
-
-  const onProfileSubmit = async (data: DeveloperProfileSignupFormData) => {
-    try {
-      console.log(data, " business registration");
-      // Simulate a 5-second delay
-      const details = {
-        ...data,
-        ...session.data?.user,
-      };
-      await developerProfileSignup(details);
-
-      // Store form data and show success page
-      setFormData({ ...data, ...session.data?.user });
-      // setShowSuccess(true);
-
-      // Reset loading state
-    } catch (error) {
-      toast.error("Registration failed", {
-        description:
-          error instanceof AxiosError
-            ? error.response?.data?.message
-            : "Signup failed",
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (session.status == "authenticated" && !profileComplete) {
-      setProfileComplete(true);
-    }
-  }, [session.status, profileComplete]);
-
-  useEffect(() => {
-    if (showSuccess) {
-      const timeout = setTimeout(() => {
-        if (path) {
-          router.push(`/auth/developer-setup?=${path}`);
-        } else {
-          router.push(`/auth/developer-setup`);
-        }
-      }, 3000);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [showSuccess, router, path]);
-
-  useEffect(() => {
-    if (invite && inviteEmail) {
-      setValue("email", inviteEmail);
-    }
-  }, [invite, inviteEmail, setValue]);
-  // Success Page Component
-  const SuccessPage = ({ firstName, lastName }: SuccessPageProps) => {
-    return (
-      <Suspense fallback={<div>Loading...</div>}>
-        <div className="w-full p-6 flex flex-col items-center justify-center min-h-96">
-          {session.status == "loading" && (
-            <div className=" absolute inset-0 bg-black/20 z-50 flex justify-center pt-[20%]">
-              <Loader2 className=" animate-spin text-primary-500" size={30} />
-            </div>
-          )}
-          <div className="mb-8">
-            {/* Enhanced Success Icon with concentric circles */}
-            <div className="relative flex items-center justify-center translate-y-[-50px]">
-              <div className=" size-[150px] rounded-full bg-emerald-100 absolute animate-ping" />
-              <div className=" size-[130px] rounded-full bg-emerald-200 absolute" />
-              <div className=" size-[110px] rounded-full bg-emerald-300 absolute" />
-              <div className=" size-[90px] rounded-full bg-emerald-500 absolute" />
-              <BiCheck className=" absolute text-white" size={40} />
-            </div>
-          </div>
-
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
-            Successful
-          </h1>
-
-          <p className="text-gray-600 dark:text-gray-300 text-center">
-            Welcome {firstName} {lastName}! You have successfully created an
-            account.
-          </p>
-        </div>
-      </Suspense>
-    );
-  };
-
-  const handleVerifyOTP = async (code: string) => {
-    try {
-      if (code.length != 6) {
-        toast.error("Incorrect OTP code");
-        return;
-      }
-      await verifyEmail(code);
-      toast.success("Email verified successfully");
+      const user = await registerDeveloper(data);
+      setRegisteredEmail(user.email);
       setShowSuccess(true);
-    } catch (error) {
-      toast.error("Verification failed", {
-        description:
-          error instanceof AxiosError
-            ? error.response?.data?.message
-            : "verification failed",
+      reset();
+
+      toast.success("Account created successfully!", {
+        description: "Please check your email to verify your account.",
+        duration: 5000,
       });
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("Registration failed", {
+        description:
+          error instanceof Error ? error.message : "Something went wrong.",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleResendOTP = async () => {
-    try {
-      await resendOTP();
-      toast.success("OTP sent successfully");
-    } catch (error) {
-      toast.error(
-        error instanceof AxiosError ? error.response?.data?.message : "failed"
-      );
-    }
+  const handleContinue = () => {
+    // Redirect to email verification page or sign in
+    router.push("/auth/verify-email?email=" + encodeURIComponent(registeredEmail));
   };
-  const VerifyAccount = () => {
+
+  // Success Page Component
+  const SuccessPage = () => {
     return (
-      <div>
-        <OtpInput
-          email={formData?.email ?? ""}
-          handleResend={handleResendOTP}
-          onSubmit={handleVerifyOTP}
-        />
+      <div className="w-full p-6 flex flex-col items-center justify-center min-h-96">
+        <div className="mb-8">
+          <div className="relative flex items-center justify-center">
+            <svg
+              width="200"
+              height="200"
+              viewBox="0 0 200 200"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="100" cy="100" r="95" fill="#E6F3FF" opacity="0.4" />
+              <circle cx="100" cy="100" r="75" fill="#CCE7FF" opacity="0.6" />
+              <circle cx="100" cy="100" r="55" fill="#99D6FF" opacity="0.8" />
+              <circle cx="100" cy="100" r="35" fill="#2563EB" />
+              <path
+                d="M85 100L95 110L115 90"
+                stroke="white"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+          Account Created Successfully!
+        </h1>
+
+        <p className="text-gray-600 text-center mb-6">
+          Welcome! Your developer account has been created. Please verify your email address to continue.
+        </p>
+
+        <CButton onClick={handleContinue} type="button">
+          Continue to Verification
+        </CButton>
+
+        <div className="mt-4 text-center">
+          <Link
+            href="/auth/signin"
+            className="text-blue-600 hover:underline text-sm"
+          >
+            Already verified? Sign in
+          </Link>
+        </div>
       </div>
     );
   };
+
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div className="w-full p-6">
-        {showSuccess && formData && (
-          <SuccessPage
-            firstName={formData.firstName ?? ""}
-            lastName={formData.lastName ?? ""}
-          />
-        )}
+    <div className="w-full p-6">
+      {showSuccess ? (
+        <SuccessPage />
+      ) : (
         <>
-          {profileComplete && !showSuccess && (
-            <>
-              <h1 className="text-xl md:text-2xl dark:text-white font-semibold mb-2 ">
-                Complete Your Profile
-              </h1>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Just a few more details to get started
-              </p>
+          <h1 className="text-xl md:text-2xl font-semibold mb-6">
+            Developer Signup
+          </h1>
 
-              <CompleteDeveloperProfile
-                onSubmit={onProfileSubmit}
-                isLoading={isLoading}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {/* Full Name */}
+            <div className="mb-4">
+              <Controller
+                name="fullName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Full Name"
+                    placeholder="Enter your full name"
+                    error={errors.fullName?.message}
+                    isLoading={isLoading}
+                    {...field}
+                  />
+                )}
               />
-            </>
-          )}
-
-          {!profileComplete && !showSuccess && (
-            <>
-              {isOTP ? (
-                <VerifyAccount />
-              ) : (
-                <>
-                  <h1 className=" text-xl md:text-2xl font-semibold mb-6 dark:text-white">
-                    Developer Signup
-                  </h1>
-
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    {/* First Name and Last Name Row */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                      <Controller
-                        name="firstName"
-                        control={control}
-                        render={({ field }) => (
-                          <Input
-                            label="First Name"
-                            placeholder="First Name"
-                            error={errors.firstName?.message}
-                            isLoading={isLoading}
-                            {...field}
-                          />
-                        )}
-                      />
-                      <Controller
-                        name="lastName"
-                        control={control}
-                        render={({ field }) => (
-                          <Input
-                            label="Last Name"
-                            placeholder="Last Name"
-                            error={errors.lastName?.message}
-                            isLoading={isLoading}
-                            {...field}
-                          />
-                        )}
-                      />
-                    </div>
+            </div>
 
                     {/* Email and GitHub Username Row */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -342,37 +178,38 @@ export default function DeveloperSignupForm() {
                       />
                     </div>
 
-                    {/* Experience Level Full Row */}
-                    <div className="mb-4">
-                      <Controller
-                        name="experience"
-                        control={control}
-                        render={({ field }) => (
-                          <Select
-                            label="Experience Level"
-                            {...field}
-                            id="experience"
-                            options={[
-                              { label: "Beginner", value: "beginner" },
-                              { label: "Intermediate", value: "intermediate" },
-                              { label: "Advanced", value: "advanced" },
-                              { label: "Expert", value: "expert" },
-                            ]}
-                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                              isLoading
-                                ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
-                                : "border-gray-300"
-                            }`}
-                            disabled={isLoading}
-                          />
-                        )}
-                      />
-                      {errors.experience && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.experience.message}
-                        </p>
-                      )}
-                    </div>
+            {/* Experience Level */}
+            <div className="mb-4">
+              <label
+                htmlFor="experience"
+                className={`block mb-2 text-sm font-medium ${
+                  isLoading ? "text-gray-500" : "text-gray-700"
+                }`}
+              >
+                Experience Level
+              </label>
+              <select
+                id="experience"
+                {...register("experience")}
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  isLoading
+                    ? "border-gray-200 bg-gray-50 opacity-70 cursor-not-allowed"
+                    : "border-gray-300"
+                }`}
+                disabled={isLoading}
+              >
+                <option value="">Select experience level</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+                <option value="expert">Expert</option>
+              </select>
+              {errors.experience && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.experience.message}
+                </p>
+              )}
+            </div>
 
                     {/* Password Fields Row */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -417,14 +254,14 @@ export default function DeveloperSignupForm() {
                       />
                     </div>
 
-                    {/* Submit Button */}
-                    <CButton
-                      type="submit"
-                      disabled={isLoading || !isValid || !isPasswordValid}
-                      isLoading={isLoading}
-                    >
-                      {isLoading ? "  Processing..." : "Create Account"}
-                    </CButton>
+            {/* Submit Button */}
+            <CButton
+              type="submit"
+              disabled={isLoading || !isValid}
+              isLoading={isLoading}
+            >
+              {isLoading ? "Creating Account..." : "Create Account"}
+            </CButton>
 
                     {/* Divider */}
                     <div className="relative my-6">
@@ -436,97 +273,89 @@ export default function DeveloperSignupForm() {
                       </div>
                     </div>
 
-                    {/* OAuth Buttons */}
-                    {isInvite ? null : (
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
-                        <button
-                          type="button"
-                          className="w-full flex gap-3 items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
-                          onClick={() => signIn("google")}
-                        >
-                          <div>
-                            <FcGoogle size={33} />
-                          </div>
-                          <span className="text-sm font-medium text-gray-700 dark:text-white">
-                            Google
-                          </span>
-                        </button>
-                        <button
-                          type="button"
-                          className="w-full gap-3 group flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md   transition-colors"
-                          onClick={() =>
-                            signIn("github", {
-                              // callbackUrl: "/auth/account-setup",
-                            })
-                          }
-                        >
-                          <div>
-                            <FaGithub size={33} className=" dark:text-white" />
-                          </div>
-                          <span className="text-sm font-medium text-gray-700 dark:text-white">
-                            GitHub
-                          </span>
-                        </button>
+            {/* OAuth Buttons */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6">
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-github.svg"
+                  alt="GitHub"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  GitHub
+                </span>
+              </button>
 
-                        <button
-                          type="button"
-                          className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md transition-colors"
-                          onClick={() =>
-                            signIn("gitlab", {
-                              // callbackUrl: "/auth/account-setup",
-                            })
-                          }
-                        >
-                          <Image
-                            src="/icon-auth-gitlab.svg"
-                            alt="GitLab"
-                            width={38}
-                            height={38}
-                            className="mr-2"
-                          />
-                          <span className="text-sm font-medium text-gray-700 dark:text-white">
-                            GitLab
-                          </span>
-                        </button>
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-gitlab.svg"
+                  alt="GitLab"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  GitLab
+                </span>
+              </button>
 
-                        <button
-                          type="button"
-                          className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md transition-colors"
-                        >
-                          <Image
-                            src="/icon-auth-aws.svg"
-                            alt="AWS"
-                            width={38}
-                            height={38}
-                            className="mr-2"
-                          />
-                          <span className="text-sm font-medium text-gray-700 dark:text-white">
-                            AWS
-                          </span>
-                        </button>
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-aws.svg"
+                  alt="AWS"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">AWS</span>
+              </button>
 
-                        <button
-                          type="button"
-                          className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md transition-colors"
-                          onClick={() =>
-                            signIn("microsoft-entra-id", {
-                              // callbackUrl: "/auth/account-setup",
-                            })
-                          }
-                        >
-                          <Image
-                            src="/icon-auth-azure.svg"
-                            alt="Azure"
-                            width={38}
-                            height={38}
-                            className="mr-2"
-                          />
-                          <span className="text-sm font-medium text-gray-700 dark:text-white">
-                            Azure
-                          </span>
-                        </button>
-                      </div>
-                    )}
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-azure.svg"
+                  alt="Azure"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Azure
+                </span>
+              </button>
+
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-sso.svg"
+                  alt="SSO"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">SSO</span>
+              </button>
+            </div>
 
                     {/* Demo Page Link */}
                     <div className="text-center">

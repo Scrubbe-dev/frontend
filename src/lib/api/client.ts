@@ -16,6 +16,9 @@ export const apiClient = axios.create({
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
   },
+  timeout: 30000, // 30 seconds timeout
 });
 
 setupInterceptors(apiClient);
+
+export default apiClient;

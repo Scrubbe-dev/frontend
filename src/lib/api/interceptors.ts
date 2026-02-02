@@ -2,6 +2,7 @@ import { AxiosInstance } from "axios";
 import { getSession } from "next-auth/react";
 
 export const setupInterceptors = (instance: AxiosInstance) => {
+  // Request interceptor
   instance.interceptors.request.use(
     async (config) => {
       const session = await getSession();
@@ -12,16 +13,21 @@ export const setupInterceptors = (instance: AxiosInstance) => {
 
       return config;
     },
-    (error) => Promise.reject(error)
+    (error: AxiosError) => {
+      return Promise.reject(error);
+    }
   );
 
+  // Response interceptor
   instance.interceptors.response.use(
     (response) => response,
     async (error) => {
       if (error.response?.status === 401) {
         // await signOut({});
       }
+
       return Promise.reject(error);
     }
   );
 };
+
