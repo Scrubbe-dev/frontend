@@ -76,7 +76,6 @@ export default function ForgotPassword() {
 
   // Handle email submission
   const handleEmailSubmit = async (e: React.FormEvent) => {
-  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
       setLoading(true);
@@ -131,7 +130,7 @@ export default function ForgotPassword() {
       validateToken();
     }
   }, [token]);
-
+  
   // Handle resend code
   // const handleResendCode = () => {};
 

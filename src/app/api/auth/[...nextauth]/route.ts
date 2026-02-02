@@ -1,4 +1,4 @@
-import { handlers } from "../../../../auth"; // Referring to the auth.ts we just created
+import * as auth from "../../../../auth"; // Referring to the auth.ts we just created
 
 // const handler = NextAuth({
 //   providers: [
@@ -49,4 +49,4 @@ import { handlers } from "../../../../auth"; // Referring to the auth.ts we just
 
 // export { handler as GET, handler as POST };
 
-export const { GET, POST } = handlers;
+export const { GET, POST } = auth;

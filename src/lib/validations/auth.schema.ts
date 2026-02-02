@@ -161,6 +161,8 @@ export const resetPasswordSchema = z.object({
   password: passwordSchema,
 });
 
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema >
+
 // Change password schema
 export const changePasswordSchema = z
   .object({

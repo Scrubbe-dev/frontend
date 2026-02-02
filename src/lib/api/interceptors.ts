@@ -13,7 +13,7 @@ export const setupInterceptors = (instance: AxiosInstance) => {
 
       return config;
     },
-    (error: AxiosError) => {
+    (error: any) => {
       return Promise.reject(error);
     }
   );

@@ -5,7 +5,6 @@ import { Suspense, useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useRouter, useSearchParams } from "next/navigation";
 import Input from "../ui/input";
 import CButton from "../ui/Cbutton";
 import useAuthStore from "@/lib/stores/auth.store";
@@ -13,11 +12,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { AxiosError } from "axios";
-import { getCookie } from "cookies-next";
-import { COOKIE_KEYS } from "@/lib/constant";
 import { getEmailDomain } from "@/lib/utils";
 import { FaBuilding, FaLink, FaShieldAlt } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
+import z from "zod"
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 
