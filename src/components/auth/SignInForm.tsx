@@ -1,31 +1,26 @@
 "use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import * as z from "zod";
+import { useRouter, useSearchParams } from "next/navigation";
 import Input from "../ui/input";
 import CButton from "../ui/Cbutton";
-
-// Define the form schema using zod
-const loginSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
-});
-
-// TypeScript type based on the schema
-type LoginFormData = z.infer<typeof loginSchema>;
+import useAuthStore from "@/lib/stores/auth.store";
+import { loginSchema, type LoginFormData } from "@/lib/validations/auth.schema";
 
 export default function SignInForm() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  
+  const { login } = useAuthStore();
 
-  // Keep the form handling structure closer to the original
-  // even though we're simplifying functionality
   const {
     control,
     handleSubmit,
@@ -41,39 +36,32 @@ export default function SignInForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      // Set loading state
       setIsLoading(true);
 
-      // Log form values
-      console.log(data);
+      await login(data.email, data.password, callbackUrl);
 
-      // Simulate a 5-second delay
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
-      // Show success toast after delay
-      toast.success(`Successfully signed in!`, {
-        description: `${data.email}, you are being redirected...`,
-        duration: 10000,
+      toast.success("Successfully signed in!", {
+        description: "Redirecting you to your dashboard...",
+        duration: 3000,
       });
 
-      // In a real app, you would redirect here
-      // router.push("/");
-
-      // Reset loading state
-      setIsLoading(false);
+      // Redirect after successful login
+      router.push(callbackUrl);
+      router.refresh();
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Sign in failed", {
         description:
-          error instanceof Error ? error.message : "An error occurred",
+          error instanceof Error ? error.message : "Invalid email or password",
       });
+    } finally {
       setIsLoading(false);
     }
   };
 
   return (
     <div className="w-full p-6">
-      <h1 className=" text-xl md:text-2xl font-semibold mb-6">
+      <h1 className="text-xl md:text-2xl font-semibold mb-6">
         Sign in to Scrubbe
       </h1>
 
@@ -87,6 +75,7 @@ export default function SignInForm() {
               placeholder="Enter Email"
               {...field}
               error={errors.email?.message}
+              disabled={isLoading}
             />
           )}
         />
@@ -101,6 +90,7 @@ export default function SignInForm() {
               {...field}
               type="password"
               error={errors.password?.message}
+              disabled={isLoading}
             />
           )}
         />
@@ -133,11 +123,11 @@ export default function SignInForm() {
         </div>
 
         <CButton
-          onClick={() => {}}
           type="submit"
           disabled={isLoading || !isValid}
+          isLoading={isLoading}
         >
-          {isLoading ? " Signing in..." : "Sign in"}
+          {isLoading ? "Signing in..." : "Sign in"}
         </CButton>
 
         <div className="relative my-6">
@@ -150,85 +140,80 @@ export default function SignInForm() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 justify-self-center gap-2 w-full">
-          <Link href="#" className="w-full">
-            <button
-              type="button"
-              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-            >
-              <Image
-                src="/icon-auth-github.svg"
-                alt="GitHub"
-                width={38}
-                height={38}
-                className="mr-2"
-              />
-              <span className="text-sm font-medium text-gray-700">GitHub</span>
-            </button>
-          </Link>
+          <button
+            type="button"
+            disabled={isLoading}
+            className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            <Image
+              src="/icon-auth-github.svg"
+              alt="GitHub"
+              width={38}
+              height={38}
+              className="mr-2"
+            />
+            <span className="text-sm font-medium text-gray-700">GitHub</span>
+          </button>
 
-          <Link href="#" className="w-full">
-            <button
-              type="button"
-              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-            >
-              <Image
-                src="/icon-auth-gitlab.svg"
-                alt="GitLab"
-                width={38}
-                height={38}
-                className="mr-2"
-              />
-              <span className="text-sm font-medium text-gray-700">GitLab</span>
-            </button>
-          </Link>
+          <button
+            type="button"
+            disabled={isLoading}
+            className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            <Image
+              src="/icon-auth-gitlab.svg"
+              alt="GitLab"
+              width={38}
+              height={38}
+              className="mr-2"
+            />
+            <span className="text-sm font-medium text-gray-700">GitLab</span>
+          </button>
 
-          <Link href="#" className="w-full">
-            <button
-              type="button"
-              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-            >
-              <Image
-                src="/icon-auth-aws.svg"
-                alt="AWS"
-                width={38}
-                height={38}
-                className="mr-2"
-              />
-              <span className="text-sm font-medium text-gray-700">AWS</span>
-            </button>
-          </Link>
+          <button
+            type="button"
+            disabled={isLoading}
+            className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            <Image
+              src="/icon-auth-aws.svg"
+              alt="AWS"
+              width={38}
+              height={38}
+              className="mr-2"
+            />
+            <span className="text-sm font-medium text-gray-700">AWS</span>
+          </button>
 
-          <Link href="#" className="w-full">
-            <button
-              type="button"
-              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-            >
-              <Image
-                src="/icon-auth-azure.svg"
-                alt="Azure"
-                width={38}
-                height={38}
-                className="mr-2"
-              />
-              <span className="text-sm font-medium text-gray-700">Azure</span>
-            </button>
-          </Link>
+          <button
+            type="button"
+            disabled={isLoading}
+            className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            <Image
+              src="/icon-auth-azure.svg"
+              alt="Azure"
+              width={38}
+              height={38}
+              className="mr-2"
+            />
+            <span className="text-sm font-medium text-gray-700">Azure</span>
+          </button>
 
-          <Link href="#" className="w-full">
-            <button
-              type="button"
-              className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-            >
-              <Image
-                src="/icon-auth-sso.svg"
-                alt="SSO"
-                width={38}
-                height={38}
-                className="mr-2"
-              />
-              <span className="text-sm font-medium text-gray-700">SSO</span>
-            </button>
-          </Link>
+          <button
+            type="button"
+            disabled={isLoading}
+            className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            <Image
+              src="/icon-auth-sso.svg"
+              alt="SSO"
+              width={38}
+              height={38}
+              className="mr-2"
+            />
+            <span className="text-sm font-medium text-gray-700">SSO</span>
+          </button>
         </div>
 
         <div className="mt-6 text-center">

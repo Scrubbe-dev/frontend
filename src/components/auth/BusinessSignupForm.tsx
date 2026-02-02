@@ -5,75 +5,75 @@ import { useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import Image from "next/image";
-import * as z from "zod";
+import { useRouter } from "next/navigation";
 import Input from "../ui/input";
 import Select from "../ui/select";
 import CButton from "../ui/Cbutton";
-
-// Define the form schema using zod
-const businessSignupSchema = z
-  .object({
-    firstName: z.string().min(1, { message: "First name is required" }),
-    lastName: z.string().min(1, { message: "Last name is required" }),
-    businessEmail: z
-      .string()
-      .email({ message: "Please enter a valid email address" }),
-    businessAddress: z
-      .string()
-      .min(1, { message: "Business address is required" }),
-    companySize: z.string().min(1, { message: "Please select company size" }),
-    purpose: z.string().min(1, { message: "Please select a purpose" }),
-    password: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: "Confirm password must be at least 6 characters" }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-// TypeScript type based on the schema
-type BusinessSignupFormData = z.infer<typeof businessSignupSchema>;
-
-// Success Page Component Props Type
-interface SuccessPageProps {
-  firstName: string;
-  lastName: string;
-}
+import useAuthStore from "@/lib/stores/auth.store";
+import { businessSignupSchema, type BusinessSignupFormData } from "@/lib/validations/auth.schema";
 
 export default function BusinessSignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [formData, setFormData] = useState<BusinessSignupFormData | null>(null);
+  const [registeredEmail, setRegisteredEmail] = useState("");
+  const router = useRouter();
+  
+  const { registerBusiness } = useAuthStore();
 
   const {
     handleSubmit,
     control,
     formState: { errors, isValid },
+    reset,
   } = useForm<BusinessSignupFormData>({
     resolver: zodResolver(businessSignupSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      businessEmail: "",
+      fullName: "",
+      email: "",
+      githubUsername: "",
+      experience: "",
+      password: "",
+      confirmPassword: "",
       businessAddress: "",
       companySize: "",
       purpose: "",
-      password: "",
-      confirmPassword: "",
     },
     mode: "onChange",
   });
 
+  const onSubmit = async (data: BusinessSignupFormData) => {
+    try {
+      setIsLoading(true);
+
+      const user = await registerBusiness(data);
+      setRegisteredEmail(user.email);
+      setShowSuccess(true);
+      reset();
+
+      toast.success("Business account created successfully!", {
+        description: "Please check your email to verify your account.",
+        duration: 5000,
+      });
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("Registration failed", {
+        description:
+          error instanceof Error ? error.message : "Something went wrong.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleContinue = () => {
+    router.push("/auth/verify-email?email=" + encodeURIComponent(registeredEmail));
+  };
+
   // Success Page Component
-  const SuccessPage = ({ firstName, lastName }: SuccessPageProps) => {
+  const SuccessPage = () => {
     return (
       <div className="w-full p-6 flex flex-col items-center justify-center min-h-96">
         <div className="mb-8">
-          {/* Enhanced Success Icon with concentric circles */}
           <div className="relative flex items-center justify-center">
             <svg
               width="200"
@@ -82,15 +82,10 @@ export default function BusinessSignupForm() {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              {/* Outermost light blue circle */}
               <circle cx="100" cy="100" r="95" fill="#E6F3FF" opacity="0.4" />
-              {/* Second light blue circle */}
               <circle cx="100" cy="100" r="75" fill="#CCE7FF" opacity="0.6" />
-              {/* Third medium blue circle */}
               <circle cx="100" cy="100" r="55" fill="#99D6FF" opacity="0.8" />
-              {/* Inner dark blue circle */}
               <circle cx="100" cy="100" r="35" fill="#2563EB" />
-              {/* Checkmark */}
               <path
                 d="M85 100L95 110L115 90"
                 stroke="white"
@@ -103,101 +98,90 @@ export default function BusinessSignupForm() {
         </div>
 
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-          Successful
+          Business Account Created!
         </h1>
 
-        <p className="text-gray-600 text-center">
-          Welcome {firstName} {lastName}! You have successfully created an
-          account.
+        <p className="text-gray-600 text-center mb-6">
+          Welcome! Your business account has been created. Please verify your email address to continue.
         </p>
+
+        <CButton onClick={handleContinue} type="button">
+          Continue to Verification
+        </CButton>
+
+        <div className="mt-4 text-center">
+          <Link
+            href="/auth/signin"
+            className="text-blue-600 hover:underline text-sm"
+          >
+            Already verified? Sign in
+          </Link>
+        </div>
       </div>
     );
   };
 
-  const onSubmit = async (data: BusinessSignupFormData) => {
-    try {
-      // Set loading state
-      setIsLoading(true);
-
-      // Log form values
-      console.log(data, " business registration");
-
-      // Simulate a 5-second delay
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
-      // Store form data and show success page
-      setFormData(data);
-      setShowSuccess(true);
-
-      // Reset loading state
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Registration error:", error);
-      toast.error("Registration failed", {
-        description:
-          error instanceof Error ? error.message : "Something went wrong.",
-      });
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="w-full p-6">
-      {showSuccess && formData ? (
-        <SuccessPage
-          firstName={formData.firstName}
-          lastName={formData.lastName}
-        />
+      {showSuccess ? (
+        <SuccessPage />
       ) : (
         <>
-          <h1 className="text-xl md:text-2xl font-semibold mb-6 ">
+          <h1 className="text-xl md:text-2xl font-semibold mb-6">
             Business Signup
           </h1>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* First Name and Last Name Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            {/* Full Name */}
+            <div className="mb-4">
               <Controller
-                name="firstName"
+                name="fullName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    label="First Name"
-                    placeholder="First Name"
+                    label="Full Name"
+                    placeholder="Enter your full name"
+                    error={errors.fullName?.message}
+                    isLoading={isLoading}
                     {...field}
-                    error={errors.firstName?.message}
-                  />
-                )}
-              />
-
-              <Controller
-                name="lastName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="Last Name"
-                    placeholder="Last Name"
-                    {...field}
-                    error={errors.lastName?.message}
                   />
                 )}
               />
             </div>
 
-            {/* Business Email and Business Address Row */}
+            {/* Email and GitHub Username Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <Controller
-                name="businessEmail"
+                name="email"
                 control={control}
                 render={({ field }) => (
                   <Input
                     label="Business Email"
                     placeholder="Enter Business Email"
+                    type="email"
+                    error={errors.email?.message}
+                    isLoading={isLoading}
                     {...field}
-                    error={errors.businessEmail?.message}
                   />
                 )}
               />
+              <Controller
+                name="githubUsername"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="GitHub Username"
+                    placeholder="Enter username"
+                    error={errors.githubUsername?.message}
+                    isLoading={isLoading}
+                    {...field}
+                  />
+                )}
+              />
+            </div>
+
+            {/* Business Address */}
+            <div className="mb-4">
               <Controller
                 name="businessAddress"
                 control={control}
@@ -205,8 +189,9 @@ export default function BusinessSignupForm() {
                   <Input
                     label="Business Address"
                     placeholder="Enter Business Address"
-                    {...field}
                     error={errors.businessAddress?.message}
+                    isLoading={isLoading}
+                    {...field}
                   />
                 )}
               />
@@ -300,7 +285,7 @@ export default function BusinessSignupForm() {
               disabled={isLoading || !isValid}
               isLoading={isLoading}
             >
-              {isLoading ? "Processing..." : "Create Account"}
+              {isLoading ? "Creating Account..." : "Create Account"}
             </CButton>
 
             {/* Divider */}
@@ -315,91 +300,86 @@ export default function BusinessSignupForm() {
 
             {/* OAuth Buttons */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6">
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-github.svg"
-                    alt="GitHub"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">
-                    GitHub
-                  </span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-github.svg"
+                  alt="GitHub"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  GitHub
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-gitlab.svg"
-                    alt="GitLab"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">
-                    GitLab
-                  </span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-gitlab.svg"
+                  alt="GitLab"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  GitLab
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-aws.svg"
-                    alt="AWS"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">AWS</span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-aws.svg"
+                  alt="AWS"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">AWS</span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-azure.svg"
-                    alt="Azure"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">
-                    Azure
-                  </span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-azure.svg"
+                  alt="Azure"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Azure
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-sso.svg"
-                    alt="SSO"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">SSO</span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-sso.svg"
+                  alt="SSO"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">SSO</span>
+              </button>
             </div>
 
             {/* Demo Page Link */}

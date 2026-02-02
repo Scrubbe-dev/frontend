@@ -1,63 +1,34 @@
 "use client";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import Image from "next/image";
-import * as z from "zod";
+import { useRouter } from "next/navigation";
 import Input from "../ui/input";
-import { Controller } from "react-hook-form";
 import CButton from "../ui/Cbutton";
-
-// Define the form schema using zod
-const developerSignupSchema = z
-  .object({
-    firstName: z.string().min(1, { message: "First name is required" }),
-    lastName: z.string().min(1, { message: "Last name is required" }),
-    email: z.string().email({ message: "Please enter a valid email address" }),
-    githubUsername: z.string().optional(),
-    experience: z
-      .string()
-      .min(1, { message: "Please select experience level" }),
-    password: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: "Confirm password must be at least 6 characters" }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-// TypeScript type based on the schema
-type DeveloperSignupFormData = z.infer<typeof developerSignupSchema>;
-
-// Success Page Component Props Type
-interface SuccessPageProps {
-  firstName: string;
-  lastName: string;
-}
+import useAuthStore from "@/lib/stores/auth.store";
+import { developerSignupSchema, type DeveloperSignupFormData } from "@/lib/validations/auth.schema";
 
 export default function DeveloperSignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [formData, setFormData] = useState<DeveloperSignupFormData | null>(
-    null
-  );
+  const [registeredEmail, setRegisteredEmail] = useState("");
+  const router = useRouter();
+  
+  const { registerDeveloper } = useAuthStore();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
     control,
+    reset,
   } = useForm<DeveloperSignupFormData>({
     resolver: zodResolver(developerSignupSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      fullName: "",
       email: "",
       githubUsername: "",
       experience: "",
@@ -67,12 +38,40 @@ export default function DeveloperSignupForm() {
     mode: "onChange",
   });
 
+  const onSubmit = async (data: DeveloperSignupFormData) => {
+    try {
+      setIsLoading(true);
+
+      const user = await registerDeveloper(data);
+      setRegisteredEmail(user.email);
+      setShowSuccess(true);
+      reset();
+
+      toast.success("Account created successfully!", {
+        description: "Please check your email to verify your account.",
+        duration: 5000,
+      });
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("Registration failed", {
+        description:
+          error instanceof Error ? error.message : "Something went wrong.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleContinue = () => {
+    // Redirect to email verification page or sign in
+    router.push("/auth/verify-email?email=" + encodeURIComponent(registeredEmail));
+  };
+
   // Success Page Component
-  const SuccessPage = ({ firstName, lastName }: SuccessPageProps) => {
+  const SuccessPage = () => {
     return (
       <div className="w-full p-6 flex flex-col items-center justify-center min-h-96">
         <div className="mb-8">
-          {/* Enhanced Success Icon with concentric circles */}
           <div className="relative flex items-center justify-center">
             <svg
               width="200"
@@ -81,15 +80,10 @@ export default function DeveloperSignupForm() {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              {/* Outermost light blue circle */}
               <circle cx="100" cy="100" r="95" fill="#E6F3FF" opacity="0.4" />
-              {/* Second light blue circle */}
               <circle cx="100" cy="100" r="75" fill="#CCE7FF" opacity="0.6" />
-              {/* Third medium blue circle */}
               <circle cx="100" cy="100" r="55" fill="#99D6FF" opacity="0.8" />
-              {/* Inner dark blue circle */}
               <circle cx="100" cy="100" r="35" fill="#2563EB" />
-              {/* Checkmark */}
               <path
                 d="M85 100L95 110L115 90"
                 stroke="white"
@@ -102,81 +96,50 @@ export default function DeveloperSignupForm() {
         </div>
 
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-          Successful
+          Account Created Successfully!
         </h1>
 
-        <p className="text-gray-600 text-center">
-          Welcome {firstName} {lastName}! You have successfully created an
-          account.
+        <p className="text-gray-600 text-center mb-6">
+          Welcome! Your developer account has been created. Please verify your email address to continue.
         </p>
+
+        <CButton onClick={handleContinue} type="button">
+          Continue to Verification
+        </CButton>
+
+        <div className="mt-4 text-center">
+          <Link
+            href="/auth/signin"
+            className="text-blue-600 hover:underline text-sm"
+          >
+            Already verified? Sign in
+          </Link>
+        </div>
       </div>
     );
   };
 
-  const onSubmit = async (data: DeveloperSignupFormData) => {
-    try {
-      // Set loading state
-      setIsLoading(true);
-
-      // Log form values
-      console.log(data, " developer registration");
-
-      // Simulate a 5-second delay
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
-      // Store form data and show success page
-      setFormData(data);
-      setShowSuccess(true);
-
-      // Reset loading state
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Registration error:", error);
-      toast.error("Registration failed", {
-        description:
-          error instanceof Error ? error.message : "Something went wrong.",
-      });
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="w-full p-6">
-      {showSuccess && formData ? (
-        <SuccessPage
-          firstName={formData.firstName}
-          lastName={formData.lastName}
-        />
+      {showSuccess ? (
+        <SuccessPage />
       ) : (
         <>
-          <h1 className=" text-xl md:text-2xl font-semibold mb-6 ">
+          <h1 className="text-xl md:text-2xl font-semibold mb-6">
             Developer Signup
           </h1>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* First Name and Last Name Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            {/* Full Name */}
+            <div className="mb-4">
               <Controller
-                name="firstName"
+                name="fullName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    label="First Name"
-                    placeholder="First Name"
-                    error={errors.firstName?.message}
-                    isLoading={isLoading}
-                    {...field}
-                  />
-                )}
-              />
-              <Controller
-                name="lastName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    label="Last Name"
-                    placeholder="Last Name"
-                    error={errors.lastName?.message}
+                    label="Full Name"
+                    placeholder="Enter your full name"
+                    error={errors.fullName?.message}
                     isLoading={isLoading}
                     {...field}
                   />
@@ -215,7 +178,7 @@ export default function DeveloperSignupForm() {
               />
             </div>
 
-            {/* Experience Level Full Row */}
+            {/* Experience Level */}
             <div className="mb-4">
               <label
                 htmlFor="experience"
@@ -286,7 +249,7 @@ export default function DeveloperSignupForm() {
               disabled={isLoading || !isValid}
               isLoading={isLoading}
             >
-              {isLoading ? "  Processing..." : "Create Account"}
+              {isLoading ? "Creating Account..." : "Create Account"}
             </CButton>
 
             {/* Divider */}
@@ -301,91 +264,86 @@ export default function DeveloperSignupForm() {
 
             {/* OAuth Buttons */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6">
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-github.svg"
-                    alt="GitHub"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">
-                    GitHub
-                  </span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-github.svg"
+                  alt="GitHub"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  GitHub
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-gitlab.svg"
-                    alt="GitLab"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">
-                    GitLab
-                  </span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-gitlab.svg"
+                  alt="GitLab"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  GitLab
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-aws.svg"
-                    alt="AWS"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">AWS</span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-aws.svg"
+                  alt="AWS"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">AWS</span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-azure.svg"
-                    alt="Azure"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">
-                    Azure
-                  </span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-azure.svg"
+                  alt="Azure"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Azure
+                </span>
+              </button>
 
-              <Link href="#" className="w-full">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  <Image
-                    src="/icon-auth-sso.svg"
-                    alt="SSO"
-                    width={38}
-                    height={38}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">SSO</span>
-                </button>
-              </Link>
+              <button
+                type="button"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Image
+                  src="/icon-auth-sso.svg"
+                  alt="SSO"
+                  width={38}
+                  height={38}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">SSO</span>
+              </button>
             </div>
 
             {/* Demo Page Link */}

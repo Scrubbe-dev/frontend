@@ -101,7 +101,7 @@ const EzraDashboard = () => {
       <div className=" w-full h-full">
         <div className="h-[58px] w-full border-b border-[#94C5FC]  flex justify-between items-center px-[3%]">
           <div className=" w-[50%] bg-zinc-800 flex gap-3 items-center border border-zinc-600 rounded-lg h-9 px-2">
-            <img src="ezrastar.svg" />
+            <img src="ezrastar.svg" alt="ezrastar.svg" />
             <p className="  text-zinc-400 text-[70%] sm:text-[90%] ">
               Ask Ezra to summarise incidents for today
             </p>

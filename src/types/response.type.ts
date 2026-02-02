@@ -57,3 +57,80 @@ export type FingerprintResponse = {
     message: string;
   };
 };
+
+// Account types matching the server
+export type AccountType = "DEVELOPER" | "BUSINESS";
+export type UserRole = "USER" | "ADMIN" | "SUPER_ADMIN";
+
+// Base API response interface
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  error?: string;
+}
+
+// Authentication response types
+export interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface UserResponse {
+  id: string;
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+  isVerified: boolean;
+  accountType: AccountType | null;
+  businessId: string | null;
+  role: UserRole;
+  lastLogin?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface AuthSuccessResponse {
+  user: UserResponse;
+  tokens: AuthTokens;
+}
+
+// Error response type
+export interface ApiErrorResponse {
+  success: false;
+  error: string;
+  message?: string;
+  statusCode?: number;
+}
+
+// Password reset response
+export interface PasswordResetResponse {
+  message: string;
+}
+
+// Token validation response
+export interface TokenValidationResponse {
+  valid: boolean;
+  message?: string;
+}
+
+// Email verification response
+export interface EmailVerificationResponse {
+  message: string;
+}
+
+// Generic success response
+export interface SuccessResponse {
+  message: string;
+}
+
+// Paginated response helper
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}

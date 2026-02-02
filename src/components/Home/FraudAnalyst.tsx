@@ -92,7 +92,7 @@ const FraudAnalyst = () => {
         >
           <EzraDashboard />
         </motion.div>
-        <img src="/Ezradashboard.png" className="md:hidden block" />
+        <img src="/Ezradashboard.png" className="md:hidden block" alt="Ezradashboard.png" />
       </div>
       <motion.div
         initial={{ opacity: 0.1, scale: 0.7 }}

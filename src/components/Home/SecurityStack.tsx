@@ -212,6 +212,7 @@ const SecurityStack = () => {
                   <img
                     src="/card-bg.png"
                     className=" absolute h-full w-full object-cover opacity-25"
+                    alt="card-bg.png"
                   />
                   <div className=" space-y-3 h-full">
                     <h2 className=" font-medium text-xl">{stack.title}</h2>

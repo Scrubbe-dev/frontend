@@ -31,7 +31,7 @@ const Hero = () => {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [steps.length]);
+  }, [steps]);
 
   const step = steps[activeStep - 1];
 

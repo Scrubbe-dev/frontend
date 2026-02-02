@@ -133,7 +133,7 @@ const MachineDetection = () => {
               }}
               className=" absolute flex flex-col justify-center items-center md:w-[80%] w-full h-[80%] bg-white z-10 rounded-md p-4 space-y-3 shadow-xl md:scale-100 scale-80"
             >
-              <img src="/success.svg" />
+              <img src="/success.svg" alt="success.svg" />
               <p className=" font-semibold text-xl">Successful</p>
               <p>Alert has been sent successfully to SOC analyst</p>
             </motion.div>

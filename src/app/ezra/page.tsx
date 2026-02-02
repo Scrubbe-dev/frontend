@@ -14,7 +14,7 @@ const sectionVariants = {
 
 const page = () => {
   return (
-    <div className="bg-darkEzra ">
+    <div className="bg-darkEzra">
       <motion.div
         initial="hidden"
         whileInView="visible"

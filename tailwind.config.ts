@@ -4,7 +4,7 @@ import tailwindcssAnimate from "tailwindcss-animate";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: ["class"],
+  darkMode: "media",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -24,6 +24,8 @@ const config: Config = {
         besley: ["var(--font-bersley)"],
       },
       colors: {
+        dark: "#111827",
+        subDark: "#1F2937",
         darkEzra: "#110F0F",
         subDarkEzra: "#1F1F24",
         colorScBlack: "#1D2838",

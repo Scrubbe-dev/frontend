@@ -1,50 +1,192 @@
 import { z } from "zod";
 
+// Password validation regex - matches server requirements
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters")
+  .max(100, "Password must be less than 100 characters")
+  .regex(
+    passwordRegex,
+    "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+  );
+
+// Email validation
+const emailSchema = z
+  .string()
+  .email("Invalid email address")
+  .max(255, "Email must be less than 255 characters")
+  .min(1, "Email is required");
+
+// Free email domains that should be rejected for business accounts
+const freeEmailDomains = [
+  "gmail.com",
+  "yahoo.com",
+  "hotmail.com",
+  "outlook.com",
+  "aol.com",
+  "icloud.com",
+  "mail.com",
+  "gmx.com",
+  "protonmail.com",
+  "zoho.com",
+  "yandex.com",
+  "msn.com",
+  "live.com",
+  "ymail.com",
+  "inbox.com",
+  "me.com",
+];
+
+// Business email validation
+const businessEmailSchema = emailSchema.refine(
+  (email) => {
+    const domain = email.split("@")[1]?.toLowerCase();
+    return !freeEmailDomains.includes(domain);
+  },
+  {
+    message: "Please use a business email address",
+  }
+);
+
+// Login schema
 export const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  email: emailSchema,
+  password: z.string().min(1, "Password is required"),
 });
 
+// Developer signup schema
 export const developerSignupSchema = z
   .object({
-    fullName: z.string().min(3, "Name must be at least 3 characters"),
-    email: z.string().email("Invalid email address"),
-    githubUsername: z.string().min(2, "GitHub username is required").optional(),
-    experience: z.string().optional(),
-    password: z
+    fullName: z
       .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        "Password must contain at least one uppercase, one lowercase, one number and one special character"
-      ),
+      .min(3, "Full name must be at least 3 characters")
+      .max(100, "Full name must be less than 100 characters"),
+    email: emailSchema,
+    githubUsername: z
+      .string()
+      .min(2, "GitHub username must be at least 2 characters")
+      .max(39, "GitHub username must be less than 39 characters")
+      .regex(/^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/, "Invalid GitHub username format")
+      .optional(),
+    experience: z
+      .string()
+      .max(50, "Experience must be less than 50 characters")
+      .optional(),
+    password: passwordSchema,
     confirmPassword: z.string().optional(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => !data.confirmPassword || data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
 
+// Business signup schema
 export const businessSignupSchema = z
   .object({
-    fullName: z.string().min(3, "Name must be at least 3 characters"),
-    email: z.string().email("Invalid email address"),
-    githubUsername: z.string().min(2, "GitHub username is required"),
-    experience: z.string().optional(),
-    password: z
+    fullName: z
       .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        "Password must contain at least one uppercase, one lowercase, one number and one special character"
-      ),
+      .min(3, "Full name must be at least 3 characters")
+      .max(100, "Full name must be less than 100 characters"),
+    email: businessEmailSchema,
+    githubUsername: z
+      .string()
+      .min(2, "GitHub username must be at least 2 characters")
+      .max(39, "GitHub username must be less than 39 characters")
+      .regex(/^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/, "Invalid GitHub username format"),
+    experience: z
+      .string()
+      .max(50, "Experience must be less than 50 characters")
+      .optional(),
+    password: passwordSchema,
     confirmPassword: z.string().optional(),
+    businessAddress: z
+      .string()
+      .min(10, "Business address must be at least 10 characters")
+      .max(255, "Business address must be less than 255 characters")
+      .optional(),
+    companySize: z
+      .string()
+      .min(1, "Company size is required")
+      .max(50, "Company size must be less than 50 characters")
+      .optional(),
+    purpose: z
+      .string()
+      .max(500, "Purpose must be less than 500 characters")
+      .optional(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => !data.confirmPassword || data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
 
+// Email verification schema
+export const verifyEmailSchema = z.object({
+  userId: z.string().uuid("Invalid user ID"),
+  code: z
+    .string()
+    .min(4, "Verification code is required")
+    .max(10, "Invalid verification code format"),
+});
+
+// Resend OTP schema
+export const resendOtpSchema = z.object({
+  userId: z.string().uuid("Invalid user ID"),
+});
+
+// Forgot password schema
+export const forgotPasswordSchema = z.object({
+  email: emailSchema,
+});
+
+// Reset password schema
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, "Reset token is required"),
+  password: passwordSchema,
+});
+
+// Change password schema
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Current password is required"),
+    newPassword: passwordSchema,
+    confirmNewPassword: z.string().optional(),
+  })
+  .refine((data) => !data.confirmNewPassword || data.newPassword === data.confirmNewPassword, {
+    message: "New passwords don't match",
+    path: ["confirmNewPassword"],
+  })
+  .refine((data) => data.currentPassword !== data.newPassword, {
+    message: "New password must be different from current password",
+    path: ["newPassword"],
+  });
+
+// Refresh token schema
+export const refreshTokenSchema = z.object({
+  refreshToken: z.string().min(1, "Refresh token is required"),
+});
+
+// Type exports
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type DeveloperSignupFormData = z.infer<typeof developerSignupSchema>;
 export type BusinessSignupFormData = z.infer<typeof businessSignupSchema>;
+export type VerifyEmailFormData = z.infer<typeof verifyEmailSchema>;
+export type ResendOtpFormData = z.infer<typeof resendOtpSchema>;
+export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
+export type RefreshTokenFormData = z.infer<typeof refreshTokenSchema>;
+
+// Export all schemas
+export const authSchemas = {
+  login: loginSchema,
+  developerSignup: developerSignupSchema,
+  businessSignup: businessSignupSchema,
+  verifyEmail: verifyEmailSchema,
+  resendOtp: resendOtpSchema,
+  forgotPassword: forgotPasswordSchema,
+  resetPassword: resetPasswordSchema,
+  changePassword: changePasswordSchema,
+  refreshToken: refreshTokenSchema,
+};
