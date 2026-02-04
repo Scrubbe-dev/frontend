@@ -15,7 +15,7 @@ import { AxiosError } from "axios";
 import { getEmailDomain } from "@/lib/utils";
 import { FaBuilding, FaLink, FaShieldAlt } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
-import z from "zod"
+import z from "zod";
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 
@@ -38,7 +38,7 @@ export default function SignInForm() {
   const path = searchParams.get("to");
   const [isAuth, setIsAuth] = useState(false);
   const inviteEmail = searchParams.get("email");
-  const [steps, setSteps] = useState<"email" | "authenticate">("authenticate")
+  const [steps, setSteps] = useState<"email" | "authenticate">("email");
 
   // Keep the form handling sfirsture closer to the original
   // even though we're simplifying functionality
@@ -191,11 +191,13 @@ export default function SignInForm() {
             <h1 className=" text-xl md:text-2xl text-white font-semibold">
               Sign in
             </h1>
-            <p className="text-base text-white">Enter your work email to continue.</p>
+            <p className="text-base text-white">
+              Enter your work email to continue.
+            </p>
           </div>
 
           {/* <form onSubmit={handleSubmit(onSubmit)}> */}
-          <form >
+          <form>
             <Controller
               name="email"
               control={control}
@@ -354,8 +356,9 @@ export default function SignInForm() {
               New to Scrubbe?{" "}
               <Link
                 href={`/auth/business-signup?to=${path}`}
-                className={`${IS_STANDALONE ? "text-IMSCyan" : "text-blue-600"
-                  } underline hover:underline inline-flex items-center`}
+                className={`${
+                  IS_STANDALONE ? "text-IMSCyan" : "text-blue-600"
+                } underline hover:underline inline-flex items-center`}
               >
                 Create Workspace
               </Link>
@@ -364,9 +367,7 @@ export default function SignInForm() {
         </div>
       </Suspense>
     );
-  }
-
-  else if (steps === "authenticate") {
+  } else if (steps === "authenticate") {
     return (
       <Suspense fallback={<div>Loading...</div>}>
         {session.status == "loading" && (
@@ -414,14 +415,15 @@ export default function SignInForm() {
             type="button"
             className="border border-zinc-600 bg-zinc-800 text-white"
           >
-           <FaLink/> Email me a magic link
+            <FaLink /> Email me a magic link
           </CButton>
           <div className="mt-4 text-center text-gray-200 text-base">
             New to Scrubbe?{" "}
             <Link
               href={`/auth/business-signup?to=${path}`}
-              className={`${IS_STANDALONE ? "text-IMSCyan" : "text-blue-600"
-                } underline hover:underline inline-flex items-center`}
+              className={`${
+                IS_STANDALONE ? "text-IMSCyan" : "text-blue-600"
+              } underline hover:underline inline-flex items-center`}
             >
               Create Workspace
             </Link>
@@ -430,5 +432,4 @@ export default function SignInForm() {
       </Suspense>
     );
   }
-
 }
