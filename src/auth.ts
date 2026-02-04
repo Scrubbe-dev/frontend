@@ -140,7 +140,7 @@ export const {
     },
   },
   pages: {
-    signIn: "/auth/business-signup",
+    signIn: "/auth/signin",
     signOut: "/auth/signin",
     error: "/auth/error",
   },

@@ -1,8 +1,8 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { ReactNode } from "react";
 import type { UserRole } from "@/auth";
+import useAuthStore from "@/lib/stores/auth.store";
 
 interface RoleGuardProps {
   children: ReactNode;
@@ -30,21 +30,21 @@ interface RoleGuardProps {
  * ```
  */
 export function RoleGuard({ children, allowedRoles, fallback = null }: RoleGuardProps) {
-  const { data: session, status } = useSession();
+  const { user, isLoading } = useAuthStore();
 
   // While loading, show nothing or a loading state
-  if (status === "loading") {
+  if (isLoading) {
     return null;
   }
 
   // Not authenticated
-  if (!session?.user?.roles) {
+  if (!user?.roles) {
     return <>{fallback}</>;
   }
 
   // Check if user has any of the required roles
   const hasRequiredRole = allowedRoles.some(role => 
-    session.user.roles?.includes(role)
+    user.roles?.includes(role)
   );
 
   if (!hasRequiredRole) {
@@ -84,11 +84,11 @@ export function SuperAdminGuard({ children, fallback = null }: { children: React
  * Hook to check user roles
  */
 export function useRoleCheck() {
-  const { data: session } = useSession();
+  const { user } = useAuthStore();
 
   const hasRole = (roles: UserRole[]): boolean => {
-    if (!session?.user?.roles) return false;
-    return roles.some(role => session.user.roles?.includes(role));
+    if (!user?.roles) return false;
+    return roles.some(role => user.roles?.includes(role));
   };
 
   const isAdmin = (): boolean => hasRole(["ADMIN", "SUPER_ADMIN"]);
@@ -100,6 +100,6 @@ export function useRoleCheck() {
     isAdmin,
     isSuperAdmin,
     isUser,
-    roles: session?.user?.roles || [],
+    roles: user?.roles || [],
   };
 }

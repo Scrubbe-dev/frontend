@@ -1,14 +1,14 @@
 import { AxiosInstance } from "axios";
-import { getSession } from "next-auth/react";
+import { getCookie } from "cookies-next";
+import { COOKIE_KEYS } from "../constant";
 
 export const setupInterceptors = (instance: AxiosInstance) => {
   // Request interceptor
   instance.interceptors.request.use(
     async (config) => {
-      const session = await getSession();
-
-      if (session?.accessToken) {
-        config.headers.Authorization = `Bearer ${session.accessToken}`;
+      const token = getCookie(COOKIE_KEYS.TOKEN);
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
       }
 
       return config;

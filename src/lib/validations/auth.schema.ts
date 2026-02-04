@@ -59,10 +59,8 @@ export const loginSchema = z.object({
 // Developer signup schema
 export const developerSignupSchema = z
   .object({
-    fullName: z
-      .string()
-      .min(3, "Full name must be at least 3 characters")
-      .max(100, "Full name must be less than 100 characters"),
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
     email: emailSchema,
     githubUsername: z
       .string()
@@ -72,8 +70,8 @@ export const developerSignupSchema = z
       .optional(),
     experience: z
       .string()
-      .max(50, "Experience must be less than 50 characters")
-      .optional(),
+      .min(1, "Experience is required")
+      .max(50, "Experience must be less than 50 characters"),
     password: passwordSchema,
     confirmPassword: z.string().optional(),
   })
@@ -121,15 +119,11 @@ export const businessSignupSchema = z
       ),
     businessAddress: z
       .string()
-      .min(1, { message: "Business address is required" }),
+      .min(10, { message: "Please provide a valid address" }),
     companySize: z.string().min(1, { message: "Please select company size" }),
     purpose: z.string().optional(),
-    password: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: "Confirm password must be at least 6 characters" }),
+    password: passwordSchema,
+    confirmPassword: z.string().optional(),
   })
   .refine((data) => !data.confirmPassword || data.password === data.confirmPassword, {
     message: "Passwords don't match",

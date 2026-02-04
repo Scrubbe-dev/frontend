@@ -48,7 +48,7 @@ export interface DeveloperSignupRequest {
   email: string;
   password: string;
   githubUsername?: string;
-  experienceLevel?: string;
+  experienceLevel: string;
 }
 
 export interface BusinessSignupRequest {
@@ -56,8 +56,8 @@ export interface BusinessSignupRequest {
   lastName: string;
   email: string;
   password: string;
-  businessAddress?: string;
-  companySize?: string;
+  businessAddress: string;
+  companySize: string;
   purpose?: string;
   businessName?: string;
 }

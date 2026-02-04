@@ -9,26 +9,19 @@ import Input from "../ui/input";
 import CButton from "../ui/Cbutton";
 import useAuthStore from "@/lib/stores/auth.store";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { AxiosError } from "axios";
 import { getEmailDomain } from "@/lib/utils";
-import { FaBuilding, FaLink, FaShieldAlt } from "react-icons/fa";
+import { FaBuilding, FaLink } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
-import z from "zod"
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
+import { loginSchema, type LoginFormData } from "@/lib/validations/auth.schema";
+import { getCookie } from "cookies-next";
+import { COOKIE_KEYS } from "@/lib/constant";
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
-
-// Define the form schema using zod
-const loginSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  // password: z
-  //   .string()
-  //   .min(6, { message: "Password must be at least 6 characters" }),
-});
-
-// TypeScript type based on the schema
-type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function SignInForm() {
   const [rememberMe, setRememberMe] = useState(false);
@@ -38,7 +31,7 @@ export default function SignInForm() {
   const path = searchParams.get("to");
   const [isAuth, setIsAuth] = useState(false);
   const inviteEmail = searchParams.get("email");
-  const [steps, setSteps] = useState<"email" | "authenticate">("authenticate")
+  const [steps, setSteps] = useState<"email" | "authenticate">("email")
 
   // Keep the form handling sfirsture closer to the original
   // even though we're simplifying functionality
@@ -51,59 +44,67 @@ export default function SignInForm() {
   } = useForm<LoginFormData>({
     defaultValues: {
       email: "",
-      // password: "",
+      password: "",
     },
     resolver: zodResolver(loginSchema),
     mode: "onChange",
   });
 
+  const redirectAfterLogin = (accountType?: string | null, purpose?: string | null) => {
+    if (IS_STANDALONE) {
+      if (path === "payment") {
+        router.replace("/pricing");
+        return;
+      }
+      if (path === "community") {
+        router.replace("/community");
+        return;
+      }
+      return;
+    }
+
+    if (path === "ezra") {
+      router.push("/ezra/dashboard");
+      return;
+    }
+
+    if (accountType === "BUSINESS") {
+      if (purpose === "IMS") {
+        const token = getCookie(COOKIE_KEYS.TOKEN);
+        const incidentUrl =
+          process.env.NEXT_PUBLIC_INCIDENT_URL ?? "https://incidents.scrubbe.com";
+        window.location.href = `${incidentUrl}/incident/tickets?token=${token ?? ""}`;
+        return;
+      }
+      router.push("/dashboard");
+      return;
+    }
+
+    if (accountType === "DEVELOPER") {
+      router.push("/developer/dashboard");
+      return;
+    }
+
+    router.push("/dashboard");
+  };
+
   const onSubmit = async (data: LoginFormData) => {
     try {
-      // const userDetails = await login(data.email, data.password);
-      toast.success(`Successfully signed in!`, {
+      const userDetails = await login(data.email, data.password);
+
+      toast.success("Successfully signed in!", {
         description: `${data.email}, you are being redirected...`,
         duration: 10000,
       });
 
-      // Show success toast after delay
-      if (IS_STANDALONE) {
-        if (path === "payment") {
-          router.replace("/pricing");
-          return;
-        }
-        if (path === "community") {
-          router.replace("/community");
-          return;
-        }
-        // router.replace("/incident/tickets");
-        return;
-      }
-      // if (path === "ezra" && userDetails?.purpose !== "IMS") {
-      //   router.push(`/ezra/dashboard`);
-      // } else {
-      //   const token = getCookie(COOKIE_KEYS.TOKEN);
-      //   if (userDetails?.accountType === "BUSINESS") {
-      //     if (userDetails?.purpose === "IMS") {
-      //       window.location.href =
-      //         (process.env.NEXT_PUBLIC_INCIDENT_URL ??
-      //           "https://incidents.scrubbe.com") +
-      //         `/incident/tickets?token=${token}`;
-      //     } else {
-      //       router.push(`/dashboard`);
-      //     }
-      //   } else {
-      //     router.push("/developer/dashboard");
-      //   }
-      // }
-
-      // Reset loading state
+      redirectAfterLogin(userDetails?.accountType, userDetails?.purpose ?? null);
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed", {
         description:
           error instanceof AxiosError
             ? error.response?.data?.message
-            : "Signup failed",
+            : "Login failed",
       });
     }
   };
@@ -126,41 +127,37 @@ export default function SignInForm() {
         data.oAuthProvider ?? ""
       );
 
-      toast.success(`Successfully signed in!`, {
+      toast.success("Successfully signed in!", {
         description: `${data.email}, you are being redirected...`,
         duration: 10000,
         id: "redirect",
       });
 
-      // Show success toast after delay
-      // In a real app, you would redirect here
-      if (path === "ezra") {
-        router.push(`/ezra/dashboard`);
+      await signOut({ redirect: false });
+      redirectAfterLogin(userDetails?.accountType, userDetails?.purpose ?? null);
+    } catch (error) {
+      const status = error instanceof AxiosError ? error.response?.status : undefined;
+      if (status === 404) {
+        toast.error("No account found", {
+          description: "Please create an account to continue.",
+        });
+        const params = new URLSearchParams();
+        if (session.data?.user.email) {
+          params.set("email", session.data.user.email);
+        }
+        if (path) {
+          params.set("to", path);
+        }
+        router.push(`/auth/business-signup?${params.toString()}`);
         return;
-      } else {
-        if (IS_STANDALONE) {
-          if (path === "payment") {
-            router.replace("/pricing");
-            return;
-          }
-          router.replace("/incident/tickets");
-          return;
-        }
-        if (userDetails?.accountType === "BUSINESS") {
-          router.push(`/dashboard`);
-        } else {
-          router.push("/developer/dashboard");
-        }
       }
 
-      // Reset loading state
-    } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed", {
         description:
           error instanceof AxiosError
             ? error.response?.data?.message
-            : "Signup failed",
+            : "Login failed",
       });
     }
   };
@@ -194,8 +191,7 @@ export default function SignInForm() {
             <p className="text-base text-white">Enter your work email to continue.</p>
           </div>
 
-          {/* <form onSubmit={handleSubmit(onSubmit)}> */}
-          <form >
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Controller
               name="email"
               control={control}
@@ -211,7 +207,7 @@ export default function SignInForm() {
               )}
             />
 
-            {/* <Controller
+            <Controller
               name="password"
               control={control}
               render={({ field }) => (
@@ -225,9 +221,9 @@ export default function SignInForm() {
                   className="text-white"
                 />
               )}
-            /> */}
+            />
 
-            {/* <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
                 <input
                   id="remember-me"
@@ -252,14 +248,18 @@ export default function SignInForm() {
               >
                 Forgot password?
               </Link>
-            </div> */}
+            </div>
+
+            <CButton type="submit" disabled={isLoading || !isValid}>
+              {isLoading ? " Signing in..." : "Sign in"}
+            </CButton>
 
             <CButton
               onClick={() => setSteps("authenticate")}
               type="button"
-              disabled={isLoading || !isValid}
+              className="mt-3 border border-zinc-600 bg-zinc-800 text-white"
             >
-              {isLoading ? " Signing in..." : "Sign in"}
+              Continue with SSO
             </CButton>
 
             {/* <div className="relative my-6">
@@ -400,8 +400,12 @@ export default function SignInForm() {
 
           </div> */}
 
-          <CButton>
-            <FaShieldAlt /> Continue with SSO
+          <CButton
+            onClick={() => setSteps("email")}
+            type="button"
+            className="border border-zinc-600 bg-zinc-800 text-white"
+          >
+            Back to password sign-in
           </CButton>
           <div className="flex justify-center items-center text-sm text-zinc-400 gap-2 py-3">
             <div className="h-[1px] w-[100%] bg-zinc-700" />
@@ -409,12 +413,71 @@ export default function SignInForm() {
             <div className="h-[1px] w-[100%] bg-zinc-700" />
           </div>
 
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mb-4">
+            <button
+              type="button"
+              className="w-full flex gap-3 items-center justify-center px-3 py-2 border border-gray-300 rounded-md transition-colors"
+              onClick={() => signIn("google")}
+            >
+              <FcGoogle size={24} />
+              <span className="text-sm font-medium text-white">Google</span>
+            </button>
+            <button
+              type="button"
+              className="w-full gap-3 group flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md transition-colors"
+              onClick={() =>
+                signIn("github", {
+                  // callbackUrl: "/auth/account-setup",
+                })
+              }
+            >
+              <FaGithub size={24} className=" text-white" />
+              <span className="text-sm font-medium text-white">GitHub</span>
+            </button>
+            <button
+              type="button"
+              className="w-full flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md transition-colors"
+              onClick={() =>
+                signIn("gitlab", {
+                  // callbackUrl: "/auth/account-setup",
+                })
+              }
+            >
+              <img
+                src="/icon-auth-gitlab.svg"
+                alt="GitLab"
+                width={24}
+                height={24}
+                className="mr-2"
+              />
+              <span className="text-sm font-medium text-white">GitLab</span>
+            </button>
+            <button
+              type="button"
+              className="w-full flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md transition-colors"
+              onClick={() =>
+                signIn("microsoft-entra-id", {
+                  // callbackUrl: "/auth/account-setup",
+                })
+              }
+            >
+              <img
+                src="/icon-auth-azure.svg"
+                alt="Azure"
+                width={24}
+                height={24}
+                className="mr-2"
+              />
+              <span className="text-sm font-medium text-white">Azure</span>
+            </button>
+          </div>
+
           <CButton
-            onClick={() => {}}
+            onClick={() => toast.info("Magic link is coming soon.")}
             type="button"
             className="border border-zinc-600 bg-zinc-800 text-white"
           >
-           <FaLink/> Email me a magic link
+            <FaLink /> Email me a magic link
           </CButton>
           <div className="mt-4 text-center text-gray-200 text-base">
             New to Scrubbe?{" "}

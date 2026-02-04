@@ -11,6 +11,7 @@ import { AxiosError } from "axios";
 import { deleteCookie, setCookie } from "cookies-next";
 import { COOKIE_KEYS } from "../constant";
 import { businessSignupSchema } from "@/components/auth/BusinessSignupForm";
+import { signOut } from "next-auth/react";
 
 export type UserRole = "USER" | "ADMIN" | "SUPER_ADMIN";
 
@@ -165,7 +166,7 @@ const useAuthStore = create<AuthState & AuthActions>()(
             password: validatedData.password,
             firstName,
             lastName,
-            githubUsername: validatedData.githubUsername,
+            githubUsername: validatedData.githubUsername?.trim() || undefined,
             experienceLevel: validatedData.experience,
           };
           const { data } = await apiClient.post("/auth/dev/register", devData);
@@ -194,16 +195,14 @@ const useAuthStore = create<AuthState & AuthActions>()(
           set({ isLoading: true, error: null });
           const validatedData = businessSignupSchema.parse(signupData);
 
-          const fullName = validatedData.fullName || "";
-          const businessName = validatedData.businessName || "";
           const newBusinessData = {
+            firstName: validatedData.firstName,
+            lastName: validatedData.lastName,
             email: validatedData.businessEmail,
             password: validatedData.password,
-            fullName,
-            businessName,
-            // companySize: validatedData.companySize,
             businessAddress: validatedData.businessAddress,
-            //  add other fields
+            companySize: validatedData.companySize,
+            purpose: validatedData.purpose || undefined,
           };
 
           const { data } = await apiClient.post(
@@ -359,6 +358,7 @@ const useAuthStore = create<AuthState & AuthActions>()(
               console.error("Backend logout failed:", error);
             }
           }
+          await signOut({ redirect: false });
           deleteCookie(COOKIE_KEYS.TOKEN);
           deleteCookie(COOKIE_KEYS.REFRESH_TOKEN);
           set({
