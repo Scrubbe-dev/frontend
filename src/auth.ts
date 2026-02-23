@@ -26,7 +26,7 @@ export const {
           scope: "read:user user:email",
         },
       },
-      async profile(profile) {
+      async profile(profile):Promise<any> {
         return {
           id: profile.id.toString(),
           oAuthProvider: "GITHUB",
@@ -42,7 +42,7 @@ export const {
       },
     }),
     Google({
-      async profile(profile) {
+      async profile(profile):Promise<any>  {
         return {
           id: profile.sub,
           oAuthProvider: "GOOGLE",
@@ -57,7 +57,7 @@ export const {
       },
     }),
     Gitlab({
-      async profile(profile) {
+      async profile(profile):Promise<any>  {
         return {
           id: profile.id.toString(),
           oAuthProvider: "GITLAB",
@@ -75,7 +75,7 @@ export const {
       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
       issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
-      async profile(profile) {
+      async profile(profile):Promise<any>  {
         return {
           id: profile.oid,
           oAuthProvider: "AZURE",
@@ -112,16 +112,16 @@ export const {
     },
     async session({ session, token }) {
       session.user.id = token.sub || "";
-      session.user.firstName = token.firstName;
-      session.user.lastName = token.lastName;
-      session.user.isVerified = token.isVerified;
+      session.user.firstName = token.firstName || '';
+      session.user.lastName = token.lastName || '';
+      session.user.isVerified = token.isVerified || false
       session.accessToken = token.accessToken;
       session.refreshToken = token.refreshToken;
       session.user.email = token.email || "";
-      session.user.oAuthProvider = token.oAuthProvider;
-      session.user.githubUsername = token.githubUsername;
-      session.user.provider = token.provider;
-      session.user.providerAccountId = token.providerAccountId;
+      session.user.oAuthProvider = token.oAuthProvider as string;
+      session.user.githubUsername = token.githubUsername as string;
+      session.user.provider = token.provider as string;
+      session.user.providerAccountId = token.providerAccountId as string;
       session.user.roles = (token.roles as UserRole[]) || ["USER"];
       session.user.accountType = token.accountType as AccountType | null;
       session.user.businessId = token.businessId as string | null;
@@ -156,21 +156,21 @@ export const {
 
 declare module "next-auth" {
   interface User {
-    firstName?: string;
-    lastName?: string;
-    isVerified?: boolean;
-    accessToken?: string;
-    refreshToken?: string;
-    email?: string;
+    firstName: string;
+    lastName: string;
+    isVerified: boolean;
+    accessToken: string;
+    refreshToken: string;
+    email: string;
     oAuthProvider?: string;
     githubUsername?: string;
     provider?: string;
     providerAccountId?: string;
-    name?: string;
+    name: string;
     image?: string | null;
     roles?: UserRole[];
-    accountType?: AccountType | null;
-    businessId?: string | null;
+    accountType: AccountType | null;
+    businessId: string | null;
   }
 
   interface Session {

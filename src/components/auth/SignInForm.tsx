@@ -257,7 +257,7 @@ export default function SignInForm() {
             <CButton
               onClick={() => setSteps("authenticate")}
               type="button"
-              className="mt-3 border border-zinc-600 bg-zinc-800 text-white"
+              className="mt-3 border border-zinc-600 bg-zinc-800 text-white hover:text-dark"
             >
               Continue with SSO
             </CButton>
@@ -384,7 +384,7 @@ export default function SignInForm() {
             </p>
           </div>
 
-          <div className="flex items-center justify-between mb-3">
+          {/* <div className="flex items-center justify-between mb-3">
             <div className=" border border-zinc-500 bg px-2 py-2 rounded-full text-sm text-zinc-300 w-fit capitalize flex items-center gap-2 bg-zinc-800/70">
               <FaBuilding />
               {getEmailDomain(watch("email")).domain}
@@ -393,7 +393,7 @@ export default function SignInForm() {
               <MdOutlineEmail />
               {getEmailDomain(watch("email")).email}
             </div>
-          </div>
+          </div> */}
 
           {/* <div className="border">
           Magic link sent to ol*****@scrubbe.com.
@@ -403,7 +403,7 @@ export default function SignInForm() {
           <CButton
             onClick={() => setSteps("email")}
             type="button"
-            className="border border-zinc-600 bg-zinc-800 text-white"
+            className="border border-zinc-600 bg-zinc-800 text-white hover:text-dark"
           >
             Back to password sign-in
           </CButton>
@@ -413,13 +413,13 @@ export default function SignInForm() {
             <div className="h-[1px] w-[100%] bg-zinc-700" />
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mb-4">
+          <div className="grid grid-cols-2 gap-2 mb-4">
             <button
               type="button"
               className="w-full flex gap-3 items-center justify-center px-3 py-2 border border-gray-300 rounded-md transition-colors"
               onClick={() => signIn("google")}
             >
-              <FcGoogle size={24} />
+              <FcGoogle size={24} className="text-white" />
               <span className="text-sm font-medium text-white">Google</span>
             </button>
             <button
@@ -431,7 +431,9 @@ export default function SignInForm() {
                 })
               }
             >
+              <div>
               <FaGithub size={24} className=" text-white" />
+              </div>
               <span className="text-sm font-medium text-white">GitHub</span>
             </button>
             <button
@@ -475,7 +477,7 @@ export default function SignInForm() {
           <CButton
             onClick={() => toast.info("Magic link is coming soon.")}
             type="button"
-            className="border border-zinc-600 bg-zinc-800 text-white"
+            className="border border-zinc-600 bg-zinc-800 text-white hover:text-dark"
           >
             <FaLink /> Email me a magic link
           </CButton>

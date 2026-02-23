@@ -200,9 +200,9 @@ const useAuthStore = create<AuthState & AuthActions>()(
             lastName: validatedData.lastName,
             email: validatedData.businessEmail,
             password: validatedData.password,
-            businessAddress: validatedData.businessAddress,
-            companySize: validatedData.companySize,
-            purpose: validatedData.purpose || undefined,
+            // businessAddress: validatedData?.businessAddress,
+            // companySize: validatedData.companySize,
+            // purpose: validatedData.purpose || undefined,
           };
 
           const { data } = await apiClient.post(
@@ -472,6 +472,5 @@ const useAuthStore = create<AuthState & AuthActions>()(
 );
 
 // Export types for use in components
-export type { UserRole };
-
+ 
 export default useAuthStore;

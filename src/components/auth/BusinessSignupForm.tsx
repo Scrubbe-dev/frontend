@@ -61,11 +61,11 @@ export const businessSignupSchema = z
           "Please use your business email address (not a public provider)",
       }
     ),
-  businessAddress: z
+  businessName: z
     .string()
-    .min(10, { message: "Please provide a valid address" }),
-  companySize: z.string().min(1, { message: "Please select company size" }),
-  purpose: z.string().optional(),
+    .min(3, { message: "Please provide a valid address" }),
+  // companySize: z.string().min(1, { message: "Please select company size" }),
+  // purpose: z.string().optional(),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" })
@@ -74,12 +74,12 @@ export const businessSignupSchema = z
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/,
       "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
     ),
-    confirmPassword: z.string().min(1, { message: "Confirm password is required" }),
+    // confirmPassword: z.string().min(1, { message: "Confirm password is required" }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
+  // .refine((data) => data.password === data.confirmPassword, {
+  //   message: "Passwords don't match",
+  //   path: ["confirmPassword"],
+  // });
 
 // TypeScript type based on the schema
 type BusinessSignupFormData = z.infer<typeof businessSignupSchema>;
@@ -123,11 +123,11 @@ export default function BusinessSignupForm() {
       firstName: "",
       lastName: "",
       businessEmail: "",
-      businessAddress: "",
-      companySize: "",
-      purpose: "",
+      businessName: "",
+      // companySize: "",
+      // purpose: "",
       password: "",
-      confirmPassword: "",
+      // confirmPassword: "",
     },
     mode: "onChange",
   });
@@ -372,7 +372,7 @@ export default function BusinessSignupForm() {
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                   {/* First Name and Last Name Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Controller
                       name="firstName"
                       control={control}
@@ -405,7 +405,7 @@ export default function BusinessSignupForm() {
                   </div>
 
                   {/* Business Email and Address Row */}
-                  <div className="grid grid-cols-1 gap-4 mb-4">
+                  <div className="grid grid-cols-1 gap-4">
                     <Controller
                       name="businessEmail"
                       control={control}
@@ -421,14 +421,14 @@ export default function BusinessSignupForm() {
                       )}
                     />
                     <Controller
-                      name="businessAddress"
+                      name="businessName"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          label="Business Address"
+                          label="Business Name"
                           placeholder="Enter Business Address"
                           {...field}
-                          error={errors.businessAddress?.message}
+                          error={errors.businessName?.message}
                           labelClassName="text-white"
                           className="text-white"
                         />
@@ -437,7 +437,7 @@ export default function BusinessSignupForm() {
                   </div>
 
                   {/* Company Size and Purpose Row */}
-                  <div className="grid grid-cols-1 gap-4 mb-4">
+                  {/* <div className="grid grid-cols-1 gap-4 mb-4">
                     <Controller
                       name="companySize"
                       control={control}
@@ -485,18 +485,19 @@ export default function BusinessSignupForm() {
                         />
                       )}
                     />
-                  </div>
+                  </div> */}
 
                   {/* Password Fields Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div className="grid grid-cols-1 gap-4 mb-6">
                     <PasswordInput
                       label="Password"
                       value={watch("password")}
+                      placeholder="*********"
                       onValueChange={(value) => setValue("password", value)}
                       onValidationChange={setIsPasswordValid}
                       error={!isPasswordValid ? "Complete all requirements" : ""}
                     />
-                    <Controller
+                    {/* <Controller
                       name="confirmPassword"
                       control={control}
                       render={({ field }) => (
@@ -511,7 +512,7 @@ export default function BusinessSignupForm() {
                           className="text-white"
                         />
                       )}
-                    />
+                    /> */}
                   </div>
 
                   {/* Submit Button */}
@@ -534,7 +535,7 @@ export default function BusinessSignupForm() {
                   </div> */}
 
                   {/* OAuth Buttons */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
+                  <div className="grid grid-cols-2  gap-2 my-6 ">
                     <button
                       type="button"
                       className="w-full flex gap-3 items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
@@ -576,8 +577,8 @@ export default function BusinessSignupForm() {
                       <img
                         src="/icon-auth-gitlab.svg"
                         alt="GitLab"
-                        width={38}
-                        height={38}
+                        width={32}
+                        height={32}
                         className="mr-2"
                       />
                       <span className="text-sm font-medium text-white">
@@ -585,7 +586,7 @@ export default function BusinessSignupForm() {
                       </span>
                     </button>
 
-                    <button
+                    {/* <button
                       type="button"
                       className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
                     >
@@ -599,7 +600,7 @@ export default function BusinessSignupForm() {
                       <span className="text-sm font-medium text-white">
                         AWS
                       </span>
-                    </button>
+                    </button> */}
 
                     <button
                       type="button"

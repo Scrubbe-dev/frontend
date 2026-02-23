@@ -1,3 +1,4 @@
+"use client"
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useCallback } from "react";
 import dayjs from "dayjs";
@@ -77,14 +78,14 @@ const DayButton: React.FC<DayButtonProps> = ({
 
   // ⭐️ Conditional classes for past days
   const pastDayClasses = isPast
-    ? "bg-gray-50 text-gray-400 cursor-not-allowed shadow-none"
-    : "hover:bg-gray-100 cursor-pointer shadow-sm";
+    ? "bg-[#252C3F] opacity-50 text-white cursor-not-allowed shadow-none"
+    : "bg-[#252C3F] text-white cursor-pointer shadow-sm";
 
   return (
     <div
       onClick={handleClick}
       // ⭐️ Apply conditional classes, prioritizing isSelected and isToday, then isPast
-      className={`w-full h-24 p-2 flex flex-col justify-center items-center border border-zinc-100 rounded-lg transition-all duration-300 ease-in-out
+      className={`w-full h-24 p-2 flex flex-col justify-center items-center rounded-lg transition-all duration-300 ease-in-out
         ${pastDayClasses}
         ${
           isToday && isCurrentMonth && !isPast
@@ -93,7 +94,7 @@ const DayButton: React.FC<DayButtonProps> = ({
         }
         ${
           isSelected
-            ? "!border-IMSLightGreen border-4 ring-2 ring-IMSLightGreen/50"
+            ? "!bg-IMSLightGreen border-4 "
             : ""
         }
       `}
@@ -179,7 +180,7 @@ const Calendar: React.FC = () => {
     ) => {
       setSelectedDate(date);
       setCurrentMembers(members);
-      setOpenAssignmentForm(true); // Open the modal on selection
+      // setOpenAssignmentForm(true); // Open the modal on selection
       console.log(`Date selected: ${date.format("YYYY-MM-DD")}`);
     },
     []
@@ -280,9 +281,9 @@ const Calendar: React.FC = () => {
   const dayLabels = dayjs().localeData().weekdays();
 
   return (
-    <div className="bg-white dark:bg-dark p-6 rounded-lg w-full max-w-4xl mx-auto">
+    <div className="rounded-lg w-full mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold dark:text-white">On-Call Schedule</h2>
+        <h2 className="text-lg font-bold text-white">Calendar & quiet exceptions</h2>
         <div className="flex space-x-4">
           <select
             value={currentMonth}
@@ -317,7 +318,7 @@ const Calendar: React.FC = () => {
         {dayLabels.map((day) => (
           <div
             key={day}
-            className="bg-IMSLightGreen text-sm text-white rounded-md p-3 text-center font-semibold"
+            className="bg-IMSCyan text-sm text-black rounded-md p-3 text-center font-semibold"
           >
             {day}
           </div>

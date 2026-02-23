@@ -5,8 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 import { ChevronLeft, Loader2 } from "lucide-react";
-import OtpInput from "@/components/ui/OtpInput";
-import CButton from "@/components/ui/Cbutton";
+ import CButton from "@/components/ui/Cbutton";
 import useAuthStore from "@/lib/stores/auth.store";
 
 function VerifyEmailContent() {
@@ -61,7 +60,7 @@ function VerifyEmailContent() {
 
     try {
       setIsLoading(true);
-      await verifyEmail(userId, code);
+      await verifyEmail(code);
       
       toast.success("Email verified successfully!", {
         description: "You can now sign in to your account.",
@@ -82,7 +81,7 @@ function VerifyEmailContent() {
 
     try {
       setIsLoading(true);
-      await resendOTP(userId);
+      await resendOTP();
       
       // Reset timer
       setResendTimer(60);
@@ -166,11 +165,11 @@ function VerifyEmailContent() {
       )}
 
       <div className="flex gap-2 mb-6 justify-center">
-        <OtpInput
+        {/* <OtpInput
           value={verificationCode}
           onChange={setVerificationCode}
           disabled={isLoading}
-        />
+        /> */}
       </div>
 
       <CButton 

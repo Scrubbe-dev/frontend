@@ -12,7 +12,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
   const { collapse, toggle } = useSidebar();
   const pathname = usePathname();
   return (
-    <div className="w-full  h-screen dark:bg-[#111827] bg-white overflow-auto relative">
+    <div className="w-full  h-screen  overflow-auto relative">
       <div
         onClick={toggle}
         className={clsx(
@@ -27,7 +27,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
       <div className="flex w-full h-full min-w-[1400px] ">
         <Sidebar />
         <div className="w-full h-full">
-          <Navbar />
+          {/* <Navbar /> */}
           <motion.div
             key={pathname}
             initial={{ x: 100, opacity: 0 }}
@@ -36,7 +36,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
               duration: 0.5,
               type: "tween",
             }}
-            className="w-full bg-[#F9FAFB] dark:bg-[#1F2937] h-[calc(100vh-80px)] overflow-y-auto"
+            className="w-full  h-[calc(100vh)] overflow-y-auto"
           >
             {children}
           </motion.div>
