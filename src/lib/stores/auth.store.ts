@@ -11,6 +11,9 @@ import { AxiosError } from "axios";
 import { deleteCookie, setCookie } from "cookies-next";
 import { COOKIE_KEYS } from "../constant";
 import { businessSignupSchema } from "@/components/auth/BusinessSignupForm";
+import { signOut } from "next-auth/react";
+
+export type UserRole = "USER" | "ADMIN" | "SUPER_ADMIN";
 
 export type User = {
   accountType: string;
@@ -29,7 +32,8 @@ export type User = {
   passwordChangedAt?: string;
   profileImage?: string;
   registerdWithOauth: boolean;
-  role: string;
+  role: string; // Legacy single role (for backward compatibility)
+  roles: UserRole[]; // New roles array from backend
   updatedAt: string;
   username?: string;
   purpose?: string;
@@ -67,6 +71,13 @@ type AuthActions = {
   logout: () => Promise<void>;
   clearError: () => void;
   setUser: (value: User) => void;
+  refreshAccessToken: () => Promise<boolean>;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (token: string, password: string) => Promise<void>;
+  // Role-based methods
+  hasRole: (requiredRoles: UserRole[]) => boolean;
+  isAdmin: () => boolean;
+  isSuperAdmin: () => boolean;
 };
 
 const useAuthStore = create<AuthState & AuthActions>()(
@@ -155,7 +166,7 @@ const useAuthStore = create<AuthState & AuthActions>()(
             password: validatedData.password,
             firstName,
             lastName,
-            githubUsername: validatedData.githubUsername,
+            githubUsername: validatedData.githubUsername?.trim() || undefined,
             experienceLevel: validatedData.experience,
           };
           const { data } = await apiClient.post("/auth/dev/register", devData);
@@ -184,16 +195,14 @@ const useAuthStore = create<AuthState & AuthActions>()(
           set({ isLoading: true, error: null });
           const validatedData = businessSignupSchema.parse(signupData);
 
-          const fullName = validatedData.fullName || "";
-          const businessName = validatedData.businessName || "";
           const newBusinessData = {
+            firstName: validatedData.firstName,
+            lastName: validatedData.lastName,
             email: validatedData.businessEmail,
             password: validatedData.password,
-            fullName,
-            businessName,
+            // businessAddress: validatedData?.businessAddress,
             // companySize: validatedData.companySize,
-            businessAddress: validatedData.businessAddress,
-            //  add other fields
+            // purpose: validatedData.purpose || undefined,
           };
 
           const { data } = await apiClient.post(
@@ -340,6 +349,16 @@ const useAuthStore = create<AuthState & AuthActions>()(
       logout: async () => {
         try {
           set({ isLoading: true });
+          // Call backend logout endpoint
+          const refreshToken = get().refreshToken;
+          if (refreshToken) {
+            try {
+              await apiClient.post("/auth/logout", { refreshToken });
+            } catch (error) {
+              console.error("Backend logout failed:", error);
+            }
+          }
+          await signOut({ redirect: false });
           deleteCookie(COOKIE_KEYS.TOKEN);
           deleteCookie(COOKIE_KEYS.REFRESH_TOKEN);
           set({
@@ -353,7 +372,93 @@ const useAuthStore = create<AuthState & AuthActions>()(
           throw error;
         }
       },
+      refreshAccessToken: async () => {
+        try {
+          const refreshToken = get().refreshToken;
+          if (!refreshToken) {
+            return false;
+          }
+
+          const { data } = await apiClient.post("/auth/refresh-token", {
+            refreshToken,
+          });
+
+          set({
+            token: data.accessToken,
+            refreshToken: data.refreshToken || refreshToken,
+          });
+
+          setCookie(COOKIE_KEYS.TOKEN, data.accessToken);
+          if (data.refreshToken) {
+            setCookie(COOKIE_KEYS.REFRESH_TOKEN, data.refreshToken);
+          }
+
+          return true;
+        } catch (error) {
+          console.error("Token refresh failed:", error);
+          // Clear auth state on refresh failure
+          set({
+            token: null,
+            refreshToken: null,
+            user: null,
+          });
+          deleteCookie(COOKIE_KEYS.TOKEN);
+          deleteCookie(COOKIE_KEYS.REFRESH_TOKEN);
+          return false;
+        }
+      },
+      forgotPassword: async (email: string) => {
+        try {
+          set({ isLoading: true, error: null });
+          await apiClient.post("/auth/forgot-password", { email });
+          set({ isLoading: false });
+        } catch (error) {
+          set({
+            error:
+              error instanceof AxiosError
+                ? error.response?.data?.message
+                : "Failed to send reset email",
+            isLoading: false,
+          });
+          throw error;
+        }
+      },
+      resetPassword: async (token: string, password: string) => {
+        try {
+          set({ isLoading: true, error: null });
+          await apiClient.post("/auth/reset-password", { token, password });
+          set({ isLoading: false });
+        } catch (error) {
+          set({
+            error:
+              error instanceof AxiosError
+                ? error.response?.data?.message
+                : "Failed to reset password",
+            isLoading: false,
+          });
+          throw error;
+        }
+      },
       clearError: () => set({ error: null }),
+      
+      // Role-based helper methods
+      hasRole: (requiredRoles: UserRole[]) => {
+        const user = get().user;
+        if (!user?.roles || user.roles.length === 0) return false;
+        return requiredRoles.some(role => user.roles.includes(role));
+      },
+      
+      isAdmin: () => {
+        const user = get().user;
+        if (!user?.roles) return false;
+        return user.roles.includes("ADMIN") || user.roles.includes("SUPER_ADMIN");
+      },
+      
+      isSuperAdmin: () => {
+        const user = get().user;
+        if (!user?.roles) return false;
+        return user.roles.includes("SUPER_ADMIN");
+      },
     }),
     {
       name: "auth-storage",
@@ -366,4 +471,6 @@ const useAuthStore = create<AuthState & AuthActions>()(
   )
 );
 
+// Export types for use in components
+ 
 export default useAuthStore;

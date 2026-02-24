@@ -64,6 +64,7 @@ import { useFetch } from "@/hooks/useFetch";
   postActions: z.array(z.string()),
   ezraFocusMode: z.string().optional(),
   ezraInstructions: z.string().optional(),
+  logs:z.string().optional()
 });
 
 export type IncidentFormValues = z.infer<typeof incidentSchema>;
@@ -483,7 +484,21 @@ const RaiseIncident = () => {
                       <TextArea
                         {...field}
                         rows={4}
-                        placeholder="Write the detailed technical story : What changed , which services , which signals , why it’s failing . This is where analysts dump everything they know "
+                        placeholder=" Failure summary
+  •  job ID:
+  •  Proposed diff (before/after):
+  •  Risk classification:
+  •  Confidence score:
+  •  Policy evaluation result:
+  •  Allowed actions:
+Evidence:
+  •  CI job IDs:
+  •  test counts:
+  •  runtime deltas:
+  •  flaky retries:
+            timestamped:
+
+Refusal Reasons:"
                         className="!bg-[#08132F]"
                       />
                     )}
@@ -507,7 +522,27 @@ const RaiseIncident = () => {
                       />
                     )}
                   />
+
+
                 </div>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] text-slate-200 font-bold uppercase tracking-tight">
+                    Logs
+                  </label>
+                  <Controller
+                    name="logs"
+                    control={control}
+                    render={({ field }) => (
+                      <TextArea
+                        {...field}
+                         labelClassName="!text-gray-300"
+                        rows={3}
+                        placeholder="Example: 'Customers in EU are seeing...'"
+                        className="!bg-[#08132F]"
+                      />
+                    )}
+                  />
+                  </div>
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-1.5">
                     <label className="text-[11px] text-slate-200 font-bold uppercase tracking-tight">

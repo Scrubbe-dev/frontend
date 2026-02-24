@@ -11,7 +11,7 @@ import { Controller } from "react-hook-form";
 import CButton from "../ui/Cbutton";
 import Select from "../ui/select";
 import useAuthStore from "@/lib/stores/auth.store";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import CompleteDeveloperProfile, {
   DeveloperProfileSignupFormData,
 } from "./CompleteDeveloperProfile";
@@ -36,10 +36,13 @@ export const developerSignupSchema = z
       .min(1, { message: "Please select experience level" }),
     password: z
       .string()
-      .min(6, { message: "Password must be at least 6 characters" }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: "Confirm password must be at least 6 characters" }),
+      .min(8, { message: "Password must be at least 8 characters" })
+      .max(100, { message: "Password must be less than 100 characters" })
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/,
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      ),
+    confirmPassword: z.string().min(1, { message: "Confirm password is required" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -132,7 +135,8 @@ export default function DeveloperSignupForm() {
 
       // Store form data and show success page
       setFormData({ ...data, ...session.data?.user });
-      // setShowSuccess(true);
+      await signOut({ redirect: false });
+      setShowSuccess(true);
 
       // Reset loading state
     } catch (error) {

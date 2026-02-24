@@ -7,8 +7,10 @@ import Link from "next/link";
 import * as z from "zod";
 import Input from "../ui/input";
 import CButton from "../ui/Cbutton";
+import Select from "../ui/select";
+import { PasswordInput } from "../ui/password-input";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import useAuthStore from "@/lib/stores/auth.store";
 import CompleteBusinessProfile, {
@@ -17,13 +19,16 @@ import CompleteBusinessProfile, {
 import OtpInput from "../ui/OtpInput";
 import { AxiosError } from "axios";
 import { BiCheck } from "react-icons/bi";
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
 
 const IS_STANDALONE = process.env.NEXT_PUBLIC_IS_STANDALONE === "true";
 
 // Define the form schema using zod
-export const businessSignupSchema = z.object({
-  fullName: z.string().min(1, { message: "First name is required" }),
-  businessName: z.string().min(1, { message: "Business name is required" }),
+export const businessSignupSchema = z
+  .object({
+  firstName: z.string().min(1, { message: "First name is required" }),
+  lastName: z.string().min(1, { message: "Last name is required" }),
   businessEmail: z
     .string()
     .email({ message: "Please enter a valid email address" })
@@ -56,28 +61,33 @@ export const businessSignupSchema = z.object({
           "Please use your business email address (not a public provider)",
       }
     ),
-  businessAddress: z
+  businessName: z
     .string()
-    .min(1, { message: "Business address is required" }),
-  companySize: z.string().min(1, { message: "Please select company size" }),
+    .min(3, { message: "Please provide a valid address" }),
+  // companySize: z.string().min(1, { message: "Please select company size" }),
+  // purpose: z.string().optional(),
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
-  // confirmPassword: z
-  //   .string()
-  //   .min(6, { message: "Confirm password must be at least 6 characters" }),
-});
-// .refine((data) => data.password === data.confirmPassword, {
-//   message: "Passwords don't match",
-//   path: ["confirmPassword"],
-// });
+    .min(8, { message: "Password must be at least 8 characters" })
+    .max(100, { message: "Password must be less than 100 characters" })
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/,
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    ),
+    // confirmPassword: z.string().min(1, { message: "Confirm password is required" }),
+  })
+  // .refine((data) => data.password === data.confirmPassword, {
+  //   message: "Passwords don't match",
+  //   path: ["confirmPassword"],
+  // });
 
 // TypeScript type based on the schema
 type BusinessSignupFormData = z.infer<typeof businessSignupSchema>;
 
 // Success Page Component Props Type
 interface SuccessPageProps {
-  fullName: string;
+  firstName: string;
+  lastName: string;
 }
 
 export default function BusinessSignupForm() {
@@ -87,6 +97,7 @@ export default function BusinessSignupForm() {
   const router = useRouter();
   const [profileComplete, setProfileComplete] = useState(false);
   const [isOTP, setIsOTP] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
   const {
     businessSignup,
     businessProfileSignup,
@@ -98,20 +109,25 @@ export default function BusinessSignupForm() {
   const [refreshing, setRefreshing] = useState(false);
   const searchParams = useSearchParams();
   const path = searchParams.get("to");
+  const inviteEmail = searchParams.get("email");
   const {
     handleSubmit,
     control,
     formState: { errors, isValid },
+    setValue,
+    watch,
     reset,
   } = useForm<BusinessSignupFormData>({
     resolver: zodResolver(businessSignupSchema),
     defaultValues: {
-      fullName: "",
+      firstName: "",
+      lastName: "",
       businessEmail: "",
-      businessAddress: "",
       businessName: "",
-      companySize: "",
+      // companySize: "",
+      // purpose: "",
       password: "",
+      // confirmPassword: "",
     },
     mode: "onChange",
   });
@@ -150,6 +166,7 @@ export default function BusinessSignupForm() {
 
       // Store form data and show success page
       setFormData({ ...data, ...session.data?.user });
+      await signOut({ redirect: false });
       setShowSuccess(true);
 
       // Reset loading state
@@ -236,7 +253,13 @@ export default function BusinessSignupForm() {
     }
   }, [showSuccess, router]);
 
-  const SuccessPage = ({ fullName }: SuccessPageProps) => {
+  useEffect(() => {
+    if (inviteEmail) {
+      setValue("businessEmail", inviteEmail);
+    }
+  }, [inviteEmail, setValue]);
+
+  const SuccessPage = ({ firstName, lastName }: SuccessPageProps) => {
     return (
       <Suspense fallback={<div>Loading...</div>}>
         <div className="w-full p-6 flex flex-col items-center justify-center min-h-96">
@@ -256,7 +279,7 @@ export default function BusinessSignupForm() {
           </h1>
 
           <p className="text-gray-300 text-center">
-            Welcome {fullName}! You have successfully created an account.
+            Welcome {firstName} {lastName}! You have successfully created an account.
           </p>
         </div>
       </Suspense>
@@ -313,7 +336,10 @@ export default function BusinessSignupForm() {
           </div>
         )}
         {showSuccess && formData && (
-          <SuccessPage fullName={formData.fullName || ""} />
+          <SuccessPage
+            firstName={formData.firstName || ""}
+            lastName={formData.lastName || ""}
+          />
         )}
 
         <>
@@ -346,23 +372,23 @@ export default function BusinessSignupForm() {
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                   {/* First Name and Last Name Row */}
-                  <div className="grid grid-cols-1 gap-4 mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Controller
-                      name="fullName"
+                      name="firstName"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          label="Full Name"
+                          label="First Name"
                           placeholder="First Name"
                           {...field}
-                          error={errors.fullName?.message}
+                          error={errors.firstName?.message}
                           labelClassName="text-white"
                           className="text-white"
                         />
                       )}
                     />
 
-                    {/* <Controller
+                    <Controller
                       name="lastName"
                       control={control}
                       render={({ field }) => (
@@ -375,11 +401,11 @@ export default function BusinessSignupForm() {
                           className="text-white"
                         />
                       )}
-                    /> */}
+                    />
                   </div>
 
-                  {/* Business Email and Business Address Row */}
-                  <div className="grid grid-cols-1 gap-4 mb-4">
+                  {/* Business Email and Address Row */}
+                  <div className="grid grid-cols-1 gap-4">
                     <Controller
                       name="businessEmail"
                       control={control}
@@ -399,8 +425,8 @@ export default function BusinessSignupForm() {
                       control={control}
                       render={({ field }) => (
                         <Input
-                          label="Company/organization"
-                          placeholder="Enter company name"
+                          label="Business Name"
+                          placeholder="Enter Business Address"
                           {...field}
                           error={errors.businessName?.message}
                           labelClassName="text-white"
@@ -408,20 +434,6 @@ export default function BusinessSignupForm() {
                         />
                       )}
                     />
-                    {/* <Controller
-                      name="businessAddress"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          label="Business Address"
-                          placeholder="Enter Business Address"
-                          {...field}
-                          error={errors.businessAddress?.message}
-                          labelClassName="text-white"
-                          className="text-white"
-                        />
-                      )}
-                    /> */}
                   </div>
 
                   {/* Company Size and Purpose Row */}
@@ -467,6 +479,8 @@ export default function BusinessSignupForm() {
                           ]}
                           error={errors.purpose?.message}
                           isLoading={isLoading}
+                          labelClassName="text-white"
+                          className="text-white"
                           {...field}
                         />
                       )}
@@ -475,37 +489,36 @@ export default function BusinessSignupForm() {
 
                   {/* Password Fields Row */}
                   <div className="grid grid-cols-1 gap-4 mb-6">
-                    {/* <PasswordInput
+                    <PasswordInput
                       label="Password"
-                      // {...field}
                       value={watch("password")}
+                      placeholder="*********"
                       onValueChange={(value) => setValue("password", value)}
                       onValidationChange={setIsPasswordValid}
-                      error={!isPasswordValid ? "complete all requirement" : ""}
-                      className="text-white"
-                    /> */}
-                    <Controller
-                      name="password"
+                      error={!isPasswordValid ? "Complete all requirements" : ""}
+                    />
+                    {/* <Controller
+                      name="confirmPassword"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          label="Password"
-                          placeholder="*********"
+                          label="Confirm Password"
+                          placeholder="Confirm Password"
                           type="password"
-                          error={errors.password?.message}
+                          error={errors.confirmPassword?.message}
                           isLoading={isLoading}
                           {...field}
                           labelClassName="text-white"
                           className="text-white"
                         />
                       )}
-                    />
+                    /> */}
                   </div>
 
                   {/* Submit Button */}
                   <CButton
                     type="submit"
-                    disabled={isLoading || !isValid}
+                    disabled={isLoading || !isValid || !isPasswordValid}
                     isLoading={isLoading}
                   >
                     {isLoading ? "Processing..." : "Create Workspace"}
@@ -522,7 +535,7 @@ export default function BusinessSignupForm() {
                   </div> */}
 
                   {/* OAuth Buttons */}
-                  {/* <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 ">
+                  <div className="grid grid-cols-2  gap-2 my-6 ">
                     <button
                       type="button"
                       className="w-full flex gap-3 items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
@@ -564,8 +577,8 @@ export default function BusinessSignupForm() {
                       <img
                         src="/icon-auth-gitlab.svg"
                         alt="GitLab"
-                        width={38}
-                        height={38}
+                        width={32}
+                        height={32}
                         className="mr-2"
                       />
                       <span className="text-sm font-medium text-white">
@@ -573,7 +586,7 @@ export default function BusinessSignupForm() {
                       </span>
                     </button>
 
-                    <button
+                    {/* <button
                       type="button"
                       className="w-full flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md  transition-colors"
                     >
@@ -587,7 +600,7 @@ export default function BusinessSignupForm() {
                       <span className="text-sm font-medium text-white">
                         AWS
                       </span>
-                    </button>
+                    </button> */}
 
                     <button
                       type="button"
@@ -609,7 +622,7 @@ export default function BusinessSignupForm() {
                         Azure
                       </span>
                     </button>
-                  </div> */}
+                  </div>
 
                   {/* Demo Page Link */}
                   <div className="text-center text-white mt-3 text-base">
